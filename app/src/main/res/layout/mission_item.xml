@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:background="@drawable/mission_box_shape"
+        android:layout_width="326dp"
+        android:layout_height="129dp"
+        android:elevation="5.3dp">
+
+    <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="38dp"
+            android:layout_height="37.5dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/star_box_shape"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                app:srcCompat="@drawable/ic_baseline_star_24" />
+    </RelativeLayout>
+
+    <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="6dp"
+            android:fontFamily="@font/call_of_ops_duty"
+            android:text="OVERLORD"
+            android:textColor="@color/primaryText"
+            android:textSize="16.1sp"
+            android:shadowColor="#d4000000"
+            android:shadowRadius="9"
+            android:letterSpacing="0.02"
+            app:layout_constraintStart_toEndOf="@+id/relativeLayout"
+            app:layout_constraintTop_toTopOf="@+id/relativeLayout" />
+
+    <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="13dp"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/open_sans_light"
+            android:text="5 Channels"
+            android:textColor="@color/secondaryText"
+            android:textSize="10.1sp"
+            app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
+            app:layout_constraintStart_toEndOf="@+id/relativeLayout" />
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="26.4dp"
+            android:maxWidth="30dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/relativeLayout" >
+
+        <include layout="@layout/soldier_thumbnail"
+                android:layout_width="26.8dp"
+                android:layout_marginEnd="5.5dp"
+                android:layout_height="match_parent"/>
+        <include layout="@layout/soldier_thumbnail"
+                android:layout_width="26.8dp"
+                android:layout_marginEnd="5.5dp"
+                android:layout_height="match_parent"/>
+        <include layout="@layout/soldier_thumbnail"
+                android:layout_width="26.8dp"
+                android:layout_marginEnd="5.5dp"
+                android:layout_height="match_parent"/>
+        <include layout="@layout/soldier_thumbnail"
+                android:layout_width="26.8dp"
+                android:layout_marginEnd="5.5dp"
+                android:layout_height="match_parent"/>
+        <include layout="@layout/soldier_thumbnail"
+                android:layout_width="26.8dp"
+                android:layout_marginEnd="5.5dp"
+                android:layout_height="match_parent"/>
+        <include layout="@layout/soldier_thumbnail"
+                android:layout_width="26.8dp"
+                android:layout_marginEnd="5.5dp"
+                android:layout_height="match_parent"/>
+        <TextView
+                android:layout_width="26.8dp"
+                android:fontFamily="@font/open_sans_light"
+                android:layout_height="match_parent"
+                android:textColor="@color/secondaryText"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:text="+10"/>
+    </LinearLayout>
+
+    <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="19dp"
+            android:layout_height="23dp"
+            android:layout_marginTop="54dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_round_keyboard_arrow_right_24" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
