@@ -16,4 +16,5 @@
             tools:listitem="@layout/mission_item"
             android:background="@color/primaryBlack"
     />
+
 </layout>
