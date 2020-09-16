@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:background="@drawable/mission_box_shape"
-        android:layout_width="326dp"
+        android:layout_width="match_parent"
         android:layout_height="129dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="17dp"
+        android:background="@drawable/mission_box_shape"
         android:elevation="5.3dp">
 
     <RelativeLayout
@@ -24,7 +26,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                app:srcCompat="@drawable/ic_baseline_star_24" />
+                app:srcCompat="@drawable/ic_baseline_star_24"
+                android:contentDescription="@string/star_icon" />
     </RelativeLayout>
 
     <TextView
@@ -34,12 +37,12 @@
             android:layout_marginStart="13dp"
             android:layout_marginTop="6dp"
             android:fontFamily="@font/call_of_ops_duty"
+            android:letterSpacing="0.02"
+            android:shadowColor="#d4000000"
+            android:shadowRadius="9"
             android:text="OVERLORD"
             android:textColor="@color/primaryText"
             android:textSize="16.1sp"
-            android:shadowColor="#d4000000"
-            android:shadowRadius="9"
-            android:letterSpacing="0.02"
             app:layout_constraintStart_toEndOf="@+id/relativeLayout"
             app:layout_constraintTop_toTopOf="@+id/relativeLayout" />
 
@@ -59,52 +62,64 @@
     <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="26.4dp"
-            android:maxWidth="30dp"
             android:layout_marginBottom="20dp"
+            android:maxWidth="30dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/relativeLayout" >
+            app:layout_constraintStart_toStartOf="@+id/relativeLayout">
 
-        <include layout="@layout/soldier_thumbnail"
+        <include
+                layout="@layout/soldier_thumbnail"
                 android:layout_width="26.8dp"
-                android:layout_marginEnd="5.5dp"
-                android:layout_height="match_parent"/>
-        <include layout="@layout/soldier_thumbnail"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5.5dp" />
+
+        <include
+                layout="@layout/soldier_thumbnail"
                 android:layout_width="26.8dp"
-                android:layout_marginEnd="5.5dp"
-                android:layout_height="match_parent"/>
-        <include layout="@layout/soldier_thumbnail"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5.5dp" />
+
+        <include
+                layout="@layout/soldier_thumbnail"
                 android:layout_width="26.8dp"
-                android:layout_marginEnd="5.5dp"
-                android:layout_height="match_parent"/>
-        <include layout="@layout/soldier_thumbnail"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5.5dp" />
+
+        <include
+                layout="@layout/soldier_thumbnail"
                 android:layout_width="26.8dp"
-                android:layout_marginEnd="5.5dp"
-                android:layout_height="match_parent"/>
-        <include layout="@layout/soldier_thumbnail"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5.5dp" />
+
+        <include
+                layout="@layout/soldier_thumbnail"
                 android:layout_width="26.8dp"
-                android:layout_marginEnd="5.5dp"
-                android:layout_height="match_parent"/>
-        <include layout="@layout/soldier_thumbnail"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5.5dp" />
+
+        <include
+                layout="@layout/soldier_thumbnail"
                 android:layout_width="26.8dp"
-                android:layout_marginEnd="5.5dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5.5dp" />
+
         <TextView
                 android:layout_width="26.8dp"
-                android:fontFamily="@font/open_sans_light"
                 android:layout_height="match_parent"
-                android:textColor="@color/secondaryText"
+                android:fontFamily="@font/open_sans_light"
                 android:gravity="center"
+                android:text="+10"
                 android:textAlignment="center"
-                android:text="+10"/>
+                android:textColor="@color/secondaryText" />
     </LinearLayout>
 
     <ImageView
             android:id="@+id/imageView6"
             android:layout_width="19dp"
             android:layout_height="23dp"
-            android:layout_marginTop="54dp"
             android:layout_marginEnd="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_round_keyboard_arrow_right_24" />

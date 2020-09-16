@@ -3,8 +3,8 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="primaryBlack">#1d1d1d</color>
-    <color name="secondaryBlack">#1a1a1a</color>
+    <color name="primaryBlack">#1a1a1a</color>
+    <color name="secondaryBlack">#1d1d1d</color>
     <color name="tertiaryBlack">#252525</color>
     <color name="militarOrange">#ec6716</color>
     <color name="militarRed">#de3317</color>
