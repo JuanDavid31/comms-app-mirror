@@ -1,17 +1,21 @@
 [
   {
+    "id": 1,
     "name":"OVERLORD",
     "channels": [{}, {}, {}, {}, {}, {}, {}, {}]
   },
   {
+    "id": 2,
     "name":"RED DAWN",
     "channels": [{}, {}, {}]
   },
   {
+    "id": 3,
     "name":"URGENT FURY",
     "channels": [{}, {}]
   },
   {
+    "id": 4,
     "name":"MARCO POLO",
     "channels": [{}]
   }

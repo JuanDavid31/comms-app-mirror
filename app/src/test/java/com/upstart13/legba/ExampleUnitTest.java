@@ -1,6 +1,13 @@
 package com.upstart13.legba;
 
+import android.util.Log;
+
+import com.upstart13.legba.data.DataManager;
+import com.upstart13.legba.data.dto.Mission;
+
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -10,8 +17,11 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+
     @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+    public void readJsonTest(){
+        List<Mission> missions = new DataManager().getMissions();
+        missions.stream().forEach(mission -> System.out.println(mission.toString()));
+        assert missions.size() == 4;
     }
 }
