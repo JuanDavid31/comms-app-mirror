@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -49,8 +48,51 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
         holder.channelsNumber.setText(String.format("%s channels", currentMission.channels.size()));
         holder.channels.removeAllViews();
         //LayoutInflater.from(context).inflate(R.layout.channel_avatar, holder.channels, true);
-        RoundedImageView newAvatar = (RoundedImageView) LayoutInflater.from(context).inflate(R.layout.channel_avatar, null);
-        holder.channels.addView(newAvatar);
+
+        boolean orange = true;
+        boolean red = false;
+        boolean blue = false;
+
+        for(int i = 0; i < 6 && i < currentMission.channels.size(); i++){
+            RoundedImageView newAvatar = (RoundedImageView) LayoutInflater.from(context).inflate(R.layout.channel_avatar, null);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPx(26.4), ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.setMarginEnd(convertDpToPx(5.3));
+            newAvatar.setLayoutParams(layoutParams);
+            if(red){
+                red = false;
+                orange = true;
+            }else if(orange){
+                orange = false;
+                blue = true;
+                newAvatar.setBorderColor(getBlueColor());
+            }else if(blue){
+                blue = false;
+                orange = true;
+                newAvatar.setBorderColor(getRedColor());
+            }
+            holder.channels.addView(newAvatar);
+        }
+
+        int remainingChannels = currentMission.channels.size() - 6;
+        if(remainingChannels > 0){
+            TextView remainingChannelsView = (TextView) LayoutInflater.from(context).inflate(R.layout.remaining_channels_number, null);
+            remainingChannelsView.setLayoutParams(new LinearLayout.LayoutParams(convertDpToPx(26.8), ViewGroup.LayoutParams.MATCH_PARENT));
+            remainingChannelsView.setText(String.format("+%s", remainingChannels));
+            holder.channels.addView(remainingChannelsView);
+        }
+    }
+
+    private int convertDpToPx(double dp){
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
+
+    private int getBlueColor(){
+        return context.getResources().getColor(R.color.militarBlue);
+    }
+
+    private int getRedColor(){
+        return context.getResources().getColor(R.color.militarRed);
     }
 
     @Override
