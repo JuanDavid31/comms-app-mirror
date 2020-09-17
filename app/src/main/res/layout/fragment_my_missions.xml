@@ -11,10 +11,14 @@
             android:id="@+id/missions_list_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/primaryBlack"
+            android:background="@color/secondaryBlack"
+            android:clipToPadding="false"
+            android:paddingStart="17dp"
+            android:paddingEnd="17dp"
+            android:paddingTop="17dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:context=".fragment.MyMissionsFragment"
-            tools:itemCount="5"
+            tools:itemCount="6"
             tools:listitem="@layout/mission_item" />
 
 </layout>

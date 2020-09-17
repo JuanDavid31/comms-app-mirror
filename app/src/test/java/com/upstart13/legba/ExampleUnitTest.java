@@ -22,6 +22,6 @@ public class ExampleUnitTest {
     public void readJsonTest(){
         List<Mission> missions = new DataManager().getMissions();
         missions.stream().forEach(mission -> System.out.println(mission.toString()));
-        assert missions.size() == 4;
+        assert missions.size() == 9;
     }
 }

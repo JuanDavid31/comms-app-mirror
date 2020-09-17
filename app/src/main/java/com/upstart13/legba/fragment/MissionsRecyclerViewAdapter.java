@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.upstart13.legba.R;
+import com.upstart13.legba.data.dto.Channel;
 import com.upstart13.legba.data.dto.Mission;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
 
     public void setMissions(List<Mission> missions){
         this.missions = missions;
+        notifyDataSetChanged();
     }
 
     public MissionsRecyclerViewAdapter(@NonNull DiffUtil.ItemCallback<Mission> diffCallback, Context context) {
@@ -47,38 +49,41 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
         holder.missionName.setText(currentMission.name);
         holder.channelsNumber.setText(String.format("%s channels", currentMission.channels.size()));
         holder.channels.removeAllViews();
-        //LayoutInflater.from(context).inflate(R.layout.channel_avatar, holder.channels, true);
 
-        boolean orange = true;
-        boolean red = false;
+        addChannelsToView(currentMission.channels, holder.channels);
+        addRemainingChannelsText(currentMission.channels, holder.channels);
+    }
+
+    private void addChannelsToView(List<Channel> channels, LinearLayout channelsView){
+        boolean red = true;
+        boolean orange = false;
         boolean blue = false;
+        boolean green = false;
 
-        for(int i = 0; i < 6 && i < currentMission.channels.size(); i++){
+        for(int i = 0; (i < 6) && (i < channels.size()); i++){
             RoundedImageView newAvatar = (RoundedImageView) LayoutInflater.from(context).inflate(R.layout.channel_avatar, null);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPx(26.4), ViewGroup.LayoutParams.MATCH_PARENT);
             layoutParams.setMarginEnd(convertDpToPx(5.3));
             newAvatar.setLayoutParams(layoutParams);
+            newAvatar.setImageResource(getImageResource(channels.get(i)));
+
             if(red){
                 red = false;
                 orange = true;
             }else if(orange){
                 orange = false;
                 blue = true;
-                newAvatar.setBorderColor(getBlueColor());
+                newAvatar.setBorderColor(getOrangeColor());
             }else if(blue){
                 blue = false;
+                green = true;
+                newAvatar.setBorderColor(getBlueColor());
+            }else if(green){
+                green = false;
                 orange = true;
-                newAvatar.setBorderColor(getRedColor());
+                newAvatar.setBorderColor(getGreenColor());
             }
-            holder.channels.addView(newAvatar);
-        }
-
-        int remainingChannels = currentMission.channels.size() - 6;
-        if(remainingChannels > 0){
-            TextView remainingChannelsView = (TextView) LayoutInflater.from(context).inflate(R.layout.remaining_channels_number, null);
-            remainingChannelsView.setLayoutParams(new LinearLayout.LayoutParams(convertDpToPx(26.8), ViewGroup.LayoutParams.MATCH_PARENT));
-            remainingChannelsView.setText(String.format("+%s", remainingChannels));
-            holder.channels.addView(remainingChannelsView);
+            channelsView.addView(newAvatar);
         }
     }
 
@@ -87,12 +92,44 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
         return (int) (dp * scale + 0.5f);
     }
 
+    private int getImageResource(Channel channel){
+        if(channel.image == null)return android.R.color.transparent;
+        switch (channel.image){
+            case "primary":
+                return R.mipmap.primary_channel_thumb;
+            case  "secondary":
+                return R.mipmap.secondary_channel_thumb;
+            case "tertiary":
+                return R.mipmap.tertiary_channel_thumb;
+            case "quaternary":
+                return R.mipmap.quaternary_channel_thumb;
+            case "quinary":
+                return R.mipmap.quinary_channel_thumb;
+            default:
+                return android.R.color.transparent;
+        }
+    }
+
+    private int getOrangeColor(){
+        return context.getResources().getColor(R.color.militarOrange);
+    }
+
     private int getBlueColor(){
         return context.getResources().getColor(R.color.militarBlue);
     }
 
-    private int getRedColor(){
-        return context.getResources().getColor(R.color.militarRed);
+    private int getGreenColor() {
+        return context.getResources().getColor(R.color.militarGreen);
+    }
+
+    private void addRemainingChannelsText(List<Channel> channels, LinearLayout channelsView){
+        int remainingChannels = channels.size() - 6;
+        if(remainingChannels > 0){
+            TextView remainingChannelsView = (TextView) LayoutInflater.from(context).inflate(R.layout.remaining_channels_number, null);
+            remainingChannelsView.setLayoutParams(new LinearLayout.LayoutParams(convertDpToPx(26.8), ViewGroup.LayoutParams.MATCH_PARENT));
+            remainingChannelsView.setText(String.format("+%s", remainingChannels));
+            channelsView.addView(remainingChannelsView);
+        }
     }
 
     @Override

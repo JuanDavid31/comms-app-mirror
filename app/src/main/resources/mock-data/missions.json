@@ -1,22 +1,92 @@
 [
   {
     "id": 1,
-    "name":"OVERLORD",
-    "channels": [{}, {}, {}, {}, {}, {}, {}, {}]
+    "name": "OVERLORD",
+    "channels": [
+      {"image": "primary"},
+      {"image": "secondary"},
+      {"image": "tertiary"},
+      {"image": "quaternary"},
+      {"image": "quinary"},
+      {},
+      {},
+      {}
+    ]
   },
   {
     "id": 2,
-    "name":"RED DAWN",
-    "channels": [{}, {}, {}]
+    "name": "RED DAWN",
+    "channels": [
+      {"image": "primary"},
+      {"image": "secondary"},
+      {"image": "tertiary"},
+      {"image": "quaternary"},
+      {"image": "quinary"},
+      {},
+      {}
+    ]
   },
   {
     "id": 3,
-    "name":"URGENT FURY",
-    "channels": [{}, {}]
+    "name": "URGENT FURY",
+    "channels": [
+      {"image": "primary"},
+      {"image": "secondary"},
+      {"image": "tertiary"},
+      {"image": "quaternary"},
+      {"image": "quinary"},
+      {}
+    ]
   },
   {
     "id": 4,
-    "name":"MARCO POLO",
-    "channels": [{}]
+    "name": "MARCO",
+    "channels": [
+      {"image": "primary"},
+      {"image": "secondary"},
+      {"image": "tertiary"},
+      {"image": "quaternary"},
+      {}
+    ]
+  },
+  {
+    "id": 5,
+    "name": "POLO",
+    "channels": [
+      {"image": "primary"},
+      {"image": "secondary"},
+      {"image": "tertiary"},
+      {"image": "quinary"}
+    ]
+  },
+  {
+    "id": 6,
+    "name": "MARCO POLO",
+    "channels": [
+      {"image": "primary"},
+      {"image": "secondary"},
+      {"image": "tertiary"}
+    ]
+  },
+  {
+    "id": 7,
+    "name": "RED EAGLE",
+    "channels": [
+      {"image": "primary"},
+      {"image": "secondary"}
+    ]
+  },
+  {
+    "id": 8,
+    "name": "BLUE EAGLE",
+    "channels": [
+      {"image": "primary"}
+    ]
+  },
+  {
+    "id": 9,
+    "name": "GREEN EAGLE",
+    "channels": [
+    ]
   }
 ]
