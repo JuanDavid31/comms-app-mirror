@@ -1,12 +1,16 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryBlack</item>
         <item name="colorPrimaryDark">@color/primaryBlack</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="elevation">30dp</item>
     </style>
 
+    <style name="toolbar">
+        <item name="fontFamily">@font/call_of_ops_duty</item>
+        <item name="android:textSize">19.9sp</item>
+        <item name="android:letterSpacing">0.2</item>
+        <item name="titleTextColor">@color/primaryText</item>
+    </style>
 </resources>
