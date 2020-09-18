@@ -13,25 +13,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize">
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/AppTheme">
 
         <TextView
                 android:id="@+id/toolbar_title_text"
                 style="@style/toolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="LEGBA"
-                android:textColor="@color/primaryText"
-                android:layout_gravity="center"/>
+                android:textColor="@color/primaryText" />
     </androidx.appcompat.widget.Toolbar>
 
-    <fragment
-            android:id="@+id/host_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/nav_graph" />
+            android:layout_height="match_parent">
+
+        <fragment
+                android:id="@+id/host_fragment"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:defaultNavHost="true"
+                app:navGraph="@navigation/nav_graph" />
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="5.3dp"
+                android:background="@drawable/toolbar_shadow" />
+
+    </FrameLayout>
 
 
 </LinearLayout>

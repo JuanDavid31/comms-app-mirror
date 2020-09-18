@@ -1,10 +1,14 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryBlack</item>
         <item name="colorPrimaryDark">@color/primaryBlack</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/primaryText</item>
+        <!--Removing this line will bug the up button in the toolbar-->
+        <item name="navigationIcon">@drawable/ic_round_keyboard_arrow_left_24</item>
+        
     </style>
 
     <style name="toolbar">

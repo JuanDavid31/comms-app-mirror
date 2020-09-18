@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.upstart13.legba.MainActivity;
 import com.upstart13.legba.R;
 import com.upstart13.legba.data.DataManager;
 import com.upstart13.legba.data.dto.Mission;
@@ -18,6 +19,7 @@ import com.upstart13.legba.databinding.FragmentMissionsListBinding;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MissionsListFragment extends Fragment {
 
@@ -27,9 +29,9 @@ public class MissionsListFragment extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_missions_list, container, false);
-        changeToolbarTitle();
+        setupToolbar();
         List<Mission> missions = new DataManager().getMissions();
-        MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), getContext());
+        MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), this);
         binding.missionsListRecyclerView.setHasFixedSize(true);
         binding.missionsListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.missionsListRecyclerView.setAdapter(adapter);
@@ -37,7 +39,7 @@ public class MissionsListFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void changeToolbarTitle(){
+    private void setupToolbar(){
         ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText("MY MISSIONS");
     }
 }

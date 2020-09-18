@@ -1,13 +1,15 @@
 package com.upstart13.legba.fragment;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,16 +25,16 @@ import java.util.List;
 public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRecyclerViewAdapter.ItemViewHolder> {
 
     private List<Mission> missions = new ArrayList();
-    private Context context;
+    private Fragment fragment;
 
     public void setMissions(List<Mission> missions){
         this.missions = missions;
         notifyDataSetChanged();
     }
 
-    public MissionsRecyclerViewAdapter(@NonNull DiffUtil.ItemCallback<Mission> diffCallback, Context context) {
+    public MissionsRecyclerViewAdapter(@NonNull DiffUtil.ItemCallback<Mission> diffCallback, Fragment fragment) {
         super(diffCallback);
-        this.context = context;
+        this.fragment = fragment;
     }
 
     @NonNull
@@ -50,6 +52,9 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
         holder.channelsNumber.setText(String.format("%s channels", currentMission.channels.size()));
         holder.channels.removeAllViews();
 
+        holder.rightArrow.setOnClickListener(view -> NavHostFragment.findNavController(fragment)
+                .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionFragment(currentMission)));
+
         addChannelsToView(currentMission.channels, holder.channels);
         addRemainingChannelsText(currentMission.channels, holder.channels);
     }
@@ -61,7 +66,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
         boolean green = false;
 
         for(int i = 0; (i < 6) && (i < channels.size()); i++){
-            RoundedImageView newAvatar = (RoundedImageView) LayoutInflater.from(context).inflate(R.layout.channel_avatar, null);
+            RoundedImageView newAvatar = (RoundedImageView) LayoutInflater.from(fragment.getContext()).inflate(R.layout.channel_avatar, null);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPx(26.4), ViewGroup.LayoutParams.MATCH_PARENT);
             layoutParams.setMarginEnd(convertDpToPx(5.3));
             newAvatar.setLayoutParams(layoutParams);
@@ -88,7 +93,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
     }
 
     private int convertDpToPx(double dp){
-        final float scale = context.getResources().getDisplayMetrics().density;
+        final float scale = fragment.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }
 
@@ -111,21 +116,21 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
     }
 
     private int getOrangeColor(){
-        return context.getResources().getColor(R.color.militarOrange);
+        return fragment.getResources().getColor(R.color.militarOrange);
     }
 
     private int getBlueColor(){
-        return context.getResources().getColor(R.color.militarBlue);
+        return fragment.getResources().getColor(R.color.militarBlue);
     }
 
     private int getGreenColor() {
-        return context.getResources().getColor(R.color.militarGreen);
+        return fragment.getResources().getColor(R.color.militarGreen);
     }
 
     private void addRemainingChannelsText(List<Channel> channels, LinearLayout channelsView){
         int remainingChannels = channels.size() - 6;
         if(remainingChannels > 0){
-            TextView remainingChannelsView = (TextView) LayoutInflater.from(context).inflate(R.layout.remaining_channels_number, null);
+            TextView remainingChannelsView = (TextView) LayoutInflater.from(fragment.getContext()).inflate(R.layout.remaining_channels_number, null);
             remainingChannelsView.setLayoutParams(new LinearLayout.LayoutParams(convertDpToPx(26.8), ViewGroup.LayoutParams.MATCH_PARENT));
             remainingChannelsView.setText(String.format("+%s", remainingChannels));
             channelsView.addView(remainingChannelsView);
@@ -142,6 +147,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
         private View root;
         private TextView missionName;
         private TextView channelsNumber;
+        private ImageView rightArrow;
         private LinearLayout channels;
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -149,6 +155,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
             this.root = itemView;
             missionName = itemView.findViewById(R.id.mission_name_text);
             channelsNumber = itemView.findViewById(R.id.mission_channels_number);
+            rightArrow = itemView.findViewById(R.id.right_arrow);
             channels = itemView.findViewById(R.id.channels_list_view);
         }
     }
