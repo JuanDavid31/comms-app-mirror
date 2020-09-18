@@ -1,8 +1,9 @@
 package com.upstart13.legba.data.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Mission {
+public class Mission implements Serializable {
     public int id;
     public String name;
     public List<Channel> channels;

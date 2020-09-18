@@ -1,37 +1,33 @@
 package com.upstart13.legba.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.upstart13.legba.MainActivity;
 import com.upstart13.legba.R;
 import com.upstart13.legba.data.DataManager;
 import com.upstart13.legba.data.dto.Mission;
-import com.upstart13.legba.databinding.FragmentMyMissionsBinding;
+import com.upstart13.legba.databinding.FragmentMissionsListBinding;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 
-public class MyMissionsFragment extends Fragment {
+public class MissionsListFragment extends Fragment {
 
-    FragmentMyMissionsBinding binding;
+    FragmentMissionsListBinding binding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_missions, container, false);
-        //TODO: Change 
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_missions_list, container, false);
+        changeToolbarTitle();
         List<Mission> missions = new DataManager().getMissions();
         MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), getContext());
         binding.missionsListRecyclerView.setHasFixedSize(true);
@@ -41,4 +37,7 @@ public class MyMissionsFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void changeToolbarTitle(){
+        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText("MY MISSIONS");
+    }
 }
