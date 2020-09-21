@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_height="match_parent"
+            android:layout_width="78.5dp"
+        >
+
+    <FrameLayout
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SOS"
+            android:shadowColor="#d4000000"
+            android:shadowRadius="9"
+            android:textSize="15sp"
+            android:textColor="@color/paleRed"
+            android:letterSpacing="0.02"
+            android:fontFamily="@font/built_titling_rg"
+            android:layout_gravity="center"
+            >
+
+        <!--android:layout_marginStart="27.5dp"
+        android:layout_marginEnd="27.5dp"-->
+
+    </TextView>
+</FrameLayout>

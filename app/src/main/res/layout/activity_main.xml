@@ -28,7 +28,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/legba"
-                    android:textColor="@color/primaryText" />
+                    android:textColor="@color/primaryText"
+                    android:shadowColor="#d4000000"
+                    android:shadowRadius="9"/>
+
         </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout
