@@ -6,7 +6,10 @@
         android:layout_height="129dp"
         android:layout_marginBottom="17dp"
         android:background="@drawable/mission_box_shape"
-        android:elevation="5.3dp">
+        android:elevation="5.3dp"
+        android:focusable="true"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground">
 
     <RelativeLayout
             android:id="@+id/relativeLayout"

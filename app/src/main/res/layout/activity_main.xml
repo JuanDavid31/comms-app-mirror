@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="LEGBA"
+                android:text="@string/legba"
                 android:textColor="@color/primaryText" />
     </androidx.appcompat.widget.Toolbar>
 

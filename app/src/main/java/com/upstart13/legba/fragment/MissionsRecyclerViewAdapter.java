@@ -48,12 +48,13 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Mission currentMission = missions.get(position);
+
+        holder.root.setOnClickListener(view -> NavHostFragment.findNavController(fragment)
+                .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionFragment(currentMission)));
+
         holder.missionName.setText(currentMission.name);
         holder.channelsNumber.setText(String.format("%s channels", currentMission.channels.size()));
         holder.channels.removeAllViews();
-
-        holder.rightArrow.setOnClickListener(view -> NavHostFragment.findNavController(fragment)
-                .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionFragment(currentMission)));
 
         addChannelsToView(currentMission.channels, holder.channels);
         addRemainingChannelsText(currentMission.channels, holder.channels);
