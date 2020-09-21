@@ -3,11 +3,31 @@
     "id": 1,
     "name": "OVERLORD",
     "channels": [
-      {"image": "primary"},
-      {"image": "secondary"},
-      {"image": "tertiary"},
-      {"image": "quaternary"},
-      {"image": "quinary"},
+      {
+        "image": "primary",
+        "name": "ALPHA TEAM",
+        "type": "primary"
+      },
+      {
+        "image": "secondary",
+        "name": "DELTA TEAM",
+        "type": "priority"
+      },
+      {
+        "image": "tertiary",
+        "name": "FIRE TEAM",
+        "type": "priority"
+      },
+      {
+        "image": "quaternary",
+        "name": "ALPHA TEAM",
+        "type": "radio"
+      },
+      {
+        "image": "quinary",
+        "name": "ALPHA TEAM",
+        "type": "radio"
+      },
       {},
       {},
       {}
@@ -17,11 +37,21 @@
     "id": 2,
     "name": "RED DAWN",
     "channels": [
-      {"image": "primary"},
-      {"image": "secondary"},
-      {"image": "tertiary"},
-      {"image": "quaternary"},
-      {"image": "quinary"},
+      {
+        "image": "primary"
+      },
+      {
+        "image": "secondary"
+      },
+      {
+        "image": "tertiary"
+      },
+      {
+        "image": "quaternary"
+      },
+      {
+        "image": "quinary"
+      },
       {},
       {}
     ]
@@ -30,11 +60,21 @@
     "id": 3,
     "name": "URGENT FURY",
     "channels": [
-      {"image": "primary"},
-      {"image": "secondary"},
-      {"image": "tertiary"},
-      {"image": "quaternary"},
-      {"image": "quinary"},
+      {
+        "image": "primary"
+      },
+      {
+        "image": "secondary"
+      },
+      {
+        "image": "tertiary"
+      },
+      {
+        "image": "quaternary"
+      },
+      {
+        "image": "quinary"
+      },
       {}
     ]
   },
@@ -42,10 +82,18 @@
     "id": 4,
     "name": "MARCO",
     "channels": [
-      {"image": "primary"},
-      {"image": "secondary"},
-      {"image": "tertiary"},
-      {"image": "quaternary"},
+      {
+        "image": "primary"
+      },
+      {
+        "image": "secondary"
+      },
+      {
+        "image": "tertiary"
+      },
+      {
+        "image": "quaternary"
+      },
       {}
     ]
   },
@@ -53,34 +101,54 @@
     "id": 5,
     "name": "POLO",
     "channels": [
-      {"image": "primary"},
-      {"image": "secondary"},
-      {"image": "tertiary"},
-      {"image": "quinary"}
+      {
+        "image": "primary"
+      },
+      {
+        "image": "secondary"
+      },
+      {
+        "image": "tertiary"
+      },
+      {
+        "image": "quinary"
+      }
     ]
   },
   {
     "id": 6,
     "name": "MARCO POLO",
     "channels": [
-      {"image": "primary"},
-      {"image": "secondary"},
-      {"image": "tertiary"}
+      {
+        "image": "primary"
+      },
+      {
+        "image": "secondary"
+      },
+      {
+        "image": "tertiary"
+      }
     ]
   },
   {
     "id": 7,
     "name": "RED EAGLE",
     "channels": [
-      {"image": "primary"},
-      {"image": "secondary"}
+      {
+        "image": "primary"
+      },
+      {
+        "image": "secondary"
+      }
     ]
   },
   {
     "id": 8,
     "name": "BLUE EAGLE",
     "channels": [
-      {"image": "primary"}
+      {
+        "image": "primary"
+      }
     ]
   },
   {

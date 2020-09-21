@@ -4,4 +4,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".fragment.MissionFragment">
+
+    <Button
+            android:layout_width="24.5dp"
+            android:layout_height="23.5dp"
+            android:text="SOS"
+            android:fontFamily="@font/call_of_ops_duty"
+            android:letterSpacing="0.02"
+            android:textColor="@color/paleRed"
+            android:textSize="15sp"
+            android:background="@drawable/roun_sos_button"
+            />
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 </FrameLayout>

@@ -14,7 +14,7 @@
     <style name="toolbar">
         <item name="fontFamily">@font/call_of_ops_duty</item>
         <item name="android:textSize">19.9sp</item>
-        <item name="android:letterSpacing">0.1</item>
+        <item name="android:letterSpacing">0.02</item>
         <item name="titleTextColor">@color/primaryText</item>
     </style>
 </resources>

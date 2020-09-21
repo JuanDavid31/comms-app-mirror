@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,7 +40,12 @@ public class MissionsListFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void setupToolbar(){
-        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText("MY MISSIONS");
+    private void setupToolbar() {
+        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(R.string.mission_list_title);
+
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        ActionBar actionBar = mainActivity.getSupportActionBar();
+        Objects.requireNonNull(actionBar)
+                .setHomeAsUpIndicator(R.drawable.ic_hamburguer_icon);
     }
 }

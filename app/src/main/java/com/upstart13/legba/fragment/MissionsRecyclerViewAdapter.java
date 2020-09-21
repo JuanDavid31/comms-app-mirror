@@ -22,6 +22,8 @@ import com.upstart13.legba.data.dto.Mission;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRecyclerViewAdapter.ItemViewHolder> {
 
     private List<Mission> missions = new ArrayList();
@@ -61,10 +63,10 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
     }
 
     private void addChannelsToView(List<Channel> channels, LinearLayout channelsView){
-        boolean red = true;
+        boolean tomato = true;
         boolean orange = false;
         boolean blue = false;
-        boolean green = false;
+        boolean white = false;
 
         for(int i = 0; (i < 6) && (i < channels.size()); i++){
             RoundedImageView newAvatar = (RoundedImageView) LayoutInflater.from(fragment.getContext()).inflate(R.layout.channel_avatar, null);
@@ -73,8 +75,8 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
             newAvatar.setLayoutParams(layoutParams);
             newAvatar.setImageResource(getImageResource(channels.get(i)));
 
-            if(red){
-                red = false;
+            if(tomato){
+                tomato = false;
                 orange = true;
             }else if(orange){
                 orange = false;
@@ -82,13 +84,14 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
                 newAvatar.setBorderColor(getOrangeColor());
             }else if(blue){
                 blue = false;
-                green = true;
+                white = true;
                 newAvatar.setBorderColor(getBlueColor());
-            }else if(green){
-                green = false;
+            }else if(white){
+                white = false;
                 orange = true;
-                newAvatar.setBorderColor(getGreenColor());
+                newAvatar.setBorderColor(getWhiteColor());
             }
+            Timber.i("Color %s - %s", i, newAvatar.getBorderColor());
             channelsView.addView(newAvatar);
         }
     }
@@ -117,15 +120,15 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
     }
 
     private int getOrangeColor(){
-        return fragment.getResources().getColor(R.color.militarOrange);
+        return fragment.getResources().getColor(R.color.orange);
     }
 
     private int getBlueColor(){
-        return fragment.getResources().getColor(R.color.militarBlue);
+        return fragment.getResources().getColor(R.color.waterBlue);
     }
 
-    private int getGreenColor() {
-        return fragment.getResources().getColor(R.color.militarGreen);
+    private int getWhiteColor() {
+        return fragment.getResources().getColor(R.color.white);
     }
 
     private void addRemainingChannelsText(List<Channel> channels, LinearLayout channelsView){

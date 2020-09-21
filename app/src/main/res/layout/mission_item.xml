@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="129dp"
-        android:layout_marginBottom="17dp"
+        android:layout_marginTop="6dp"
         android:background="@drawable/mission_box_shape"
         android:elevation="5.3dp"
         android:focusable="true"
@@ -19,16 +19,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/star_box_shape"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:contentDescription="@string/star_icon"
-                app:srcCompat="@drawable/ic_baseline_star_24" />
-    </RelativeLayout>
+            app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
             android:id="@+id/mission_name_text"

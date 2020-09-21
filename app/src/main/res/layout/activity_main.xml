@@ -1,49 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/drawer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:baselineAligned="false"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
+        android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="@style/AppTheme">
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:orientation="vertical"
+            tools:context=".MainActivity">
 
-        <TextView
-                android:id="@+id/toolbar_title_text"
-                style="@style/toolbar"
-                android:layout_width="wrap_content"
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/legba"
-                android:textColor="@color/primaryText" />
-    </androidx.appcompat.widget.Toolbar>
+                android:background="?attr/colorPrimary"
+                android:minHeight="85dp"
+                android:theme="@style/AppTheme">
 
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            <TextView
+                    android:id="@+id/toolbar_title_text"
+                    style="@style/toolbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/legba"
+                    android:textColor="@color/primaryText" />
+        </androidx.appcompat.widget.Toolbar>
 
-        <fragment
-                android:id="@+id/host_fragment"
-                android:name="androidx.navigation.fragment.NavHostFragment"
+        <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:defaultNavHost="true"
-                app:navGraph="@navigation/nav_graph" />
+                android:layout_height="match_parent">
 
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="5.3dp"
-                android:background="@drawable/toolbar_shadow" />
+            <fragment
+                    android:id="@+id/host_fragment"
+                    android:name="androidx.navigation.fragment.NavHostFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:defaultNavHost="true"
+                    app:navGraph="@navigation/nav_graph" />
 
-    </FrameLayout>
+            <View android:layout_width="match_parent"
+                    android:layout_height="5.3dp"
+                    android:background="@drawable/toolbar_shadow" />
 
+        </FrameLayout>
 
-</LinearLayout>
+    </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

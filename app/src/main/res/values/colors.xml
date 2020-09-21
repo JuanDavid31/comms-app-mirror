@@ -7,10 +7,12 @@
     <color name="primaryBlack">#1a1a1a</color>
     <color name="secondaryBlack">#1d1d1d</color>
     <color name="tertiaryBlack">#252525</color>
-    <color name="militarOrange">#ec6716</color>
-    <color name="militarRed">#de3317</color>
-    <color name="militarBlue">#17a8de</color>
-    <color name="militarGreen">#08a145</color>
+
+    <color name="paleRed">#db3737</color>
+    <color name="orange">#ec6716</color>
+    <color name="tomato">#de3317</color>
+    <color name="waterBlue">#17a8de</color>
+    <color name="white">#ffffff</color>
     <color name="primaryText">#ffffff</color>
     <color name="secondaryText">#7c7c7c</color>
 </resources>
