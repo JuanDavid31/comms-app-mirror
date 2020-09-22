@@ -24,6 +24,8 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static com.upstart13.legba.util.RUtils.getImageResource;
+
 public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRecyclerViewAdapter.ItemViewHolder> {
 
     private List<Mission> missions = new ArrayList();
@@ -99,24 +101,6 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
     private int convertDpToPx(double dp){
         final float scale = fragment.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
-    }
-
-    private int getImageResource(Channel channel){
-        if(channel.image == null)return android.R.color.transparent;
-        switch (channel.image){
-            case "primary":
-                return R.mipmap.primary_channel_thumb;
-            case  "secondary":
-                return R.mipmap.secondary_channel_thumb;
-            case "tertiary":
-                return R.mipmap.tertiary_channel_thumb;
-            case "quaternary":
-                return R.mipmap.quaternary_channel_thumb;
-            case "quinary":
-                return R.mipmap.quinary_channel_thumb;
-            default:
-                return android.R.color.transparent;
-        }
     }
 
     private int getOrangeColor(){

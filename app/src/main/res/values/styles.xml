@@ -11,10 +11,47 @@
         
     </style>
 
-    <style name="toolbar">
+    <!--Font #1-->
+
+    <style name="builtTitlingFont">
         <item name="fontFamily">@font/built_titling_rg</item>
+    </style>
+
+    <style name="primaryText" parent="builtTitlingFont">
+        <item name="android:textColor">@color/primaryText</item>
+    </style>
+
+    <style name="primaryName" parent="primaryText">
+        <item name="android:textSize">16.1sp</item>
+    </style>
+
+    <style name="toolbar" parent="primaryText">
         <item name="android:textSize">19.9sp</item>
         <item name="android:letterSpacing">0.04</item>
-        <item name="titleTextColor">@color/primaryText</item>
     </style>
+
+
+    <!--Font #2-->
+
+    <style name="openSansLightFont">
+        <item name="fontFamily">@font/open_sans_light</item>
+    </style>
+
+    <style name="secondaryText" parent="openSansLightFont">
+        <item name="android:textColor">@color/secondaryText</item>
+    </style>
+
+    <style name="secondaryTitle" parent="openSansLightFont">
+        <item name="android:textSize">10.1sp</item>
+    </style>
+
+    <style name="priorityChannelLayout">
+        <item name="android:layout_width">156.3dp</item>
+        <item name="android:layout_height">156.5dp</item>
+        <item name="android:layout_marginEnd">14dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:background">@drawable/primary_element_box_shape</item>
+        <item name="android:elevation">5.3dp</item>
+    </style>
+
 </resources>

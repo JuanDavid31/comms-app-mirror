@@ -3,10 +3,9 @@
         android:layout_width="26.8dp"
         android:layout_height="match_parent"
         xmlns:tools="http://schemas.android.com/tools"
-        android:fontFamily="@font/open_sans_light"
         android:gravity="center"
         tools:text="+10"
         android:textAlignment="center"
-        android:textColor="@color/secondaryText">
+        style="@style/secondaryText">
 
 </TextView>

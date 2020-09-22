@@ -3,6 +3,7 @@ package com.upstart13.legba.fragment;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -16,14 +17,21 @@ import android.widget.Toast;
 
 import com.upstart13.legba.MainActivity;
 import com.upstart13.legba.R;
+import com.upstart13.legba.data.dto.Channel;
 import com.upstart13.legba.data.dto.Mission;
+import com.upstart13.legba.databinding.FragmentMissionBinding;
+import com.upstart13.legba.util.RUtils;
 
-import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static com.upstart13.legba.util.RUtils.getImageResource;
 
 
 public class MissionFragment extends Fragment {
 
+    private FragmentMissionBinding binding;
     private Mission mission;
 
     @Override
@@ -38,7 +46,56 @@ public class MissionFragment extends Fragment {
                              Bundle savedInstanceState) {
         updateToolbar();
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_mission, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
+
+
+        final String PRIMARY_TYPE = "primary";
+        final String PRIORITARY_TYPE = "priority";
+        final String RADIO_TYPE = "radio";
+
+        //Primary channel
+
+        Channel primaryChannel = mission.channels
+                .stream()
+                .filter(channel -> channel.type != null)
+                .filter(channel -> channel.type.equals(PRIMARY_TYPE))
+                .findFirst()
+                .orElse(null);
+
+        if(primaryChannel != null){
+            binding.primaryChannelImage.setImageResource(getImageResource(primaryChannel));
+            binding.primaryChannelNameView.setText(primaryChannel.name);
+        }
+
+        //Priority channels
+
+        List<Channel> priorityChannels = mission.channels
+                .stream()
+                .filter(channel -> channel.type != null)
+                .filter(channel -> channel.type.equals(PRIORITARY_TYPE))
+                .collect(Collectors.toList());
+
+
+
+        if(priorityChannels.size() > 0){
+
+            Channel priorityChannel1 = priorityChannels.get(0);
+            Channel priorityChannel2 = priorityChannels.get(1);
+
+            if(priorityChannel1 != null){
+                binding.priorityChannel1Image.setImageResource(getImageResource(priorityChannel1));
+                binding.priorityChannel1Name.setText(priorityChannel1.name);
+            }
+
+            if(priorityChannels.get(1) != null){
+                binding.priorityChannel2Image.setImageResource(getImageResource(priorityChannel2));
+                binding.priorityChannel2Name.setText(priorityChannel2.name);
+            }
+        }
+
+        //TODO: Radio channels
+
+        return binding.getRoot();
     }
 
     private void updateToolbar() {
