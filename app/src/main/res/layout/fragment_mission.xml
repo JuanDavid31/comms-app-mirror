@@ -15,6 +15,12 @@
             android:paddingTop="10dp"
             tools:context=".fragment.MissionFragment">
 
+        <View android:id="@+id/space_filler"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:visibility="gone"/>
+
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/primary_channel_layout"
                 android:layout_width="match_parent"
@@ -26,7 +32,9 @@
                 android:elevation="5.3dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"
+                tools:visibility="visible">
 
             <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/primary_channel_image"
@@ -58,7 +66,7 @@
                     style="@style/secondaryTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Primary Channel"
+                    android:text="Primary Channel"
                     android:textColor="@color/paleRed"
                     app:layout_constraintBottom_toBottomOf="@+id/primary_channel_image"
                     app:layout_constraintStart_toStartOf="@+id/primary_channel_name_view" />
@@ -102,7 +110,9 @@
                     app:layout_constraintBottom_toTopOf="@+id/radio_channels_layout"
                     app:layout_constraintStart_toStartOf="@+id/primary_channel_layout"
                     app:layout_constraintTop_toBottomOf="@+id/primary_channel_layout"
-                    app:layout_constraintVertical_bias="1.0">
+                    app:layout_constraintVertical_bias="1.0"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                 <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/priority_channel_1_image"
@@ -134,7 +144,7 @@
                         style="@style/secondaryTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Priority Channel 1"
+                        android:text="Priority Channel 1"
                         android:textColor="@color/waterBlue"
                         app:layout_constraintStart_toStartOf="@+id/priority_channel_1_name"
                         app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_name" />
@@ -185,7 +195,9 @@
                     style="@style/priorityChannelLayout"
                     app:layout_constraintBottom_toBottomOf="@+id/priority_channel_1_layout"
                     app:layout_constraintEnd_toEndOf="@+id/primary_channel_layout"
-                    app:layout_constraintTop_toTopOf="@+id/priority_channel_1_layout">
+                    app:layout_constraintTop_toTopOf="@+id/priority_channel_1_layout"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                 <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/priority_channel_2_image"
@@ -218,7 +230,7 @@
                         style="@style/secondaryTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Priority Channel 2"
+                        android:text="Priority Channel 2"
                         android:textColor="@color/orange"
                         app:layout_constraintStart_toStartOf="@+id/priority_channel_2_name"
                         app:layout_constraintTop_toBottomOf="@+id/priority_channel_2_name" />

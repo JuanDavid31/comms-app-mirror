@@ -63,6 +63,7 @@ public class MissionFragment extends Fragment {
                 .orElse(null);
 
         if(primaryChannel != null){
+            binding.primaryChannelLayout.setVisibility(View.VISIBLE);
             binding.primaryChannelImage.setImageResource(getImageResource(primaryChannel));
             binding.primaryChannelNameView.setText(primaryChannel.name);
         }
@@ -83,17 +84,25 @@ public class MissionFragment extends Fragment {
             Channel priorityChannel2 = priorityChannels.get(1);
 
             if(priorityChannel1 != null){
+                binding.priorityChannel1Layout.setVisibility(View.VISIBLE);
                 binding.priorityChannel1Image.setImageResource(getImageResource(priorityChannel1));
                 binding.priorityChannel1Name.setText(priorityChannel1.name);
             }
 
             if(priorityChannels.get(1) != null){
+                binding.priorityChannel2Layout.setVisibility(View.VISIBLE);
                 binding.priorityChannel2Image.setImageResource(getImageResource(priorityChannel2));
                 binding.priorityChannel2Name.setText(priorityChannel2.name);
             }
         }
 
+        if(binding.primaryChannelLayout.getVisibility() == View.GONE){
+            binding.spaceFiller.setVisibility(View.VISIBLE);
+        }
+
         //TODO: Radio channels
+
+
 
         return binding.getRoot();
     }
