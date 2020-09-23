@@ -16,4 +16,7 @@
     <color name="warmGrey">#858585</color>
     <color name="primaryText">#ffffff</color>
     <color name="secondaryText">#7c7c7c</color>
+    <color name="greyish">#a4a4a4</color>
+    <color name="greyish_93">#eeb1b1b1</color>
+    <color name="white_93">#eeffffff</color>
 </resources>

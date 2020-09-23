@@ -4,7 +4,7 @@
     <item
             android:id="@+id/show_list_action"
             android:title="Show list"
-            android:icon="@drawable/view_agenda"
+            android:icon="@mipmap/ic_view_agenda"
             app:showAsAction="always" />
 
     <item

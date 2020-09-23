@@ -51,6 +51,7 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
 
         if(currentElement.type.equals("subchannel"))return;
 
+        //Is there a better way to do this?
         String[] names = currentElement.name.split(" ");
         String name = "";
         for(int i = 0; (i < names.length) && (i < 2); i++){
@@ -62,11 +63,11 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
         holder.memberNickName.setText(currentElement.nickName);
         holder.memberNumber.setText(currentElement.number);
 
-        if(currentElement.range != null){
+        /*if(currentElement.range != null){//The member is a primary range
             holder.memberCapsBox.setBackground(fragment.getResources().getDrawable(R.drawable.primary_member_caps_box_shape));
             holder.memberNumber.setTextColor(fragment.getResources().getColor(R.color.orange));
             holder.memberPrimaryType.setVisibility(View.VISIBLE);
-        }
+        }*/
 
         /*holder.channels.removeAllViews();*/
 
@@ -75,11 +76,6 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
     }
 
     private void addChannelsToView(List<Channel> channels, LinearLayout channelsView){
-        boolean tomato = true;
-        boolean orange = false;
-        boolean blue = false;
-        boolean white = false;
-
         for(int i = 0; (i < 6) && (i < channels.size()); i++){
             RoundedImageView newAvatar = (RoundedImageView) LayoutInflater.from(fragment.getContext()).inflate(R.layout.channel_avatar, null);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPx(26.4), ViewGroup.LayoutParams.MATCH_PARENT);

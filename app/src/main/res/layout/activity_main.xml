@@ -49,7 +49,7 @@
                         android:layout_gravity="center"
                         android:clickable="true"
                         android:focusable="true"
-                        android:fontFamily="@font/built_titling_rg"
+                        android:fontFamily="@font/built_titling_rg_bold"
                         android:foreground="?attr/selectableItemBackground"
                         android:letterSpacing="0.02"
                         android:shadowColor="#d4000000"

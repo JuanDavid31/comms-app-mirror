@@ -13,11 +13,11 @@
 
     <!--Font #1-->
 
-    <style name="builtTitlingFont">
-        <item name="fontFamily">@font/built_titling_rg</item>
+    <style name="builtTitlingRgBoldFont">
+        <item name="fontFamily">@font/built_titling_rg_bold</item>
     </style>
 
-    <style name="primaryText" parent="builtTitlingFont">
+    <style name="primaryText" parent="builtTitlingRgBoldFont">
         <item name="android:textColor">@color/primaryText</item>
     </style>
 
@@ -43,6 +43,18 @@
 
     <style name="secondaryTitle" parent="openSansLightFont">
         <item name="android:textSize">10.1sp</item>
+    </style>
+
+    <!--Font #3-->
+
+    <style name="callOfOpsDutyFont">
+        <item name="fontFamily">@font/call_of_ops_duty</item>
+    </style>
+
+    <!--Font #4-->
+
+    <style name="openSansRegularFont">
+        <item name="android:fontFamily">@font/open_sans_regular</item>
     </style>
 
     <style name="priorityChannelLayout">
