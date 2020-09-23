@@ -13,6 +13,7 @@
     <color name="tomato">#de3317</color>
     <color name="waterBlue">#17a8de</color>
     <color name="white">#ffffff</color>
+    <color name="warmGrey">#858585</color>
     <color name="primaryText">#ffffff</color>
     <color name="secondaryText">#7c7c7c</color>
 </resources>

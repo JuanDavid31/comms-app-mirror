@@ -23,5 +23,20 @@
         <argument
                 android:name="mission"
                 app:argType="com.upstart13.legba.data.dto.Mission" />
+        <action
+                android:id="@+id/action_missionFragment_to_channelFragment"
+                app:destination="@id/channelFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+            android:id="@+id/channelFragment"
+            android:name="com.upstart13.legba.fragment.ChannelFragment"
+            tools:layout="@layout/fragment_channel" >
+        <argument
+                android:name="channel"
+                app:argType="com.upstart13.legba.data.dto.Channel" />
     </fragment>
 </navigation>

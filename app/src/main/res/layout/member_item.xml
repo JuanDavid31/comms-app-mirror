@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="69.5dp"
+        android:elevation="5.3dp">
+
+    <FrameLayout
+            android:id="@+id/member_caps_layout"
+            android:layout_width="38dp"
+            android:layout_height="37.5dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"
+            android:background="@drawable/member_caps_box_shape"
+            android:elevation="5.3dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+                android:id="@+id/member_caps_text"
+                style="@style/builtTitlingFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="EJ"
+                android:textColor="@color/secondaryText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+    </FrameLayout>
+
+    <TextView
+            android:id="@+id/member_name_text"
+            style="@style/primaryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="13dp"
+            android:text="EVIN JACOBS"
+            app:layout_constraintStart_toEndOf="@+id/member_caps_layout"
+            app:layout_constraintTop_toTopOf="@+id/member_caps_layout" />
+
+    <TextView
+            android:id="@+id/member_nickname_text"
+            style="@style/secondaryTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="5dp"
+            android:text="Evi"
+            app:layout_constraintStart_toStartOf="@+id/member_name_text"
+            app:layout_constraintTop_toBottomOf="@+id/member_name_text" />
+
+    <TextView
+            android:id="@+id/member_number_text"
+            style="@style/openSansLightFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5443211"
+            android:textColor="@color/primaryText"
+            android:textSize="10.1sp"
+            app:layout_constraintStart_toEndOf="@+id/member_nickname_text"
+            app:layout_constraintTop_toTopOf="@+id/member_nickname_text" />
+
+    <TextView
+            android:id="@+id/member_primary_type_text"
+            style="@style/openSansLightFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="Primary"
+            android:textColor="@color/orange"
+            android:textSize="10.1sp"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

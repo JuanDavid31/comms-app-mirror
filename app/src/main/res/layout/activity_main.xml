@@ -16,20 +16,62 @@
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="85dp"
                 android:background="?attr/colorPrimary"
                 android:minHeight="85dp"
                 android:theme="@style/AppTheme">
 
-            <TextView
-                    android:id="@+id/toolbar_title_text"
-                    style="@style/toolbar"
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/legba"
-                    android:shadowColor="#d4000000"
-                    android:shadowRadius="9"/>
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center">
+
+
+                <TextView
+                        android:id="@+id/toolbar_title_text"
+                        style="@style/toolbar"
+                        android:layout_width="wrap_content"
+
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="28dp"
+                        android:shadowColor="#d4000000"
+                        android:shadowRadius="9"
+                        android:text="@string/my_missions"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                        android:id="@+id/sos_action"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:fontFamily="@font/built_titling_rg"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:letterSpacing="0.02"
+                        android:shadowColor="#d4000000"
+                        android:shadowRadius="9"
+                        android:text="SOS"
+                        android:textColor="@color/paleRed"
+                        android:textSize="15sp"
+                        android:visibility="invisible"
+                        tools:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/toolbar_title_text"/>
+
+                <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.50" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -45,7 +87,8 @@
                     app:defaultNavHost="true"
                     app:navGraph="@navigation/nav_graph" />
 
-            <View android:layout_width="match_parent"
+            <View
+                    android:layout_width="match_parent"
                     android:layout_height="5.3dp"
                     android:background="@drawable/toolbar_shadow" />
 

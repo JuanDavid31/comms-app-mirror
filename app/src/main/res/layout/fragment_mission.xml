@@ -11,15 +11,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/primaryBlack"
+            android:gravity="bottom|end"
             android:orientation="vertical"
             android:paddingTop="10dp"
             tools:context=".fragment.MissionFragment">
-
-        <View android:id="@+id/space_filler"
-                android:layout_weight="1"
-                android:layout_height="0dp"
-                android:layout_width="match_parent"
-                android:visibility="gone"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/primary_channel_layout"
@@ -30,10 +25,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/primary_element_box_shape"
                 android:elevation="5.3dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:visibility="gone"
                 tools:visibility="visible">
 
             <com.makeramen.roundedimageview.RoundedImageView
@@ -42,6 +37,7 @@
                     android:layout_height="37.5dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="18dp"
+                    android:elevation="5.3dp"
                     android:scaleType="fitCenter"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -58,9 +54,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="13.3dp"
                     android:letterSpacing="0.04"
-                    tools:text="ALPHA TEAM"
                     app:layout_constraintStart_toEndOf="@+id/primary_channel_image"
-                    app:layout_constraintTop_toTopOf="@+id/primary_channel_image" />
+                    app:layout_constraintTop_toTopOf="@+id/primary_channel_image"
+                    tools:text="ALPHA TEAM" />
 
             <TextView
                     style="@style/secondaryTitle"
@@ -72,10 +68,11 @@
                     app:layout_constraintStart_toStartOf="@+id/primary_channel_name_view" />
 
             <ImageButton
+                    android:id="@+id/primary_channel_link_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="27.5dp"
-                    android:layout_marginEnd="19.5dp"
+                    android:layout_marginEnd="19.3dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:contentDescription="@string/channel_link"
                     android:src="@drawable/ic_round_link_24"
@@ -99,19 +96,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="17dp"
-                android:layout_marginEnd="17dp"
                 android:layout_marginTop="9.5dp"
+                android:layout_marginEnd="17dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="horizontal">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/priority_channel_1_layout"
                     style="@style/priorityChannelLayout"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@+id/radio_channels_layout"
                     app:layout_constraintStart_toStartOf="@+id/primary_channel_layout"
                     app:layout_constraintTop_toBottomOf="@+id/primary_channel_layout"
                     app:layout_constraintVertical_bias="1.0"
-                    android:visibility="gone"
                     tools:visibility="visible">
 
                 <com.makeramen.roundedimageview.RoundedImageView
@@ -120,6 +117,7 @@
                         android:layout_height="37.5dp"
                         android:layout_marginStart="20.3dp"
                         android:layout_marginTop="19dp"
+                        android:elevation="5.3dp"
                         android:scaleType="fitCenter"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -135,9 +133,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:letterSpacing="0.04"
-                        tools:text="DELTA TEAM"
                         app:layout_constraintStart_toStartOf="@+id/priority_channel_1_image"
-                        app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_image" />
+                        app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_image"
+                        tools:text="DELTA TEAM" />
 
                 <TextView
                         android:id="@+id/priority_channel_1_description"
@@ -150,10 +148,11 @@
                         app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_name" />
 
                 <ImageButton
+                        android:id="@+id/priority_channel_1_link_image"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="17dp"
                         android:background="?selectableItemBackgroundBorderless"
                         android:contentDescription="@string/channel_link"
                         android:src="@drawable/ic_round_link_24"
@@ -167,12 +166,12 @@
                         android:layout_marginEnd="14dp"
                         android:layout_marginBottom="20.3dp"
                         android:background="?selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/channel_mic"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_microphone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_description"
-                        android:contentDescription="@string/channel_mic" />
+                        app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_description" />
 
                 <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline2"
@@ -193,10 +192,10 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/priority_channel_2_layout"
                     style="@style/priorityChannelLayout"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/priority_channel_1_layout"
                     app:layout_constraintEnd_toEndOf="@+id/primary_channel_layout"
                     app:layout_constraintTop_toTopOf="@+id/priority_channel_1_layout"
-                    android:visibility="gone"
                     tools:visibility="visible">
 
                 <com.makeramen.roundedimageview.RoundedImageView
@@ -205,6 +204,7 @@
                         android:layout_height="37.5dp"
                         android:layout_marginStart="20.3dp"
                         android:layout_marginTop="19dp"
+                        android:elevation="5.3dp"
                         android:scaleType="fitCenter"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -221,9 +221,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:letterSpacing="0.04"
-                        tools:text="FIRE TEAM"
                         app:layout_constraintStart_toStartOf="@+id/priority_channel_2_image"
-                        app:layout_constraintTop_toBottomOf="@+id/priority_channel_2_image" />
+                        app:layout_constraintTop_toBottomOf="@+id/priority_channel_2_image"
+                        tools:text="FIRE TEAM" />
 
                 <TextView
                         android:id="@+id/textView2"
@@ -236,10 +236,11 @@
                         app:layout_constraintTop_toBottomOf="@+id/priority_channel_2_name" />
 
                 <ImageButton
+                        android:id="@+id/priority_channel_2_link_image"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="17dp"
                         android:background="?selectableItemBackgroundBorderless"
                         android:contentDescription="@string/channel_link"
                         android:src="@drawable/ic_round_link_24"
@@ -253,12 +254,12 @@
                         android:layout_marginEnd="14dp"
                         android:layout_marginBottom="20.3dp"
                         android:background="?selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/channel_mic"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_microphone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView2"
-                        android:contentDescription="@string/channel_mic" />
+                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
                 <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline4"
