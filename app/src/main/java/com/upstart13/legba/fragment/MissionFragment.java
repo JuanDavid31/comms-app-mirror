@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.upstart13.legba.MainActivity;
 import com.upstart13.legba.R;
 import com.upstart13.legba.data.dto.Channel;
@@ -100,6 +101,25 @@ public class MissionFragment extends Fragment {
             }
         }
 
+        //Sliding up layout
+
+        binding.radioChannelsSlidingupLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                if(newState == SlidingUpPanelLayout.PanelState.EXPANDED){
+                    binding.toogleRadioChannelButton.setImageResource(R.drawable.ic_round_keyboard_arrow_down_24);
+                }else if(newState == SlidingUpPanelLayout.PanelState.COLLAPSED){
+                    binding.toogleRadioChannelButton.setImageResource(R.drawable.ic_round_keyboard_arrow_up_24);
+                }
+            }
+        });
+
+        //
 
         // RECYCLERVIEW
 

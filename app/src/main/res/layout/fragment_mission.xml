@@ -1,159 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <LinearLayout
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            android:id="@+id/radio_channels_slidingup_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/primaryBlack"
-            android:gravity="bottom|end"
-            android:orientation="vertical"
-            android:paddingTop="10dp"
-            tools:context=".fragment.MissionFragment">
+            android:background="@drawable/radio_layout_box_shape"
+            android:gravity="bottom"
+            app:umanoDragView="@id/radio_channels_layout"
+            app:umanoOverlay="false"
+            app:umanoPanelHeight="31dp"
+            app:umanoScrollableView="@id/radio_channels_recycler"
+            sothree:umanoFadeColor="@android:color/transparent"
+            sothree:umanoShadowHeight="4dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/primary_channel_layout"
+        <!--Main content-->
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginStart="17dp"
-                android:layout_marginEnd="17dp"
-                android:layout_weight="1"
-                android:background="@drawable/primary_element_box_shape"
-                android:elevation="5.3dp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible">
+                android:layout_height="match_parent"
+                android:background="@color/primaryBlack"
+                android:gravity="bottom|end"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                tools:context=".fragment.MissionFragment">
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/primary_channel_image"
-                    android:layout_width="38dp"
-                    android:layout_height="37.5dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="18dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/primary_channel_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/primary_element_box_shape"
                     android:elevation="5.3dp"
-                    android:scaleType="fitCenter"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:riv_border_color="@color/paleRed"
-                    app:riv_border_width="0.8dp"
-                    app:riv_corner_radius="5.3dp"
-                    tools:src="@sample/channel" />
-
-
-            <TextView
-                    android:id="@+id/primary_channel_name_view"
-                    style="@style/primaryName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="13.3dp"
-                    android:letterSpacing="0.04"
-                    app:layout_constraintStart_toEndOf="@+id/primary_channel_image"
-                    app:layout_constraintTop_toTopOf="@+id/primary_channel_image"
-                    tools:text="ALPHA TEAM" />
-
-            <TextView
-                    style="@style/secondaryTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Primary Channel"
-                    android:textColor="@color/paleRed"
-                    app:layout_constraintBottom_toBottomOf="@+id/primary_channel_image"
-                    app:layout_constraintStart_toStartOf="@+id/primary_channel_name_view" />
-
-            <ImageButton
-                    android:id="@+id/primary_channel_link_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="27.5dp"
-                    android:layout_marginEnd="19.3dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/channel_link"
-                    android:src="@drawable/ic_round_link_24"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                    android:layout_width="32.3dp"
-                    android:layout_height="44.3dp"
-                    android:layout_marginEnd="34dp"
-                    android:layout_marginBottom="37.8dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/channel_mic"
-                    android:src="@drawable/ic_microphone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="17dp"
-                android:layout_marginTop="9.5dp"
-                android:layout_marginEnd="17dp"
-                android:layout_marginBottom="5dp"
-                android:orientation="horizontal">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/priority_channel_1_layout"
-                    style="@style/priorityChannelLayout"
-                    android:layout_marginEnd="14dp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@+id/radio_channels_layout"
-                    app:layout_constraintStart_toStartOf="@+id/primary_channel_layout"
-                    app:layout_constraintTop_toBottomOf="@+id/primary_channel_layout"
-                    app:layout_constraintVertical_bias="1.0"
                     tools:visibility="visible">
 
                 <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/priority_channel_1_image"
+                        android:id="@+id/primary_channel_image"
                         android:layout_width="38dp"
                         android:layout_height="37.5dp"
-                        android:layout_marginStart="20.3dp"
-                        android:layout_marginTop="19dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="18dp"
                         android:elevation="5.3dp"
                         android:scaleType="fitCenter"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:riv_border_color="@color/waterBlue"
+                        app:riv_border_color="@color/paleRed"
                         app:riv_border_width="0.8dp"
                         app:riv_corner_radius="5.3dp"
                         tools:src="@sample/channel" />
 
+
                 <TextView
-                        android:id="@+id/priority_channel_1_name"
+                        android:id="@+id/primary_channel_name_view"
                         style="@style/primaryName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="13.3dp"
                         android:letterSpacing="0.04"
-                        app:layout_constraintStart_toStartOf="@+id/priority_channel_1_image"
-                        app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_image"
-                        tools:text="DELTA TEAM" />
+                        app:layout_constraintStart_toEndOf="@+id/primary_channel_image"
+                        app:layout_constraintTop_toTopOf="@+id/primary_channel_image"
+                        tools:text="ALPHA TEAM" />
 
                 <TextView
-                        android:id="@+id/priority_channel_1_description"
                         style="@style/secondaryTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Priority Channel 1"
-                        android:textColor="@color/waterBlue"
-                        app:layout_constraintStart_toStartOf="@+id/priority_channel_1_name"
-                        app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_name" />
+                        android:text="Primary Channel"
+                        android:textColor="@color/paleRed"
+                        app:layout_constraintBottom_toBottomOf="@+id/primary_channel_image"
+                        app:layout_constraintStart_toStartOf="@+id/primary_channel_name_view" />
 
                 <ImageButton
-                        android:id="@+id/priority_channel_1_link_image"
+                        android:id="@+id/primary_channel_link_image"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginEnd="17dp"
+                        android:layout_marginTop="27.5dp"
+                        android:layout_marginEnd="19.3dp"
                         android:background="?selectableItemBackgroundBorderless"
                         android:contentDescription="@string/channel_link"
                         android:src="@drawable/ic_round_link_24"
@@ -161,140 +95,224 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="14dp"
-                        android:layout_marginBottom="20.3dp"
+                        android:layout_width="32.3dp"
+                        android:layout_height="44.3dp"
+                        android:layout_marginEnd="34dp"
+                        android:layout_marginBottom="37.8dp"
                         android:background="?selectableItemBackgroundBorderless"
                         android:contentDescription="@string/channel_mic"
-                        android:scaleType="fitCenter"
                         android:src="@drawable/ic_microphone"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_description" />
-
-                <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/guideline2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:layout_constraintGuide_begin="19dp" />
-
-                <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/guideline3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_end="17dp" />
+                        app:layout_constraintEnd_toEndOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/priority_channel_2_layout"
-                    style="@style/priorityChannelLayout"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@+id/priority_channel_1_layout"
-                    app:layout_constraintEnd_toEndOf="@+id/primary_channel_layout"
-                    app:layout_constraintTop_toTopOf="@+id/priority_channel_1_layout"
-                    tools:visibility="visible">
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginTop="9.5dp"
+                    android:layout_marginEnd="17dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
 
-                <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/priority_channel_2_image"
-                        android:layout_width="38dp"
-                        android:layout_height="37.5dp"
-                        android:layout_marginStart="20.3dp"
-                        android:layout_marginTop="19dp"
-                        android:elevation="5.3dp"
-                        android:scaleType="fitCenter"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:riv_border_color="@color/orange"
-                        app:riv_border_width="0.8dp"
-                        app:riv_corner_radius="5.3dp"
-                        tools:src="@sample/channel" />
-
-
-                <TextView
-                        android:id="@+id/priority_channel_2_name"
-                        style="@style/primaryName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:letterSpacing="0.04"
-                        app:layout_constraintStart_toStartOf="@+id/priority_channel_2_image"
-                        app:layout_constraintTop_toBottomOf="@+id/priority_channel_2_image"
-                        tools:text="FIRE TEAM" />
-
-                <TextView
-                        android:id="@+id/textView2"
-                        style="@style/secondaryTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Priority Channel 2"
-                        android:textColor="@color/orange"
-                        app:layout_constraintStart_toStartOf="@+id/priority_channel_2_name"
-                        app:layout_constraintTop_toBottomOf="@+id/priority_channel_2_name" />
-
-                <ImageButton
-                        android:id="@+id/priority_channel_2_link_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginEnd="17dp"
-                        android:background="?selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/channel_link"
-                        android:src="@drawable/ic_round_link_24"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginTop="12dp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/priority_channel_1_layout"
+                        style="@style/priorityChannelLayout"
                         android:layout_marginEnd="14dp"
-                        android:layout_marginBottom="20.3dp"
-                        android:background="?selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/channel_mic"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_microphone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toTopOf="@+id/radio_channels_layout"
+                        app:layout_constraintStart_toStartOf="@+id/primary_channel_layout"
+                        app:layout_constraintTop_toBottomOf="@+id/primary_channel_layout"
+                        app:layout_constraintVertical_bias="1.0"
+                        tools:visibility="visible">
 
-                <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/guideline4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:layout_constraintGuide_begin="19dp" />
+                    <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/priority_channel_1_image"
+                            android:layout_width="38dp"
+                            android:layout_height="37.5dp"
+                            android:layout_marginStart="20.3dp"
+                            android:layout_marginTop="19dp"
+                            android:elevation="5.3dp"
+                            android:scaleType="fitCenter"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:riv_border_color="@color/waterBlue"
+                            app:riv_border_width="0.8dp"
+                            app:riv_corner_radius="5.3dp"
+                            tools:src="@sample/channel" />
 
-                <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/guideline5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_end="17dp" />
+                    <TextView
+                            android:id="@+id/priority_channel_1_name"
+                            style="@style/primaryName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:letterSpacing="0.04"
+                            app:layout_constraintStart_toStartOf="@+id/priority_channel_1_image"
+                            app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_image"
+                            tools:text="DELTA TEAM" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                            android:id="@+id/priority_channel_1_description"
+                            style="@style/secondaryTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Priority Channel 1"
+                            android:textColor="@color/waterBlue"
+                            app:layout_constraintStart_toStartOf="@+id/priority_channel_1_name"
+                            app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_name" />
+
+                    <ImageButton
+                            android:id="@+id/priority_channel_1_link_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="17dp"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/channel_link"
+                            android:src="@drawable/ic_round_link_24"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginEnd="14dp"
+                            android:layout_marginBottom="20.3dp"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/channel_mic"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_microphone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_description" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintGuide_begin="19dp" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_end="17dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/priority_channel_2_layout"
+                        style="@style/priorityChannelLayout"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/priority_channel_1_layout"
+                        app:layout_constraintEnd_toEndOf="@+id/primary_channel_layout"
+                        app:layout_constraintTop_toTopOf="@+id/priority_channel_1_layout"
+                        tools:visibility="visible">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/priority_channel_2_image"
+                            android:layout_width="38dp"
+                            android:layout_height="37.5dp"
+                            android:layout_marginStart="20.3dp"
+                            android:layout_marginTop="19dp"
+                            android:elevation="5.3dp"
+                            android:scaleType="fitCenter"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:riv_border_color="@color/orange"
+                            app:riv_border_width="0.8dp"
+                            app:riv_corner_radius="5.3dp"
+                            tools:src="@sample/channel" />
+
+
+                    <TextView
+                            android:id="@+id/priority_channel_2_name"
+                            style="@style/primaryName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:letterSpacing="0.04"
+                            app:layout_constraintStart_toStartOf="@+id/priority_channel_2_image"
+                            app:layout_constraintTop_toBottomOf="@+id/priority_channel_2_image"
+                            tools:text="FIRE TEAM" />
+
+                    <TextView
+                            android:id="@+id/textView2"
+                            style="@style/secondaryTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Priority Channel 2"
+                            android:textColor="@color/orange"
+                            app:layout_constraintStart_toStartOf="@+id/priority_channel_2_name"
+                            app:layout_constraintTop_toBottomOf="@+id/priority_channel_2_name" />
+
+                    <ImageButton
+                            android:id="@+id/priority_channel_2_link_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="17dp"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/channel_link"
+                            android:src="@drawable/ic_round_link_24"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginEnd="14dp"
+                            android:layout_marginBottom="20.3dp"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/channel_mic"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_microphone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintGuide_begin="19dp" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_end="17dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.5" />
+
         </LinearLayout>
 
-        <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5" />
-
+        <!--Sliding layout-->
         <LinearLayout
+                android:id="@+id/radio_channels_layout"
                 android:layout_width="match_parent"
                 android:layout_height="112dp"
-                android:orientation="vertical"
-                android:elevation="5.3dp"
-                android:background="@drawable/radio_layout_box_shape">
+                android:clickable="true"
+                android:focusable="false"
+                android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/radio_channels_layout"
                     android:layout_width="match_parent"
                     android:layout_height="31dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -318,6 +336,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
+                        android:id="@+id/toogle_radio_channel_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="11.8dp"
@@ -335,12 +354,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
                     android:clipToPadding="false"
+                    android:orientation="horizontal"
                     android:paddingStart="9.5dp"
                     android:paddingEnd="9.5dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/radio_channel_item"/>
+                    tools:listitem="@layout/radio_channel_item" />
         </LinearLayout>
-    </LinearLayout>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
 </layout>
