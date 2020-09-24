@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +50,7 @@ public class MissionFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
 
+
         //TODO: Fix and refactor.
         final String PRIMARY_TYPE = "primary";
         final String PRIORITARY_TYPE = "priority";
@@ -62,7 +65,7 @@ public class MissionFragment extends Fragment {
                 .findFirst()
                 .orElse(null);
 
-        if(primaryChannel != null){
+        if (primaryChannel != null) {
             binding.primaryChannelLayout.setVisibility(View.VISIBLE);
             binding.primaryChannelImage.setImageResource(getImageResource(primaryChannel));
             binding.primaryChannelNameView.setText(primaryChannel.name);
@@ -77,19 +80,19 @@ public class MissionFragment extends Fragment {
                 .filter(channel -> channel.type.equals(PRIORITARY_TYPE))
                 .collect(Collectors.toList());
 
-        if(priorityChannels.size() > 0){
+        if (priorityChannels.size() > 0) {
 
             Channel priorityChannel1 = priorityChannels.get(0);
             Channel priorityChannel2 = priorityChannels.get(1);
 
-            if(priorityChannel1 != null){
+            if (priorityChannel1 != null) {
                 binding.priorityChannel1Layout.setVisibility(View.VISIBLE);
                 binding.priorityChannel1Image.setImageResource(getImageResource(priorityChannel1));
                 binding.priorityChannel1Name.setText(priorityChannel1.name);
                 binding.priorityChannel1LinkImage.setOnClickListener(view -> goToChannelFragment(priorityChannel1));
             }
 
-            if(priorityChannels.get(1) != null){
+            if (priorityChannels.get(1) != null) {
                 binding.priorityChannel2Layout.setVisibility(View.VISIBLE);
                 binding.priorityChannel2Image.setImageResource(getImageResource(priorityChannel2));
                 binding.priorityChannel2Name.setText(priorityChannel2.name);
@@ -97,7 +100,21 @@ public class MissionFragment extends Fragment {
             }
         }
 
-        //TODO: Radio channels
+
+        // RECYCLERVIEW
+
+        List<Channel> radioChannels = mission.channels
+                .stream()
+                .filter(channel -> channel.type != null)
+                .filter(channel -> channel.type.equals("radio"))
+                .collect(Collectors.toList());
+
+        RadioChannelsRecyclerViewAdapter adapter = new RadioChannelsRecyclerViewAdapter(new RadioChannelsRecyclerViewAdapter.AdapterDiffCallback(), this);
+        binding.radioChannelsRecycler.setHasFixedSize(true);
+        binding.radioChannelsRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        binding.radioChannelsRecycler.setAdapter(adapter);
+        adapter.setRadioChannels(radioChannels);
+        //
 
         return binding.getRoot();
     }
@@ -108,7 +125,7 @@ public class MissionFragment extends Fragment {
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
-    public void goToChannelFragment(Channel channel){
+    public void goToChannelFragment(Channel channel) {
         NavHostFragment.findNavController(this)
                 .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(channel));
     }
@@ -138,7 +155,7 @@ public class MissionFragment extends Fragment {
         if (item.getItemId() == R.id.show_list_action) {
             Toast.makeText(getContext(), "List type pressed", Toast.LENGTH_SHORT).show();
             return true;
-        }else if (item.getItemId() == R.id.show_grid_action) {
+        } else if (item.getItemId() == R.id.show_grid_action) {
             Toast.makeText(getContext(), "Grid Type pressed", Toast.LENGTH_SHORT).show();
             return true;
         }

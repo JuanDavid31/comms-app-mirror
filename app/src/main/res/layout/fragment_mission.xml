@@ -104,6 +104,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/priority_channel_1_layout"
                     style="@style/priorityChannelLayout"
+                    android:layout_marginEnd="14dp"
                     android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@+id/radio_channels_layout"
                     app:layout_constraintStart_toStartOf="@+id/primary_channel_layout"
@@ -285,44 +286,61 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/radio_channels_layout"
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="31dp"
-                android:background="@drawable/primary_element_box_shape"
+                android:layout_height="112dp"
+                android:orientation="vertical"
                 android:elevation="5.3dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent">
+                android:background="@drawable/radio_layout_box_shape">
 
-            <TextView
-                    android:id="@+id/radio_channel_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="11.3dp"
-                    android:layout_marginBottom="11.8dp"
-                    android:text="@string/radio_channels"
-                    android:textColor="@color/primaryText"
-                    android:textSize="10.1sp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/radio_channels_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent">
 
-            <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="11.8dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/toggle_radio_channels"
-                    android:src="@drawable/ic_round_keyboard_arrow_up_24"
-                    app:layout_constraintBottom_toBottomOf="@+id/radio_channel_text"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/radio_channel_text" />
+                <TextView
+                        android:id="@+id/radio_channel_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="11.3dp"
+                        android:layout_marginBottom="11.8dp"
+                        android:text="@string/radio_channels"
+                        android:textColor="@color/primaryText"
+                        android:textSize="10.1sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="11.8dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/toggle_radio_channels"
+                        android:src="@drawable/ic_round_keyboard_arrow_up_24"
+                        app:layout_constraintBottom_toBottomOf="@+id/radio_channel_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/radio_channel_text" />
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/radio_channels_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:clipToPadding="false"
+                    android:paddingStart="9.5dp"
+                    android:paddingEnd="9.5dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/radio_channel_item"/>
+        </LinearLayout>
     </LinearLayout>
 </layout>

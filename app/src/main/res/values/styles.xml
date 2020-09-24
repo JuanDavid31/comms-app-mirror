@@ -58,9 +58,9 @@
     </style>
 
     <style name="priorityChannelLayout">
-        <item name="android:layout_width">156.3dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">156.5dp</item>
-        <item name="android:layout_marginEnd">14dp</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:background">@drawable/primary_element_box_shape</item>
         <item name="android:elevation">5.3dp</item>

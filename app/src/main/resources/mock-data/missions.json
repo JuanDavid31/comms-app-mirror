@@ -4,6 +4,7 @@
         "name": "OVERLORD",
         "channels": [
             {
+                "id": 1,
                 "image": "primary",
                 "name": "ALPHA TEAM",
                 "type": "primary",
@@ -30,55 +31,55 @@
                         "image": "quinary",
                         "members": [
                             {
-                              "id": 1,
+                                "id": 1,
                                 "name": "JOHN WAREN",
                                 "nickName": "johnister",
                                 "number": "544321124"
                             },
                             {
-                              "id": 2,
+                                "id": 2,
                                 "name": "DONALD MIKE",
                                 "nickName": "Archie",
                                 "number": "544321125"
                             },
                             {
-                              "id": 3,
+                                "id": 3,
                                 "name": "EDWARD WATKIN",
                                 "nickName": "Edi",
                                 "number": "544321132"
                             },
                             {
-                              "id": 4,
+                                "id": 4,
                                 "name": "JULIUS HODGES",
                                 "nickName": "Juli",
                                 "number": "544321352"
                             },
                             {
-                              "id": 5,
+                                "id": 5,
                                 "name": "SMITH RICHARDSON",
                                 "nickName": "Kiah",
                                 "number": "544321563"
                             },
                             {
-                              "id": 6,
+                                "id": 6,
                                 "name": "RUBEN COLEMAN",
                                 "nickName": "Rubby",
                                 "number": "544321668"
                             },
                             {
-                              "id": 7,
+                                "id": 7,
                                 "name": "EUNICE FLEMING",
                                 "nickName": "Nice",
                                 "number": "54321003"
                             },
                             {
-                              "id": 8,
+                                "id": 8,
                                 "name": "STELLA JOHNSTON",
                                 "nickName": "The steal",
                                 "number": "544321591"
                             },
                             {
-                              "id": 9,
+                                "id": 9,
                                 "name": "MARLON BARNES",
                                 "nickName": "Marly",
                                 "number": "544321777"
@@ -109,26 +110,35 @@
                 ]
             },
             {
+                "id": 2,
                 "image": "secondary",
                 "name": "DELTA TEAM",
                 "type": "priority"
             },
             {
+                "id": 3,
                 "image": "tertiary",
                 "name": "FIRE TEAM",
                 "type": "priority"
             },
             {
+                "id": 4,
                 "image": "quaternary",
                 "name": "ALPHA TEAM",
                 "type": "radio"
             },
             {
+                "id": 5,
                 "image": "quinary",
                 "name": "ANOTHER TEAM",
                 "type": "radio"
             },
-            {},
+            {
+                "id": 6,
+                "image": "primary",
+                "name": "BETA TEAM",
+                "type": "radio"
+            },
             {},
             {}
         ]

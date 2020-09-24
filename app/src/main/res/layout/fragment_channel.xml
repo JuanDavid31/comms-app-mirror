@@ -12,12 +12,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/primaryBlack"
+            android:clipToPadding="false"
             android:paddingStart="17dp"
+            android:paddingTop="8.75dp"
             android:paddingEnd="17dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="8.5dp"
+            android:paddingBottom="6.25dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:context=".fragment.ChannelFragment"
             tools:itemCount="6"
-            tools:listitem="@layout/mission_item" />
+            tools:listitem="@layout/member_item" />
 </layout>

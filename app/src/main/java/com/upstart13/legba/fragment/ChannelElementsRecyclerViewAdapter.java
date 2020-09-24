@@ -3,7 +3,6 @@ package com.upstart13.legba.fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,15 +11,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.upstart13.legba.R;
-import com.upstart13.legba.data.dto.Channel;
 import com.upstart13.legba.data.dto.ChannelElement;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.upstart13.legba.util.RUtils.getImageResource;
 
 public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelElement, ChannelElementsRecyclerViewAdapter.ItemViewHolder> {
 
@@ -73,34 +68,6 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
 
         /*addChannelsToView(currentElement.channels, holder.channels);
         addRemainingChannelsText(currentElement.channels, holder.channels);*/
-    }
-
-    private void addChannelsToView(List<Channel> channels, LinearLayout channelsView){
-        for(int i = 0; (i < 6) && (i < channels.size()); i++){
-            RoundedImageView newAvatar = (RoundedImageView) LayoutInflater.from(fragment.getContext()).inflate(R.layout.channel_avatar, null);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPx(26.4), ViewGroup.LayoutParams.MATCH_PARENT);
-            layoutParams.setMarginEnd(convertDpToPx(5.3));
-            newAvatar.setLayoutParams(layoutParams);
-            newAvatar.setImageResource(getImageResource(channels.get(i)));
-
-
-            channelsView.addView(newAvatar);
-        }
-    }
-
-    private int convertDpToPx(double dp){
-        final float scale = fragment.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
-
-    private void addRemainingChannelsText(List<Channel> channels, LinearLayout channelsView){
-        int remainingChannels = channels.size() - 6;
-        if(remainingChannels > 0){
-            TextView remainingChannelsView = (TextView) LayoutInflater.from(fragment.getContext()).inflate(R.layout.remaining_channels_number, null);
-            remainingChannelsView.setLayoutParams(new LinearLayout.LayoutParams(convertDpToPx(26.8), ViewGroup.LayoutParams.MATCH_PARENT));
-            remainingChannelsView.setText(String.format("+%s", remainingChannels));
-            channelsView.addView(remainingChannelsView);
-        }
     }
 
     @Override
