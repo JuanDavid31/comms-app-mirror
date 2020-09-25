@@ -11,7 +11,7 @@
             android:id="@+id/missions_list_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/secondaryBlack"
+            android:background="@color/primaryBlack"
             android:clipToPadding="false"
             android:paddingStart="17dp"
             android:paddingTop="11.25dp"

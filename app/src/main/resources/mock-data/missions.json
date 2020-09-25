@@ -14,7 +14,7 @@
                         "name": "EVIN JACOBS",
                         "nickName": "Evi",
                         "type": "member",
-                        "range": "primary",
+                        "state": "added",
                         "number": "5432211"
                     },
                     {
@@ -22,6 +22,7 @@
                         "name": "MICHAEL SMITH",
                         "nickName": "Mike",
                         "type": "member",
+                        "state": "pending",
                         "number": "544321559"
                     },
                     {
@@ -91,6 +92,7 @@
                         "name": "PHILBERT FULLER",
                         "nickName": "Bert",
                         "type": "member",
+                        "state": "not added",
                         "number": "544321007"
                     },
                     {
@@ -98,6 +100,7 @@
                         "name": "ASHLEY THOMPSON",
                         "nickName": "Abe",
                         "type": "member",
+                        "state": "not added",
                         "number": "5443211987"
                     },
                     {
@@ -105,6 +108,7 @@
                         "name": "KOBE PHILIPS",
                         "nickName": "Jay",
                         "type": "member",
+                        "state": "not added",
                         "number": "544321639"
                     }
                 ]

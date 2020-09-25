@@ -3,6 +3,7 @@ package com.upstart13.legba.fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -57,17 +58,22 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
         holder.memberName.setText(currentElement.name);
         holder.memberNickName.setText(currentElement.nickName);
         holder.memberNumber.setText(currentElement.number);
+        holder.micImage.setImageResource(getStateImage(currentElement.state));
+        holder.requestPendingText.setVisibility(currentElement.state.equals("pending") ? View.VISIBLE : View.INVISIBLE);
+    }
 
-        /*if(currentElement.range != null){//The member is a primary range
-            holder.memberCapsBox.setBackground(fragment.getResources().getDrawable(R.drawable.primary_member_caps_box_shape));
-            holder.memberNumber.setTextColor(fragment.getResources().getColor(R.color.orange));
-            holder.memberPrimaryType.setVisibility(View.VISIBLE);
-        }*/
-
-        /*holder.channels.removeAllViews();*/
-
-        /*addChannelsToView(currentElement.channels, holder.channels);
-        addRemainingChannelsText(currentElement.channels, holder.channels);*/
+    public int getStateImage(String state){
+        if(state == null)return android.R.color.transparent;
+        switch (state){
+            case "added":
+                return R.drawable.ic_mic;
+            case  "not added":
+                return R.mipmap.ic_mic_plus;
+            case "pending":
+                return R.drawable.ic_mic_pending_request;
+            default:
+                return android.R.color.transparent;
+        }
     }
 
     @Override
@@ -78,24 +84,22 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
     static class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private View root;
-        private View memberCapsBox;
         private TextView membersCaps;
         private TextView memberName;
         private TextView memberNickName;
         private TextView memberNumber;
-        private View memberPrimaryType;
-        //private LinearLayout channels;
+        private TextView requestPendingText;
+        private ImageButton micImage;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             this.root = itemView;
-            memberCapsBox = itemView.findViewById(R.id.member_caps_layout);
             membersCaps = itemView.findViewById(R.id.member_caps_text);
             memberName = itemView.findViewById(R.id.member_name_text);
             memberNickName = itemView.findViewById(R.id.member_nickname_text);
             memberNumber = itemView.findViewById(R.id.member_number_text);
-            memberPrimaryType = itemView.findViewById(R.id.member_primary_type_text);
-            //channels = itemView.findViewById(R.id.channels_list_view);
+            requestPendingText = itemView.findViewById(R.id.request_pending_text);
+            micImage = itemView.findViewById(R.id.member_state_image);
         }
     }
 

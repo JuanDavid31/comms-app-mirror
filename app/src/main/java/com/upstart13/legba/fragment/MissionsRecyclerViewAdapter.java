@@ -135,7 +135,6 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
         private View root;
         private TextView missionName;
         private TextView channelsNumber;
-        private ImageView rightArrow;
         private LinearLayout channels;
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -143,7 +142,6 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
             this.root = itemView;
             missionName = itemView.findViewById(R.id.mission_name_text);
             channelsNumber = itemView.findViewById(R.id.mission_channels_number);
-            rightArrow = itemView.findViewById(R.id.right_arrow);
             channels = itemView.findViewById(R.id.channels_list_view);
         }
     }

@@ -136,7 +136,7 @@
                         android:layout_marginBottom="37.8dp"
                         android:background="?selectableItemBackgroundBorderless"
                         android:contentDescription="@string/channel_mic"
-                        android:src="@drawable/ic_microphone"
+                        android:src="@drawable/ic_mic"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -223,7 +223,7 @@
                             android:background="?selectableItemBackgroundBorderless"
                             android:contentDescription="@string/channel_mic"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/ic_microphone"
+                            android:src="@drawable/ic_mic"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_description" />
@@ -311,7 +311,7 @@
                             android:background="?selectableItemBackgroundBorderless"
                             android:contentDescription="@string/channel_mic"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/ic_microphone"
+                            android:src="@drawable/ic_mic"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView2" />

@@ -12,15 +12,19 @@ public class ChannelElement implements Serializable {
     public String type;
     public String range;
     public String number;
+    public String state;
 
     @Override
     public String toString() {
         return "ChannelElement{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", members=" + members +
                 ", nickName='" + nickName + '\'' +
                 ", type='" + type + '\'' +
-                ", number=" + number +
+                ", range='" + range + '\'' +
+                ", number='" + number + '\'' +
+                ", state='" + state + '\'' +
                 '}';
     }
 }
