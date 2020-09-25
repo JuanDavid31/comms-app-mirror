@@ -26,20 +26,51 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
 
+                <ImageView
+                        android:id="@+id/logo_image"
+                        android:layout_width="224dp"
+                        android:layout_height="91.3dp"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/logo"
+                        android:scaleType="center"
+                        android:scrollX="-23dp"
+                        android:scrollY="82dp"
+                        android:src="@drawable/ic_logo"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
+                        android:visibility="gone"/>
+
+                <TextView
+                        android:id="@+id/big_toolbar_title"
+                        style="@style/builtTitlingRgBoldFont"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.04"
+                        android:textColor="#E6212122"
+                        android:textSize="44.9sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="OVERLORD"
+                        />
 
                 <TextView
                         android:id="@+id/toolbar_title_text"
                         style="@style/toolbar"
                         android:layout_width="wrap_content"
-
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="28dp"
-                        android:shadowColor="#d4000000"
-                        android:shadowRadius="9"
                         android:text="@string/my_missions"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:visibility="gone" />
 
 
                 <TextView
@@ -56,20 +87,14 @@
                         android:shadowRadius="9"
                         android:text="SOS"
                         android:textColor="@color/paleRed"
-                        android:textSize="15sp"
+                        android:textSize="22.5sp"
                         android:visibility="invisible"
-                        tools:visibility="visible"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@+id/big_toolbar_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/toolbar_title_text"/>
+                        app:layout_constraintTop_toTopOf="@+id/big_toolbar_title"
+                        tools:visibility="visible" />
 
-                <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/guideline7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:layout_constraintGuide_percent="0.50" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -58,8 +58,15 @@ public class ChannelFragment extends Fragment {
     }
 
     private void updateToolbar() {
+        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
         ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(channel.name);
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.INVISIBLE);
     }
 
     @Override

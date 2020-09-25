@@ -45,11 +45,18 @@ public class MissionsListFragment extends Fragment {
     }
 
     private void setupToolbar() {
+        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
         ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(R.string.mission_list_title);
 
         MainActivity mainActivity = (MainActivity) requireActivity();
         ActionBar actionBar = mainActivity.getSupportActionBar();
         Objects.requireNonNull(actionBar)
                 .setHomeAsUpIndicator(R.drawable.ic_hamburguer_icon);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.INVISIBLE);
     }
 }

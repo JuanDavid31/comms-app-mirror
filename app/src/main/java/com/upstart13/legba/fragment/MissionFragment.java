@@ -15,8 +15,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.upstart13.legba.MainActivity;
@@ -35,13 +36,18 @@ import static com.upstart13.legba.util.RUtils.getImageResource;
 public class MissionFragment extends Fragment {
 
     private FragmentMissionBinding binding;
+    private Menu sortTypeMenu;
     private Mission mission;
+
+    private enum SortType {List, Grid}
+    private SortType currentSortType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
         mission = missionFragmentArgs.getMission();
+        currentSortType = SortType.Grid; //Load and save in MissionFragmentViewModel
     }
 
     @Override
@@ -102,7 +108,6 @@ public class MissionFragment extends Fragment {
         }
 
         //Sliding up layout
-
         binding.radioChannelsSlidingupLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
@@ -111,10 +116,12 @@ public class MissionFragment extends Fragment {
 
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                ImageButton toggleRadioChannelButton = binding.toggleRadioChannelButton;
+                float newRotation = toggleRadioChannelButton.getRotation() + 180F;
                 if(newState == SlidingUpPanelLayout.PanelState.EXPANDED){
-                    binding.toogleRadioChannelButton.setImageResource(R.drawable.ic_round_keyboard_arrow_down_24);
+                    toggleRadioChannelButton.animate().rotation(newRotation).setInterpolator(new AccelerateDecelerateInterpolator());
                 }else if(newState == SlidingUpPanelLayout.PanelState.COLLAPSED){
-                    binding.toogleRadioChannelButton.setImageResource(R.drawable.ic_round_keyboard_arrow_up_24);
+                    toggleRadioChannelButton.animate().rotation(newRotation).setInterpolator(new AccelerateDecelerateInterpolator());
                 }
             }
         });
@@ -140,7 +147,9 @@ public class MissionFragment extends Fragment {
     }
 
     private void updateToolbar() {
-        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(mission.name);
+        requireActivity().findViewById(R.id.logo_image).setVisibility(View.VISIBLE);
+        requireActivity().findViewById(R.id.big_toolbar_title).setVisibility(View.VISIBLE);
+        ((TextView)requireActivity().findViewById(R.id.big_toolbar_title)).setText(mission.name);
         requireActivity().findViewById(R.id.sos_action).setVisibility(View.VISIBLE);
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
@@ -153,30 +162,36 @@ public class MissionFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        requireActivity().findViewById(R.id.sos_action).setVisibility(View.INVISIBLE);
+        requireActivity().findViewById(R.id.logo_image).setVisibility(View.GONE);
+        requireActivity().findViewById(R.id.big_toolbar_title).setVisibility(View.GONE);
+        requireActivity().findViewById(R.id.sos_action).setVisibility(View.GONE);
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.sort_type_menu, menu);
+        sortTypeMenu = menu;
+        updateSortIcon();
     }
 
-/*    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        MenuItem item = menu.findItem(R.id.show_list_action);
-        View root = item.getActionView();
-        root.setOnClickListener(view -> onOptionsItemSelected(item));
-        super.onPrepareOptionsMenu(menu);
-    }*/
+    private void updateSortIcon(){
+        if(currentSortType == SortType.List){
+            sortTypeMenu.findItem(R.id.toggle_sort_type_action).setIcon(R.drawable.ic_view_agenda);
+        }else {
+            sortTypeMenu.findItem(R.id.toggle_sort_type_action).setIcon(R.drawable.ic_view_grid);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.show_list_action) {
-            Toast.makeText(getContext(), "List type pressed", Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.toggle_sort_type_action && currentSortType == SortType.List) {
+            currentSortType = SortType.Grid;
+            updateSortIcon();
             return true;
-        } else if (item.getItemId() == R.id.show_grid_action) {
-            Toast.makeText(getContext(), "Grid Type pressed", Toast.LENGTH_SHORT).show();
+        } else if (item.getItemId() == R.id.toggle_sort_type_action && currentSortType == SortType.Grid) {
+            currentSortType = SortType.List;
+            updateSortIcon();
             return true;
         }
         return super.onOptionsItemSelected(item);

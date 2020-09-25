@@ -26,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/primaryBlack"
+                android:clipToPadding="false"
                 android:gravity="bottom|end"
                 android:orientation="vertical"
                 android:paddingTop="10dp"
@@ -110,11 +111,15 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="17dp"
-                    android:layout_marginTop="9.5dp"
-                    android:layout_marginEnd="17dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:orientation="horizontal">
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingStart="7dp"
+                    android:paddingTop="7dp"
+                    android:paddingEnd="7dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/priority_channel_1_layout"
@@ -336,7 +341,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
-                        android:id="@+id/toogle_radio_channel_button"
+                        android:id="@+id/toggle_radio_channel_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="11.8dp"

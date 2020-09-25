@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-            android:id="@+id/show_list_action"
-            android:title="Show list"
-            android:icon="@mipmap/ic_view_agenda"
-            app:showAsAction="always" />
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <item
-            android:id="@+id/show_grid_action"
+            android:id="@+id/toggle_sort_type_action"
             android:title="Show grid"
             android:icon="@drawable/ic_view_grid"
             app:showAsAction="always" />
+
+
 </menu>
