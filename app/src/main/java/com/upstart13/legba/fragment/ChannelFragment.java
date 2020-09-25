@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -15,24 +14,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.upstart13.legba.MainActivity;
 import com.upstart13.legba.R;
-import com.upstart13.legba.data.DataManager;
 import com.upstart13.legba.data.dto.Channel;
-import com.upstart13.legba.data.dto.Mission;
 import com.upstart13.legba.databinding.FragmentChannelBinding;
 
-import java.util.List;
 import java.util.Objects;
-
 
 public class ChannelFragment extends Fragment {
 
     private FragmentChannelBinding binding;
     private Channel channel;
+    private FrameLayout redCircle;
+    private TextView notificationsText;
+    private int notificationsCount = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,24 +71,41 @@ public class ChannelFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.history_menu, menu);
+        inflater.inflate(R.menu.channel_fragment_menu, menu);
     }
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        MenuItem item = menu.findItem(R.id.history_action);
+        MenuItem item = menu.findItem(R.id.notifications_action);
         View root = item.getActionView();
         root.setOnClickListener(view -> onOptionsItemSelected(item));
+        redCircle = root.findViewById(R.id.notifications_action_red_circle);
+        notificationsText = root.findViewById(R.id.notifications_action_red_circle_count_text);
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.history_action) {
+        if(item.getItemId() == R.id.notifications_action){
+            notificationsCount = (notificationsCount + 1)  % 6; //Cycle trhough 0 - 5
+            updateNotificationsIcon();
+            return true;
+        }else if (item.getItemId() == R.id.history_action) {
             Toast.makeText(getContext(), "History pressed", Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateNotificationsIcon(){
+        // if notifications count extends into two digits, just show the red circle
+        if (0 < notificationsCount && notificationsCount < 10) {
+            notificationsText.setText(String.valueOf(notificationsCount));
+        } else {
+            notificationsText.setText("");
+        }
+
+        redCircle.setVisibility((notificationsCount > 0) ? View.VISIBLE : View.GONE);
     }
 
 }

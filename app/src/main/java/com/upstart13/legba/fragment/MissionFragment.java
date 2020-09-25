@@ -76,7 +76,7 @@ public class MissionFragment extends Fragment {
             binding.primaryChannelLayout.setVisibility(View.VISIBLE);
             binding.primaryChannelImage.setImageResource(getImageResource(primaryChannel));
             binding.primaryChannelNameView.setText(primaryChannel.name);
-            binding.primaryChannelLinkImage.setOnClickListener(view -> goToChannelFragment(primaryChannel));
+            binding.primaryChannelInfo.setOnClickListener(view -> goToChannelFragment(primaryChannel));
         }
 
         //Priority channels

@@ -12,4 +12,6 @@
     <string name="go_to_detail">Go to detail</string>
     <string name="_10">+10</string>
     <string name="logo">logo</string>
+    <string name="history">History</string>
+    <string name="notifications">notifications</string>
 </resources>

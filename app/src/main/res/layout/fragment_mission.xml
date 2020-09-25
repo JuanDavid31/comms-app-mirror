@@ -47,41 +47,75 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:visibility="visible">
 
-                <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/primary_channel_image"
-                        android:layout_width="38dp"
-                        android:layout_height="37.5dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="18dp"
-                        android:elevation="5.3dp"
-                        android:scaleType="fitCenter"
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/primary_channel_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:clickable="true"
+                        android:clipToPadding="false"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:background="@drawable/primary_element_box_shape"
+                        android:paddingStart="10dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="10dp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:riv_border_color="@color/paleRed"
-                        app:riv_border_width="0.8dp"
-                        app:riv_corner_radius="5.3dp"
-                        tools:src="@sample/channel" />
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/primary_channel_image"
+                            android:layout_width="38dp"
+                            android:layout_height="37.5dp"
+                            android:elevation="5.3dp"
+                            android:scaleType="fitCenter"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:riv_border_color="@color/paleRed"
+                            app:riv_border_width="0.8dp"
+                            app:riv_corner_radius="5.3dp"
+                            tools:src="@sample/channel" />
+
+                    <TextView
+                            android:id="@+id/primary_channel_name_view"
+                            style="@style/primaryName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="13.3dp"
+                            android:letterSpacing="0.04"
+                            app:layout_constraintStart_toEndOf="@+id/primary_channel_image"
+                            app:layout_constraintTop_toTopOf="@+id/primary_channel_image"
+                            tools:text="ALPHA TEAM" />
+
+                    <TextView
+                            style="@style/secondaryTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Primary Channel"
+                            android:layout_marginBottom="1dp"
+                            android:textColor="@color/paleRed"
+                            app:layout_constraintBottom_toBottomOf="@+id/primary_channel_image"
+                            app:layout_constraintStart_toStartOf="@+id/primary_channel_name_view" />
 
 
-                <TextView
-                        android:id="@+id/primary_channel_name_view"
-                        style="@style/primaryName"
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="13.3dp"
-                        android:letterSpacing="0.04"
-                        app:layout_constraintStart_toEndOf="@+id/primary_channel_image"
-                        app:layout_constraintTop_toTopOf="@+id/primary_channel_image"
-                        tools:text="ALPHA TEAM" />
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_begin="28dp" />
 
-                <TextView
-                        style="@style/secondaryTitle"
+                <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Primary Channel"
-                        android:textColor="@color/paleRed"
-                        app:layout_constraintBottom_toBottomOf="@+id/primary_channel_image"
-                        app:layout_constraintStart_toStartOf="@+id/primary_channel_name_view" />
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_begin="43dp" />
 
                 <ImageButton
                         android:id="@+id/primary_channel_link_image"
