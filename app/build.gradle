@@ -9,7 +9,7 @@ def additionalFlavorsFile = "flavors/flavors.gradle"
 
 // The application ID in the final APK.  Change this string for a different
 // APK package name .
-def apkPackageName = "com.upstart13.legba"
+def apkPackageName = "com.rallytac.engageandroid"
 
 android {
     flavorDimensions "version"
@@ -58,7 +58,7 @@ android {
         variant.outputs.all { output ->
             def apkBaseName = variant.productFlavors.get(0).name
             def SEP = "_"
-            def buildType = variant.buildType.name
+            def buildType = variant.variantData.variantConfiguration.buildType.name
             def version = variant.versionCode
             def date = new Date()
             def formattedDate = date.format('yyyyMMdd_HHmmss')
