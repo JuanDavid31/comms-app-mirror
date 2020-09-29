@@ -41,21 +41,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.0"
-                        android:visibility="gone"/>
-
-                <TextView
-                        android:id="@+id/big_toolbar_title"
-                        style="@style/builtTitlingRgBoldFont"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:letterSpacing="0.04"
-                        android:textColor="#E6212122"
-                        android:textSize="44.9sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="OVERLORD"
                         />
 
                 <TextView
@@ -69,8 +54,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:visibility="gone" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
                 <TextView
@@ -89,10 +73,10 @@
                         android:textColor="@color/paleRed"
                         android:textSize="22.5sp"
                         android:visibility="invisible"
-                        app:layout_constraintBottom_toBottomOf="@+id/big_toolbar_title"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/big_toolbar_title"
+                        app:layout_constraintTop_toBottomOf="@+id/toolbar_title_text"
                         tools:visibility="visible" />
 
 

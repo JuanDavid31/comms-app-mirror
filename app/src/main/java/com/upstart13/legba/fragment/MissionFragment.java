@@ -142,8 +142,6 @@ public class MissionFragment extends Fragment {
 
     private void updateToolbar() {
         requireActivity().findViewById(R.id.logo_image).setVisibility(View.VISIBLE);
-        requireActivity().findViewById(R.id.big_toolbar_title).setVisibility(View.VISIBLE);
-        ((TextView)requireActivity().findViewById(R.id.big_toolbar_title)).setText(mission.name);
         requireActivity().findViewById(R.id.sos_action).setVisibility(View.VISIBLE);
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
@@ -157,7 +155,6 @@ public class MissionFragment extends Fragment {
     public void onStop() {
         super.onStop();
         requireActivity().findViewById(R.id.logo_image).setVisibility(View.GONE);
-        requireActivity().findViewById(R.id.big_toolbar_title).setVisibility(View.GONE);
         requireActivity().findViewById(R.id.sos_action).setVisibility(View.GONE);
     }
 

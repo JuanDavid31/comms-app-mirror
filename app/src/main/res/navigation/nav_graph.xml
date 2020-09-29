@@ -40,7 +40,11 @@
                 app:argType="com.upstart13.legba.data.dto.Channel" />
         <action
                 android:id="@+id/action_channelFragment_to_subchannelFragment"
-                app:destination="@id/subchannelFragment" />
+                app:destination="@id/subchannelFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
             android:id="@+id/subchannelFragment"

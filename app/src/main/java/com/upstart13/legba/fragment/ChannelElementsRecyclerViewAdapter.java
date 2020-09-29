@@ -50,7 +50,7 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
     public ChannelElementViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == MEMBER_ID) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.member_item, parent, false);
+                    .inflate(R.layout.member_info_item, parent, false);
             return new MemberViewHolder(itemView);
         } else {
             View itemView = LayoutInflater.from(parent.getContext())

@@ -20,5 +20,5 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:context=".fragment.ChannelFragment"
             tools:itemCount="6"
-            tools:listitem="@layout/member_item" />
+            tools:listitem="@layout/member_info_item" />
 </layout>
