@@ -18,7 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.upstart13.legba.MainActivity;
+import com.upstart13.legba.HostActivity;
 import com.upstart13.legba.R;
 import com.upstart13.legba.data.dto.Channel;
 import com.upstart13.legba.databinding.FragmentChannelBinding;
@@ -59,7 +59,7 @@ public class ChannelFragment extends Fragment {
     private void updateToolbar() {
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
         ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(channel.name);
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
+        Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
     @Override

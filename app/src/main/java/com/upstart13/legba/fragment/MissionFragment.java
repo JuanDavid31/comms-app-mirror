@@ -17,10 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.upstart13.legba.MainActivity;
+import com.upstart13.legba.HostActivity;
 import com.upstart13.legba.R;
 import com.upstart13.legba.data.dto.Channel;
 import com.upstart13.legba.data.dto.Mission;
@@ -143,7 +142,7 @@ public class MissionFragment extends Fragment {
     private void updateToolbar() {
         requireActivity().findViewById(R.id.logo_image).setVisibility(View.VISIBLE);
         requireActivity().findViewById(R.id.sos_action).setVisibility(View.VISIBLE);
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
+        Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
     public void goToChannelFragment(Channel channel) {

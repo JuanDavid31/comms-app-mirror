@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -13,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.upstart13.legba.MainActivity;
+import com.upstart13.legba.HostActivity;
 import com.upstart13.legba.R;
 import com.upstart13.legba.data.dto.Subchannel;
 import com.upstart13.legba.databinding.FragmentSubchannelBinding;
@@ -55,7 +54,7 @@ public class SubchannelFragment extends Fragment {
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
         Timber.i("Nombre del subcanal %s", subchannel.name);
         ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(subchannel.name);
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
+        Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
     @Override

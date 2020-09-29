@@ -2,20 +2,16 @@ package com.upstart13.legba.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.upstart13.legba.MainActivity;
+import com.upstart13.legba.HostActivity;
 import com.upstart13.legba.R;
 import com.upstart13.legba.data.DataManager;
 import com.upstart13.legba.data.dto.Mission;
@@ -48,8 +44,8 @@ public class MissionsListFragment extends Fragment {
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
         ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(R.string.mission_list_title);
 
-        MainActivity mainActivity = (MainActivity) requireActivity();
-        ActionBar actionBar = mainActivity.getSupportActionBar();
+        HostActivity hostActivity = (HostActivity) requireActivity();
+        ActionBar actionBar = hostActivity.getSupportActionBar();
         Objects.requireNonNull(actionBar)
                 .setHomeAsUpIndicator(R.drawable.ic_hamburguer_icon);
     }
