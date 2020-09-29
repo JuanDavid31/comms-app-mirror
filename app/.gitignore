@@ -1,1 +1,4 @@
 /build
+libs/*.so
+libs/*.aar
+flavors/*.gradle
