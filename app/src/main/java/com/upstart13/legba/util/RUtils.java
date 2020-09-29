@@ -5,9 +5,9 @@ import com.upstart13.legba.data.dto.Channel;
 
 public class RUtils {
 
-    public static int getImageResource(Channel channel){
-        if(channel.image == null)return android.R.color.transparent;
-        switch (channel.image){
+    public static int getImageResource(String imageName){
+        if(imageName == null)return android.R.color.transparent;
+        switch (imageName){
             case "primary":
                 return R.mipmap.primary_channel_thumb;
             case  "secondary":

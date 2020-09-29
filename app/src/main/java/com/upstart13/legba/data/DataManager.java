@@ -3,8 +3,11 @@ package com.upstart13.legba.data;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.upstart13.legba.data.dto.Channel;
 import com.upstart13.legba.data.dto.Mission;
+import com.upstart13.legba.mapping.ChannelDeserializer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +29,10 @@ public class DataManager {
         try {
             String jsonMissions = source.readUtf8();
             Type listType = new TypeToken<List<Mission>>() {}.getType();
-            return new Gson().fromJson(jsonMissions, listType);
+
+            return new GsonBuilder()
+                    .create()
+                    .fromJson(jsonMissions, listType);
         } catch (IOException e) {
             e.printStackTrace();
         }

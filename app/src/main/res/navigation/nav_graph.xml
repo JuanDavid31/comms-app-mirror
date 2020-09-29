@@ -38,5 +38,16 @@
         <argument
                 android:name="channel"
                 app:argType="com.upstart13.legba.data.dto.Channel" />
+        <action
+                android:id="@+id/action_channelFragment_to_subchannelFragment"
+                app:destination="@id/subchannelFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/subchannelFragment"
+            android:name="com.upstart13.legba.fragment.SubchannelFragment"
+            tools:layout="@layout/fragment_subchannel" >
+        <argument
+                android:name="subchannel"
+                app:argType="com.upstart13.legba.data.dto.Subchannel" />
     </fragment>
 </navigation>

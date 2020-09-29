@@ -24,6 +24,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static com.upstart13.legba.util.DimUtils.convertDpToPx;
 import static com.upstart13.legba.util.RUtils.getImageResource;
 
 public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRecyclerViewAdapter.ItemViewHolder> {
@@ -31,7 +32,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
     private List<Mission> missions = new ArrayList();
     private Fragment fragment;
 
-    public void setMissions(List<Mission> missions){
+    public void setMissions(List<Mission> missions) {
         this.missions = missions;
         notifyDataSetChanged();
     }
@@ -64,50 +65,44 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
         addRemainingChannelsText(currentMission.channels, holder.channels);
     }
 
-    private void addChannelsToView(List<Channel> channels, LinearLayout channelsView){
+    private void addChannelsToView(List<Channel> channels, LinearLayout channelsView) {
         boolean tomato = true;
         boolean orange = false;
         boolean blue = false;
         boolean white = false;
 
-        for(int i = 0; (i < 6) && (i < channels.size()); i++){
+        for (int i = 0; (i < 6) && (i < channels.size()); i++) {
             RoundedImageView newAvatar = (RoundedImageView) LayoutInflater.from(fragment.getContext()).inflate(R.layout.channel_avatar, null);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPx(26.4), ViewGroup.LayoutParams.MATCH_PARENT);
-            layoutParams.setMarginEnd(convertDpToPx(5.3));
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPx(fragment, 26.4), ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.setMarginEnd(convertDpToPx(fragment, 5.3));
             newAvatar.setLayoutParams(layoutParams);
-            newAvatar.setImageResource(getImageResource(channels.get(i)));
+            newAvatar.setImageResource(getImageResource(channels.get(i).image));
 
-            if(tomato){
+            if (tomato) {
                 tomato = false;
                 orange = true;
-            }else if(orange){
+            } else if (orange) {
                 orange = false;
                 blue = true;
                 newAvatar.setBorderColor(getOrangeColor());
-            }else if(blue){
+            } else if (blue) {
                 blue = false;
                 white = true;
                 newAvatar.setBorderColor(getBlueColor());
-            }else if(white){
+            } else if (white) {
                 white = false;
                 orange = true;
                 newAvatar.setBorderColor(getWhiteColor());
             }
-            Timber.i("Color %s - %s", i, newAvatar.getBorderColor());
             channelsView.addView(newAvatar);
         }
     }
 
-    private int convertDpToPx(double dp){
-        final float scale = fragment.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
-
-    private int getOrangeColor(){
+    private int getOrangeColor() {
         return fragment.getResources().getColor(R.color.orange);
     }
 
-    private int getBlueColor(){
+    private int getBlueColor() {
         return fragment.getResources().getColor(R.color.waterBlue);
     }
 
@@ -115,11 +110,11 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
         return fragment.getResources().getColor(R.color.white);
     }
 
-    private void addRemainingChannelsText(List<Channel> channels, LinearLayout channelsView){
+    private void addRemainingChannelsText(List<Channel> channels, LinearLayout channelsView) {
         int remainingChannels = channels.size() - 6;
-        if(remainingChannels > 0){
+        if (remainingChannels > 0) {
             TextView remainingChannelsView = (TextView) LayoutInflater.from(fragment.getContext()).inflate(R.layout.remaining_channels_number, null);
-            remainingChannelsView.setLayoutParams(new LinearLayout.LayoutParams(convertDpToPx(26.8), ViewGroup.LayoutParams.MATCH_PARENT));
+            remainingChannelsView.setLayoutParams(new LinearLayout.LayoutParams(convertDpToPx(fragment, 26.8), ViewGroup.LayoutParams.MATCH_PARENT));
             remainingChannelsView.setText(String.format("+%s", remainingChannels));
             channelsView.addView(remainingChannelsView);
         }

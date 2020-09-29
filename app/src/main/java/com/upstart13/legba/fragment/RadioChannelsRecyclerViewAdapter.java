@@ -49,7 +49,7 @@ public class RadioChannelsRecyclerViewAdapter extends ListAdapter<Channel, Radio
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Channel currentChannel = radioChannels.get(position);
 
-        holder.radioChannelImage.setImageResource(getImageResource(currentChannel));
+        holder.radioChannelImage.setImageResource(getImageResource(currentChannel.image));
         holder.radioChannelName.setText(currentChannel.name);
     }
 

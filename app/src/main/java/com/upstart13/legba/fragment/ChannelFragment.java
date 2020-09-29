@@ -51,7 +51,7 @@ public class ChannelFragment extends Fragment {
         binding.channelElementsRecycler.setHasFixedSize(true);
         binding.channelElementsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.channelElementsRecycler.setAdapter(adapter);
-        adapter.setSubChannelsAndMembers(channel.subChannelsAndMembers);
+        adapter.setChannelElements(channel.channelElements);
 
         return binding.getRoot();
     }

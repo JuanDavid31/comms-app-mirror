@@ -57,24 +57,18 @@ public class MissionFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
 
-
-        //TODO: Fix and refactor.
-        final String PRIMARY_TYPE = "primary";
-        final String PRIORITARY_TYPE = "priority";
-        final String RADIO_TYPE = "radio";
-
         //Primary channel
 
         Channel primaryChannel = mission.channels
                 .stream()
                 .filter(channel -> channel.type != null)
-                .filter(channel -> channel.type.equals(PRIMARY_TYPE))
+                .filter(channel -> channel.type == Channel.ChannelType.PRIMARY)
                 .findFirst()
                 .orElse(null);
 
         if (primaryChannel != null) {
             binding.primaryChannelLayout.setVisibility(View.VISIBLE);
-            binding.primaryChannelImage.setImageResource(getImageResource(primaryChannel));
+            binding.primaryChannelImage.setImageResource(getImageResource(primaryChannel.image));
             binding.primaryChannelNameView.setText(primaryChannel.name);
             binding.primaryChannelInfo.setOnClickListener(view -> goToChannelFragment(primaryChannel));
         }
@@ -84,7 +78,7 @@ public class MissionFragment extends Fragment {
         List<Channel> priorityChannels = mission.channels
                 .stream()
                 .filter(channel -> channel.type != null)
-                .filter(channel -> channel.type.equals(PRIORITARY_TYPE))
+                .filter(channel -> channel.type == Channel.ChannelType.PRIORITY)
                 .collect(Collectors.toList());
 
         if (priorityChannels.size() > 0) {
@@ -94,14 +88,14 @@ public class MissionFragment extends Fragment {
 
             if (priorityChannel1 != null) {
                 binding.priorityChannel1Layout.setVisibility(View.VISIBLE);
-                binding.priorityChannel1Image.setImageResource(getImageResource(priorityChannel1));
+                binding.priorityChannel1Image.setImageResource(getImageResource(priorityChannel1.image));
                 binding.priorityChannel1Name.setText(priorityChannel1.name);
                 binding.priorityChannel1LinkImage.setOnClickListener(view -> goToChannelFragment(priorityChannel1));
             }
 
             if (priorityChannels.get(1) != null) {
                 binding.priorityChannel2Layout.setVisibility(View.VISIBLE);
-                binding.priorityChannel2Image.setImageResource(getImageResource(priorityChannel2));
+                binding.priorityChannel2Image.setImageResource(getImageResource(priorityChannel2.image));
                 binding.priorityChannel2Name.setText(priorityChannel2.name);
                 binding.priorityChannel2LinkImage.setOnClickListener(view -> goToChannelFragment(priorityChannel2));
             }
@@ -133,7 +127,7 @@ public class MissionFragment extends Fragment {
         List<Channel> radioChannels = mission.channels
                 .stream()
                 .filter(channel -> channel.type != null)
-                .filter(channel -> channel.type.equals("radio"))
+                .filter(channel -> channel.type == Channel.ChannelType.RADIO)
                 .collect(Collectors.toList());
 
         RadioChannelsRecyclerViewAdapter adapter = new RadioChannelsRecyclerViewAdapter(new RadioChannelsRecyclerViewAdapter.AdapterDiffCallback(), this);

@@ -3,52 +3,61 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="129dp"
-        android:layout_marginTop="5.25dp"
-        android:layout_marginBottom="5.25dp"
+        android:layout_height="119dp"
+        android:layout_marginTop="8.5dp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/primary_element_box_shape"
         android:clickable="true"
         android:elevation="5.3dp"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground">
 
-    <RelativeLayout
-            android:id="@+id/relativeLayout"
+    <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/subchannel_image"
             android:layout_width="38dp"
             android:layout_height="37.5dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/star_box_shape"
+            android:layout_marginStart="20.3dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/member_caps_box_shape"
             android:elevation="5.3dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_border_color="@color/orange"
+            app:riv_border_width="1dp"
+            app:riv_corner_radius="5.3dp"
+            tools:src="@sample/channel" />
 
     <TextView
-            android:id="@+id/mission_name_text"
-            style="@style/primaryName"
+            android:id="@+id/subchannel_name_text"
+            style="@style/builtTitlingRgBoldFont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
-            android:layout_marginTop="2dp"
-            android:letterSpacing="0.02"
-            android:shadowColor="#d4000000"
-            android:shadowRadius="9"
-            android:text="OVERLORD"
-            app:layout_constraintStart_toEndOf="@+id/relativeLayout"
-            app:layout_constraintTop_toTopOf="@+id/relativeLayout" />
+            android:layout_marginStart="11.5dp"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@+id/subchannel_image"
+            app:layout_constraintTop_toTopOf="@+id/subchannel_image"
+            tools:text="2ND AIRBONE" />
 
     <TextView
-            android:id="@+id/mission_channels_number"
             style="@style/secondaryTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
             android:layout_marginBottom="2dp"
-            android:shadowColor="#d4000000"
-            android:shadowRadius="9"
-            android:text="5 Channels"
-            app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
-            app:layout_constraintStart_toEndOf="@+id/relativeLayout" />
+            android:text="@string/subchannel"
+            android:textColor="@color/greyish_93"
+            app:layout_constraintBottom_toBottomOf="@+id/subchannel_image"
+            app:layout_constraintStart_toStartOf="@+id/subchannel_name_text" />
+
+    <ImageView
+            android:layout_width="19dp"
+            android:layout_height="23dp"
+            android:layout_marginEnd="20dp"
+            android:contentDescription="@string/channel_link"
+            android:src="@drawable/ic_round_keyboard_arrow_right_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
 
     <LinearLayout
             android:id="@+id/channels_list_view"
@@ -57,40 +66,40 @@
             android:layout_marginBottom="20dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/relativeLayout">
+            app:layout_constraintStart_toStartOf="@+id/subchannel_image">
 
         <include
-                layout="@layout/channel_avatar"
+                layout="@layout/member_caps_layout"
                 android:layout_width="26.8dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5.5dp" />
 
         <include
-                layout="@layout/channel_avatar"
+                layout="@layout/member_caps_layout"
                 android:layout_width="26.8dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5.5dp" />
 
         <include
-                layout="@layout/channel_avatar"
+                layout="@layout/member_caps_layout"
                 android:layout_width="26.8dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5.5dp" />
 
         <include
-                layout="@layout/channel_avatar"
+                layout="@layout/member_caps_layout"
                 android:layout_width="26.8dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5.5dp" />
 
         <include
-                layout="@layout/channel_avatar"
+                layout="@layout/member_caps_layout"
                 android:layout_width="26.8dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5.5dp" />
 
         <include
-                layout="@layout/channel_avatar"
+                layout="@layout/member_caps_layout"
                 android:layout_width="26.8dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5.5dp" />
@@ -102,18 +111,21 @@
                 android:gravity="center"
                 android:text="@string/_10"
                 android:textAlignment="center" />
+
     </LinearLayout>
 
-    <ImageView
-            android:id="@+id/right_arrow"
-            android:layout_width="19dp"
-            android:layout_height="23dp"
-            android:layout_marginEnd="20dp"
-            android:contentDescription="@string/go_to_detail"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_round_keyboard_arrow_right_24" />
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="35dp" />
 
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="42dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
