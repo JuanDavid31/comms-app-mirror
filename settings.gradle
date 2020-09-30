@@ -1,2 +1,3 @@
+include ':engage'
 include ':app'
 rootProject.name = "Legba"
