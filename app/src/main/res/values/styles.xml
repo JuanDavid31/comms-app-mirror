@@ -26,10 +26,9 @@
     </style>
 
     <style name="toolbar" parent="primaryText">
-        <item name="android:textSize">22.5sp</item>
-        <item name="android:letterSpacing">0.02</item>
-        <item name="android:shadowColor">#d4000000</item>
-        <item name="android:shadowRadius">9</item>
+        <item name="android:textSize">19.9sp</item>
+        <item name="android:letterSpacing">0.04</item>
+        <item name="android:textColor">@color/pinkish_grey</item>
     </style>
 
 
@@ -68,4 +67,5 @@
         <item name="android:elevation">5.3dp</item>
     </style>
 
+    <color name="pinkish_grey">#bebebe</color>
 </resources>

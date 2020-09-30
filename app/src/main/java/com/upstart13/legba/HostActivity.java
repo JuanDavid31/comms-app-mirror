@@ -8,12 +8,15 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Objects;
+
+import timber.log.Timber;
 
 public class HostActivity extends AppCompatActivity {
 
@@ -33,8 +36,14 @@ public class HostActivity extends AppCompatActivity {
                         .setOpenableLayout((Openable) findViewById(R.id.drawer))
                         .build();
 
-        setupToolbarConfiguration(navController, appBarConfiguration);
         setupDrawerConfiguration(navController);
+        setupToolbarConfiguration(navController, appBarConfiguration);
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            Timber.i("onDestinationChangedListener");
+            findViewById(R.id.logo_image).setVisibility(View.GONE);
+            findViewById(R.id.toolbar_title_text).setVisibility(View.GONE);
+            findViewById(R.id.fragment_description).setVisibility(View.GONE);
+        });
     }
 
     private void setupDrawerConfiguration(NavController navController) {

@@ -18,9 +18,12 @@ import com.upstart13.legba.data.dto.Mission;
 import com.upstart13.legba.databinding.FragmentMissionsListBinding;
 
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 import java.util.List;
 import java.util.Objects;
+
+import timber.log.Timber;
 
 public class MissionsListFragment extends Fragment {
 
@@ -41,18 +44,12 @@ public class MissionsListFragment extends Fragment {
     }
 
     private void setupToolbar() {
+        Timber.i("updateToolbar");
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
-        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(R.string.mission_list_title);
-
+        ((TextView)requireActivity().findViewById(R.id.toolbar_title_text)).setText(R.string.mission_list_title);
         HostActivity hostActivity = (HostActivity) requireActivity();
         ActionBar actionBar = hostActivity.getSupportActionBar();
         Objects.requireNonNull(actionBar)
                 .setHomeAsUpIndicator(R.drawable.ic_hamburguer_icon);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.INVISIBLE);
     }
 }

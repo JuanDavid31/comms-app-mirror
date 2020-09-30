@@ -2,12 +2,16 @@ package com.upstart13.legba.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -52,14 +56,23 @@ public class SubchannelFragment extends Fragment {
 
     private void updateToolbar() {
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
-        Timber.i("Nombre del subcanal %s", subchannel.name);
         ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(subchannel.name);
+
+        requireActivity().findViewById(R.id.fragment_description).setVisibility(View.VISIBLE);
+        ((TextView)requireActivity().findViewById(R.id.fragment_description)).setText("Subchannel");
+        ((TextView)requireActivity().findViewById(R.id.fragment_description)).setTextColor(this.getResources().getColor(R.color.white));
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.INVISIBLE);
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.channel_fragment_menu, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.findItem(R.id.notifications_action).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
     }
 }

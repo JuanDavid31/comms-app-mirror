@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent" android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="78.5dp"
+        android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <FrameLayout
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+    <TextView
+            android:fontFamily="@font/call_of_ops_duty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:letterSpacing="0.02"
+            android:shadowColor="#d4000000"
+            android:shadowRadius="9"
+            android:text="SOS"
+            android:textColor="@color/paleRed"
+            android:textSize="17.6sp">
+
+        <!--android:layout_marginStart="27.5dp"
+        android:layout_marginEnd="27.5dp"-->
+
+    </TextView>
+</FrameLayout>

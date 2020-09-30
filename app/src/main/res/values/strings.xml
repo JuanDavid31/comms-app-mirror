@@ -16,4 +16,5 @@
     <string name="notifications">notifications</string>
     <string name="request_pending">Request <b>pending</b></string>
     <string name="subchannel">Subchannel</string>
+    <string name="sos">SOS</string>
 </resources>

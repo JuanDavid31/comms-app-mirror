@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.upstart13.legba.HostActivity;
@@ -29,24 +31,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import timber.log.Timber;
+
 import static com.upstart13.legba.util.RUtils.getImageResource;
 
 
 public class MissionFragment extends Fragment {
 
     private FragmentMissionBinding binding;
-    private Menu sortTypeMenu;
     private Mission mission;
-
-    private enum SortType {List, Grid}
-    private SortType currentSortType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
         mission = missionFragmentArgs.getMission();
-        currentSortType = SortType.Grid; //Load and save in MissionFragmentViewModel
     }
 
     @Override
@@ -139,51 +138,25 @@ public class MissionFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void updateToolbar() {
-        requireActivity().findViewById(R.id.logo_image).setVisibility(View.VISIBLE);
-        requireActivity().findViewById(R.id.sos_action).setVisibility(View.VISIBLE);
-        Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
-    }
-
     public void goToChannelFragment(Channel channel) {
         NavHostFragment.findNavController(this)
                 .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(channel));
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        requireActivity().findViewById(R.id.logo_image).setVisibility(View.GONE);
-        requireActivity().findViewById(R.id.sos_action).setVisibility(View.GONE);
+    private void updateToolbar() {
+        Timber.i("updateToolbar MissionFragment");
+        requireActivity().findViewById(R.id.logo_image).setVisibility(View.VISIBLE);
+        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
+        ((TextView)requireActivity().findViewById(R.id.toolbar_title_text)).setText(mission.name);
+        requireActivity().findViewById(R.id.fragment_description).setVisibility(View.VISIBLE);
+        ((TextView)requireActivity().findViewById(R.id.fragment_description)).setText("Main Channels");
+        ((TextView)requireActivity().findViewById(R.id.fragment_description)).setTextColor(this.getResources().getColor(R.color.paleRed));
+        Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.sort_type_menu, menu);
-        sortTypeMenu = menu;
-        updateSortIcon();
-    }
-
-    private void updateSortIcon(){
-        if(currentSortType == SortType.List){
-            sortTypeMenu.findItem(R.id.toggle_sort_type_action).setIcon(R.drawable.ic_view_agenda);
-        }else {
-            sortTypeMenu.findItem(R.id.toggle_sort_type_action).setIcon(R.drawable.ic_view_grid);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.toggle_sort_type_action && currentSortType == SortType.List) {
-            currentSortType = SortType.Grid;
-            updateSortIcon();
-            return true;
-        } else if (item.getItemId() == R.id.toggle_sort_type_action && currentSortType == SortType.Grid) {
-            currentSortType = SortType.List;
-            updateSortIcon();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        inflater.inflate(R.menu.mission_fragment_menu, menu);
     }
 }

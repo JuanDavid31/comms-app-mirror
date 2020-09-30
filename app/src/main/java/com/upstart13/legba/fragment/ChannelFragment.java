@@ -46,6 +46,7 @@ public class ChannelFragment extends Fragment {
         updateToolbar();
         setHasOptionsMenu(true);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_channel, container, false);
+
         ChannelElementsRecyclerViewAdapter adapter =
                 new ChannelElementsRecyclerViewAdapter(new ChannelElementsRecyclerViewAdapter.AdapterDiffCallback(), this);
         binding.channelElementsRecycler.setHasFixedSize(true);
@@ -60,12 +61,6 @@ public class ChannelFragment extends Fragment {
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
         ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(channel.name);
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.INVISIBLE);
     }
 
     @Override
