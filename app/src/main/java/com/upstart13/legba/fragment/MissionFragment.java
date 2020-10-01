@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
@@ -12,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -37,10 +39,8 @@ import com.upstart13.legba.databinding.FragmentMissionBinding;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import timber.log.Timber;
-
+import static com.upstart13.legba.util.DimUtils.convertDpToPx;
 import static com.upstart13.legba.util.RUtils.getImageResource;
 
 
@@ -49,6 +49,7 @@ public class MissionFragment extends Fragment {
     private FragmentMissionBinding binding;
     private Mission mission;
     private TextView fragmentDescriptionText;
+    private ImageView[] dotIndicators;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,15 +70,17 @@ public class MissionFragment extends Fragment {
                 .collect(Collectors.toList());
 
         binding.missionViewPager.setAdapter(new ChannelSlidePageAdapter(this, nonRadioChannels));
-        binding.springDotsIndicator.setViewPager2(binding.missionViewPager);
+        //binding.springDotsIndicator.setViewPager2(binding.missionViewPager);
 
         binding.missionViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
 
+                updateDots(position);
+
                 String ordinalPosition;
-                switch (position){
+                switch (position) {
                     case 0:
                         ordinalPosition = "First";
                         break;
@@ -107,55 +110,21 @@ public class MissionFragment extends Fragment {
             }
         });
 
-        //Primary channel
-
-/*        Channel primaryChannel = mission.channels
-                .stream()
-                .filter(channel -> channel.type != null)
-                .filter(channel -> channel.type == Channel.ChannelType.PRIMARY)
-                .findFirst()
-                .orElse(null);
-
-        if (primaryChannel != null) {
-            binding.primaryChannelLayout.setVisibility(View.VISIBLE);
-            binding.primaryChannelImage.setImageResource(getImageResource(primaryChannel.image));
-            binding.primaryChannelNameView.setText(primaryChannel.name);
-            binding.primaryChannelInfo.setOnClickListener(view -> goToChannelFragment(primaryChannel));
+        binding.tabLayout.removeAllViews();
+        dotIndicators = new ImageView[nonRadioChannels.size()];
+        for (int i = 0; i < nonRadioChannels.size(); i++) {
+            dotIndicators[i] = new ImageView(getContext());
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPx(this, 5), convertDpToPx(this, 5));
+            layoutParams.setMarginEnd(convertDpToPx(this, 8.3));
+            dotIndicators[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_dot));
+            dotIndicators[i].setLayoutParams(layoutParams);
+            binding.tabLayout.addView(dotIndicators[i]);
         }
-
-        //Priority channels
-
-        List<Channel> priorityChannels = mission.channels
-                .stream()
-                .filter(channel -> channel.type != null)
-                .filter(channel -> channel.type == Channel.ChannelType.PRIORITY)
-                .collect(Collectors.toList());
-
-        if (priorityChannels.size() > 0) {
-
-            Channel priorityChannel1 = priorityChannels.get(0);
-            Channel priorityChannel2 = priorityChannels.get(1);
-
-            if (priorityChannel1 != null) {
-                binding.priorityChannel1Layout.setVisibility(View.VISIBLE);
-                binding.priorityChannel1Image.setImageResource(getImageResource(priorityChannel1.image));
-                binding.priorityChannel1Name.setText(priorityChannel1.name);
-                binding.priorityChannel1LinkImage.setOnClickListener(view -> goToChannelFragment(priorityChannel1));
-            }
-
-            if (priorityChannels.get(1) != null) {
-                binding.priorityChannel2Layout.setVisibility(View.VISIBLE);
-                binding.priorityChannel2Image.setImageResource(getImageResource(priorityChannel2.image));
-                binding.priorityChannel2Name.setText(priorityChannel2.name);
-                binding.priorityChannel2LinkImage.setOnClickListener(view -> goToChannelFragment(priorityChannel2));
-            }
-        }*/
 
         //Sliding up layout
         binding.radioChannelsSlidingupLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
-
             }
 
             @Override
@@ -188,6 +157,16 @@ public class MissionFragment extends Fragment {
         //
 
         return binding.getRoot();
+    }
+
+    private void updateDots(int position) {
+        for (int i = 0; i < dotIndicators.length; i++) {
+            if (i == position) {
+                dotIndicators[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.selected_dot));
+            } else {
+                dotIndicators[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_dot));
+            }
+        }
     }
 
     private void updateToolbar() {
@@ -276,7 +255,7 @@ public class MissionFragment extends Fragment {
                 case PRIMARY:
                     return "Primary Channel";
                 case PRIORITY:
-                     String priority = "Priority Channel " + (priorityIndicator + 1);
+                    String priority = "Priority Channel " + (priorityIndicator + 1);
                     priorityIndicator++;
                     return priority;
                 case RADIO:

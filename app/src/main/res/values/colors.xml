@@ -20,5 +20,6 @@
     <color name="greyish_93">#eeb1b1b1</color>
     <color name="white_93">#eeffffff</color>
     <color name="black">#171717</color>
+    <color name="pinkish_grey">#bebebe</color>
     <color name="pinkish_grey_93">#eebebebe</color>
 </resources>

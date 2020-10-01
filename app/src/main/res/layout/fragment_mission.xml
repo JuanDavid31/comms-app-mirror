@@ -35,31 +35,47 @@
                     android:id="@+id/mission_view_pager"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginTop="8.3dp"
                     android:layout_marginStart="12dp"
+                    android:layout_marginTop="8.3dp"
                     android:layout_marginEnd="12dp"
                     android:layout_marginBottom="6.3dp"
                     android:layout_weight="1"
                     android:background="@drawable/primary_element_box_shape"
                     android:clipToPadding="false"
-                    android:elevation="5.3dp"
-   />
+                    android:elevation="5.3dp" />
 
-            <com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
-                    android:id="@+id/spring_dots_indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+            <LinearLayout
+                    android:id="@+id/tab_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="9dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="7dp"
-                    android:layout_marginBottom="12.5dp"
-                    app:dampingRatio="0.5"
-                    app:dotsColor="@color/paleRed"
-                    app:dotsCornerRadius="10dp"
-                    app:dotsSize="6dp"
-                    app:dotsSpacing="6.8dp"
-                    app:dotsStrokeColor="@color/white"
-                    app:dotsStrokeWidth="1dp"
-                    app:stiffness="300" />
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10.5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/selected_dot" />
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/default_dot" />
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/default_dot" />
+
+            </LinearLayout>
             <!--            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/primary_channel_layout"
                                 android:layout_width="match_parent"

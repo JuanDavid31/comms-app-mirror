@@ -66,6 +66,4 @@
         <item name="android:background">@drawable/primary_element_box_shape</item>
         <item name="android:elevation">5.3dp</item>
     </style>
-
-    <color name="pinkish_grey">#bebebe</color>
 </resources>
