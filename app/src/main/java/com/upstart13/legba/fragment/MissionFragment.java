@@ -1,5 +1,6 @@
 package com.upstart13.legba.fragment;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,7 +9,14 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +48,7 @@ public class MissionFragment extends Fragment {
 
     private FragmentMissionBinding binding;
     private Mission mission;
+    private TextView fragmentDescriptionText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,42 @@ public class MissionFragment extends Fragment {
 
         binding.missionViewPager.setAdapter(new ChannelSlidePageAdapter(this, nonRadioChannels));
         binding.springDotsIndicator.setViewPager2(binding.missionViewPager);
+
+        binding.missionViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+
+                String ordinalPosition;
+                switch (position){
+                    case 0:
+                        ordinalPosition = "First";
+                        break;
+                    case 1:
+                        ordinalPosition = "Second";
+                        break;
+                    case 2:
+                        ordinalPosition = "Third";
+                        break;
+                    case 3:
+                        ordinalPosition = "Fourth";
+                        break;
+                    case 4:
+                        ordinalPosition = "Fifth";
+                        break;
+                    default:
+                        ordinalPosition = "";
+                        break;
+                }
+
+                SpannableStringBuilder ssb = new SpannableStringBuilder(String.format("%s View", ordinalPosition));
+                final ForegroundColorSpan fcs = new ForegroundColorSpan(getResources().getColor(R.color.pinkish_grey));
+
+                ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ordinalPosition.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                ssb.setSpan(fcs, ordinalPosition.length() + 1, ssb.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                fragmentDescriptionText.setText(ssb);
+            }
+        });
 
         //Primary channel
 
@@ -145,19 +190,13 @@ public class MissionFragment extends Fragment {
         return binding.getRoot();
     }
 
-    public void goToChannelFragment(Channel channel) {
-        NavHostFragment.findNavController(this)
-                .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(channel));
-    }
-
     private void updateToolbar() {
-        Timber.i("updateToolbar MissionFragment");
         requireActivity().findViewById(R.id.logo_image).setVisibility(View.VISIBLE);
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
         ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(mission.name);
         requireActivity().findViewById(R.id.fragment_description).setVisibility(View.VISIBLE);
-        ((TextView) requireActivity().findViewById(R.id.fragment_description)).setText("Main Channels");
-        ((TextView) requireActivity().findViewById(R.id.fragment_description)).setTextColor(this.getResources().getColor(R.color.paleRed));
+        fragmentDescriptionText = requireActivity().findViewById(R.id.fragment_description);
+        fragmentDescriptionText.setTextColor(this.getResources().getColor(R.color.paleRed));
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
@@ -190,7 +229,6 @@ public class MissionFragment extends Fragment {
         @NonNull
         @Override
         public ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            Timber.i("Creando page");
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.channel_item, parent, false);
             return new ChannelViewHolder(itemView);
@@ -198,7 +236,6 @@ public class MissionFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ChannelViewHolder holder, int position) {
-            Timber.i("onBindViewHolder - ChannelSlidePageAdapter");
             Channel currentChannel = channels.get(position);
             holder.channelInfo.setOnClickListener(view -> NavHostFragment.findNavController(fragment)
                     .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(currentChannel)));
@@ -215,12 +252,14 @@ public class MissionFragment extends Fragment {
 
                 holder.channelImage.setBorderColor(getWaterBlueColor());
                 holder.channelType.setTextColor(getWaterBlueColor());
+                holder.lastMessageTime.setTextColor(getWaterBlueColor());
             } else if (orange) {
                 orange = false;
                 paleRed = true;
 
                 holder.channelImage.setBorderColor(getOrangeColor());
                 holder.channelType.setTextColor(getOrangeColor());
+                holder.lastMessageTime.setTextColor(getOrangeColor());
             }
         }
 
@@ -258,6 +297,7 @@ public class MissionFragment extends Fragment {
             private RoundedImageView channelImage;
             private TextView channelName;
             private TextView channelType;
+            private TextView lastMessageTime;
 
             public ChannelViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -265,6 +305,7 @@ public class MissionFragment extends Fragment {
                 channelImage = itemView.findViewById(R.id.channel_image);
                 channelName = itemView.findViewById(R.id.channel_name_text);
                 channelType = itemView.findViewById(R.id.channel_type_text);
+                lastMessageTime = itemView.findViewById(R.id.last_message_time);
             }
         }
     }
