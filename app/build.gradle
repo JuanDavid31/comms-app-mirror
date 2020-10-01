@@ -63,6 +63,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
 }

@@ -29,10 +29,37 @@
                 android:clipToPadding="false"
                 android:gravity="bottom|end"
                 android:orientation="vertical"
-                android:paddingTop="10dp"
                 tools:context=".fragment.MissionFragment">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/mission_view_pager"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="6.3dp"
+                android:layout_marginBottom="6.3dp"
+                android:clipToPadding="false"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+
+            <com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="12.5dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/spring_dots_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:dampingRatio="0.5"
+                    app:dotsColor="@color/paleRed"
+                    app:dotsStrokeColor="@color/white"
+                    app:dotsCornerRadius="10dp"
+                    app:dotsSize="6dp"
+                    app:dotsSpacing="6.8dp"
+                    app:dotsStrokeWidth="1dp"
+                    app:stiffness="300"
+                    />
+<!--            <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/primary_channel_layout"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -331,7 +358,7 @@
                             app:layout_constraintGuide_end="17dp" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </LinearLayout>
+            </LinearLayout>-->
 
             <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline"

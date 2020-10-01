@@ -4,25 +4,24 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/primary_channel_layout"
         android:layout_width="match_parent"
-        android:layout_height="145dp"
-        android:layout_marginTop="5.5dp"
-        android:layout_marginBottom="5.5dp"
-        android:background="@drawable/primary_element_box_shape"
+        android:layout_height="match_parent"
+        android:background="@drawable/channel_item_shape"
         android:elevation="5.3dp"
-        android:visibility="gone"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="6.3dp"
+        android:layout_marginBottom="5.8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible">
-
+        app:layout_constraintTop_toTopOf="parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/primary_channel_info"
+            android:id="@+id/channel_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/primary_element_box_shape"
+            android:background="@drawable/channel_item_shape"
             android:clickable="true"
             android:clipToPadding="false"
             android:focusable="true"
@@ -35,7 +34,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
         <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/primary_channel_image"
+                android:id="@+id/channel_image"
                 android:layout_width="38dp"
                 android:layout_height="37.5dp"
                 android:elevation="5.3dp"
@@ -48,41 +47,34 @@
                 tools:src="@sample/channel" />
 
         <TextView
-                android:id="@+id/primary_channel_name_view"
+                android:id="@+id/channel_name_text"
                 style="@style/builtTitlingRgBoldFont"
-                android:textSize="16.1sp"
-                android:textColor="@color/pinkish_grey"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="13.3dp"
+                android:letterSpacing="0.04"
                 android:shadowColor="#d4000000"
                 android:shadowRadius="9"
-                android:letterSpacing="0.04"
-                app:layout_constraintStart_toEndOf="@+id/primary_channel_image"
-                app:layout_constraintTop_toTopOf="@+id/primary_channel_image"
+                android:textColor="@color/pinkish_grey"
+                android:textSize="16.1sp"
+                app:layout_constraintStart_toEndOf="@+id/channel_image"
+                app:layout_constraintTop_toTopOf="@+id/channel_image"
                 tools:text="ALPHA TEAM" />
 
         <TextView
+                android:id="@+id/channel_type_text"
                 style="@style/openSansRegularFont"
-                android:textSize="10.1sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"
                 android:letterSpacing="0.02"
                 android:text="Primary Channel"
                 android:textColor="@color/paleRed"
-                app:layout_constraintBottom_toBottomOf="@+id/primary_channel_image"
-                app:layout_constraintStart_toStartOf="@+id/primary_channel_name_view" />
-
+                android:textSize="10.1sp"
+                app:layout_constraintBottom_toBottomOf="@+id/channel_image"
+                app:layout_constraintStart_toStartOf="@+id/channel_name_text" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="12dp" />
 
     <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline8"
@@ -91,41 +83,5 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="43dp" />
 
-    <ImageButton
-            android:id="@+id/primary_channel_link_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="12.3dp"
-            android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/channel_link"
-            android:src="@drawable/ic_speaker"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-            android:layout_width="32.3dp"
-            android:layout_height="44.3dp"
-            android:layout_marginEnd="2.3dp"
-            android:layout_marginBottom="2.3dp"
-            android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/channel_mic"
-            android:src="@drawable/ic_filled_mic"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_end="12.3dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="12.3dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
