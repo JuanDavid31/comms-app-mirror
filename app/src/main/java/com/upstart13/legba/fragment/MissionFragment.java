@@ -177,12 +177,12 @@ public class MissionFragment extends Fragment {
         private boolean waterBlue = false;
         private boolean orange = false;
 
-        public void setChannels(List channels) {
+        public void setChannels(List<Channel> channels) {
             this.channels = channels;
             notifyDataSetChanged();
         }
 
-        public ChannelSlidePageAdapter(Fragment fragment, List channels) {
+        public ChannelSlidePageAdapter(Fragment fragment, List<Channel> channels) {
             this.fragment = fragment;
             this.channels = channels;
         }
@@ -237,7 +237,9 @@ public class MissionFragment extends Fragment {
                 case PRIMARY:
                     return "Primary Channel";
                 case PRIORITY:
-                    return "Priority Channel " + priorityIndicator;
+                     String priority = "Priority Channel " + (priorityIndicator + 1);
+                    priorityIndicator++;
+                    return priority;
                 case RADIO:
                     return "Radio Channel";
                 default:
