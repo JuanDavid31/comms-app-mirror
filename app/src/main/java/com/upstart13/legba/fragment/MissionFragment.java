@@ -77,11 +77,6 @@ public class MissionFragment extends Fragment {
 
         binding.missionViewPager.setAdapter(new ChannelSlidePageAdapter(this, nonRadioChannels));
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            Timber.i("Landscape mode");
-            setMainContentsViewPagerHeight();
-        }
-
         setupViewPagerOnPageChangeListener();
         setupViewPagerDotIndicator(nonRadioChannels);
         setUpSlidingUpPanelListener();
@@ -98,16 +93,6 @@ public class MissionFragment extends Fragment {
         fragmentDescriptionText = requireActivity().findViewById(R.id.fragment_description);
         fragmentDescriptionText.setTextColor(this.getResources().getColor(R.color.paleRed));
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
-    }
-
-    private void setMainContentsViewPagerHeight(){
-        Fragment fragment = this;
-        binding.mainContentViewPager.post(() -> {
-            LinearLayout mainContentViewPager = binding.mainContentViewPager;
-            ViewGroup.LayoutParams layoutParams = mainContentViewPager.getLayoutParams();
-            layoutParams.height = mainContentViewPager.getHeight() - convertDpToPx(fragment, 31);
-            mainContentViewPager.setLayoutParams(layoutParams);
-        });
     }
 
     private void setupViewPagerOnPageChangeListener() {
