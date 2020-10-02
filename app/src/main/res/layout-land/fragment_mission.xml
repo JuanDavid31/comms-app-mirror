@@ -25,13 +25,14 @@
                 android:gravity="bottom"
                 app:umanoDragView="@id/radio_channels_layout"
                 app:umanoOverlay="true"
-                app:umanoPanelHeight="31dp"
+                app:umanoPanelHeight="33dp"
                 app:umanoScrollableView="@id/radio_channels_recycler"
                 sothree:umanoFadeColor="@android:color/transparent"
-                sothree:umanoShadowHeight="0.1dp">
+                sothree:umanoShadowHeight="0dp">
 
             <!--Main content-->
             <LinearLayout
+                    android:id="@+id/main_content_viewPager"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/primaryBlack"
@@ -87,17 +88,18 @@
 
             </LinearLayout>
 
-            <!--Sliding layout-->
-<!--            <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
+            <FrameLayout
+                    android:id="@+id/frame_sliding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="112dp"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp">
+                    android:clipToPadding="false"
+                    android:paddingEnd="12dp"
+                    android:background="@android:color/transparent">
                 <LinearLayout
                         android:id="@+id/radio_channels_layout"
-                        android:gravity="center"
-                        android:layout_gravity="center"
+                        android:gravity="center|bottom"
+                        android:layout_gravity="center|bottom"
                         android:layout_width="match_parent"
                         android:layout_height="112dp"
                         android:background="@drawable/primary_element_box_shape"
@@ -155,72 +157,7 @@
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             tools:listitem="@layout/radio_channel_item" />
                 </LinearLayout>
-            </FrameLayout>-->
-
-            <LinearLayout
-                    android:id="@+id/radio_channels_layout"
-                    android:gravity="center|bottom"
-                    android:layout_gravity="center|bottom"
-                    android:layout_width="match_parent"
-                    app:calc_width="@{24}"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_height="112dp"
-                    android:background="@drawable/primary_element_box_shape"
-                    android:clickable="true"
-                    android:elevation="5.3dp"
-                    android:focusable="false"
-                    android:orientation="vertical">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="31dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent">
-
-                    <TextView
-                            android:id="@+id/radio_channel_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="11.3dp"
-                            android:layout_marginBottom="11.8dp"
-                            android:text="@string/radio_channels"
-                            android:textColor="@color/primaryText"
-                            android:textSize="10.1sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageButton
-                            android:id="@+id/toggle_radio_channel_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="11.8dp"
-                            android:background="?selectableItemBackgroundBorderless"
-                            android:contentDescription="@string/toggle_radio_channels"
-                            android:src="@drawable/ic_round_keyboard_arrow_up_24"
-                            app:layout_constraintBottom_toBottomOf="@+id/radio_channel_text"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/radio_channel_text" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/radio_channels_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:clipToPadding="false"
-                        android:orientation="horizontal"
-                        android:paddingStart="9.5dp"
-                        android:paddingEnd="9.5dp"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/radio_channel_item" />
-            </LinearLayout>
+            </FrameLayout>
 
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 

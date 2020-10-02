@@ -1,5 +1,6 @@
 package com.upstart13.legba.fragment;
 
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -8,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -22,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -39,6 +42,8 @@ import com.upstart13.legba.databinding.FragmentMissionBinding;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import timber.log.Timber;
 
 import static com.upstart13.legba.util.DimUtils.convertDpToPx;
 import static com.upstart13.legba.util.RUtils.getImageResource;
@@ -72,6 +77,11 @@ public class MissionFragment extends Fragment {
 
         binding.missionViewPager.setAdapter(new ChannelSlidePageAdapter(this, nonRadioChannels));
 
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            Timber.i("Landscape mode");
+            setMainContentsViewPagerHeight();
+        }
+
         setupViewPagerOnPageChangeListener();
         setupViewPagerDotIndicator(nonRadioChannels);
         setUpSlidingUpPanelListener();
@@ -88,6 +98,16 @@ public class MissionFragment extends Fragment {
         fragmentDescriptionText = requireActivity().findViewById(R.id.fragment_description);
         fragmentDescriptionText.setTextColor(this.getResources().getColor(R.color.paleRed));
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
+    }
+
+    private void setMainContentsViewPagerHeight(){
+        Fragment fragment = this;
+        binding.mainContentViewPager.post(() -> {
+            LinearLayout mainContentViewPager = binding.mainContentViewPager;
+            ViewGroup.LayoutParams layoutParams = mainContentViewPager.getLayoutParams();
+            layoutParams.height = mainContentViewPager.getHeight() - convertDpToPx(fragment, 31);
+            mainContentViewPager.setLayoutParams(layoutParams);
+        });
     }
 
     private void setupViewPagerOnPageChangeListener() {
@@ -128,7 +148,7 @@ public class MissionFragment extends Fragment {
         });
     }
 
-    private void setupViewPagerDotIndicator(List nonRadioChannels) {
+    private void setupViewPagerDotIndicator(List<Channel> nonRadioChannels) {
         binding.tabLayout.removeAllViews();
         int dotNumber = nonRadioChannels.size() > 2 ? nonRadioChannels.size() + 1 : nonRadioChannels.size();
         dotIndicators = new ImageView[dotNumber];
