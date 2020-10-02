@@ -102,7 +102,7 @@
                         android:layout_gravity="center|bottom"
                         android:layout_width="match_parent"
                         android:layout_height="112dp"
-                        android:background="@drawable/primary_element_box_shape"
+                        android:background="@drawable/radio_layout_box_shape"
                         android:clickable="true"
                         android:elevation="5.3dp"
                         android:focusable="false"

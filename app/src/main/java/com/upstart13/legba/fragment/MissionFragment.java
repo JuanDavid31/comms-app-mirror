@@ -163,6 +163,13 @@ public class MissionFragment extends Fragment {
     }
 
     private void setUpSlidingUpPanelListener() {
+        binding.toggleRadioChannelButton.setOnClickListener(view -> {
+            if(binding.radioChannelsSlidingupLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
+                binding.radioChannelsSlidingupLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+            }else if(binding.radioChannelsSlidingupLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
+                binding.radioChannelsSlidingupLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
         binding.radioChannelsSlidingupLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
@@ -171,11 +178,10 @@ public class MissionFragment extends Fragment {
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
                 ImageButton toggleRadioChannelButton = binding.toggleRadioChannelButton;
-                float newRotation = toggleRadioChannelButton.getRotation() + 180F;
                 if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
-                    toggleRadioChannelButton.animate().rotation(newRotation).setInterpolator(new AccelerateDecelerateInterpolator());
+                    toggleRadioChannelButton.animate().rotation(180F).setInterpolator(new AccelerateDecelerateInterpolator());
                 } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                    toggleRadioChannelButton.animate().rotation(newRotation).setInterpolator(new AccelerateDecelerateInterpolator());
+                    toggleRadioChannelButton.animate().rotation(0F).setInterpolator(new AccelerateDecelerateInterpolator());
                 }
             }
         });
