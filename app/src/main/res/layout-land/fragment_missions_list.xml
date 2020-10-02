@@ -17,7 +17,8 @@
             android:paddingTop="11.25dp"
             android:paddingEnd="12dp"
             android:paddingBottom="5.25dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
             tools:context=".fragment.MissionsListFragment"
             tools:itemCount="6"
             tools:listitem="@layout/mission_item" />

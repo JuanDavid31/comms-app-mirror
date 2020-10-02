@@ -1,5 +1,6 @@
 package com.upstart13.legba.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.upstart13.legba.HostActivity;
@@ -32,12 +34,24 @@ public class MissionsListFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_missions_list, container, false);
         setupToolbar();
         List<Mission> missions = new DataManager().getMissions();
         MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), this);
         binding.missionsListRecyclerView.setHasFixedSize(true);
-        binding.missionsListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        int orientation = getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_PORTRAIT){
+            Timber.i("Portrait mode");
+            binding.missionsListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }else if(orientation == Configuration.ORIENTATION_LANDSCAPE){
+            Timber.i("Landscape mode");
+            binding.missionsListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        }
+
+
         binding.missionsListRecyclerView.setAdapter(adapter);
         adapter.setMissions(missions);
         return binding.getRoot();
