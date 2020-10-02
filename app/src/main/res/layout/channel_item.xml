@@ -89,8 +89,8 @@
             android:id="@+id/last_message_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/open_sans_regular"
             android:layout_marginBottom="3dp"
+            android:fontFamily="@font/open_sans_regular"
             android:text="Last Message:"
             android:textColor="@color/pinkish_grey"
             android:textSize="10.1sp"
@@ -113,6 +113,8 @@
             android:id="@+id/last_message_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="12dp"
             android:fontFamily="@font/built_titling_rg_bold"
             android:letterSpacing="0.02"
             android:shadowColor="#d4000000"
@@ -120,32 +122,21 @@
             android:text="John Waren"
             android:textColor="@color/pinkish_grey"
             android:textSize="12.4sp"
-            app:layout_constraintBottom_toTopOf="@id/last_message_nickname_text"
-            app:layout_constraintStart_toStartOf="@id/last_message_nickname_text" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
             android:id="@+id/last_message_nickname_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="13.3dp"
-            android:layout_marginBottom="12dp"
             android:fontFamily="@font/open_sans_light"
             android:text="Johnister"
             android:textColor="@color/greyish_93"
             android:textSize="10.1sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:fontFamily="@font/open_sans_regular"
-            android:text="544321124"
-            android:textColor="@color/pinkish_grey_93"
-            android:textSize="10.1sp"
-            app:layout_constraintBottom_toBottomOf="@id/last_message_nickname_text"
-            app:layout_constraintStart_toEndOf="@id/last_message_nickname_text" />
+            android:layout_marginStart="6dp"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintBottom_toBottomOf="@id/last_message_name"
+            app:layout_constraintStart_toEndOf="@id/last_message_name" />
 
     <ImageButton
             android:layout_width="wrap_content"
