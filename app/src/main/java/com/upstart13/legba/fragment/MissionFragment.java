@@ -135,7 +135,7 @@ public class MissionFragment extends Fragment {
 
     private void setupViewPagerDotIndicator(List<Channel> nonRadioChannels) {
         binding.tabLayout.removeAllViews();
-        int dotNumber = nonRadioChannels.size() == 3 ? 3 + 1 : nonRadioChannels.size() + 1;
+        int dotNumber = nonRadioChannels.size() == 3 ? 3 + 1 + 1: nonRadioChannels.size() + 1;
         dotIndicators = new ImageView[dotNumber];
         for (int i = 0; i < dotNumber; i++) {
             dotIndicators[i] = new ImageView(getContext());
@@ -207,6 +207,10 @@ public class MissionFragment extends Fragment {
         private Fragment fragment;
         private List<Channel> channels;
 
+        private int CHANNEL_ITEM = 0;
+        private int RESUME_CHANNELS_ITEM = 1;
+        private int ADD_CHANNEL_ITEM = 2;
+
         private int priorityIndicator = 1;
         private boolean paleRed = true;
         private boolean waterBlue = false;
@@ -216,9 +220,6 @@ public class MissionFragment extends Fragment {
         private boolean priority1SpekearOn = true;
         private boolean priority2SpeakerOn = true;
 
-        private int CHANNEL_ITEM = 0;
-        private int RESUME_CHANNELS_ITEM = 1;
-        private int ADD_CHANNEL_ITEM = 2;
 
         public void setChannels(List<Channel> channels) {
             this.channels = channels;
@@ -230,13 +231,11 @@ public class MissionFragment extends Fragment {
             this.channels = channels;
         }
 
-
-
         @Override
         public int getItemViewType(int position) {
-            if (position < 3 && position < channels.size()) {
+            if (position < channels.size()) {
                 return CHANNEL_ITEM;
-            } else if (channels.size() == 3 && 3 == position){
+            } else if (channels.size() > 1 && channels.size() == position){
                 return RESUME_CHANNELS_ITEM;
             } else {
                 return ADD_CHANNEL_ITEM;
@@ -354,7 +353,7 @@ public class MissionFragment extends Fragment {
         public int getItemCount() {
             int resumeItems = 1;
             int addChannelItems = 1;
-            return channels.size() == 3 ? 3 + resumeItems : channels.size() + addChannelItems;
+            return channels.size() > 1 ? channels.size() + resumeItems + addChannelItems : channels.size() + addChannelItems;
         }
 
         class GenericViewHolder extends RecyclerView.ViewHolder {
