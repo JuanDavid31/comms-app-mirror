@@ -1,6 +1,5 @@
 package com.upstart13.legba.fragment;
 
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -9,7 +8,6 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -24,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -42,8 +39,6 @@ import com.upstart13.legba.databinding.FragmentMissionBinding;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import timber.log.Timber;
 
 import static com.upstart13.legba.util.DimUtils.convertDpToPx;
 import static com.upstart13.legba.util.RUtils.getImageResource;
@@ -104,38 +99,33 @@ public class MissionFragment extends Fragment {
                 String ordinalPosition;
                 switch (position) {
                     case 0:
-                        ordinalPosition = "First";
+                        ordinalPosition = "Black Ops";
                         break;
                     case 1:
-                        ordinalPosition = "Second";
+                        ordinalPosition = "John";
                         break;
                     case 2:
-                        ordinalPosition = "Third";
+                        ordinalPosition = "Connor";
                         break;
                     case 3:
-                        ordinalPosition = "Fourth";
+                        ordinalPosition = "Tactital Ground";
                         break;
                     case 4:
-                        ordinalPosition = "Fifth";
+                        ordinalPosition = "Add Title";
                         break;
                     default:
                         ordinalPosition = "";
                         break;
                 }
 
-                SpannableStringBuilder ssb = new SpannableStringBuilder(String.format("%s View", ordinalPosition));
-                final ForegroundColorSpan fcs = new ForegroundColorSpan(getResources().getColor(R.color.pinkish_grey));
-
-                ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ordinalPosition.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                ssb.setSpan(fcs, ordinalPosition.length() + 1, ssb.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                fragmentDescriptionText.setText(ssb);
+                fragmentDescriptionText.setText(ordinalPosition);
             }
         });
     }
 
-    private void setupViewPagerDotIndicator(List<Channel> nonRadioChannels) {
+    private void setupViewPagerDotIndicator(List<Channel> channels) {
         binding.tabLayout.removeAllViews();
-        int dotNumber = nonRadioChannels.size() == 3 ? 3 + 1 + 1: nonRadioChannels.size() + 1;
+        int dotNumber = channels.size() > 1 ? channels.size() + 1 + 1: channels.size() + 1;
         dotIndicators = new ImageView[dotNumber];
         for (int i = 0; i < dotNumber; i++) {
             dotIndicators[i] = new ImageView(getContext());
@@ -216,10 +206,9 @@ public class MissionFragment extends Fragment {
         private boolean waterBlue = false;
         private boolean orange = false;
 
-        private boolean primarySpeakerOn = true;
-        private boolean priority1SpekearOn = true;
-        private boolean priority2SpeakerOn = true;
-
+        private boolean isPrimarySpeakerOn = true;
+        private boolean isPriority1SpekearOn = true;
+        private boolean isPriority2SpeakerOn = true;
 
         public void setChannels(List<Channel> channels) {
             this.channels = channels;
@@ -290,29 +279,66 @@ public class MissionFragment extends Fragment {
                     channelHolder.channelType.setTextColor(getOrangeColor());
                     channelHolder.lastMessageTime.setTextColor(getOrangeColor());
                 }
+
+                switch (position){
+                    case 0:
+                        toggleSpeakerIcon(isPrimarySpeakerOn, channelHolder.speakerButton);
+                        channelHolder.speakerButton.setOnClickListener(view -> {
+                            isPrimarySpeakerOn = !isPrimarySpeakerOn;
+                            toggleSpeakerIcon(isPrimarySpeakerOn, (ImageButton) view);
+                        });
+                        return;
+                    case 1:
+                        toggleSpeakerIcon(isPriority1SpekearOn, channelHolder.speakerButton);
+                        channelHolder.speakerButton.setOnClickListener(view -> {
+                            isPriority1SpekearOn = !isPriority1SpekearOn;
+                            toggleSpeakerIcon(isPriority1SpekearOn, (ImageButton) view);
+                        });
+                        return;
+                    case 2:
+                        toggleSpeakerIcon(isPriority2SpeakerOn, channelHolder.speakerButton);
+                        channelHolder.speakerButton.setOnClickListener(view -> {
+                            isPriority2SpeakerOn = !isPriority2SpeakerOn;
+                            toggleSpeakerIcon(isPriority2SpeakerOn, (ImageButton) view);
+                        });
+                        return;
+                    default:
+                }
+
             } else if (holder instanceof ChannelResumeViewHolder) {
                 ChannelResumeViewHolder channelResumeHolder = (ChannelResumeViewHolder) holder;
 
+                channelResumeHolder.primaryChannel.setVisibility(View.VISIBLE);
                 channelResumeHolder.primaryChannelImage.setImageResource(getImageResource(channels.get(0).image));
                 channelResumeHolder.primaryChannelName.setText(channels.get(0).name);
+                toggleSpeakerIcon(isPrimarySpeakerOn, channelResumeHolder.primaryChannelSpeaker);
                 channelResumeHolder.primaryChannelSpeaker.setOnClickListener(view -> {
-                    primarySpeakerOn = !primarySpeakerOn;
-                    toggleSpeakerIcon(primarySpeakerOn, (ImageButton) view);
+                    isPrimarySpeakerOn = !isPrimarySpeakerOn;
+                    toggleSpeakerIcon(isPrimarySpeakerOn, (ImageButton) view);
                 });
 
+
+                channelResumeHolder.priorityChannel1.setVisibility(View.VISIBLE);
                 channelResumeHolder.priorityChannel1Image.setImageResource(getImageResource(channels.get(1).image));
                 channelResumeHolder.priorityChannel1Name.setText(channels.get(1).name);
+                toggleSpeakerIcon(isPriority1SpekearOn, channelResumeHolder.priorityChannel1Speaker);
                 channelResumeHolder.priorityChannel1Speaker.setOnClickListener(view -> {
-                    priority1SpekearOn = !priority1SpekearOn;
-                    toggleSpeakerIcon(priority1SpekearOn, (ImageButton) view);
+                    isPriority1SpekearOn = !isPriority1SpekearOn;
+                    toggleSpeakerIcon(isPriority1SpekearOn, (ImageButton) view);
                 });
 
+                if(channels.size() < 3)return;
+
+                channelResumeHolder.priorityChannel2.setVisibility(View.VISIBLE);
                 channelResumeHolder.priorityChannel2Image.setImageResource(getImageResource(channels.get(2).image));
                 channelResumeHolder.priorityChannel2Name.setText(channels.get(2).name);
+                toggleSpeakerIcon(isPriority2SpeakerOn, channelResumeHolder.priorityChannel2Speaker);
                 channelResumeHolder.priorityChannel2Speaker.setOnClickListener(view -> {
-                    priority2SpeakerOn = !priority2SpeakerOn;
-                    toggleSpeakerIcon(priority2SpeakerOn, (ImageButton) view);
+                    isPriority2SpeakerOn = !isPriority2SpeakerOn;
+                    toggleSpeakerIcon(isPriority2SpeakerOn, (ImageButton) view);
                 });
+
+
             } else if (holder instanceof AddChannelViewHolder) {
                 //TODO: Add redirection to addChannelButton.
             }
@@ -370,6 +396,7 @@ public class MissionFragment extends Fragment {
             private TextView channelName;
             private TextView channelType;
             private TextView lastMessageTime;
+            private ImageButton speakerButton;
 
             public ChannelViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -378,17 +405,23 @@ public class MissionFragment extends Fragment {
                 channelName = itemView.findViewById(R.id.channel_name_text);
                 channelType = itemView.findViewById(R.id.channel_type_text);
                 lastMessageTime = itemView.findViewById(R.id.last_message_time);
+                speakerButton = itemView.findViewById(R.id.channel_speaker);
             }
         }
 
         class ChannelResumeViewHolder extends GenericViewHolder {
 
+            private View primaryChannel;
             private RoundedImageView primaryChannelImage;
             private TextView primaryChannelName;
             private ImageButton primaryChannelSpeaker;
+
+            private View priorityChannel1;
             private RoundedImageView priorityChannel1Image;
             private TextView priorityChannel1Name;
             private ImageButton priorityChannel1Speaker;
+
+            private View priorityChannel2;
             private RoundedImageView priorityChannel2Image;
             private TextView priorityChannel2Name;
             private ImageButton priorityChannel2Speaker;
@@ -396,12 +429,17 @@ public class MissionFragment extends Fragment {
             public ChannelResumeViewHolder(@NonNull View itemView) {
                 super(itemView);
 
+                primaryChannel = itemView.findViewById(R.id.primary_channel_layout);
                 primaryChannelImage = itemView.findViewById(R.id.primary_channel_image);
                 primaryChannelName = itemView.findViewById(R.id.primary_channel_name_text);
                 primaryChannelSpeaker = itemView.findViewById(R.id.primary_channel_speaker);
+
+                priorityChannel1 = itemView.findViewById(R.id.priority_channel_1_layout);
                 priorityChannel1Name = itemView.findViewById(R.id.priority_channel_1_name_text);
                 priorityChannel1Image = itemView.findViewById(R.id.priority_channel_1_image);
                 priorityChannel1Speaker = itemView.findViewById(R.id.priority_channel_1_speaker);
+
+                priorityChannel2 = itemView.findViewById(R.id.priority_channel_2_layout);
                 priorityChannel2Name = itemView.findViewById(R.id.priority_channel_2_name_text);
                 priorityChannel2Image = itemView.findViewById(R.id.priority_channel_2_image);
                 priorityChannel2Speaker = itemView.findViewById(R.id.priority_channel_2_speaker);

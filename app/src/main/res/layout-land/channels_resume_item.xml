@@ -22,10 +22,10 @@
                 style="@style/priorityChannelLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:elevation="0.3dp"
                 android:layout_marginBottom="6dp"
+                android:layout_weight="1"
                 android:background="@drawable/channel_resumen_item_box_shape"
+                android:elevation="0.3dp"
                 app:layout_constraintBottom_toTopOf="@+id/radio_channels_layout"
                 app:layout_constraintStart_toStartOf="@+id/primary_channel_layout"
                 app:layout_constraintTop_toBottomOf="@+id/primary_channel_layout"
@@ -55,10 +55,10 @@
                     android:letterSpacing="0.04"
                     android:shadowColor="#d4000000"
                     android:shadowRadius="9"
+                    android:text="DELTA TEAM"
                     android:textSize="16.1sp"
                     app:layout_constraintStart_toEndOf="@+id/priority_channel_1_image"
-                    app:layout_constraintTop_toTopOf="@+id/priority_channel_1_image"
-                    android:text="DELTA TEAM" />
+                    app:layout_constraintTop_toTopOf="@+id/priority_channel_1_image" />
 
             <TextView
                     android:id="@+id/priority_channel_1_description"
@@ -86,10 +86,9 @@
 
             <ImageButton
                     android:id="@+id/priority_channel_1_mic"
-                    android:layout_width="14dp"
-                    android:layout_height="20dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="12.8dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginBottom="4dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:contentDescription="@string/channel_mic"
                     android:src="@drawable/ic_filled_mic"
@@ -101,14 +100,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_begin="19dp" />
+                    app:layout_constraintGuide_begin="15.8dp" />
 
             <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_end="17dp" />
+                    app:layout_constraintGuide_end="15.5dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_end="15.8dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -117,10 +123,10 @@
                 style="@style/priorityChannelLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:elevation="0.3dp"
                 android:layout_marginBottom="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/channel_resumen_item_box_shape"
+                android:elevation="0.3dp"
                 app:layout_constraintBottom_toBottomOf="@+id/priority_channel_1_layout"
                 app:layout_constraintEnd_toEndOf="@+id/primary_channel_layout"
                 app:layout_constraintTop_toTopOf="@+id/priority_channel_1_layout">
@@ -147,10 +153,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="13.3dp"
                     android:letterSpacing="0.04"
+                    android:text="FIRE TEAM"
                     android:textSize="16.1sp"
                     app:layout_constraintStart_toEndOf="@+id/priority_channel_2_image"
-                    app:layout_constraintTop_toTopOf="@+id/priority_channel_2_image"
-                    android:text="FIRE TEAM" />
+                    app:layout_constraintTop_toTopOf="@+id/priority_channel_2_image" />
 
             <TextView
                     android:id="@+id/textView2"
@@ -168,8 +174,8 @@
                     android:id="@+id/priority_channel_2_speaker"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="12.3dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginEnd="15.5dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:contentDescription="@string/channel_link"
                     android:src="@drawable/ic_speaker"
@@ -178,10 +184,9 @@
 
             <ImageButton
                     android:id="@+id/priority_channel_2_mic"
-                    android:layout_width="14dp"
-                    android:layout_height="20dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="12.8dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginBottom="5dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:contentDescription="@string/channel_mic"
                     android:src="@drawable/ic_filled_mic"
@@ -193,14 +198,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_begin="19dp" />
+                    app:layout_constraintGuide_begin="15.8dp" />
 
             <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_end="17dp" />
+                    app:layout_constraintGuide_end="15.5dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_end="16dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
@@ -210,9 +222,9 @@
             android:id="@+id/primary_channel_layout"
             android:layout_width="212dp"
             android:layout_height="match_parent"
+            android:layout_marginStart="6dp"
             android:background="@drawable/channel_resumen_item_box_shape"
             android:elevation="0.3dp"
-            android:layout_marginStart="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -241,10 +253,10 @@
                 android:letterSpacing="0.04"
                 android:shadowColor="#d4000000"
                 android:shadowRadius="9"
+                android:text="ALPHA TEAM"
                 android:textSize="16.1sp"
                 app:layout_constraintStart_toEndOf="@+id/primary_channel_image"
-                app:layout_constraintTop_toTopOf="@+id/primary_channel_image"
-                android:text="ALPHA TEAM" />
+                app:layout_constraintTop_toTopOf="@+id/primary_channel_image" />
 
         <TextView
                 style="@style/openSansRegularFont"
@@ -273,10 +285,10 @@
 
         <ImageButton
                 android:id="@+id/primary_channel_speaker"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="12.3dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="7dp"
+                android:padding="50dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_link"
                 android:src="@drawable/ic_speaker"
@@ -285,15 +297,28 @@
 
         <ImageButton
                 android:id="@+id/primary_channel_mic"
-                android:layout_width="14dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="12.8dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="3dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_mic"
                 android:src="@drawable/ic_filled_mic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_end="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="16.5dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -16,9 +16,9 @@
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="85dp"
+                android:layout_height="50dp"
                 android:background="?attr/colorPrimary"
-                android:minHeight="85dp"
+                android:minHeight="73dp"
                 android:theme="@style/AppTheme">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +34,7 @@
                         android:contentDescription="@string/logo"
                         android:scaleType="center"
                         android:scrollX="-23dp"
-                        android:scrollY="82dp"
+                        android:scrollY="112dp"
                         android:src="@drawable/ic_logo"
                         tools:visibility="visible"
                         android:visibility="invisible"
@@ -49,6 +49,7 @@
                         style="@style/toolbar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
                         android:layout_gravity="center"
                         android:text="overlord"
                         android:visibility="visible"
@@ -57,15 +58,16 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+
                 <TextView
                         android:id="@+id/fragment_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginBottom="11dp"
-                        android:fontFamily="@font/open_sans_bold"
+                        android:layout_marginBottom="9dp"
+                        android:fontFamily="@font/open_sans_regular"
                         android:letterSpacing="0.02"
-                        android:text="Connor"
+                        android:text="Black Ops"
                         android:textColor="@color/paleRed"
                         android:textSize="12sp"
                         android:visibility="invisible"
@@ -80,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        app:layout_constraintGuide_end="14.3dp" />
+                        app:layout_constraintGuide_end="7.3dp" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

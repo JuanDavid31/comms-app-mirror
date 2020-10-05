@@ -4,23 +4,25 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
         android:orientation="vertical"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
         android:paddingStart="6dp"
+        android:paddingTop="6dp"
         android:paddingEnd="6dp"
-        android:clipToPadding="false">
+        android:paddingBottom="6dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/primary_channel_layout"
             android:layout_width="match_parent"
             android:layout_height="145dp"
+            android:layout_marginBottom="5.5dp"
             android:background="@drawable/channel_resumen_item_box_shape"
             android:elevation="0.3dp"
-            android:layout_marginBottom="5.5dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
 
         <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/primary_channel_image"
@@ -46,10 +48,10 @@
                 android:letterSpacing="0.04"
                 android:shadowColor="#d4000000"
                 android:shadowRadius="9"
+                android:text="ALPHA TEAM"
                 android:textSize="16.1sp"
                 app:layout_constraintStart_toEndOf="@+id/primary_channel_image"
-                app:layout_constraintTop_toTopOf="@+id/primary_channel_image"
-                android:text="ALPHA TEAM" />
+                app:layout_constraintTop_toTopOf="@+id/primary_channel_image" />
 
         <TextView
                 style="@style/openSansRegularFont"
@@ -107,14 +109,16 @@
             style="@style/priorityChannelLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:elevation="0.3dp"
             android:layout_marginBottom="5dp"
+            android:layout_weight="1"
             android:background="@drawable/channel_resumen_item_box_shape"
+            android:elevation="0.3dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/radio_channels_layout"
             app:layout_constraintStart_toStartOf="@+id/primary_channel_layout"
             app:layout_constraintTop_toBottomOf="@+id/primary_channel_layout"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintVertical_bias="1.0"
+            tools:visibility="visible">
 
         <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/priority_channel_1_image"
@@ -140,10 +144,10 @@
                 android:letterSpacing="0.04"
                 android:shadowColor="#d4000000"
                 android:shadowRadius="9"
+                android:text="DELTA TEAM"
                 android:textSize="16.1sp"
                 app:layout_constraintStart_toEndOf="@+id/priority_channel_1_image"
-                app:layout_constraintTop_toTopOf="@+id/priority_channel_1_image"
-                android:text="DELTA TEAM" />
+                app:layout_constraintTop_toTopOf="@+id/priority_channel_1_image" />
 
         <TextView
                 android:id="@+id/priority_channel_1_description"
@@ -202,13 +206,15 @@
             style="@style/priorityChannelLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:elevation="0.3dp"
             android:layout_marginBottom="0dp"
             android:layout_weight="1"
             android:background="@drawable/channel_resumen_item_box_shape"
+            android:elevation="0.3dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/priority_channel_1_layout"
             app:layout_constraintEnd_toEndOf="@+id/primary_channel_layout"
-            app:layout_constraintTop_toTopOf="@+id/priority_channel_1_layout">
+            app:layout_constraintTop_toTopOf="@+id/priority_channel_1_layout"
+            tools:visibility="visible">
 
         <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/priority_channel_2_image"
@@ -232,10 +238,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="13.3dp"
                 android:letterSpacing="0.04"
+                android:text="FIRE TEAM"
                 android:textSize="16.1sp"
                 app:layout_constraintStart_toEndOf="@+id/priority_channel_2_image"
-                app:layout_constraintTop_toTopOf="@+id/priority_channel_2_image"
-                android:text="FIRE TEAM" />
+                app:layout_constraintTop_toTopOf="@+id/priority_channel_2_image" />
 
         <TextView
                 android:id="@+id/textView2"

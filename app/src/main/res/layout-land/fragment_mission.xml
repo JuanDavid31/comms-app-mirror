@@ -25,9 +25,9 @@
                 android:gravity="bottom"
                 app:umanoDragView="@id/radio_channels_layout"
                 app:umanoOverlay="false"
-                sothree:umanoClipPanel="false"
                 app:umanoPanelHeight="33dp"
                 app:umanoScrollableView="@id/radio_channels_recycler"
+                sothree:umanoClipPanel="false"
                 sothree:umanoFadeColor="@android:color/transparent"
                 sothree:umanoShadowHeight="0dp">
 
@@ -93,20 +93,21 @@
                     android:id="@+id/frame_sliding"
                     android:layout_width="wrap_content"
                     android:layout_height="112dp"
-                    android:paddingStart="12dp"
+                    android:background="@android:color/transparent"
                     android:clipToPadding="false"
-                    android:paddingEnd="12dp"
-                    android:background="@android:color/transparent">
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp">
+
                 <LinearLayout
                         android:id="@+id/radio_channels_layout"
-                        android:gravity="center|bottom"
-                        android:layout_gravity="center|bottom"
                         android:layout_width="match_parent"
                         android:layout_height="112dp"
+                        android:layout_gravity="center|bottom"
                         android:background="@drawable/radio_layout_box_shape"
                         android:clickable="true"
                         android:elevation="5.3dp"
                         android:focusable="false"
+                        android:gravity="center|bottom"
                         android:orientation="vertical">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
