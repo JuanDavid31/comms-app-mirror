@@ -135,7 +135,7 @@ public class MissionFragment extends Fragment {
 
     private void setupViewPagerDotIndicator(List<Channel> nonRadioChannels) {
         binding.tabLayout.removeAllViews();
-        int dotNumber = nonRadioChannels.size() > 2 ? nonRadioChannels.size() + 1 : nonRadioChannels.size();
+        int dotNumber = nonRadioChannels.size() == 3 ? 3 + 1 : nonRadioChannels.size() + 1;
         dotIndicators = new ImageView[dotNumber];
         for (int i = 0; i < dotNumber; i++) {
             dotIndicators[i] = new ImageView(getContext());
@@ -149,9 +149,9 @@ public class MissionFragment extends Fragment {
 
     private void setUpSlidingUpPanelListener() {
         binding.toggleRadioChannelButton.setOnClickListener(view -> {
-            if(binding.radioChannelsSlidingupLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
+            if (binding.radioChannelsSlidingupLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                 binding.radioChannelsSlidingupLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-            }else if(binding.radioChannelsSlidingupLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
+            } else if (binding.radioChannelsSlidingupLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
                 binding.radioChannelsSlidingupLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
@@ -216,6 +216,10 @@ public class MissionFragment extends Fragment {
         private boolean priority1SpekearOn = true;
         private boolean priority2SpeakerOn = true;
 
+        private int CHANNEL_ITEM = 0;
+        private int RESUME_CHANNELS_ITEM = 1;
+        private int ADD_CHANNEL_ITEM = 2;
+
         public void setChannels(List<Channel> channels) {
             this.channels = channels;
             notifyDataSetChanged();
@@ -226,26 +230,34 @@ public class MissionFragment extends Fragment {
             this.channels = channels;
         }
 
+
+
         @Override
         public int getItemViewType(int position) {
-            if (position < 3) {
-                return 0;
+            if (position < 3 && position < channels.size()) {
+                return CHANNEL_ITEM;
+            } else if (channels.size() == 3 && 3 == position){
+                return RESUME_CHANNELS_ITEM;
             } else {
-                return 1;
+                return ADD_CHANNEL_ITEM;
             }
         }
 
         @NonNull
         @Override
         public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            if (viewType == 0) {
+            if (viewType == CHANNEL_ITEM) {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.channel_item, parent, false);
                 return new ChannelViewHolder(itemView);
-            } else {
+            } else if (viewType == RESUME_CHANNELS_ITEM) {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.channels_resume_item, parent, false);
                 return new ChannelResumeViewHolder(itemView);
+            } else {
+                View itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.add_channel_item, parent, false);
+                return new AddChannelViewHolder(itemView);
             }
         }
 
@@ -302,6 +314,8 @@ public class MissionFragment extends Fragment {
                     priority2SpeakerOn = !priority2SpeakerOn;
                     toggleSpeakerIcon(priority2SpeakerOn, (ImageButton) view);
                 });
+            } else if (holder instanceof AddChannelViewHolder) {
+                //TODO: Add redirection to addChannelButton.
             }
         }
 
@@ -318,7 +332,7 @@ public class MissionFragment extends Fragment {
                 case PRIMARY:
                     return "Primary Channel";
                 case PRIORITY:
-                    String priority = "Priority Channel " + (priorityIndicator + 1);
+                    String priority = "Priority Channel " + priorityIndicator;
                     priorityIndicator++;
                     return priority;
                 case RADIO:
@@ -338,7 +352,9 @@ public class MissionFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return channels.size() > 2 ? channels.size() + 1 : channels.size();
+            int resumeItems = 1;
+            int addChannelItems = 1;
+            return channels.size() == 3 ? 3 + resumeItems : channels.size() + addChannelItems;
         }
 
         class GenericViewHolder extends RecyclerView.ViewHolder {
@@ -390,6 +406,13 @@ public class MissionFragment extends Fragment {
                 priorityChannel2Name = itemView.findViewById(R.id.priority_channel_2_name_text);
                 priorityChannel2Image = itemView.findViewById(R.id.priority_channel_2_image);
                 priorityChannel2Speaker = itemView.findViewById(R.id.priority_channel_2_speaker);
+            }
+        }
+
+        class AddChannelViewHolder extends GenericViewHolder {
+
+            public AddChannelViewHolder(@NonNull View itemView) {
+                super(itemView);
             }
         }
     }
