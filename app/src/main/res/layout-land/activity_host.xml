@@ -65,7 +65,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginBottom="9dp"
-                        android:fontFamily="@font/open_sans_regular"
+                        android:fontFamily="@font/open_sans_bold"
                         android:letterSpacing="0.02"
                         android:text="Black Ops"
                         android:textColor="@color/paleRed"

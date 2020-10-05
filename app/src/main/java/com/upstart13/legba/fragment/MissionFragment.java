@@ -110,9 +110,6 @@ public class MissionFragment extends Fragment {
                     case 3:
                         ordinalPosition = "Tactital Ground";
                         break;
-                    case 4:
-                        ordinalPosition = "Add Title";
-                        break;
                     default:
                         ordinalPosition = "";
                         break;
