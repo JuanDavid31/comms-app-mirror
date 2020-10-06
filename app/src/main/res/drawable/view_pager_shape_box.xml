@@ -2,5 +2,4 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/viewpager_shadow"/>
 
-
 </layer-list>

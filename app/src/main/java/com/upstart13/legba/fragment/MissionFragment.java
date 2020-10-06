@@ -267,8 +267,8 @@ public class MissionFragment extends Fragment {
                 ChannelViewHolder channelHolder = (ChannelViewHolder) holder;
 
                 Channel currentChannel = channels.get(position);
-                channelHolder.channelInfo.setOnClickListener(view -> NavHostFragment.findNavController(fragment)
-                        .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(currentChannel)));
+              /*  channelHolder.channelInfo.setOnClickListener(view -> NavHostFragment.findNavController(fragment)
+                        .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(currentChannel)));*/
                 channelHolder.channelImage.setImageResource(getImageResource(currentChannel.image));
                 channelHolder.channelName.setText(currentChannel.name);
                 channelHolder.channelType.setText(getTypeString(currentChannel.type));

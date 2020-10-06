@@ -33,7 +33,7 @@ public class HostActivity extends AppCompatActivity {
 
         AppBarConfiguration appBarConfiguration =
                 new AppBarConfiguration.Builder(navController.getGraph())
-                        .setOpenableLayout((Openable) findViewById(R.id.drawer))
+                        //.setOpenableLayout((Openable) findViewById(R.id.drawer))
                         .build();
 
         setupDrawerConfiguration(navController);
