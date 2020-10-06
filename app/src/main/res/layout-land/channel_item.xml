@@ -1,192 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/primary_channel_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="6.3dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginBottom="6dp"
-        android:background="@drawable/channel_item_shape"
-        android:elevation="0.3dp"
-        app:layout_constraintEnd_toEndOf="parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/primary_channel_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="6dp"
+    android:layout_marginTop="6.3dp"
+    android:layout_marginEnd="6dp"
+    android:layout_marginBottom="6dp"
+
+    android:background="@drawable/channel_item_shape"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/channel_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+
+        android:clickable="true"
+        android:clipToPadding="false"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:paddingStart="7dp"
+        android:paddingTop="7.8dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/channel_info"
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/channel_image"
+            android:layout_width="48dp"
+            android:layout_height="47.5dp"
+            android:elevation="5.3dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_border_color="@color/paleRed"
+            app:riv_border_width="0.8dp"
+            app:riv_corner_radius="5.3dp"
+            tools:src="@sample/channel" />
+
+        <TextView
+            android:id="@+id/channel_name_text"
+            style="@style/builtTitlingRgBoldFont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/channel_item_shape"
-            android:clickable="true"
-            android:clipToPadding="false"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:paddingStart="7dp"
-            android:paddingTop="7.8dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="12dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/channel_image"
-                android:layout_width="48dp"
-                android:layout_height="47.5dp"
-                android:elevation="5.3dp"
-                android:scaleType="fitCenter"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:riv_border_color="@color/paleRed"
-                app:riv_border_width="0.8dp"
-                app:riv_corner_radius="5.3dp"
-                tools:src="@sample/channel" />
+            android:layout_marginStart="10.8dp"
+            android:layout_marginTop="10dp"
+            android:letterSpacing="0.04"
+            android:shadowColor="#d4000000"
+            android:shadowRadius="9"
+            android:textColor="@color/pinkish_grey"
+            android:textSize="16.1sp"
+            app:layout_constraintStart_toEndOf="@+id/channel_image"
+            app:layout_constraintTop_toTopOf="@+id/channel_image"
+            tools:text="ALPHA TEAM" />
 
         <TextView
-                android:id="@+id/channel_name_text"
-                style="@style/builtTitlingRgBoldFont"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10.8dp"
-                android:layout_marginTop="10dp"
-                android:letterSpacing="0.04"
-                android:shadowColor="#d4000000"
-                android:shadowRadius="9"
-                android:textColor="@color/pinkish_grey"
-                android:textSize="16.1sp"
-                app:layout_constraintStart_toEndOf="@+id/channel_image"
-                app:layout_constraintTop_toTopOf="@+id/channel_image"
-                tools:text="ALPHA TEAM" />
-
-        <TextView
-                android:id="@+id/channel_type_text"
-                style="@style/openSansRegularFont"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="0dp"
-                android:letterSpacing="0.02"
-                android:text="Primary Channel"
-                android:textColor="@color/paleRed"
-                android:textSize="10.1sp"
-                app:layout_constraintTop_toBottomOf="@+id/channel_name_text"
-                app:layout_constraintStart_toStartOf="@+id/channel_name_text" />
+            android:id="@+id/channel_type_text"
+            style="@style/openSansRegularFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:letterSpacing="0.02"
+            android:text="Primary Channel"
+            android:textColor="@color/paleRed"
+            android:textSize="10.1sp"
+            app:layout_constraintStart_toStartOf="@+id/channel_name_text"
+            app:layout_constraintTop_toBottomOf="@+id/channel_name_text" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="43dp" />
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="43dp" />
 
 
     <TextView
-            android:id="@+id/last_message_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:fontFamily="@font/open_sans_regular"
-            android:text="Last Message:"
-            android:textColor="@color/pinkish_grey"
-            android:textSize="10.1sp"
-            app:layout_constraintBottom_toTopOf="@id/last_message_name"
-            app:layout_constraintStart_toStartOf="@id/last_message_name" />
+        android:id="@+id/last_message_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:fontFamily="@font/open_sans_regular"
+        android:text="Last Message:"
+        android:textColor="@color/pinkish_grey"
+        android:textSize="10.1sp"
+        app:layout_constraintBottom_toTopOf="@id/last_message_name"
+        app:layout_constraintStart_toStartOf="@id/last_message_name" />
 
     <TextView
-            android:id="@+id/last_message_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:fontFamily="@font/open_sans_regular"
-            android:text="12:35 PM"
-            android:textColor="@color/paleRed"
-            android:textSize="10.1sp"
-            app:layout_constraintBottom_toBottomOf="@+id/last_message_text"
-            app:layout_constraintStart_toEndOf="@id/last_message_text" />
+        android:id="@+id/last_message_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:fontFamily="@font/open_sans_regular"
+        android:text="12:35 PM"
+        android:textColor="@color/paleRed"
+        android:textSize="10.1sp"
+        app:layout_constraintBottom_toBottomOf="@+id/last_message_text"
+        app:layout_constraintStart_toEndOf="@id/last_message_text" />
 
     <TextView
-            android:id="@+id/last_message_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginBottom="12dp"
-            android:fontFamily="@font/built_titling_rg_bold"
-            android:letterSpacing="0.02"
-            android:shadowColor="#d4000000"
-            android:shadowRadius="9"
-            android:text="John Waren"
-            android:textColor="@color/pinkish_grey"
-            android:textSize="12.4sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+        android:id="@+id/last_message_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:fontFamily="@font/built_titling_rg_bold"
+        android:letterSpacing="0.02"
+        android:shadowColor="#d4000000"
+        android:shadowRadius="9"
+        android:text="John Waren"
+        android:textColor="@color/pinkish_grey"
+        android:textSize="12.4sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-            android:id="@+id/last_message_nickname_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_marginBottom="2dp"
-            android:fontFamily="@font/open_sans_light"
-            android:text="Johnister"
-            android:textColor="@color/greyish_93"
-            android:textSize="10.1sp"
-            app:layout_constraintBottom_toBottomOf="@id/last_message_name"
-            app:layout_constraintStart_toEndOf="@id/last_message_name" />
+        android:id="@+id/last_message_nickname_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="2dp"
+        android:fontFamily="@font/open_sans_light"
+        android:text="Johnister"
+        android:textColor="@color/greyish_93"
+        android:textSize="10.1sp"
+        app:layout_constraintBottom_toBottomOf="@id/last_message_name"
+        app:layout_constraintStart_toEndOf="@id/last_message_name" />
 
     <ImageButton
-            android:id="@+id/channel_speaker"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="3dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Speaker"
-            android:padding="13dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_speaker"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/channel_speaker"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="3dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Speaker"
+        android:padding="13dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_speaker"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_end="14dp" />
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="14dp" />
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="32.5dp" />
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="32.5dp" />
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline17"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="15.5dp" />
+        android:id="@+id/guideline17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="15.5dp" />
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="34.5dp" />
+        android:id="@+id/guideline22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="34.5dp" />
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline23"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="13.5dp" />
+        android:id="@+id/guideline23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="13.5dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
