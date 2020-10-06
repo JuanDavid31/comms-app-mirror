@@ -93,10 +93,12 @@
 
         <ImageView
                 android:id="@+id/primary_channel_mic"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginBottom="4dp"
+                android:layout_width="16.3dp"
+                android:layout_height="23.5dp"
+                android:layout_marginRight="15.3dp"
+                android:layout_marginBottom="16dp"
                 android:contentDescription="@string/channel_mic"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_filled_mic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -189,13 +191,15 @@
 
         <ImageView
                 android:id="@+id/priority_channel_1_mic"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginBottom="4dp"
+                android:layout_width="16.3dp"
+                android:layout_height="23.5dp"
+                android:layout_marginRight="15.3dp"
+                android:layout_marginBottom="16dp"
                 android:contentDescription="@string/channel_mic"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_filled_mic"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"  />
 
         <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline2"
@@ -281,13 +285,15 @@
 
         <ImageView
                 android:id="@+id/priority_channel_2_mic"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginBottom="4dp"
+                android:layout_width="16.3dp"
+                android:layout_height="23.5dp"
+                android:layout_marginRight="15.3dp"
+                android:layout_marginBottom="16dp"
                 android:contentDescription="@string/channel_mic"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_filled_mic"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"  />
 
         <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline4"
