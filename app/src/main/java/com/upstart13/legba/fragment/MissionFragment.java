@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.renderscript.ScriptGroup;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -32,6 +33,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.upstart13.legba.HostActivity;
 import com.upstart13.legba.R;
+import com.upstart13.legba.adapter.BindingAdapters;
 import com.upstart13.legba.data.dto.Channel;
 import com.upstart13.legba.data.dto.Mission;
 import com.upstart13.legba.databinding.FragmentMissionBinding;
@@ -76,6 +78,8 @@ public class MissionFragment extends Fragment {
         setupViewPagerDotIndicator(nonRadioChannels);
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();
+
+
 
         return binding.getRoot();
     }
@@ -277,8 +281,11 @@ public class MissionFragment extends Fragment {
                     channelHolder.lastMessageTime.setTextColor(getOrangeColor());
                 }
 
+                //BindingAdapters.setTouchArea(channelHolder.speakerButton, 100);
+
                 switch (position){
                     case 0:
+                        BindingAdapters.setTouchArea(channelHolder.speakerButton, 500);
                         toggleSpeakerIcon(isPrimarySpeakerOn, channelHolder.speakerButton);
                         channelHolder.speakerButton.setOnClickListener(view -> {
                             isPrimarySpeakerOn = !isPrimarySpeakerOn;

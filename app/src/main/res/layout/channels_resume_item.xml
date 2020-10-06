@@ -69,38 +69,53 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="12dp" />
+                app:layout_constraintGuide_begin="15.3dp" />
 
         <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="43dp" />
+                app:layout_constraintGuide_begin="34.3dp" />
 
         <ImageButton
                 android:id="@+id/primary_channel_speaker"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="12.3dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_link"
-                android:src="@drawable/ic_speaker"
+                android:padding="13dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_speaker_off"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
                 android:id="@+id/primary_channel_mic"
-                android:layout_width="14dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="12.8dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginBottom="4dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_mic"
                 android:src="@drawable/ic_filled_mic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="15.3dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="34.3dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -163,22 +178,23 @@
 
         <ImageButton
                 android:id="@+id/priority_channel_1_speaker"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="12.3dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_link"
-                android:src="@drawable/ic_speaker"
+                android:padding="13dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_speaker_off"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
                 android:id="@+id/priority_channel_1_mic"
-                android:layout_width="14dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="12.8dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginBottom="4dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_mic"
                 android:src="@drawable/ic_filled_mic"
@@ -247,7 +263,6 @@
                 android:id="@+id/textView2"
                 style="@style/openSansRegularFont"
                 android:layout_width="wrap_content"
-
                 android:layout_height="wrap_content"
                 android:text="Priority Channel 2"
                 android:textColor="@color/orange"
@@ -257,22 +272,23 @@
 
         <ImageButton
                 android:id="@+id/priority_channel_2_speaker"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="12.3dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_link"
-                android:src="@drawable/ic_speaker"
+                android:padding="13dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_speaker_off"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
                 android:id="@+id/priority_channel_2_mic"
-                android:layout_width="14dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="12.8dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginBottom="4dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_mic"
                 android:src="@drawable/ic_filled_mic"
