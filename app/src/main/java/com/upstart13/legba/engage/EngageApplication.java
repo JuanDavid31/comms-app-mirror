@@ -43,6 +43,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.rallytac.engage.engine.Engine;
+import com.upstart13.legba.R;
 import com.upstart13.legba.engage.Biometrics.DataSeries;
 import com.upstart13.legba.engage.Biometrics.RandomHumanBiometricGenerator;
 
