@@ -119,6 +119,7 @@
                             app:layout_constraintStart_toStartOf="parent">
 
                         <TextView
+                                android:fontFamily="@font/open_sans_semi_bold"
                                 android:id="@+id/radio_channel_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

@@ -58,7 +58,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
                 .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionFragment(currentMission)));
 
         holder.missionName.setText(currentMission.name);
-        holder.channelsNumber.setText(String.format("%s channels", currentMission.channels.size()));
+        holder.channelsNumber.setText(String.format("%s Channels", currentMission.channels.size()));
         holder.channels.removeAllViews();
 
         addChannelsToView(currentMission.channels, holder.channels);
