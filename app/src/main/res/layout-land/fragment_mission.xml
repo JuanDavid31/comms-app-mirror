@@ -25,7 +25,7 @@
                 android:gravity="bottom"
                 app:umanoDragView="@id/radio_channels_layout"
                 app:umanoOverlay="false"
-                app:umanoPanelHeight="33dp"
+                app:umanoPanelHeight="40dp"
                 app:umanoScrollableView="@id/radio_channels_recycler"
                 sothree:umanoClipPanel="false"
                 sothree:umanoFadeColor="@android:color/transparent"
@@ -58,7 +58,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="9dp"
                         android:layout_gravity="center"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="0dp"
                         android:layout_marginBottom="10.5dp"
                         android:gravity="center"
                         android:orientation="horizontal">

@@ -78,6 +78,7 @@ public class MissionFragment extends Fragment {
         setupViewPagerDotIndicator(nonRadioChannels);
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();
+        updateDots(0);
 
 
 
@@ -130,8 +131,8 @@ public class MissionFragment extends Fragment {
         dotIndicators = new ImageView[dotNumber];
         for (int i = 0; i < dotNumber; i++) {
             dotIndicators[i] = new ImageView(getContext());
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPx(this, 5), convertDpToPx(this, 5));
-            layoutParams.setMarginEnd(convertDpToPx(this, 8.3));
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPx(this, 4.5), convertDpToPx(this, 4.5));
+            layoutParams.setMarginEnd(convertDpToPx(this, 6.3));
             dotIndicators[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_dot));
             dotIndicators[i].setLayoutParams(layoutParams);
             binding.tabLayout.addView(dotIndicators[i]);
@@ -179,11 +180,21 @@ public class MissionFragment extends Fragment {
 
     private void updateDots(int position) {
         for (int i = 0; i < dotIndicators.length; i++) {
+            double dp;
+            int drawableId;
+
             if (i == position) {
-                dotIndicators[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.selected_dot));
+                dp = 5.5;
+                drawableId = R.drawable.selected_dot;
             } else {
-                dotIndicators[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_dot));
+                dp = 4.5;
+                drawableId = R.drawable.default_dot;
             }
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPx(this, dp), convertDpToPx(this, dp));
+            layoutParams.setMarginEnd(convertDpToPx(this, 6.3));
+            dotIndicators[i].setImageDrawable(ContextCompat.getDrawable(getContext(), drawableId));
+            dotIndicators[i].setLayoutParams(layoutParams);
         }
     }
 
