@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:umanoDragView="@id/radio_channels_layout"
             app:umanoOverlay="false"
-            app:umanoPanelHeight="40dp"
+            app:umanoPanelHeight="52dp"
             app:umanoScrollableView="@id/radio_channels_recycler"
             sothree:umanoClipPanel="false"
             sothree:umanoFadeColor="@android:color/transparent"
@@ -96,9 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="112dp"
                 android:background="@android:color/transparent"
-                android:clipToPadding="false"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp">
+                android:clipToPadding="false">
 
                 <LinearLayout
                     android:id="@+id/radio_channels_layout"
@@ -114,7 +112,7 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="31dp"
+                        android:layout_height="43dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
