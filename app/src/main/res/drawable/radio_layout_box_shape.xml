@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/primaryBlack" />
-    <corners android:topLeftRadius="6dp" android:topRightRadius="6dp" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/monitoring_channels_shadow"/>
+    <!--Padding in every direction 12dp.
+    clipped to the bottom-->
+    <item>
+        <shape>
+            <solid android:color="@color/primaryBlack" />
+            <corners
+                    android:topLeftRadius="6dp"
+                    android:topRightRadius="6dp" />
+        </shape>
+    </item>
+</layer-list>
