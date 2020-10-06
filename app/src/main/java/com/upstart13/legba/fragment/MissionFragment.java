@@ -292,29 +292,27 @@ public class MissionFragment extends Fragment {
                     channelHolder.lastMessageTime.setTextColor(getOrangeColor());
                 }
 
-                //BindingAdapters.setTouchArea(channelHolder.speakerButton, 100);
 
                 switch (position){
                     case 0:
-                        BindingAdapters.setTouchArea(channelHolder.speakerButton, 500);
                         toggleSpeakerIcon(isPrimarySpeakerOn, channelHolder.speakerButton);
                         channelHolder.speakerButton.setOnClickListener(view -> {
                             isPrimarySpeakerOn = !isPrimarySpeakerOn;
-                            toggleSpeakerIcon(isPrimarySpeakerOn, (ImageButton) view);
+                            toggleSpeakerIcon(isPrimarySpeakerOn, (ImageView) view);
                         });
                         return;
                     case 1:
                         toggleSpeakerIcon(isPriority1SpekearOn, channelHolder.speakerButton);
                         channelHolder.speakerButton.setOnClickListener(view -> {
                             isPriority1SpekearOn = !isPriority1SpekearOn;
-                            toggleSpeakerIcon(isPriority1SpekearOn, (ImageButton) view);
+                            toggleSpeakerIcon(isPriority1SpekearOn, (ImageView) view);
                         });
                         return;
                     case 2:
                         toggleSpeakerIcon(isPriority2SpeakerOn, channelHolder.speakerButton);
                         channelHolder.speakerButton.setOnClickListener(view -> {
                             isPriority2SpeakerOn = !isPriority2SpeakerOn;
-                            toggleSpeakerIcon(isPriority2SpeakerOn, (ImageButton) view);
+                            toggleSpeakerIcon(isPriority2SpeakerOn, (ImageView) view);
                         });
                         return;
                     default:
@@ -329,7 +327,7 @@ public class MissionFragment extends Fragment {
                 toggleSpeakerIcon(isPrimarySpeakerOn, channelResumeHolder.primaryChannelSpeaker);
                 channelResumeHolder.primaryChannelSpeaker.setOnClickListener(view -> {
                     isPrimarySpeakerOn = !isPrimarySpeakerOn;
-                    toggleSpeakerIcon(isPrimarySpeakerOn, (ImageButton) view);
+                    toggleSpeakerIcon(isPrimarySpeakerOn, (ImageView) view);
                 });
 
 
@@ -339,7 +337,7 @@ public class MissionFragment extends Fragment {
                 toggleSpeakerIcon(isPriority1SpekearOn, channelResumeHolder.priorityChannel1Speaker);
                 channelResumeHolder.priorityChannel1Speaker.setOnClickListener(view -> {
                     isPriority1SpekearOn = !isPriority1SpekearOn;
-                    toggleSpeakerIcon(isPriority1SpekearOn, (ImageButton) view);
+                    toggleSpeakerIcon(isPriority1SpekearOn, (ImageView) view);
                 });
 
                 if(channels.size() < 3)return;
@@ -350,7 +348,7 @@ public class MissionFragment extends Fragment {
                 toggleSpeakerIcon(isPriority2SpeakerOn, channelResumeHolder.priorityChannel2Speaker);
                 channelResumeHolder.priorityChannel2Speaker.setOnClickListener(view -> {
                     isPriority2SpeakerOn = !isPriority2SpeakerOn;
-                    toggleSpeakerIcon(isPriority2SpeakerOn, (ImageButton) view);
+                    toggleSpeakerIcon(isPriority2SpeakerOn, (ImageView) view);
                 });
 
 
@@ -382,7 +380,7 @@ public class MissionFragment extends Fragment {
             }
         }
 
-        private void toggleSpeakerIcon(boolean isOn, ImageButton button) {
+        private void toggleSpeakerIcon(boolean isOn, ImageView button) {
             if (isOn) {
                 button.setImageResource(R.drawable.ic_speaker);
             } else {
@@ -411,7 +409,7 @@ public class MissionFragment extends Fragment {
             private TextView channelName;
             private TextView channelType;
             private TextView lastMessageTime;
-            private ImageButton speakerButton;
+            private ImageView speakerButton;
 
             public ChannelViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -429,17 +427,17 @@ public class MissionFragment extends Fragment {
             private View primaryChannel;
             private RoundedImageView primaryChannelImage;
             private TextView primaryChannelName;
-            private ImageButton primaryChannelSpeaker;
+            private ImageView primaryChannelSpeaker;
 
             private View priorityChannel1;
             private RoundedImageView priorityChannel1Image;
             private TextView priorityChannel1Name;
-            private ImageButton priorityChannel1Speaker;
+            private ImageView priorityChannel1Speaker;
 
             private View priorityChannel2;
             private RoundedImageView priorityChannel2Image;
             private TextView priorityChannel2Name;
-            private ImageButton priorityChannel2Speaker;
+            private ImageView priorityChannel2Speaker;
 
             public ChannelResumeViewHolder(@NonNull View itemView) {
                 super(itemView);

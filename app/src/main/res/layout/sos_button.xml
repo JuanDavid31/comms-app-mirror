@@ -4,12 +4,6 @@
         android:layout_height="match_parent"
     android:clickable="true">
 
-    <FrameLayout
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless" />
-
     <TextView
             android:fontFamily="@font/built_titling_rg_bold"
             android:layout_width="wrap_content"
@@ -21,9 +15,6 @@
             android:text="SOS"
             android:textColor="@color/paleRed"
             android:textSize="17.6sp">
-
-        <!--android:layout_marginStart="27.5dp"
-        android:layout_marginEnd="27.5dp"-->
 
     </TextView>
 </FrameLayout>

@@ -93,12 +93,11 @@
                         android:layout_margin="6dp"
                         android:elevation="0.3dp">
 
-                    <ImageButton
+                    <ImageView
                             android:id="@+id/big_mic_button"
                             android:layout_width="27.5dp"
                             android:layout_height="39.5dp"
                             android:layout_marginEnd="36.8dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/channel_mic"
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_filled_mic"

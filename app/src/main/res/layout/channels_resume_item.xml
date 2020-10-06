@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="145dp"
             android:layout_marginBottom="5.5dp"
-            android:background="@drawable/channel_resumen_item_box_shape"
+            android:background="@drawable/channel_resume_item_box_shape"
             android:elevation="0.3dp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
@@ -78,13 +78,12 @@
                 android:orientation="horizontal"
                 app:layout_constraintGuide_begin="34.3dp" />
 
-        <ImageButton
+        <ImageView
                 android:id="@+id/primary_channel_speaker"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="2dp"
-                android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_link"
                 android:padding="13dp"
                 android:scaleType="centerCrop"
@@ -92,12 +91,11 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
+        <ImageView
                 android:id="@+id/primary_channel_mic"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginBottom="4dp"
-                android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_mic"
                 android:src="@drawable/ic_filled_mic"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -126,7 +124,7 @@
             android:layout_height="0dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="1"
-            android:background="@drawable/channel_resumen_item_box_shape"
+            android:background="@drawable/channel_resume_item_box_shape"
             android:elevation="0.3dp"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/radio_channels_layout"
@@ -176,13 +174,12 @@
                 app:layout_constraintStart_toStartOf="@+id/priority_channel_1_name_text"
                 app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_name_text" />
 
-        <ImageButton
+        <ImageView
                 android:id="@+id/priority_channel_1_speaker"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="2dp"
-                android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_link"
                 android:padding="13dp"
                 android:scaleType="centerCrop"
@@ -190,12 +187,11 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
+        <ImageView
                 android:id="@+id/priority_channel_1_mic"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginBottom="4dp"
-                android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_mic"
                 android:src="@drawable/ic_filled_mic"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -224,7 +220,7 @@
             android:layout_height="0dp"
             android:layout_marginBottom="0dp"
             android:layout_weight="1"
-            android:background="@drawable/channel_resumen_item_box_shape"
+            android:background="@drawable/channel_resume_item_box_shape"
             android:elevation="0.3dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/priority_channel_1_layout"
@@ -270,13 +266,12 @@
                 app:layout_constraintStart_toStartOf="@+id/priority_channel_2_name_text"
                 app:layout_constraintTop_toBottomOf="@+id/priority_channel_2_name_text" />
 
-        <ImageButton
+        <ImageView
                 android:id="@+id/priority_channel_2_speaker"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="2dp"
-                android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_link"
                 android:padding="13dp"
                 android:scaleType="centerCrop"
@@ -284,12 +279,11 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
+        <ImageView
                 android:id="@+id/priority_channel_2_mic"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginBottom="4dp"
-                android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/channel_mic"
                 android:src="@drawable/ic_filled_mic"
                 app:layout_constraintBottom_toBottomOf="parent"
