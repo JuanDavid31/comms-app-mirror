@@ -33,10 +33,10 @@ public class HostActivity extends AppCompatActivity {
 
         AppBarConfiguration appBarConfiguration =
                 new AppBarConfiguration.Builder(navController.getGraph())
-                        .setOpenableLayout((Openable) findViewById(R.id.drawer))
+                      //  .setOpenableLayout((Openable) findViewById(R.id.drawer))
                         .build();
 
-        setupDrawerConfiguration(navController);
+  //      setupDrawerConfiguration(navController);
         setupToolbarConfiguration(navController, appBarConfiguration);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             Timber.i("onDestinationChangedListener");

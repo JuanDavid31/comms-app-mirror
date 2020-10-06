@@ -136,10 +136,12 @@
                 android:id="@+id/frame_sliding"
                 android:layout_width="wrap_content"
                 android:layout_height="112dp"
-                android:background="@android:color/transparent"
+            android:background="@drawable/binding_background"
                 android:clipToPadding="false"
                 android:paddingStart="12dp"
-                android:paddingEnd="12dp">
+                android:paddingEnd="12dp"
+
+            >
 
             <LinearLayout
                     android:id="@+id/radio_channels_layout"
@@ -148,7 +150,7 @@
                     android:layout_gravity="center|bottom"
                     android:background="@drawable/radio_layout_box_shape"
                     android:clickable="true"
-                    android:elevation="5.3dp"
+
                     android:focusable="false"
                     android:gravity="center|bottom"
                     android:orientation="vertical">

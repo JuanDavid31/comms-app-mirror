@@ -41,17 +41,12 @@
                     tools:context=".fragment.MissionFragment">
 
                 <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/mission_view_pager"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginTop="8.3dp"
-                        android:layout_marginEnd="12dp"
-                        android:layout_marginBottom="6.3dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/primary_element_box_shape"
-                        android:clipToPadding="false"
-                        android:elevation="5.3dp" />
+                    android:id="@+id/mission_view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:clipToPadding="false"
+                    android:elevation="5.3dp" />
 
                 <LinearLayout
                         android:id="@+id/tab_layout"
@@ -167,52 +162,48 @@
         <FrameLayout
                 android:layout_width="220.5dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/primary_element_box_shape"
-                android:elevation="5.3dp">
+                            android:background="@drawable/primary_element_box_shape"
+               >
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="6dp"
-                    android:background="@drawable/channel_resumen_item_box_shape"
-                    android:elevation="0.3dp">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="6dp"
+                android:background="@drawable/binding_background"
+                android:elevation="0.3dp">
 
                 <ImageButton
-                        android:layout_width="27.5dp"
-                        android:layout_height="39.5dp"
-                        android:layout_marginEnd="49.3dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/channel_mic"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_filled_mic"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_width="27.5dp"
+                    android:layout_height="39.5dp"
+                    android:layout_marginEnd="49.3dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/channel_mic"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_filled_mic"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/guideline"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:layout_constraintGuide_begin="39.5dp" />
+                    android:id="@+id/guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_begin="39.5dp" />
 
                 <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/guideline2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:layout_constraintGuide_end="39.5dp" />
+                    android:id="@+id/guideline2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_end="39.5dp" />
 
                 <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/guideline3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_end="36.8dp" />
+                    android:id="@+id/guideline3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_end="36.8dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
     </LinearLayout>
