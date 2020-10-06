@@ -44,6 +44,7 @@
 
     <style name="secondaryTitle" parent="openSansLightFont">
         <item name="android:textSize">10.1sp</item>
+        <item name="android:textColor">@color/secondaryText</item>
     </style>
 
     <!--Font #3-->
