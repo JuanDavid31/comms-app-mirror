@@ -17,4 +17,11 @@
     <string name="request_pending">Request <b>pending</b></string>
     <string name="subchannel">Subchannel</string>
     <string name="sos">SOS</string>
+    <string name="android_notification_service_is_running">%1$s is running</string>
+    <string name="multicast_lock_name" translatable="false">.MulticastLock</string>
+    <string name="wifi_lock_name" translatable="false">.WifiLock</string>
+    <string name="wake_lock_name" translatable="false">.WakeLock</string>
+    <string name="android_notification_channel_id">.NotificationChannel</string>
+    <string name="android_notification_channel_name">.Notifications</string>
+    <string name="android_notitication_channel_description">%1$s is the standard for high-performance, reliable communications capabilities for secure systems</string>
 </resources>
