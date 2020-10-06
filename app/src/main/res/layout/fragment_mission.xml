@@ -168,7 +168,7 @@
                             android:layout_marginTop="11.3dp"
                             android:layout_marginBottom="11.8dp"
                             android:text="@string/radio_channels"
-                            android:textColor="@color/primaryText"
+                            android:textColor="@color/pinkish_grey"
                             android:textSize="10.1sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"

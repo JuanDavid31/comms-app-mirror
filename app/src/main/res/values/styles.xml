@@ -18,7 +18,7 @@
     </style>
 
     <style name="primaryText" parent="builtTitlingRgBoldFont">
-        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textColor">@color/pinkish_grey</item>
     </style>
 
     <style name="primaryName" parent="primaryText">
