@@ -1,23 +1,87 @@
 package com.rallytac.engageandroid.legba;
 
+import android.media.SoundPool;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.widget.SeekBar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.material.navigation.NavigationView;
+import com.rallytac.engageandroid.ActiveConfiguration;
+import com.rallytac.engageandroid.Globals;
+import com.rallytac.engageandroid.GroupSelectorAdapter;
+import com.rallytac.engageandroid.MapTracker;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.SimpleUiMainActivity;
+import com.rallytac.engageandroid.VolumeLevels;
 
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.Timer;
 
 import timber.log.Timber;
 
 public class HostActivity extends AppCompatActivity {
+
+
+
+    private static String TAG = SimpleUiMainActivity.class.getSimpleName();
+
+    private static int SETTINGS_REQUEST_CODE = 42;
+    private static int MISSION_LISTING_REQUEST_CODE = 43;
+    private static int PICK_MISSION_FILE_REQUEST_CODE = 44;
+    private static int CERTIFICATE_MANAGER_REQUEST_CODE = 45;
+    private static int ENGINE_POLICY_EDIT_REQUEST_CODE = 46;
+
+    private ActiveConfiguration _ac = null;
+    private Timer _waitForEngineStartedTimer = null;
+    private boolean _anyTxActive = false;
+    private boolean _anyTxPending = false;
+    private Animation _notificationBarAnimation = null;
+    private Runnable _actionOnNotificationBarClick = null;
+    private boolean _pttRequested = false;
+    private boolean _pttHardwareButtonDown = false;
+
+    private Animation _licensingBarAnimation = null;
+    private Runnable _actionOnLicensingBarClick = null;
+
+    private Animation _humanBiometricsAnimation = null;
+    private Runnable _actionOnHumanBiometricsClick = null;
+
+    private long _lastHeadsetKeyhookDown = 0;
+
+    private VolumeLevels _vlSaved;
+    private VolumeLevels _vlInProgress;
+    private boolean _volumeSynced = true;
+    private SeekBar _volumeSliderLastMoved = null;
+
+    private boolean _optAllowMultipleChannelView = true;
+
+    private GoogleMap _map;
+    private boolean _firstCameraPositioningDone = false;
+    private HashMap<String, MapTracker> _mapTrackers = new HashMap<>();
+
+    private RecyclerView _groupSelectorView = null;
+    private GroupSelectorAdapter _groupSelectorAdapter = null;
+
+    private int _keycodePtt = 0;
+    private SoundPool _soundpool = null;
+
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +89,14 @@ public class HostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_host);
         setSupportActionBar(findViewById(R.id.toolbar));
         setupConf();
+        setUpEngage();
+    }
+
+    private void setUpEngage() {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+        _ac = Globals.getEngageApplication().getActiveConfiguration();
+        Log.w("LEGBA SAYS:",_ac.getSelectedGroups().size()+"");
     }
 
     public void setupConf(){

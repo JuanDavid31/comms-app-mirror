@@ -60,7 +60,7 @@ public class MissionsListFragment extends Fragment {
     private void setupToolbar() {
         Timber.i("updateToolbar");
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
-        ((TextView)requireActivity().findViewById(R.id.toolbar_title_text)).setText(R.string.mission_list_title);
+        ((TextView)requireActivity().findViewById(R.id.toolbar_title_text)).setText("Mission");
         HostActivity hostActivity = (HostActivity) requireActivity();
         ActionBar actionBar = hostActivity.getSupportActionBar();
         Objects.requireNonNull(actionBar)

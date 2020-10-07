@@ -7,7 +7,7 @@
 
     <fragment
             android:id="@+id/missionsFragment"
-            android:name="com.upstart13.legba.fragment.MissionsListFragment"
+            android:name="com.rallytac.engageandroid.legba.fragment.MissionsListFragment"
             tools:layout="@layout/fragment_missions_list">
         <action
                 android:id="@+id/action_Missions_fragment_to_missionFragment"
@@ -19,11 +19,11 @@
     </fragment>
     <fragment
             android:id="@+id/missionFragment"
-            android:name="com.upstart13.legba.fragment.MissionFragment"
+            android:name="com.rallytac.engageandroid.legba.fragment.MissionFragment"
             tools:layout="@layout/fragment_mission">
         <argument
                 android:name="mission"
-                app:argType="com.upstart13.legba.data.dto.Mission" />
+                app:argType="com.rallytac.engageandroid.legba.data.dto.Mission" />
         <action
                 android:id="@+id/action_missionFragment_to_channelFragment"
                 app:destination="@id/channelFragment"
@@ -34,11 +34,11 @@
     </fragment>
     <fragment
             android:id="@+id/channelFragment"
-            android:name="com.upstart13.legba.fragment.ChannelFragment"
+            android:name="com.rallytac.engageandroid.legba.fragment.ChannelFragment"
             tools:layout="@layout/fragment_channel" >
         <argument
                 android:name="channel"
-                app:argType="com.upstart13.legba.data.dto.Channel" />
+                app:argType="com.rallytac.engageandroid.legba.data.dto.Channel" />
         <action
                 android:id="@+id/action_channelFragment_to_subchannelFragment"
                 app:destination="@id/subchannelFragment"
@@ -49,10 +49,10 @@
     </fragment>
     <fragment
             android:id="@+id/subchannelFragment"
-            android:name="com.upstart13.legba.fragment.SubchannelFragment"
+            android:name="com.rallytac.engageandroid.legba.fragment.SubchannelFragment"
             tools:layout="@layout/fragment_subchannel" >
         <argument
                 android:name="subchannel"
-                app:argType="com.upstart13.legba.data.dto.Subchannel" />
+                app:argType="com.rallytac.engageandroid.legba.data.dto.Subchannel" />
     </fragment>
 </navigation>
