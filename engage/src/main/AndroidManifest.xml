@@ -39,10 +39,21 @@
 
         <meta-data
             android:name="Launcher.LAUNCH_ACTIVITY"
-            android:value="com.rallytac.engageandroid.SimpleUiMainActivity" />
+            android:value="com.rallytac.engageandroid.legba.HostActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
+
+        <activity android:name=".legba.HostActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
 
         <activity
             android:name=".UserNodeViewActivity"

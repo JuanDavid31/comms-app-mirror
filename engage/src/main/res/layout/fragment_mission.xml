@@ -94,7 +94,7 @@
                         android:elevation="0.3dp">
 
                     <ImageView
-                            android:id="@+id/big_mic_button"
+                            android:id="@+id/ic_mic"
                             android:layout_width="27.5dp"
                             android:layout_height="39.5dp"
                             android:layout_marginEnd="36.8dp"
@@ -125,6 +125,17 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             app:layout_constraintGuide_end="36.8dp" />
+
+                    <ImageView
+                        android:id="@+id/tx_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ic_mic"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        sothree:srcCompat="@drawable/tx_" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </FrameLayout>
 

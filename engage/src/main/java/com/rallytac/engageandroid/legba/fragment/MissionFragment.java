@@ -1,9 +1,11 @@
 package com.rallytac.engageandroid.legba.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.rallytac.engageandroid.legba.HostActivity;
@@ -42,6 +45,8 @@ public class MissionFragment extends Fragment {
     private Mission mission;
     private TextView fragmentDescriptionText;
     private ImageView[] dotIndicators;
+    private boolean _pttRequested;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,31 @@ public class MissionFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
 
+        binding.icMic.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN)
+                {
+                    binding.txImage.setVisibility(View.VISIBLE);
+                    Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
+                    _pttRequested = true;
+                    Globals.getEngageApplication().startTx(0, 0);
+                }
+                else if (event.getAction() == MotionEvent.ACTION_UP)
+                {
+                    binding.txImage.setVisibility(View.INVISIBLE);
+                    Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
+                    _pttRequested = false;
+                    Globals.getEngageApplication().endTx();
+
+                }
+
+                return true;
+            }
+        });
         List<Channel> nonRadioChannels = mission.channels
                 .stream()
                 .filter(channel -> channel.type != Channel.ChannelType.RADIO)
