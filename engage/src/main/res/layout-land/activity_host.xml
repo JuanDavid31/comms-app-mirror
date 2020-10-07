@@ -6,12 +6,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <LinearLayout
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:baselineAligned="false"
-            android:orientation="vertical"
-            tools:context=".HostActivity">
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:orientation="vertical"
+                tools:context=".HostActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -85,30 +89,60 @@
                     app:layout_constraintGuide_end="7.3dp" />
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.appcompat.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
-        <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            <fragment
-                    android:id="@+id/host_fragment"
-                    android:name="androidx.navigation.fragment.NavHostFragment"
+            <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:defaultNavHost="true"
-                    app:navGraph="@navigation/nav_graph" />
+                    android:layout_height="match_parent">
+
+                <fragment
+                        android:id="@+id/host_fragment"
+                        android:name="androidx.navigation.fragment.NavHostFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:defaultNavHost="true"
+                        app:navGraph="@navigation/nav_graph" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="12.5dp"
                 android:background="@drawable/toolbar_shadow" />
 
-        </FrameLayout>
+            </FrameLayout>
 
-    </LinearLayout>
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/overlap_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/secondaryBlack"
+                android:visibility="gone"
+                tools:background="@color/secondaryBlack"
+                tools:visibility="visible">
+
+            <ImageView
+                    android:id="@+id/overlap_logo_image"
+                    android:layout_width="224dp"
+                    android:layout_height="91.3dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="center"
+                    android:scrollX="-23dp"
+                    android:scrollY="112dp"
+                    android:src="@drawable/ic_overlap_logo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
 
     <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"

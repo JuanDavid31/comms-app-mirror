@@ -1,10 +1,12 @@
 package com.rallytac.engageandroid.legba.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +15,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -35,18 +39,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import timber.log.Timber;
+
 import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
 
 public class MissionFragment extends Fragment {
 
+    private HostActivity activity;
     private FragmentMissionBinding binding;
     private Mission mission;
     private TextView fragmentDescriptionText;
     private ImageView[] dotIndicators;
     private boolean _pttRequested;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,35 +64,14 @@ public class MissionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        activity = (HostActivity) requireActivity();
+
+        activity.findViewById(R.id.overlap_layout).setOnClickListener(view -> toggleSOSLayoutVisiblity());
+
         updateToolbar();
         setHasOptionsMenu(true);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
 
-        binding.icMicCard.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN)
-                {
-                    binding.txImage.setVisibility(View.VISIBLE);
-                    Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
-                    _pttRequested = true;
-                    Globals.getEngageApplication().startTx(0, 0);
-                }
-                else if (event.getAction() == MotionEvent.ACTION_UP)
-                {
-                    binding.txImage.setVisibility(View.INVISIBLE);
-                    Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
-                    _pttRequested = false;
-                    Globals.getEngageApplication().endTx();
-
-                }
-
-                return true;
-            }
-        });
         List<Channel> nonRadioChannels = mission.channels
                 .stream()
                 .filter(channel -> channel.type != Channel.ChannelType.RADIO)
@@ -94,13 +79,12 @@ public class MissionFragment extends Fragment {
 
         binding.missionViewPager.setAdapter(new ChannelSlidePageAdapter(this, nonRadioChannels));
 
+        setupPTTOnMic();
         setupViewPagerOnPageChangeListener();
         setupViewPagerDotIndicator(nonRadioChannels);
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();
         updateDots(0);
-
-
 
         return binding.getRoot();
     }
@@ -113,6 +97,29 @@ public class MissionFragment extends Fragment {
         fragmentDescriptionText = requireActivity().findViewById(R.id.fragment_description);
         fragmentDescriptionText.setTextColor(this.getResources().getColor(R.color.paleRed));
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
+    }
+
+    private void setupPTTOnMic(){
+        binding.icMicCard.setOnTouchListener((v, event) -> {
+
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
+            {
+                binding.txImage.setVisibility(View.VISIBLE);
+                Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
+                _pttRequested = true;
+                Globals.getEngageApplication().startTx(0, 0);
+            }
+            else if (event.getAction() == MotionEvent.ACTION_UP)
+            {
+                binding.txImage.setVisibility(View.INVISIBLE);
+                Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
+                _pttRequested = false;
+                Globals.getEngageApplication().endTx();
+
+            }
+
+            return true;
+        });
     }
 
     private void setupViewPagerOnPageChangeListener() {
@@ -222,6 +229,51 @@ public class MissionFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.mission_fragment_menu, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        MenuItem item = menu.findItem(R.id.sos_action);
+        View root = item.getActionView();
+        //root.setOnClickListener(view -> onOptionsItemSelected(item));
+
+        root.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Timber.i("onTouch ");
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                    Timber.i("ACTION_DOWN");
+                    toggleSOSLayoutVisiblity();
+                    return true;
+                }else if(motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    Timber.i("ACTION_UP");
+                    toggleSOSLayoutVisiblity();
+                    return true;
+                }
+                return false;
+            }
+
+        });
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.sos_action){
+            Timber.i("SOS PRESSED");
+            toggleSOSLayoutVisiblity();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void toggleSOSLayoutVisiblity(){
+        View sosLayout = activity.findViewById(R.id.overlap_layout);
+        if(sosLayout.getVisibility() == View.GONE){
+            sosLayout.setVisibility(View.VISIBLE);
+        }else{
+            sosLayout.setVisibility(View.GONE);
+        }
     }
 
     private class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePageAdapter.GenericViewHolder> {
