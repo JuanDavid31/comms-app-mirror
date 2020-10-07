@@ -4,11 +4,8 @@ import android.graphics.Rect;
 import android.view.TouchDelegate;
 import android.view.View;
 
-import androidx.databinding.BindingAdapter;
-
 public class BindingAdapters {
 
-    @BindingAdapter("touch")
     public static void setTouchArea(View view, int dp){
         final View parent = (View) view.getParent();  // button: the view you want to enlarge hit area
         parent.post( new Runnable() {
