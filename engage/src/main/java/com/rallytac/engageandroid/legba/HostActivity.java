@@ -97,6 +97,7 @@ public class HostActivity extends AppCompatActivity {
 
         _ac = Globals.getEngageApplication().getActiveConfiguration();
         Log.w("LEGBA SAYS:",_ac.getSelectedGroups().size()+"");
+        Log.w("License time left",Globals.getEngageApplication().getLicenseSecondsLeft()+"");
     }
 
     public void setupConf(){
