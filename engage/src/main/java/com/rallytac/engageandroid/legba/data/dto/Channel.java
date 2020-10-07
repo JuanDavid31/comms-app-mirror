@@ -1,7 +1,7 @@
 package com.rallytac.engageandroid.legba.data.dto;
 
 import com.google.gson.annotations.JsonAdapter;
-import com.upstart13.legba.mapping.ChannelDeserializer;
+import com.rallytac.engageandroid.legba.mapping.ChannelDeserializer;
 
 import java.io.Serializable;
 import java.util.List;

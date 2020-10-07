@@ -14,15 +14,16 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.upstart13.legba.R;
-import com.upstart13.legba.data.dto.Channel;
-import com.upstart13.legba.data.dto.Mission;
+
+import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.legba.data.dto.Channel;
+import com.rallytac.engageandroid.legba.data.dto.Mission;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.upstart13.legba.util.DimUtils.convertDpToPx;
-import static com.upstart13.legba.util.RUtils.getImageResource;
+import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
+import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
 public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRecyclerViewAdapter.ItemViewHolder> {
 

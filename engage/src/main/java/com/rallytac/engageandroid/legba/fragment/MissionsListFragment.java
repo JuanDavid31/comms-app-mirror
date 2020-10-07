@@ -13,11 +13,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.upstart13.legba.HostActivity;
-import com.upstart13.legba.R;
-import com.upstart13.legba.data.DataManager;
-import com.upstart13.legba.data.dto.Mission;
-import com.upstart13.legba.databinding.FragmentMissionsListBinding;
+import  com.rallytac.engageandroid.legba.HostActivity;
+import  com.rallytac.engageandroid.legba.R;
+import  com.rallytac.engageandroid.legba.data.DataManager;
+import  com.rallytac.engageandroid.legba.data.dto.Mission;
+import  com.rallytac.engageandroid.legba.databinding.FragmentMissionsListBinding;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.upstart13.legba.R;
-import com.upstart13.legba.data.dto.Member;
+import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.legba.data.dto.Member;
 
 import java.util.ArrayList;
 import java.util.List;

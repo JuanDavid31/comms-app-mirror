@@ -16,19 +16,20 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.upstart13.legba.R;
-import com.upstart13.legba.data.dto.ChannelElement;
-import com.upstart13.legba.data.dto.Member;
-import com.upstart13.legba.data.dto.Subchannel;
-import com.upstart13.legba.util.DimUtils;
+
+import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.legba.data.dto.ChannelElement;
+import com.rallytac.engageandroid.legba.data.dto.Member;
+import com.rallytac.engageandroid.legba.data.dto.Subchannel;
+import com.rallytac.engageandroid.legba.util.DimUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
 
-import static com.upstart13.legba.util.DimUtils.convertDpToPx;
-import static com.upstart13.legba.util.RUtils.getImageResource;
+import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
+import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
 public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelElement, ChannelElementsRecyclerViewAdapter.ChannelElementViewHolder> {
 

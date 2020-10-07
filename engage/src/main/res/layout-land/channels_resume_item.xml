@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:paddingStart="6dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="6dp">
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/priority_channel_1_layout"
+                style="@style/priorityChannelLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/channel_resume_item_box_shape"
+                android:elevation="0.3dp"
+                app:layout_constraintBottom_toTopOf="@+id/radio_channels_layout"
+                app:layout_constraintStart_toStartOf="@+id/primary_channel_layout"
+                app:layout_constraintTop_toBottomOf="@+id/primary_channel_layout"
+                app:layout_constraintVertical_bias="1.0">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/priority_channel_1_image"
+                    android:layout_width="38dp"
+                    android:layout_height="37.5dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
+                    android:elevation="5.3dp"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:riv_border_color="@color/waterBlue"
+                    app:riv_border_width="0.8dp"
+                    app:riv_corner_radius="5.3dp"
+                    />
+
+            <TextView
+                    android:id="@+id/priority_channel_1_name_text"
+                    style="@style/builtTitlingRgBoldFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13.3dp"
+                    android:letterSpacing="0.04"
+                    android:shadowColor="#d4000000"
+                    android:shadowRadius="9"
+                    android:text="DELTA TEAM"
+                    android:textSize="16.1sp"
+                    app:layout_constraintStart_toEndOf="@+id/priority_channel_1_image"
+                    app:layout_constraintTop_toTopOf="@+id/priority_channel_1_image" />
+
+            <TextView
+                    android:id="@+id/priority_channel_1_description"
+                    style="@style/openSansRegularFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:text="Priority Channel 1"
+                    android:textColor="@color/waterBlue"
+                    android:textSize="10.1sp"
+                    app:layout_constraintStart_toStartOf="@+id/priority_channel_1_name_text"
+                    app:layout_constraintTop_toBottomOf="@+id/priority_channel_1_name_text" />
+
+            <ImageView
+                    android:id="@+id/priority_channel_1_speaker"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="2dp"
+
+                    android:padding="13dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_speaker"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                    android:id="@+id/priority_channel_1_mic"
+                    android:layout_width="16.3dp"
+                    android:layout_height="23.5dp"
+                    android:layout_marginRight="15.3dp"
+                    android:layout_marginBottom="15.8dp"
+
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_filled_mic"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"  />
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_begin="13.5dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_begin="32.5dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_end="15.5dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_end="34.5dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_end="15.8dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/priority_channel_2_layout"
+                style="@style/priorityChannelLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/channel_resume_item_box_shape"
+                android:elevation="0.3dp"
+                app:layout_constraintBottom_toBottomOf="@+id/priority_channel_1_layout"
+                app:layout_constraintEnd_toEndOf="@+id/primary_channel_layout"
+                app:layout_constraintTop_toTopOf="@+id/priority_channel_1_layout">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/priority_channel_2_image"
+                    android:layout_width="38dp"
+                    android:layout_height="37.5dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
+                    android:elevation="5.3dp"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:riv_border_color="@color/orange"
+                    app:riv_border_width="0.8dp"
+                    app:riv_corner_radius="5.3dp"
+                    tools:src="channel" />
+
+            <TextView
+                    android:id="@+id/priority_channel_2_name_text"
+                    style="@style/builtTitlingRgBoldFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13.3dp"
+                    android:letterSpacing="0.04"
+                    android:text="FIRE TEAM"
+                    android:textSize="16.1sp"
+                    app:layout_constraintStart_toEndOf="@+id/priority_channel_2_image"
+                    app:layout_constraintTop_toTopOf="@+id/priority_channel_2_image" />
+
+            <TextView
+                    android:id="@+id/textView2"
+                    style="@style/openSansRegularFont"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:text="Priority Channel 2"
+                    android:textColor="@color/orange"
+                    android:textSize="10.1sp"
+                    app:layout_constraintStart_toStartOf="@+id/priority_channel_2_name_text"
+                    app:layout_constraintTop_toBottomOf="@+id/priority_channel_2_name_text" />
+
+            <ImageView
+                    android:id="@+id/priority_channel_2_speaker"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="2dp"
+                    android:contentDescription="channel_link"
+                    android:padding="13dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_speaker"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                    android:id="@+id/priority_channel_2_mic"
+                    android:layout_width="16.3dp"
+                    android:layout_height="23.5dp"
+                    android:layout_marginRight="15.3dp"
+                    android:layout_marginBottom="15.8dp"
+                    android:contentDescription="channel_mic"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_filled_mic"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"   />
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_begin="15.8dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_end="15.5dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_end="16dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/primary_channel_layout"
+            android:layout_width="212dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/channel_resume_item_box_shape"
+            android:elevation="0.3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/primary_channel_image"
+                android:layout_width="38dp"
+                android:layout_height="37.5dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:elevation="5.3dp"
+                android:scaleType="fitCenter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_border_color="@color/paleRed"
+                app:riv_border_width="0.8dp"
+                app:riv_corner_radius="5.3dp"
+                tools:src="channel" />
+
+        <TextView
+                android:id="@+id/primary_channel_name_text"
+                style="@style/builtTitlingRgBoldFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13.3dp"
+                android:letterSpacing="0.04"
+                android:shadowColor="#d4000000"
+                android:shadowRadius="9"
+                android:text="ALPHA TEAM"
+                android:textSize="16.1sp"
+                app:layout_constraintStart_toEndOf="@+id/primary_channel_image"
+                app:layout_constraintTop_toTopOf="@+id/primary_channel_image" />
+
+        <TextView
+                style="@style/openSansRegularFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:text="Primary Channel"
+                android:textColor="@color/paleRed"
+                android:textSize="10.1sp"
+                app:layout_constraintBottom_toBottomOf="@+id/primary_channel_image"
+                app:layout_constraintStart_toStartOf="@+id/primary_channel_name_text" />
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="16.3dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="35.5dp" />
+
+        <ImageView
+                android:id="@+id/primary_channel_speaker"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="4dp"
+
+                android:padding="13dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_speaker_off"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+                android:id="@+id/primary_channel_mic"
+                android:layout_width="16.3dp"
+                android:layout_height="23.5dp"
+                android:layout_marginRight="15.3dp"
+                android:layout_marginBottom="15.8dp"
+
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_filled_mic"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"   />
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_end="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="16.5dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="35.5dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
