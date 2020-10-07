@@ -190,15 +190,16 @@
                 <ImageView
                     android:id="@+id/ic_mic"
                     android:layout_width="60dp"
-                    android:layout_height="70dp"
-                    android:layout_marginEnd="30.3dp"
+                    android:layout_height="80dp"
                     android:contentDescription="channel_mic"
                     android:padding="20dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_filled_mic"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.8" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline"
@@ -223,13 +224,15 @@
 
                 <ImageView
                     android:id="@+id/tx_image"
-                    android:layout_width="126dp"
-                    android:layout_height="267dp"
-                    android:rotation="90"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitStart"
                     android:visibility="invisible"
                     app:layout_constraintBottom_toTopOf="@+id/guideline2"
-                    app:layout_constraintEnd_toStartOf="@+id/ic_mic"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/guideline"
+                    app:layout_constraintVertical_bias="0.0"
                     sothree:srcCompat="@drawable/tx_" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
