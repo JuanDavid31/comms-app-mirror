@@ -21,12 +21,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.rallytac.engageandroid.R;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.rallytac.engageandroid.legba.HostActivity;
-import com.rallytac.engageandroid.legba.R;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
-import com.rallytac.engageandroid.legba.databinding.FragmentMissionBinding;
+import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 
 import java.util.List;
 import java.util.Objects;
