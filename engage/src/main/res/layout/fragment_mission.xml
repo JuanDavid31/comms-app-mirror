@@ -88,43 +88,44 @@
                     android:elevation="5.3dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="6dp"
-                        android:elevation="0.3dp">
+                    android:id="@+id/ic_mic_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="6dp"
+                    android:elevation="0.3dp">
 
                     <ImageView
-                            android:id="@+id/ic_mic"
-                            android:layout_width="27.5dp"
-                            android:layout_height="39.5dp"
-                            android:layout_marginEnd="36.8dp"
-                            android:contentDescription="big_mic_button"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/ic_filled_mic"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                        android:id="@+id/ic_mic"
+                        android:layout_width="27.5dp"
+                        android:layout_height="39.5dp"
+                        android:layout_marginEnd="36.8dp"
+                        android:contentDescription="big_mic_button"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_filled_mic"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.constraintlayout.widget.Guideline
-                            android:id="@+id/guideline"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            app:layout_constraintGuide_begin="39.5dp" />
+                        android:id="@+id/guideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_begin="39.5dp" />
 
                     <androidx.constraintlayout.widget.Guideline
-                            android:id="@+id/guideline2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            app:layout_constraintGuide_end="39.5dp" />
+                        android:id="@+id/guideline2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_end="39.5dp" />
 
                     <androidx.constraintlayout.widget.Guideline
-                            android:id="@+id/guideline3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            app:layout_constraintGuide_end="36.8dp" />
+                        android:id="@+id/guideline3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_end="36.8dp" />
 
                     <ImageView
                         android:id="@+id/tx_image"
@@ -178,7 +179,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="11.3dp"
                             android:layout_marginBottom="11.8dp"
-                            android:text="radio_channels"
+                            android:text="@string/radio_channels"
                             android:textColor="@color/pinkish_grey"
                             android:textSize="10.1sp"
                             app:layout_constraintBottom_toBottomOf="parent"

@@ -62,7 +62,7 @@ public class MissionFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
 
-        binding.icMic.setOnTouchListener(new View.OnTouchListener()
+        binding.icMicCard.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
             public boolean onTouch(View v, MotionEvent event)

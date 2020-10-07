@@ -1,4 +1,20 @@
 <resources>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="star_icon">Star icon</string>
+    <string name="my_missions">MY MISSIONS</string>
+    <string name="mission_list_title">MY MISSIONS</string>
+    <string name="channel_link">Link</string>
+    <string name="channel_mic">Mic</string>
+    <string name="toggle_radio_channels">Toggle radio channels</string>
+    <string name="radio_channels">Monitoring Channels</string>
+    <string name="go_to_detail">Go to detail</string>
+    <string name="_10">+10</string>
+    <string name="logo">logo</string>
+    <string name="history">History</string>
+    <string name="notifications">notifications</string>
+    <string name="request_pending">Request <b>pending</b></string>
+    <string name="subchannel">Subchannel</string>
+    <string name="sos">SOS</string>
     <string name="certstore_cache_dir" translatable="false">certstore_cache</string>
     <string name="certstore_default_fn" translatable="false">engage.certstore</string>
     <string name="certstore_active_fn" translatable="false">active-certstore.certstore</string>

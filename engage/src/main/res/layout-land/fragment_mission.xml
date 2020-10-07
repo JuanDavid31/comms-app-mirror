@@ -96,6 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="112dp"
                 android:background="@android:color/transparent"
+                android:paddingEnd="7dp"
                 android:clipToPadding="false">
 
                 <LinearLayout
@@ -126,7 +127,7 @@
                             android:layout_marginTop="11.3dp"
                             android:layout_marginBottom="11.8dp"
                             android:fontFamily="@font/open_sans_semi_bold"
-                            android:text="radio_channels"
+                            android:text="@string"
                             android:textColor="@color/pinkish_grey"
                             android:textSize="10.1sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -174,6 +175,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ic_mic_card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="6dp"
@@ -218,8 +220,8 @@
 
                 <ImageView
                     android:id="@+id/tx_image"
-                    android:layout_width="127dp"
-                    android:layout_height="169dp"
+                    android:layout_width="126dp"
+                    android:layout_height="267dp"
                     android:rotation="90"
                     android:visibility="invisible"
                     app:layout_constraintBottom_toTopOf="@+id/guideline2"
