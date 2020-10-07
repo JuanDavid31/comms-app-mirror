@@ -2,7 +2,7 @@ package com.rallytac.engageandroid.legba.data;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.upstart13.legba.data.dto.Mission;
+import com.rallytac.engageandroid.legba.data.dto.Mission;
 
 import java.io.IOException;
 import java.io.InputStream;

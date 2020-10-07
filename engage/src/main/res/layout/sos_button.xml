@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="78.5dp"
+        android:layout_height="match_parent"
+    android:clickable="true">
+
+    <TextView
+            android:fontFamily="@font/built_titling_rg_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:letterSpacing="0.02"
+            android:shadowColor="#d4000000"
+            android:shadowRadius="9"
+            android:text="SOS"
+            android:textColor="@color/paleRed"
+            android:textSize="17.6sp">
+
+    </TextView>
+</FrameLayout>

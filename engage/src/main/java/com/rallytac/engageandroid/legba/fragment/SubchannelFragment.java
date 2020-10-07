@@ -14,10 +14,10 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.upstart13.legba.HostActivity;
-import com.upstart13.legba.R;
-import com.upstart13.legba.data.dto.Subchannel;
-import com.upstart13.legba.databinding.FragmentSubchannelBinding;
+import com.rallytac.engageandroid.legba.HostActivity;
+
+import com.rallytac.engageandroid.legba.data.dto.Subchannel;
+import com.rallytac.engageandroid.legba.databinding.FragmentSubchannelBinding;
 
 import java.util.Objects;
 

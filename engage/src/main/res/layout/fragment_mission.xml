@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            android:id="@+id/radio_channels_slidingup_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/radio_layout_box_shape"
+            android:gravity="bottom"
+            app:umanoDragView="@id/radio_channels_layout"
+            app:umanoOverlay="false"
+            app:umanoPanelHeight="44dp"
+            app:umanoScrollableView="@id/radio_channels_recycler"
+            sothree:umanoClipPanel="false"
+            sothree:umanoFadeColor="@android:color/transparent"
+            sothree:umanoShadowHeight="0dp">
+
+        <!--Main content-->
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/primaryBlack"
+                android:clipToPadding="false"
+                android:gravity="bottom|end"
+                android:orientation="vertical"
+                tools:context=".fragment.MissionFragment">
+
+            <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/mission_view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8.3dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="6.3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/view_pager_shape_box"
+                    android:clipToPadding="false"
+                     />
+
+            <LinearLayout
+                    android:id="@+id/tab_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="9dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="10.5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/selected_dot" />
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/default_dot" />
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/default_dot" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="118.5dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/primary_element_box_shape"
+                    android:elevation="5.3dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="6dp"
+                        android:elevation="0.3dp">
+
+                    <ImageView
+                            android:id="@+id/big_mic_button"
+                            android:layout_width="27.5dp"
+                            android:layout_height="39.5dp"
+                            android:layout_marginEnd="36.8dp"
+                            android:contentDescription="big_mic_button"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_filled_mic"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintGuide_begin="39.5dp" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintGuide_end="39.5dp" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_end="36.8dp" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <!--Sliding layout-->
+        <FrameLayout
+                android:id="@+id/frame_sliding"
+                android:layout_width="wrap_content"
+                android:layout_height="112dp"
+                android:background="@android:color/transparent"
+                android:clipToPadding="false"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp">
+
+            <LinearLayout
+                    android:id="@+id/radio_channels_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="112dp"
+                    android:layout_gravity="center|bottom"
+                    android:background="@drawable/radio_layout_box_shape"
+                    android:clickable="true"
+                    android:elevation="5.3dp"
+                    android:focusable="false"
+                    android:gravity="center|bottom"
+                    android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="31dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                            android:id="@+id/radio_channel_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="11.3dp"
+                            android:layout_marginBottom="11.8dp"
+                            android:text="radio_channels"
+                            android:textColor="@color/pinkish_grey"
+                            android:textSize="10.1sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                            android:id="@+id/toggle_radio_channel_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="11.8dp"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:contentDescription="toggle_radio_channels"
+                            android:src="@drawable/ic_round_keyboard_arrow_up_24"
+                            app:layout_constraintBottom_toBottomOf="@+id/radio_channel_text"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/radio_channel_text" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/radio_channels_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:clipToPadding="false"
+                        android:orientation="horizontal"
+                        android:paddingStart="9.5dp"
+                        android:paddingEnd="9.5dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/radio_channel_item" />
+            </LinearLayout>
+        </FrameLayout>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+</layout>

@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+
+
     <color name="colorBlack">#000000</color>
     <color name="colorSentMessage">#aa00aa</color>
     <color name="colorReceivedMessage">#5f5f5f</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+
+    <color name="primaryBlack">#1a1a1a</color>
+    <color name="secondaryBlack">#1d1d1d</color>
+    <color name="tertiaryBlack">#252525</color>
+
+    <color name="paleRed">#db3737</color>
+    <color name="orange">#ec6716</color>
+    <color name="tomato">#de3317</color>
+    <color name="waterBlue">#17a8de</color>
+    <color name="white">#ffffff</color>
+    <color name="warmGrey">#858585</color>
+    <color name="primaryText">#ffffff</color>
+    <color name="secondaryText">#7c7c7c</color>
+    <color name="greyish">#a4a4a4</color>
+    <color name="greyish_93">#eeb1b1b1</color>
+    <color name="white_93">#eeffffff</color>
+    <color name="black">#171717</color>
+    <color name="pinkish_grey">#bebebe</color>
+    <color name="pinkish_grey_93">#eebebebe</color>
+    <color name="warmGreyThree">#8d8d8d</color>
 </resources>

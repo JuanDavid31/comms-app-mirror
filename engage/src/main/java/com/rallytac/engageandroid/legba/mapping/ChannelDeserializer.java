@@ -7,14 +7,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
-import com.upstart13.legba.data.dto.Channel;
-import com.upstart13.legba.data.dto.ChannelElement;
+import com.rallytac.engageandroid.legba.data.dto.Channel;
+import com.rallytac.engageandroid.legba.data.dto.ChannelElement;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
-import static com.upstart13.legba.data.dto.Channel.*;
+import static com.rallytac.engageandroid.legba.data.dto.Channel.*;
 
 public class ChannelDeserializer implements JsonDeserializer<Channel> {
 

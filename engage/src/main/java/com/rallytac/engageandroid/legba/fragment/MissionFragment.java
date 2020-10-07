@@ -22,18 +22,18 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.upstart13.legba.HostActivity;
-import com.upstart13.legba.R;
-import com.upstart13.legba.data.dto.Channel;
-import com.upstart13.legba.data.dto.Mission;
-import com.upstart13.legba.databinding.FragmentMissionBinding;
+import com.rallytac.engageandroid.legba.HostActivity;
+import com.rallytac.engageandroid.legba.R;
+import com.rallytac.engageandroid.legba.data.dto.Channel;
+import com.rallytac.engageandroid.legba.data.dto.Mission;
+import com.rallytac.engageandroid.legba.databinding.FragmentMissionBinding;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.upstart13.legba.util.DimUtils.convertDpToPx;
-import static com.upstart13.legba.util.RUtils.getImageResource;
+import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
+import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
 
 public class MissionFragment extends Fragment {

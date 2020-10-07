@@ -1,6 +1,7 @@
 package com.rallytac.engageandroid.legba.util;
 
-import com.upstart13.legba.R;
+
+import com.rallytac.engageandroid.R;
 
 public class RUtils {
 
