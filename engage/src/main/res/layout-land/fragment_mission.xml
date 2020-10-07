@@ -127,7 +127,7 @@
                             android:layout_marginTop="11.3dp"
                             android:layout_marginBottom="11.8dp"
                             android:fontFamily="@font/open_sans_semi_bold"
-                            android:text="@string"
+                            android:text="@string/radio_channels"
                             android:textColor="@color/pinkish_grey"
                             android:textSize="10.1sp"
                             app:layout_constraintBottom_toBottomOf="parent"
