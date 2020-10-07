@@ -7,9 +7,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
-import com.upstart13.legba.data.dto.ChannelElement;
-import com.upstart13.legba.data.dto.Member;
-import com.upstart13.legba.data.dto.Subchannel;
+import com.rallytac.engageandroid.legba.data.dto.ChannelElement;
+import com.rallytac.engageandroid.legba.data.dto.Member;
+import com.rallytac.engageandroid.legba.data.dto.Subchannel;
 
 import java.lang.reflect.Type;
 

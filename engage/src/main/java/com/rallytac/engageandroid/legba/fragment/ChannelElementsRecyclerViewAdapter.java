@@ -23,6 +23,7 @@ import com.rallytac.engageandroid.legba.data.dto.Member;
 import com.rallytac.engageandroid.legba.data.dto.Subchannel;
 import com.rallytac.engageandroid.legba.util.DimUtils;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
