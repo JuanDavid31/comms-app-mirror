@@ -66,7 +66,13 @@ public class MissionFragment extends Fragment {
                              Bundle savedInstanceState) {
         activity = (HostActivity) requireActivity();
 
-        activity.findViewById(R.id.overlap_layout).setOnClickListener(view -> toggleSOSLayoutVisiblity());
+
+        try{
+          //  activity.findViewById(R.id.overlap_layout).setOnClickListener(view -> toggleSOSLayoutVisiblity());
+        }catch (Exception e){
+
+        }
+
 
         updateToolbar();
         setHasOptionsMenu(true);
