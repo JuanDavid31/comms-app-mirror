@@ -188,7 +188,7 @@ public class MissionFragment extends Fragment {
         List<Channel> radioChannels = mission.channels
                 .stream()
                 .filter(channel -> channel.type != null)
-                .filter(channel -> channel.type == Channel.ChannelType.RADIO)
+                //.filter(channel -> channel.type == Channel.ChannelType.RADIO)
                 .collect(Collectors.toList());
 
         RadioChannelsRecyclerViewAdapter adapter = new RadioChannelsRecyclerViewAdapter(new RadioChannelsRecyclerViewAdapter.AdapterDiffCallback(), this);

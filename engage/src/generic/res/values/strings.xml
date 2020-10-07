@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Engage</string>
+    <string name="app_name">Legba</string>
     <string name="file_content_provider">com.rallytac.engageandroid.generic</string>
     <string name="share_mission_activity_action">com.rallytac.engageandroid.rts.ShareMissionActivity</string>
 

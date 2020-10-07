@@ -2,6 +2,7 @@ package com.rallytac.engageandroid.legba.fragment;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,9 +61,11 @@ public class MissionsListFragment extends Fragment {
     private void setupToolbar() {
         Timber.i("updateToolbar");
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
-        ((TextView)requireActivity().findViewById(R.id.toolbar_title_text)).setText("Mission");
+
+        ((TextView)requireActivity().findViewById(R.id.toolbar_title_text)).setText("My Missions");
         HostActivity hostActivity = (HostActivity) requireActivity();
         ActionBar actionBar = hostActivity.getSupportActionBar();
+
         Objects.requireNonNull(actionBar)
                 .setHomeAsUpIndicator(R.drawable.ic_hamburguer_icon);
     }

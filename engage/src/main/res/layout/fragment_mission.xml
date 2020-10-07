@@ -33,17 +33,12 @@
                 tools:context=".fragment.MissionFragment">
 
             <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/mission_view_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="8.3dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="6.3dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/view_pager_shape_box"
-                    android:clipToPadding="false"
-                     />
+                android:id="@+id/mission_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/view_pager_shape_box"
+                android:clipToPadding="false" />
 
             <LinearLayout
                     android:id="@+id/tab_layout"

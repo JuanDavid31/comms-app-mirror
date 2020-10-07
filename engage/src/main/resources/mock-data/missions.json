@@ -128,13 +128,13 @@
             {
                 "id": 4,
                 "image": "quaternary",
-                "name": "ALPHA TEAM",
+                "name": "RADIO TEAM",
                 "type": "radio"
             },
             {
                 "id": 5,
                 "image": "quinary",
-                "name": "ANOTHER TEAM",
+                "name": "GROUND TEAM",
                 "type": "radio"
             }
         ]

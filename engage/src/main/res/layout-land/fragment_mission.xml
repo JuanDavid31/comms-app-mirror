@@ -11,9 +11,46 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/primaryBlack"
+        android:background="@drawable/general_background"
         android:baselineAligned="false"
         android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="9dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/radio_channels_slidingup_layout"
+            app:layout_constraintHorizontal_bias="0.51"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.87">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/selected_dot" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/default_dot" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/default_dot" />
+
+        </LinearLayout>
 
         <com.sothree.slidinguppanel.SlidingUpPanelLayout
             android:id="@+id/radio_channels_slidingup_layout"
@@ -21,7 +58,6 @@
             android:layout_height="0dp"
             android:layout_marginEnd="240dp"
             android:layout_weight="1"
-            android:background="@drawable/primary_element_box_shape"
             android:clipToPadding="false"
             android:gravity="bottom"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -41,7 +77,7 @@
                 android:id="@+id/main_content_viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/primaryBlack"
+                android:background="@drawable/primary_element_box_shape"
                 android:orientation="vertical"
                 tools:context=".fragment.MissionFragment">
 
@@ -51,42 +87,9 @@
                     android:layout_height="0dp"
 
                     android:layout_weight="1"
-                    android:background="@drawable/view_pager_shape_box"
+                    android:background="@drawable/ptt_shape_box"
                     android:clipToPadding="false"
                     android:elevation="5.3dp" />
-
-                <LinearLayout
-                    android:id="@+id/tab_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="9dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="-15dp"
-                    android:layout_marginBottom="10.5dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/selected_dot" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/default_dot" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/default_dot" />
-
-                </LinearLayout>
 
 
             </LinearLayout>
@@ -95,25 +98,24 @@
                 android:id="@+id/frame_sliding"
                 android:layout_width="wrap_content"
                 android:layout_height="112dp"
-                android:background="@android:color/transparent"
-                android:paddingEnd="7dp"
                 android:clipToPadding="false">
+
 
                 <LinearLayout
                     android:id="@+id/radio_channels_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="112dp"
+                    android:layout_height="100dp"
                     android:layout_gravity="center|bottom"
-                    android:background="@drawable/radio_layout_box_shape"
+                    android:background="@drawable/ptt_shape_box"
                     android:clickable="true"
-                    android:elevation="5.3dp"
+                    android:elevation="20dp"
                     android:focusable="false"
                     android:gravity="center|bottom"
                     android:orientation="vertical">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="43dp"
+                        android:layout_height="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -161,6 +163,8 @@
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:listitem="@layout/radio_channel_item" />
                 </LinearLayout>
+
+
             </FrameLayout>
 
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
@@ -181,8 +185,7 @@
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="6dp"
                 android:layout_marginEnd="5.8dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/channel_item_shape">
+                android:layout_marginBottom="5dp">
 
                 <ImageView
                     android:id="@+id/ic_mic"
@@ -230,6 +233,8 @@
                     sothree:srcCompat="@drawable/tx_" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

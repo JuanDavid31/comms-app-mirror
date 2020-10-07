@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="129dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/mission_item_box_shape"
     android:clickable="true"
     android:focusable="true">
@@ -19,7 +19,7 @@
         android:layout_width="38dp"
         android:layout_height="37.5dp"
         android:layout_marginStart="18.3dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/star_box_shape"
         android:elevation="5.3dp"
         app:layout_constraintStart_toStartOf="parent"
