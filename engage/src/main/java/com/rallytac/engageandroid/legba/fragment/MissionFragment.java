@@ -1,5 +1,6 @@
 package com.rallytac.engageandroid.legba.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -66,7 +67,9 @@ public class MissionFragment extends Fragment {
                              Bundle savedInstanceState) {
         activity = (HostActivity) requireActivity();
 
-        activity.findViewById(R.id.overlap_layout).setOnClickListener(view -> toggleSOSLayoutVisiblity());
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            activity.findViewById(R.id.overlap_layout).setOnClickListener(view -> toggleSOSLayoutVisiblity());
+        }
 
         updateToolbar();
         setHasOptionsMenu(true);
@@ -131,16 +134,16 @@ public class MissionFragment extends Fragment {
                 String ordinalPosition;
                 switch (position) {
                     case 0:
-                        ordinalPosition = "Black Ops";
+                        ordinalPosition = "Alpha";
                         break;
                     case 1:
-                        ordinalPosition = "John";
+                        ordinalPosition = "Delta";
                         break;
                     case 2:
-                        ordinalPosition = "Connor";
+                        ordinalPosition = "Fire";
                         break;
                     case 3:
-                        ordinalPosition = "Tactical Ground";
+                        ordinalPosition = "All Ground";
                         break;
                     default:
                         ordinalPosition = "";
@@ -269,6 +272,7 @@ public class MissionFragment extends Fragment {
 
     private void toggleSOSLayoutVisiblity(){
         View sosLayout = activity.findViewById(R.id.overlap_layout);
+        if (sosLayout == null) return;
         if(sosLayout.getVisibility() == View.GONE){
             sosLayout.setVisibility(View.VISIBLE);
         }else{
