@@ -143,16 +143,16 @@ public class MissionFragment extends Fragment{
                 String ordinalPosition;
                 switch (position) {
                     case 0:
-                        ordinalPosition = "Black Ops";
+                        ordinalPosition = "Alpha";
                         break;
                     case 1:
-                        ordinalPosition = "John";
+                        ordinalPosition = "Delta";
                         break;
                     case 2:
-                        ordinalPosition = "Connor";
+                        ordinalPosition = "Fire";
                         break;
                     case 3:
-                        ordinalPosition = "Tactical Ground";
+                        ordinalPosition = "All Ground";
                         break;
                     default:
                         ordinalPosition = "";
