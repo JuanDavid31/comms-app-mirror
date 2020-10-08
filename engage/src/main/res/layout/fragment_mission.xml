@@ -130,7 +130,7 @@
                         app:layout_constraintEnd_toStartOf="@+id/ic_mic"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        sothree:srcCompat="@drawable/tx_" />
+                        sothree:srcCompat="@drawable/ic_red_tx" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </FrameLayout>
 

@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -289,7 +290,7 @@ public class MissionFragment extends Fragment{
 
 
 
-    private class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePageAdapter.GenericViewHolder>  implements RxListener  {
+    private class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePageAdapter.GenericViewHolder> {
 
         private Fragment fragment;
         private List<Channel> channels;
@@ -332,13 +333,13 @@ public class MissionFragment extends Fragment{
         @NonNull
         @Override
         public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            Globals.actualListener =this;
+
             if (viewType == CHANNEL_ITEM) {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.channel_item, parent, false);
-              rxImage=  itemView.findViewById(R.id.rx_image);
-
-                return new ChannelViewHolder(itemView);
+                ChannelViewHolder channelViewHolder = new ChannelViewHolder(itemView);
+                Globals.actualListener = channelViewHolder;
+                return channelViewHolder;
             } else if (viewType == RESUME_CHANNELS_ITEM) {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.channels_resume_item, parent, false);
@@ -372,6 +373,18 @@ public class MissionFragment extends Fragment{
                     channelHolder.channelImage.setBorderColor(getWaterBlueColor());
                     channelHolder.channelType.setTextColor(getWaterBlueColor());
                     channelHolder.lastMessageTime.setTextColor(getWaterBlueColor());
+                    channelHolder.incomingMessageLayout
+                            .findViewById(R.id.incoming_message_speaker_layout)
+                            .setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.incoming_message_speaker_blue_layout_shape, null));
+                    ((ImageView)channelHolder.incomingMessageLayout
+                            .findViewById(R.id.incoming_message_speaker))
+                            .setImageResource(R.drawable.ic_blue_speaker);
+                    ((TextView)channelHolder.incomingMessageLayout
+                            .findViewById(R.id.incoming_message_speaking_text))
+                            .setTextColor(getResources().getColor(R.color.waterBlue93, null));
+                    ((ImageView)channelHolder.incomingMessageLayout
+                            .findViewById(R.id.rx_image))
+                            .setImageResource(R.drawable.ic_blue_tx);
                 } else if (orange) {
                     orange = false;
                     paleRed = true;
@@ -379,8 +392,19 @@ public class MissionFragment extends Fragment{
                     channelHolder.channelImage.setBorderColor(getOrangeColor());
                     channelHolder.channelType.setTextColor(getOrangeColor());
                     channelHolder.lastMessageTime.setTextColor(getOrangeColor());
+                    channelHolder.incomingMessageLayout
+                            .findViewById(R.id.incoming_message_speaker_layout)
+                            .setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.incoming_message_speaker_orange_layout_shape, null));
+                    ((ImageView)channelHolder.incomingMessageLayout
+                            .findViewById(R.id.incoming_message_speaker))
+                            .setImageResource(R.drawable.ic_orange_speaker);
+                    ((TextView)channelHolder.incomingMessageLayout
+                            .findViewById(R.id.incoming_message_speaking_text))
+                            .setTextColor(getResources().getColor(R.color.orange93, null));
+                    ((ImageView)channelHolder.incomingMessageLayout
+                            .findViewById(R.id.rx_image))
+                            .setImageResource(R.drawable.ic_orange_tx);
                 }
-
 
                 switch (position){
                     case 0:
@@ -484,16 +508,6 @@ public class MissionFragment extends Fragment{
             return channels.size() > 1 ? channels.size() + resumeItems + addChannelItems : channels.size() + addChannelItems;
         }
 
-        @Override
-        public void onRx(String id, String other) {
-          rxImage.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void stopRx() {
-            rxImage.setVisibility(View.INVISIBLE);
-        }
-
         class GenericViewHolder extends RecyclerView.ViewHolder {
 
             public GenericViewHolder(@NonNull View itemView) {
@@ -501,7 +515,7 @@ public class MissionFragment extends Fragment{
             }
         }
 
-        class ChannelViewHolder extends GenericViewHolder {
+        class ChannelViewHolder extends GenericViewHolder implements RxListener{
 
             private View channelInfo;
             private RoundedImageView channelImage;
@@ -509,6 +523,7 @@ public class MissionFragment extends Fragment{
             private TextView channelType;
             private TextView lastMessageTime;
             private ImageView speakerButton;
+            private View incomingMessageLayout;
 
             public ChannelViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -518,6 +533,17 @@ public class MissionFragment extends Fragment{
                 channelType = itemView.findViewById(R.id.channel_type_text);
                 lastMessageTime = itemView.findViewById(R.id.last_message_time);
                 speakerButton = itemView.findViewById(R.id.channel_speaker);
+                incomingMessageLayout = itemView.findViewById(R.id.incoming_message_layout);
+            }
+
+            @Override
+            public void onRx(String id, String other) {
+                incomingMessageLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void stopRx() {
+                incomingMessageLayout.setVisibility(View.INVISIBLE);
             }
         }
 
