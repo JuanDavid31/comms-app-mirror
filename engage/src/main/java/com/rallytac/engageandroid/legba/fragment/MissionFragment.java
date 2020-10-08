@@ -1,7 +1,6 @@
 package com.rallytac.engageandroid.legba.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,10 +14,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
@@ -28,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.rallytac.engage.engine.Engine;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.engage.RxListener;
@@ -539,6 +535,14 @@ public class MissionFragment extends Fragment{
             @Override
             public void onRx(String id, String other) {
                 incomingMessageLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onJsonRX(String id, String alias) {
+                incomingMessageLayout.setVisibility(View.VISIBLE);
+                ((TextView)incomingMessageLayout
+                    .findViewById(R.id.incoming_message_name))
+                    .setText(alias != null? alias : "UNKOWN ALIAS");
             }
 
             @Override

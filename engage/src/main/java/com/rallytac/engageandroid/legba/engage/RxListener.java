@@ -4,4 +4,6 @@ public interface RxListener {
     public void onRx(String id, String other);
 
     public void stopRx();
+
+    public void onJsonRX(String id, String alias);
 }

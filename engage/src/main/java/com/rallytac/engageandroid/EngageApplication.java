@@ -3293,7 +3293,7 @@ public class EngageApplication
 
 
         try{
-            Globals.actualListener.onRx(id,eventExtraJson);
+            Globals.actualListener.onRx(id, eventExtraJson);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -3414,7 +3414,7 @@ public class EngageApplication
                                 TalkerDescriptor td = new TalkerDescriptor();
                                 td.alias = obj.optString(Engine.JsonFields.TalkerInformation.alias);
                                 td.nodeId = obj.optString(Engine.JsonFields.TalkerInformation.nodeId);
-
+                                Globals.actualListener.onJsonRX(id, td.alias);
                                 if (talkers == null)
                                 {
                                     talkers = new ArrayList<>();
