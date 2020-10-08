@@ -8,6 +8,8 @@ package com.rallytac.engageandroid;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.rallytac.engageandroid.legba.engage.RxListener;
+
 public class Globals
 {
     private static Context _ctx = null;
@@ -15,6 +17,7 @@ public class Globals
     private static SharedPreferences _sp = null;
     private static SharedPreferences.Editor _spEd = null;
     private static AudioPlayerManager _apm = null;
+    public static RxListener actualListener = null;
 
     public static void setContext(Context ctx)
     {

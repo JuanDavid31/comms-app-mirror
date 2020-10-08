@@ -382,6 +382,8 @@ public class EngageApplication
         {
             Log.i(TAG, "{DBG}: " + intent.toString());
 
+
+
             String action = intent.getAction();
             if(action == null)
             {
@@ -645,6 +647,8 @@ public class EngageApplication
         Globals.setContext(getApplicationContext());
         Globals.setSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this));
         Globals.setAudioPlayerManager(new AudioPlayerManager(this));
+
+       // Globals.getEngageApplication().onGroupRxStarted();
 
         setupDirectories();
         //setupFilesystemLogging();
@@ -3286,6 +3290,16 @@ public class EngageApplication
     @Override
     public void onGroupRxStarted(final String id, final String eventExtraJson)
     {
+
+
+        try{
+            Globals.actualListener.onRx(id,eventExtraJson);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        Log.w("message",eventExtraJson);
         runOnUiThread(new Runnable()
         {
             @Override
@@ -3332,6 +3346,15 @@ public class EngageApplication
     @Override
     public void onGroupRxEnded(final String id, final String eventExtraJson)
     {
+
+
+        try{
+            Globals.actualListener.stopRx();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
         runOnUiThread(new Runnable()
         {
             @Override
@@ -4464,6 +4487,8 @@ public class EngageApplication
     @Override
     public void onGroupBlobReceived(final String id, final String blobInfoJson, final byte[] blob, final long blobSize, final String eventExtraJson)
     {
+
+        Log.w("message","receive");
         runOnUiThread(new Runnable()
         {
             @Override

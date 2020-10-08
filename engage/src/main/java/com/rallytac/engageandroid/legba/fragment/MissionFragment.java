@@ -27,8 +27,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.rallytac.engage.engine.Engine;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.rallytac.engageandroid.legba.HostActivity;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
@@ -45,7 +47,7 @@ import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
 
-public class MissionFragment extends Fragment {
+public class MissionFragment extends Fragment{
 
     private HostActivity activity;
     private FragmentMissionBinding binding;
@@ -59,6 +61,7 @@ public class MissionFragment extends Fragment {
         super.onCreate(savedInstanceState);
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
         mission = missionFragmentArgs.getMission();
+
     }
 
     @Override
@@ -84,6 +87,8 @@ public class MissionFragment extends Fragment {
                 .collect(Collectors.toList());
 
         binding.missionViewPager.setAdapter(new ChannelSlidePageAdapter(this, nonRadioChannels));
+
+
 
         setupPTTOnMic();
         setupViewPagerOnPageChangeListener();
@@ -282,10 +287,13 @@ public class MissionFragment extends Fragment {
         }
     }
 
-    private class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePageAdapter.GenericViewHolder> {
+
+
+    private class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePageAdapter.GenericViewHolder>  implements RxListener  {
 
         private Fragment fragment;
         private List<Channel> channels;
+        private ImageView rxImage;
 
         private int CHANNEL_ITEM = 0;
         private int RESUME_CHANNELS_ITEM = 1;
@@ -324,9 +332,12 @@ public class MissionFragment extends Fragment {
         @NonNull
         @Override
         public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            Globals.actualListener =this;
             if (viewType == CHANNEL_ITEM) {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.channel_item, parent, false);
+              rxImage=  itemView.findViewById(R.id.rx_image);
+
                 return new ChannelViewHolder(itemView);
             } else if (viewType == RESUME_CHANNELS_ITEM) {
                 View itemView = LayoutInflater.from(parent.getContext())
@@ -471,6 +482,16 @@ public class MissionFragment extends Fragment {
             int resumeItems = 1;
             int addChannelItems = 1;
             return channels.size() > 1 ? channels.size() + resumeItems + addChannelItems : channels.size() + addChannelItems;
+        }
+
+        @Override
+        public void onRx(String id, String other) {
+          rxImage.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void stopRx() {
+            rxImage.setVisibility(View.INVISIBLE);
         }
 
         class GenericViewHolder extends RecyclerView.ViewHolder {
