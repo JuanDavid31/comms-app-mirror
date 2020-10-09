@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.VideoView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.common.ConnectionResult;
@@ -62,7 +64,7 @@ public class LauncherActivity extends AppCompatActivity
     private boolean _wasLauncherRunBefore;
 
     private LottieAnimationView lottieAnimationView;
-
+    VideoView videoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -77,7 +79,20 @@ public class LauncherActivity extends AppCompatActivity
         Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.launcher_logo_fade);
 
         findViewById(R.id.ivAppSplash).startAnimation(fadeInAnimation);
-        lottieAnimationView = findViewById(R.id.animation_view);
+        videoView = (VideoView)findViewById(R.id.videoView);
+        String path = "android.resource://" + getPackageName() + "/" + R.raw.splash;
+        videoView.setVideoURI(Uri.parse(path));
+      //  videoView.start();
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                launchUiActivity();
+            }
+        });
+
+
+
+   /*     lottieAnimationView = findViewById(R.id.animation_view);
         lottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
@@ -100,7 +115,7 @@ public class LauncherActivity extends AppCompatActivity
             }
         });
         // See if the launcher has been run before
-        _wasLauncherRunBefore = (Globals.getSharedPreferences().getBoolean(PreferenceKeys.LAUNCHER_RUN_BEFORE, false) == true);
+       */ _wasLauncherRunBefore = (Globals.getSharedPreferences().getBoolean(PreferenceKeys.LAUNCHER_RUN_BEFORE, false) == true);
 
         if(!_wasLauncherRunBefore)
         {
@@ -644,7 +659,7 @@ public class LauncherActivity extends AppCompatActivity
             @Override
             public void run()
             {
-           lottieAnimationView.playAnimation();
+                videoView.start();
             }
         });
     }
