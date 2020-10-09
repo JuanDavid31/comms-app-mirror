@@ -1,147 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/drawer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/primaryBlack"
-        android:baselineAligned="false"
-        android:orientation="vertical"
-        tools:context=".HostActivity">
+    <data>
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:background="?attr/colorPrimary"
-            android:minHeight="85dp"
-            android:theme="@style/AppTheme">
+    </data>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center">
-
-                <ImageView
-                    android:id="@+id/logo_image"
-                    android:layout_width="224dp"
-                    android:layout_height="91.3dp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="logo"
-                    android:scaleType="center"
-                    android:scrollX="-23dp"
-                    android:scrollY="82dp"
-                    android:src="@drawable/ic_logo"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    tools:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/toolbar_title_text"
-                    style="@style/toolbar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="overlord"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/fragment_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="11dp"
-                    android:fontFamily="@font/open_sans_bold"
-                    android:letterSpacing="0.02"
-                    android:text="Connor"
-                    android:textColor="@color/paleRed"
-                    android:textSize="12sp"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/toolbar_title_text"
-                    tools:visibility="visible" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_end="14.3dp" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.appcompat.widget.Toolbar>
-
-        <FrameLayout
+    <androidx.drawerlayout.widget.DrawerLayout
+            android:id="@+id/drawer"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <fragment
-                android:id="@+id/host_fragment"
-                android:name="androidx.navigation.fragment.NavHostFragment"
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:defaultNavHost="true"
-                app:navGraph="@navigation/nav_graph" />
+                android:baselineAligned="false"
+                android:orientation="vertical"
+                tools:context=".HostActivity">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="5.3dp"
-                android:background="@drawable/toolbar_shadow" />
+            <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="85dp"
+                    android:background="?attr/colorPrimary"
+                    android:minHeight="85dp"
+                    android:theme="@style/AppTheme">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/overlap_layout"
-                android:layout_width="match_parent"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center">
+
+                    <ImageView
+                            android:id="@+id/logo_image"
+                            android:layout_width="224dp"
+                            android:layout_height="91.3dp"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="logo"
+                            android:scaleType="center"
+                            android:scrollX="-23dp"
+                            android:scrollY="82dp"
+                            android:src="@drawable/ic_logo"
+                            tools:visibility="visible"
+                            android:visibility="invisible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0" />
+
+                    <TextView
+                            android:id="@+id/toolbar_title_text"
+                            style="@style/toolbar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="overlord"
+                            android:visibility="visible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                            android:id="@+id/fragment_description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="11dp"
+                            android:fontFamily="@font/open_sans_bold"
+                            android:letterSpacing="0.02"
+                            android:text="Connor"
+                            android:textColor="@color/paleRed"
+                            android:textSize="12sp"
+                            android:visibility="invisible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/toolbar_title_text"
+                            tools:visibility="visible" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintGuide_end="14.3dp" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <fragment
+                        android:id="@+id/host_fragment"
+                        android:name="androidx.navigation.fragment.NavHostFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:defaultNavHost="true"
+                        app:navGraph="@navigation/nav_graph" />
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="5.3dp"
+                        android:background="@drawable/toolbar_shadow" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <com.google.android.material.navigation.NavigationView
+                android:id="@+id/nav_view"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@color/secondaryBlack"
-                android:visibility="gone"
-                tools:background="@color/secondaryBlack"
-                tools:visibility="visible">
+                android:layout_gravity="start"
+                android:fitsSystemWindows="true" />
 
-                <ImageView
-                    android:id="@+id/overlap_logo_image"
-                    android:layout_width="224dp"
-                    android:layout_height="91.3dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="center"
-                    android:scrollX="-23dp"
-                    android:scrollY="112dp"
-                    android:src="@drawable/ic_overlap_logo"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
-
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </FrameLayout>
-
-    </LinearLayout>
-
-    <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fitsSystemWindows="true" />
-
-</androidx.drawerlayout.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
+</layout>

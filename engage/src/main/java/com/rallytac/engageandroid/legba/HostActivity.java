@@ -10,6 +10,7 @@ import android.widget.SeekBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -25,6 +26,7 @@ import com.rallytac.engageandroid.MapTracker;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.SimpleUiMainActivity;
 import com.rallytac.engageandroid.VolumeLevels;
+import com.rallytac.engageandroid.databinding.ActivityHostBinding;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -78,16 +80,13 @@ public class HostActivity extends AppCompatActivity {
     private int _keycodePtt = 0;
     private SoundPool _soundpool = null;
 
-
-
-
-
+    public ActivityHostBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_host);
-        setSupportActionBar(findViewById(R.id.toolbar));
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_host);
+        setSupportActionBar(binding.toolbar);
         setupConf();
         setUpEngage();
     }
@@ -105,21 +104,20 @@ public class HostActivity extends AppCompatActivity {
 
         AppBarConfiguration appBarConfiguration =
                 new AppBarConfiguration.Builder(navController.getGraph())
-                        //.setOpenableLayout((Openable) findViewById(R.id.drawer))
                         .build();
 
         setupDrawerConfiguration(navController);
         setupToolbarConfiguration(navController, appBarConfiguration);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             Timber.i("onDestinationChangedListener");
-            findViewById(R.id.logo_image).setVisibility(View.GONE);
-            findViewById(R.id.toolbar_title_text).setVisibility(View.GONE);
-            findViewById(R.id.fragment_description).setVisibility(View.GONE);
+            binding.logoImage.setVisibility(View.GONE);
+            binding.toolbarTitleText.setVisibility(View.GONE);
+            binding.fragmentDescription.setVisibility(View.GONE);
         });
     }
 
     private void setupDrawerConfiguration(NavController navController) {
-        NavigationView navView = findViewById(R.id.nav_view);
+        NavigationView navView = binding.navView;
         NavigationUI.setupWithNavController(navView, navController);
     }
 
@@ -127,7 +125,7 @@ public class HostActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar())
                 .setDisplayShowTitleEnabled(false);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = binding.toolbar;
 
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
     }

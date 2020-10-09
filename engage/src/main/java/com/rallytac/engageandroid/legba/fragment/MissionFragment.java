@@ -1,5 +1,6 @@
 package com.rallytac.engageandroid.legba.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.engage.RxListener;
+import com.rallytac.engageandroid.legba.view.SwipeButton;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.rallytac.engageandroid.legba.HostActivity;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
@@ -66,13 +68,23 @@ public class MissionFragment extends Fragment{
                              Bundle savedInstanceState) {
         activity = (HostActivity) requireActivity();
 
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            activity.findViewById(R.id.overlap_layout).setOnClickListener(view -> toggleSOSLayoutVisiblity());
+            activity.binding.sosSwipeButton.setSosEmergencyListener(new SwipeButton.SOSEmergencyListener() {
 
-        try{
-          //  activity.findViewById(R.id.overlap_layout).setOnClickListener(view -> toggleSOSLayoutVisiblity());
-        }catch (Exception e){
+                @Override
+                public void onStart() {
+                    activity.binding.eyesGlowAnimation.setVisibility(View.VISIBLE);
+                    activity.binding.sosGlowAnimation.setVisibility(View.VISIBLE);
+                }
 
+                @Override
+                public void onStop() {
+                    activity.binding.eyesGlowAnimation.setVisibility(View.GONE);
+                    activity.binding.sosGlowAnimation.setVisibility(View.VISIBLE);
+                }
+            });
         }
-
 
         updateToolbar();
         setHasOptionsMenu(true);
@@ -243,9 +255,9 @@ public class MissionFragment extends Fragment{
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item = menu.findItem(R.id.sos_action);
         View root = item.getActionView();
-        //root.setOnClickListener(view -> onOptionsItemSelected(item));
+        root.setOnClickListener(view -> onOptionsItemSelected(item));
 
-        root.setOnTouchListener(new View.OnTouchListener() {
+/*        root.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Timber.i("onTouch ");
@@ -261,7 +273,7 @@ public class MissionFragment extends Fragment{
                 return false;
             }
 
-        });
+        });*/
 
     }
 
@@ -277,6 +289,7 @@ public class MissionFragment extends Fragment{
 
     private void toggleSOSLayoutVisiblity(){
         View sosLayout = activity.findViewById(R.id.overlap_layout);
+        if (sosLayout == null) return;
         if(sosLayout.getVisibility() == View.GONE){
             sosLayout.setVisibility(View.VISIBLE);
         }else{
