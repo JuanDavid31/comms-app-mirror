@@ -30,6 +30,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.legba.view.SwipeButton;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.rallytac.engageandroid.legba.HostActivity;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
@@ -69,6 +70,20 @@ public class MissionFragment extends Fragment {
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             activity.findViewById(R.id.overlap_layout).setOnClickListener(view -> toggleSOSLayoutVisiblity());
+            activity.binding.sosSwipeButton.setSosEmergencyListener(new SwipeButton.SOSEmergencyListener() {
+
+                @Override
+                public void onStart() {
+                    activity.binding.eyesGlowAnimation.setVisibility(View.VISIBLE);
+                    activity.binding.sosGlowAnimation.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onStop() {
+                    activity.binding.eyesGlowAnimation.setVisibility(View.GONE);
+                    activity.binding.sosGlowAnimation.setVisibility(View.VISIBLE);
+                }
+            });
         }
 
         updateToolbar();
@@ -238,9 +253,9 @@ public class MissionFragment extends Fragment {
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item = menu.findItem(R.id.sos_action);
         View root = item.getActionView();
-        //root.setOnClickListener(view -> onOptionsItemSelected(item));
+        root.setOnClickListener(view -> onOptionsItemSelected(item));
 
-        root.setOnTouchListener(new View.OnTouchListener() {
+/*        root.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Timber.i("onTouch ");
@@ -256,7 +271,7 @@ public class MissionFragment extends Fragment {
                 return false;
             }
 
-        });
+        });*/
 
     }
 
