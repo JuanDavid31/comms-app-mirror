@@ -34,7 +34,7 @@
             android:layout_marginStart="13.3dp"
             app:layout_constraintStart_toEndOf="@+id/radio_channel_image"
             app:layout_constraintTop_toTopOf="@+id/radio_channel_image"
-            tools:text="RADIO TEAM" />
+            tools:text="CHARLIE" />
 
     <TextView
             style="@style/secondaryTitle"

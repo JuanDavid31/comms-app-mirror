@@ -6,7 +6,7 @@
             {
                 "id": 1,
                 "image": "primary",
-                "name": "ALPHA TEAM",
+                "name": "ALPHA",
                 "type": "primary",
                 "subChannelsAndMembers": [
                     {
@@ -116,19 +116,19 @@
             {
                 "id": 2,
                 "image": "secondary",
-                "name": "DELTA TEAM",
+                "name": "DELTA",
                 "type": "priority"
             },
             {
                 "id": 3,
                 "image": "tertiary",
-                "name": "FIRE TEAM",
+                "name": "ECHO",
                 "type": "priority"
             },
             {
                 "id": 4,
                 "image": "quaternary",
-                "name": "RADIO TEAM",
+                "name": "CHARLIE",
                 "type": "radio"
             },
             {

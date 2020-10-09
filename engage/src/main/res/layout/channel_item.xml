@@ -146,7 +146,7 @@
                 android:textSize="16.1sp"
                 app:layout_constraintStart_toEndOf="@+id/channel_image"
                 app:layout_constraintTop_toTopOf="@+id/channel_image"
-                tools:text="ALPHA TEAM" />
+                tools:text="ALPHA" />
 
         <TextView
                 android:id="@+id/channel_type_text"
