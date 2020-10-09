@@ -544,8 +544,8 @@ public class LauncherActivity extends AppCompatActivity
             try
             {
                 Class<?> cls = getClassLoader().loadClass(launchActivityName);
-                startActivity(new Intent(getApplicationContext(), cls));
-                finish();
+            //    startActivity(new Intent(getApplicationContext(), cls));
+              //  finish();
             }
             catch (Exception e)
             {

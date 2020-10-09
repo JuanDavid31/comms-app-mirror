@@ -76,7 +76,7 @@ dependencies {
     // Engage Engine - copied from engage
     implementation 'com.rallytac.engage:engage-engine-release:1.176.9013@aar'
 
-
+    implementation "com.airbnb.android:lottie:3.4.4"
 
     // Android goodies
     implementation 'androidx.appcompat:appcompat:1.0.0'

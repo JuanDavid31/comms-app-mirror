@@ -6,6 +6,7 @@
 package com.rallytac.engageandroid;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -29,6 +30,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -59,6 +61,8 @@ public class LauncherActivity extends AppCompatActivity
     private int _permissionStateMachineStep = 0;
     private boolean _wasLauncherRunBefore;
 
+    private LottieAnimationView lottieAnimationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -73,7 +77,28 @@ public class LauncherActivity extends AppCompatActivity
         Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.launcher_logo_fade);
 
         findViewById(R.id.ivAppSplash).startAnimation(fadeInAnimation);
+        lottieAnimationView = findViewById(R.id.animation_view);
+        lottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
 
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                launchUiActivity();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
         // See if the launcher has been run before
         _wasLauncherRunBefore = (Globals.getSharedPreferences().getBoolean(PreferenceKeys.LAUNCHER_RUN_BEFORE, false) == true);
 
@@ -564,7 +589,8 @@ public class LauncherActivity extends AppCompatActivity
         if(Globals.getEngageApplication().isEngineRunning())
         {
             Log.i(TAG, "engine is already running - ui was likely relaunched");//NON-NLS
-            launchUiActivity();
+
+            startAnimation();
             return;
         }
 
@@ -595,7 +621,7 @@ public class LauncherActivity extends AppCompatActivity
                 {
                     _waitForEngageOnlineTimer.cancel();
                     Globals.getEngageApplication().startEngine();
-                    launchUiActivity();
+                       startAnimation();
                 }
                 else
                 {
@@ -610,4 +636,17 @@ public class LauncherActivity extends AppCompatActivity
             }
         }, tmrDelay, tmrPeriod);
     }
+
+    public void startAnimation(){
+
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+           lottieAnimationView.playAnimation();
+            }
+        });
+    }
+
 }

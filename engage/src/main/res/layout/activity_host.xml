@@ -105,6 +105,34 @@
                 android:layout_height="5.3dp"
                 android:background="@drawable/toolbar_shadow" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/overlap_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/secondaryBlack"
+                android:visibility="gone"
+                tools:background="@color/secondaryBlack"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/overlap_logo_image"
+                    android:layout_width="224dp"
+                    android:layout_height="91.3dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="center"
+                    android:scrollX="-23dp"
+                    android:scrollY="112dp"
+                    android:src="@drawable/ic_overlap_logo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </FrameLayout>
 
     </LinearLayout>
