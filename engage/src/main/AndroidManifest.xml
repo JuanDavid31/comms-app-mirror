@@ -90,6 +90,7 @@
             android:exported="false" /> <!-- The first activity that is run upon startup -->
         <activity
             android:name=".LauncherActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
