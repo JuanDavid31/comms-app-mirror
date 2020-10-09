@@ -112,7 +112,6 @@
             android:clickable="true"
             android:clipToPadding="false"
             android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
             android:paddingStart="12dp"
             android:paddingTop="12dp"
             android:paddingEnd="12dp"
