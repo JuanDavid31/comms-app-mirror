@@ -40,7 +40,7 @@ public class MapTrackerListAdapter extends ArrayAdapter<MapTracker>
         MapTracker item = getItem(position);
 
         ImageView iv = convertView.findViewById(R.id.ivType);
-        iv.setImageDrawable(ContextCompat.getDrawable(_ctx, R.drawable.ic_app_logo));
+        iv.setImageDrawable(ContextCompat.getDrawable(_ctx, R.mipmap.ic_launcher));
 
         String displayName = item._pd.displayName;
         if(Utils.isEmptyString(displayName))

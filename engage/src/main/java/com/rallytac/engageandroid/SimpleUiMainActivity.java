@@ -1756,7 +1756,7 @@ public class SimpleUiMainActivity
             final PresenceDescriptor item = getItem(position);
 
             ImageView iv = convertView.findViewById(R.id.ivType);
-            iv.setImageDrawable(ContextCompat.getDrawable(_ctx, R.drawable.ic_app_logo));
+            iv.setImageDrawable(ContextCompat.getDrawable(_ctx, R.mipmap.ic_launcher));
 
             String displayName = item.displayName;
             if(Utils.isEmptyString(displayName))

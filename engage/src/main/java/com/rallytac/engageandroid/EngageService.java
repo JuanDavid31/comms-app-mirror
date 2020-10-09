@@ -126,7 +126,7 @@ public class EngageService extends Service
         Log.i(TAG, "=====================onStartCommand: intent=" + ((intent != null) ? intent.toString() : "null") + ", flags=" + flags + ", startId=" + startId);//NON-NLS
         super.onStartCommand(intent, flags, startId);
 
-        showOsNotification(getString(R.string.app_name), String.format(getString(R.string.android_notification_service_is_running),getString(R.string.app_name)), R.drawable.ic_app_logo);
+        showOsNotification(getString(R.string.app_name), String.format(getString(R.string.android_notification_service_is_running),getString(R.string.app_name)), R.mipmap.ic_launcher);
 
         return START_STICKY;
     }
