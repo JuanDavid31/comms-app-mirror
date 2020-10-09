@@ -63,7 +63,6 @@ public class LauncherActivity extends AppCompatActivity
     private int _permissionStateMachineStep = 0;
     private boolean _wasLauncherRunBefore;
 
-    private LottieAnimationView lottieAnimationView;
     VideoView videoView;
 
     @Override
