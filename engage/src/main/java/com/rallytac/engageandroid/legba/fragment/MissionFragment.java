@@ -39,6 +39,8 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -588,7 +590,10 @@ public class MissionFragment extends Fragment {
             private RoundedImageView channelImage;
             private TextView channelName;
             private TextView channelType;
+            private TextView lastMessageText;
             private TextView lastMessageTime;
+            private TextView lastMessageAlias;
+            private TextView lastMessageDisplayName;
             private ImageView speakerButton;
             private View incomingMessageLayout;
 
@@ -598,7 +603,10 @@ public class MissionFragment extends Fragment {
                 channelImage = itemView.findViewById(R.id.channel_image);
                 channelName = itemView.findViewById(R.id.channel_name_text);
                 channelType = itemView.findViewById(R.id.channel_type_text);
+                lastMessageText = itemView.findViewById(R.id.last_message_text);
                 lastMessageTime = itemView.findViewById(R.id.last_message_time);
+                lastMessageAlias = itemView.findViewById(R.id.last_message_alias);
+                lastMessageDisplayName = itemView.findViewById(R.id.last_message_displayName);
                 speakerButton = itemView.findViewById(R.id.channel_speaker);
                 incomingMessageLayout = itemView.findViewById(R.id.incoming_message_layout);
             }
@@ -609,11 +617,22 @@ public class MissionFragment extends Fragment {
             }
 
             @Override
-            public void onJsonRX(String id, String alias) {
-                incomingMessageLayout.setVisibility(View.VISIBLE);
+            public void onJsonRX(String id, String alias, String displayName) {
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm a");
+                LocalDateTime now = LocalDateTime.now();
+                String timeText = dtf.format(now);
+
+                String aliasText = alias == null ? "UNKNOWN" : alias;
+                String displayNameText = displayName == null ? "Unknown user" : displayName;
+
                 ((TextView) incomingMessageLayout
-                        .findViewById(R.id.incoming_message_name))
-                        .setText(alias != null ? alias : "UNKOWN ALIAS");
+                    .findViewById(R.id.incoming_message_name)).setText(aliasText);
+
+                lastMessageTime.setText(timeText);
+                lastMessageAlias.setText(aliasText);
+                lastMessageDisplayName.setText(displayNameText);
+                lastMessageText.setVisibility(View.VISIBLE);
+                incomingMessageLayout.setVisibility(View.VISIBLE);
             }
 
             @Override

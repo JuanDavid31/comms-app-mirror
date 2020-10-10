@@ -3414,11 +3414,17 @@ public class EngageApplication
                                 TalkerDescriptor td = new TalkerDescriptor();
                                 td.alias = obj.optString(Engine.JsonFields.TalkerInformation.alias);
                                 td.nodeId = obj.optString(Engine.JsonFields.TalkerInformation.nodeId);
-                                Globals.actualListener.onJsonRX(id, td.alias);
                                 if (talkers == null)
                                 {
                                     talkers = new ArrayList<>();
                                 }
+
+                                PresenceDescriptor pd = _activeConfiguration.getPresenceDescriptor(td.nodeId);
+                                String displayName = td.alias;
+                                if (pd != null) {
+                                    displayName = pd.displayName;
+                                }
+                                Globals.actualListener.onJsonRX(id, td.alias, displayName);
 
                                 talkers.add(td);
                             }
