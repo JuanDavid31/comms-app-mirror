@@ -5165,6 +5165,7 @@ public class EngageApplication
                             throw new Exception("no device id available for licensing");
                         }
                         Globals.getSharedPreferencesEditor().putString(PreferenceKeys.USER_LICENSING_KEY, "861B1070050242E1A60D5239");
+                        Globals.getSharedPreferencesEditor().apply();
                         String key = "861B1070050242E1A60D5239";// Globals.getSharedPreferences().getString(PreferenceKeys.USER_LICENSING_KEY, "861B1070050242E1A60D5239");
 
                         if (Utils.isEmptyString(key))
