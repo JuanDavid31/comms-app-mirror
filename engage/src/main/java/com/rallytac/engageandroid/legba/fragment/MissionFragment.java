@@ -1,5 +1,8 @@
 package com.rallytac.engageandroid.legba.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,7 +49,7 @@ import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
 
-public class MissionFragment extends Fragment{
+public class MissionFragment extends Fragment {
 
     private HostActivity activity;
     private FragmentMissionBinding binding;
@@ -68,20 +71,62 @@ public class MissionFragment extends Fragment{
                              Bundle savedInstanceState) {
         activity = (HostActivity) requireActivity();
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            activity.findViewById(R.id.overlap_layout).setOnClickListener(view -> toggleSOSLayoutVisiblity());
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            activity.findViewById(R.id.sos_overlap_layout).setOnClickListener(view -> toggleSOSLayoutVisiblity());
             activity.binding.sosSwipeButton.setSosEmergencyListener(new SwipeButton.SOSEmergencyListener() {
 
                 @Override
                 public void onStart() {
                     activity.binding.eyesGlowAnimation.setVisibility(View.VISIBLE);
-                    activity.binding.sosGlowAnimation.setVisibility(View.VISIBLE);
+                    activity.binding.sosButtonGlowAnimation.setVisibility(View.VISIBLE);
+
+                    activity.binding.sosButtonGlowAnimation.addAnimatorListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+                            Timber.i(activity.binding.sosButtonGlowAnimation.getMinFrame() + " MINFRAME");
+                            Timber.i(activity.binding.sosButtonGlowAnimation.getMaxFrame() + " MAXFRAME");
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            Timber.i(activity.binding.sosButtonGlowAnimation.getMinFrame() + " MINFRAME");
+                            Timber.i(activity.binding.sosButtonGlowAnimation.getMaxFrame() + " MAXFRAME");
+                            activity.binding.sosButtonGlowAnimation.removeAllAnimatorListeners();
+                            activity.binding.sosButtonGlowAnimation.setRepeatCount(ValueAnimator.INFINITE);
+                            Timber.i(activity.binding.sosButtonGlowAnimation.getMinFrame() + " MINFRAME");
+                            Timber.i(activity.binding.sosButtonGlowAnimation.getMaxFrame() + " MAXFRAME");
+                            activity.binding.sosButtonGlowAnimation.setMinAndMaxFrame(125, 147);
+                            activity.binding.sosButtonGlowAnimation.playAnimation();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    });
+
+                    activity.binding.sosTxImage.animate()
+                            .alpha(1f)
+                            .setDuration(600);
                 }
 
                 @Override
                 public void onStop() {
                     activity.binding.eyesGlowAnimation.setVisibility(View.GONE);
-                    activity.binding.sosGlowAnimation.setVisibility(View.VISIBLE);
+                    activity.binding.sosButtonGlowAnimation.setVisibility(View.GONE);
+                    activity.binding.sosTxImage.animate()
+                            .alpha(0.0f)
+                            .setDuration(300);
+                }
+
+                @Override
+                public void onFinish() {
+                    toggleSOSLayoutVisiblity();
                 }
             });
         }
@@ -96,7 +141,6 @@ public class MissionFragment extends Fragment{
                 .collect(Collectors.toList());
 
         binding.missionViewPager.setAdapter(new ChannelSlidePageAdapter(this, nonRadioChannels));
-
 
 
         setupPTTOnMic();
@@ -119,18 +163,15 @@ public class MissionFragment extends Fragment{
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
-    private void setupPTTOnMic(){
+    private void setupPTTOnMic() {
         binding.icMicCard.setOnTouchListener((v, event) -> {
 
-            if (event.getAction() == MotionEvent.ACTION_DOWN)
-            {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 binding.txImage.setVisibility(View.VISIBLE);
                 Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
                 _pttRequested = true;
                 Globals.getEngageApplication().startTx(0, 0);
-            }
-            else if (event.getAction() == MotionEvent.ACTION_UP)
-            {
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 binding.txImage.setVisibility(View.INVISIBLE);
                 Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
                 _pttRequested = false;
@@ -174,7 +215,7 @@ public class MissionFragment extends Fragment{
 
     private void setupViewPagerDotIndicator(List<Channel> channels) {
         binding.tabLayout.removeAllViews();
-        int dotNumber = channels.size() > 1 ? channels.size() + 1 + 1: channels.size() + 1;
+        int dotNumber = channels.size() > 1 ? channels.size() + 1 + 1 : channels.size() + 1;
         dotIndicators = new ImageView[dotNumber];
         for (int i = 0; i < dotNumber; i++) {
             dotIndicators[i] = new ImageView(getContext());
@@ -279,7 +320,7 @@ public class MissionFragment extends Fragment{
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.sos_action){
+        if (item.getItemId() == R.id.sos_action) {
             Timber.i("SOS PRESSED");
             toggleSOSLayoutVisiblity();
             return true;
@@ -287,16 +328,33 @@ public class MissionFragment extends Fragment{
         return super.onOptionsItemSelected(item);
     }
 
-    private void toggleSOSLayoutVisiblity(){
-        View sosLayout = activity.findViewById(R.id.overlap_layout);
+    private void toggleSOSLayoutVisiblity() {
+        View sosLayout = activity.findViewById(R.id.sos_overlap_layout);
         if (sosLayout == null) return;
-        if(sosLayout.getVisibility() == View.GONE){
-            sosLayout.setVisibility(View.VISIBLE);
-        }else{
-            sosLayout.setVisibility(View.GONE);
+        if (sosLayout.getVisibility() == View.GONE) {
+            sosLayout.animate()
+                    .alpha(0.9f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            sosLayout.setVisibility(View.VISIBLE);
+                        }
+                    });
+        } else {
+            sosLayout.animate()
+                    .alpha(0.0f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            sosLayout.setVisibility(View.GONE);
+                        }
+                    });
         }
     }
-
 
 
     private class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePageAdapter.GenericViewHolder> {
@@ -332,7 +390,7 @@ public class MissionFragment extends Fragment{
         public int getItemViewType(int position) {
             if (position < channels.size()) {
                 return CHANNEL_ITEM;
-            } else if (channels.size() > 1 && channels.size() == position){
+            } else if (channels.size() > 1 && channels.size() == position) {
                 return RESUME_CHANNELS_ITEM;
             } else {
                 return ADD_CHANNEL_ITEM;
@@ -385,13 +443,13 @@ public class MissionFragment extends Fragment{
                     channelHolder.incomingMessageLayout
                             .findViewById(R.id.incoming_message_speaker_layout)
                             .setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.incoming_message_speaker_blue_layout_shape, null));
-                    ((ImageView)channelHolder.incomingMessageLayout
+                    ((ImageView) channelHolder.incomingMessageLayout
                             .findViewById(R.id.incoming_message_speaker))
                             .setImageResource(R.drawable.ic_blue_speaker);
-                    ((TextView)channelHolder.incomingMessageLayout
+                    ((TextView) channelHolder.incomingMessageLayout
                             .findViewById(R.id.incoming_message_speaking_text))
                             .setTextColor(getResources().getColor(R.color.waterBlue93, null));
-                    ((ImageView)channelHolder.incomingMessageLayout
+                    ((ImageView) channelHolder.incomingMessageLayout
                             .findViewById(R.id.rx_image))
                             .setImageResource(R.drawable.ic_blue_tx);
                 } else if (orange) {
@@ -404,18 +462,18 @@ public class MissionFragment extends Fragment{
                     channelHolder.incomingMessageLayout
                             .findViewById(R.id.incoming_message_speaker_layout)
                             .setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.incoming_message_speaker_orange_layout_shape, null));
-                    ((ImageView)channelHolder.incomingMessageLayout
+                    ((ImageView) channelHolder.incomingMessageLayout
                             .findViewById(R.id.incoming_message_speaker))
                             .setImageResource(R.drawable.ic_orange_speaker);
-                    ((TextView)channelHolder.incomingMessageLayout
+                    ((TextView) channelHolder.incomingMessageLayout
                             .findViewById(R.id.incoming_message_speaking_text))
                             .setTextColor(getResources().getColor(R.color.orange93, null));
-                    ((ImageView)channelHolder.incomingMessageLayout
+                    ((ImageView) channelHolder.incomingMessageLayout
                             .findViewById(R.id.rx_image))
                             .setImageResource(R.drawable.ic_orange_tx);
                 }
 
-                switch (position){
+                switch (position) {
                     case 0:
                         toggleSpeakerIcon(isPrimarySpeakerOn, channelHolder.speakerButton);
                         channelHolder.speakerButton.setOnClickListener(view -> {
@@ -462,7 +520,7 @@ public class MissionFragment extends Fragment{
                     toggleSpeakerIcon(isPriority1SpekearOn, (ImageView) view);
                 });
 
-                if(channels.size() < 3)return;
+                if (channels.size() < 3) return;
 
                 channelResumeHolder.priorityChannel2.setVisibility(View.VISIBLE);
                 channelResumeHolder.priorityChannel2Image.setImageResource(getImageResource(channels.get(2).image));
@@ -524,7 +582,7 @@ public class MissionFragment extends Fragment{
             }
         }
 
-        class ChannelViewHolder extends GenericViewHolder implements RxListener{
+        class ChannelViewHolder extends GenericViewHolder implements RxListener {
 
             private View channelInfo;
             private RoundedImageView channelImage;
@@ -553,9 +611,9 @@ public class MissionFragment extends Fragment{
             @Override
             public void onJsonRX(String id, String alias) {
                 incomingMessageLayout.setVisibility(View.VISIBLE);
-                ((TextView)incomingMessageLayout
-                    .findViewById(R.id.incoming_message_name))
-                    .setText(alias != null? alias : "UNKOWN ALIAS");
+                ((TextView) incomingMessageLayout
+                        .findViewById(R.id.incoming_message_name))
+                        .setText(alias != null ? alias : "UNKOWN ALIAS");
             }
 
             @Override

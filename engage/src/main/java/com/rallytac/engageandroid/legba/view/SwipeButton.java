@@ -1,14 +1,14 @@
 package com.rallytac.engageandroid.legba.view;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.rallytac.engageandroid.R;
 
@@ -85,7 +86,7 @@ public class SwipeButton extends RelativeLayout {
         this.redCircle = swipeButton;
         redCircle.setGravity(Gravity.CENTER);
         redCircle.setText("SOS");
-        redCircle.setTypeface(Typeface.create("font/open_sans_semi_bold.ttf", Typeface.NORMAL));
+        redCircle.setTypeface(ResourcesCompat.getFont(context, R.font.call_of_ops_duty));
         redCircle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
         redCircle.setPadding(15, 20, 15, 20);
 
@@ -110,7 +111,7 @@ public class SwipeButton extends RelativeLayout {
         //this.centerText.setAnimation(animation);
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         centerText.setText("Swipe Down"); //add any text you need
-        centerText.setTypeface(Typeface.create("font/open_sans_light.ttf", Typeface.NORMAL));
+        centerText.setTypeface(ResourcesCompat.getFont(context, R.font.open_sans_regular));
         centerText.setRotation(-90);
         centerText.setTextColor(getResources().getColor(R.color.white05, null));
         centerText.setGravity(Gravity.FILL_VERTICAL);
@@ -132,8 +133,6 @@ public class SwipeButton extends RelativeLayout {
                         actionMove(event);
                         return true;
                     case MotionEvent.ACTION_UP:
-                        //Release logic here
-                        //actionUp();
                         moveButtonBack();
                         return true;
                 }
@@ -151,15 +150,10 @@ public class SwipeButton extends RelativeLayout {
         int buttonCenter = redCircle.getHeight() / 2; // 120
         DecimalFormat df = new DecimalFormat("0.00");
 
-        Log.i("Dims", " - getX " + redCircle.getY() + " - Total Height " + getHeight() + " - buttonCenter " + buttonCenter);
-
         float leftSide = redCircle.getY() - paddingTop;
         int rightSide = getHeight() - (paddingTop + paddingBottom + circleHeight);
         double percentage = leftSide / rightSide;
         double halfPercentage = (leftSide) / (rightSide / 2);
-
-        Log.i("percentage", df.format(percentage) + " - " + leftSide + " / " + rightSide);
-        Log.i("Half percentage", halfPercentage + "");
 
         if (initialY == 0) {
             initialY = redCircle.getY();
@@ -298,6 +292,16 @@ public class SwipeButton extends RelativeLayout {
             }
         });
 
+        positionAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                sosEmergencyListener.onFinish();
+            }
+        });
+
+
+
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(centerText, "alpha", 1);
         positionAnimator.setDuration(300);
 
@@ -311,5 +315,6 @@ public class SwipeButton extends RelativeLayout {
     public interface SOSEmergencyListener {
         void onStart();
         void onStop();
+        void onFinish();
     }
 }
