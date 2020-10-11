@@ -5,7 +5,7 @@
 
     <string name="copyright">Copyright (c) 2019 Rally Tactical Systems, Inc.</string>
     <string name="licensing_manufacturerId"></string>
-    <string name="licensing_entitlement" translatable="false">{d8d689b8-7f13-48b1-94e0-091e679058d6}</string>
+    <string name="licensing_entitlement" translatable="false">{c10eefc9-e395-4813-beff-53b112e8794b}</string>
 
     <string name="generated_user_id_email_domain">\@demo.rallytac.com</string>
 

@@ -91,11 +91,12 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
             android:fontFamily="@font/open_sans_regular"
-            android:text="Last Message:"
+            android:text="@string/last_message"
             android:textColor="@color/pinkish_grey"
             android:textSize="10.1sp"
-            app:layout_constraintBottom_toTopOf="@id/last_message_name"
-            app:layout_constraintStart_toStartOf="@id/last_message_name" />
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/last_message_alias"
+            app:layout_constraintStart_toStartOf="@id/last_message_alias" />
 
     <TextView
             android:id="@+id/last_message_time"
@@ -103,14 +104,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:fontFamily="@font/open_sans_regular"
-            android:text="12:35 PM"
+            android:text=""
             android:textColor="@color/paleRed"
             android:textSize="10.1sp"
             app:layout_constraintBottom_toBottomOf="@+id/last_message_text"
             app:layout_constraintStart_toEndOf="@id/last_message_text" />
 
     <TextView
-            android:id="@+id/last_message_name"
+            android:id="@+id/last_message_alias"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -119,24 +120,24 @@
             android:letterSpacing="0.02"
             android:shadowColor="#d4000000"
             android:shadowRadius="9"
-            android:text="John Waren"
+            android:text=""
             android:textColor="@color/pinkish_grey"
             android:textSize="12.4sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-            android:id="@+id/last_message_nickname_text"
+            android:id="@+id/last_message_displayName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginBottom="2dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="Johnister"
+            android:text=""
             android:textColor="@color/greyish_93"
             android:textSize="10.1sp"
-            app:layout_constraintBottom_toBottomOf="@id/last_message_name"
-            app:layout_constraintStart_toEndOf="@id/last_message_name" />
+            app:layout_constraintBottom_toBottomOf="@id/last_message_alias"
+            app:layout_constraintStart_toEndOf="@id/last_message_alias" />
 
     <ImageView
             android:id="@+id/channel_speaker"
