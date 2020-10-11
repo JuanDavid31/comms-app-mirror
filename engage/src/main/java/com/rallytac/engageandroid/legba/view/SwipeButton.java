@@ -69,23 +69,23 @@ public class SwipeButton extends RelativeLayout {
         //Background
         RelativeLayout background = new RelativeLayout(context);
 
-        LayoutParams layoutParamsView = new LayoutParams(convertDpToPx(context, 66), convertDpToPx(context, 206));
-
-        layoutParamsView.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         background.setClipToPadding(false);
         background.setBackground(ContextCompat.getDrawable(context, R.drawable.swipe_button_layout_shape));
+        background.setAlpha(0.9f);
         int padding = convertDpToPx(context, 3.8);
         background.setPadding(padding, padding, padding, padding);
+        LayoutParams layoutParamsView = new LayoutParams(convertDpToPx(context, 66), convertDpToPx(context, 206));
+        layoutParamsView.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         addView(background, layoutParamsView);
 
 
         // Moving icon
 
-
         final TextView swipeButton = new TextView(context);
         this.redCircle = swipeButton;
         redCircle.setGravity(Gravity.CENTER);
         redCircle.setText("SOS");
+        redCircle.setLetterSpacing(0.02f);
         redCircle.setTypeface(ResourcesCompat.getFont(context, R.font.call_of_ops_duty));
         redCircle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
         redCircle.setPadding(15, 20, 15, 20);
@@ -108,9 +108,10 @@ public class SwipeButton extends RelativeLayout {
         this.centerText = centerText;
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.vertical_text);
         animation.setFillAfter(true);
-        //this.centerText.setAnimation(animation);
+        centerText.setAlpha(0.9f);
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        centerText.setText("Swipe Down"); //add any text you need
+        centerText.setText("Swipe Down");
+        centerText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         centerText.setTypeface(ResourcesCompat.getFont(context, R.font.open_sans_regular));
         centerText.setRotation(-90);
         centerText.setTextColor(getResources().getColor(R.color.white05, null));
