@@ -61,6 +61,8 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import timber.log.Timber;
+
 public class EngageApplication
                                 extends
                                     Application
@@ -621,6 +623,7 @@ public class EngageApplication
     @Override
     public void onCreate()
     {
+        Timber.plant(new Timber.DebugTree());
         Log.d(TAG, "onCreate");
 
         super.onCreate();

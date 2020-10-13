@@ -7,7 +7,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -27,6 +26,8 @@ import com.rallytac.engageandroid.R;
 
 import java.text.DecimalFormat;
 
+import timber.log.Timber;
+
 import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 
 public class SwipeButton extends RelativeLayout {
@@ -37,7 +38,9 @@ public class SwipeButton extends RelativeLayout {
     private Context context;
     private SOSEmergencyListener sosEmergencyListener;
 
-    public void setSosEmergencyListener(SOSEmergencyListener sosEmergencyListener){
+    public static int SWIPE_TEXT_ID = 999;
+
+    public void setSosEmergencyListener(SOSEmergencyListener sosEmergencyListener) {
         this.sosEmergencyListener = sosEmergencyListener;
     }
 
@@ -71,7 +74,7 @@ public class SwipeButton extends RelativeLayout {
 
         background.setClipToPadding(false);
         background.setBackground(ContextCompat.getDrawable(context, R.drawable.swipe_button_layout_shape));
-        background.setAlpha(0.9f);
+        background.setAlpha(0.18f);
         int padding = convertDpToPx(context, 3.8);
         background.setPadding(padding, padding, padding, padding);
         LayoutParams layoutParamsView = new LayoutParams(convertDpToPx(context, 66), convertDpToPx(context, 206));
@@ -83,6 +86,8 @@ public class SwipeButton extends RelativeLayout {
 
         final TextView swipeButton = new TextView(context);
         this.redCircle = swipeButton;
+        redCircle.generateViewId();
+        redCircle.setId(SWIPE_TEXT_ID);
         redCircle.setGravity(Gravity.CENTER);
         redCircle.setText("SOS");
         redCircle.setLetterSpacing(0.02f);
@@ -127,13 +132,17 @@ public class SwipeButton extends RelativeLayout {
         return new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                Timber.i("onTouch SwipeButton");
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        Timber.i("ACTION_DOWN");
                         return true;
                     case MotionEvent.ACTION_MOVE:
+                        Timber.i("ACTION_MOVE");
                         actionMove(event);
                         return true;
                     case MotionEvent.ACTION_UP:
+                        Timber.i("ACTION_UP");
                         moveButtonBack();
                         return true;
                 }
@@ -181,104 +190,20 @@ public class SwipeButton extends RelativeLayout {
             redCircle.setY(padding);
         }
 
-        if(percentage > 0.90){
-            sosEmergencyListener.onStart();
-        }else{
-            sosEmergencyListener.onStop();
+        if (percentage > 0.90) {
+            sosEmergencyListener.onSosStart();
+        } else {
+            sosEmergencyListener.onSosStop();
         }
     }
 
 /*    private void actionUp() {
-        if (active) {
-            //collapseButton();
+        if (slidingButton.getX() + slidingButton.getWidth() > getWidth() * 0.85) {
+            //expandButton();
         } else {
-            initialButtonWidth = slidingButton.getWidth();
-
-            if (slidingButton.getX() + slidingButton.getWidth() > getWidth() * 0.85) {
-                //expandButton();
-            } else {
-                //moveButtonBack();
-            }
+            //moveButtonBack();
         }
     }*/
-
-    private void collapseButton() {
-/*        //Creates the movement animation
-        final ValueAnimator widthAnimator = ValueAnimator.ofInt(
-                slidingButton.getWidth(),
-                initialButtonWidth);
-
-        //Moves the button
-        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                ViewGroup.LayoutParams params =  slidingButton.getLayoutParams();
-                params.width = (Integer) widthAnimator.getAnimatedValue();
-                slidingButton.setLayoutParams(params);
-            }
-        });
-
-        //Sets the state to inactive on animationEnd
-        widthAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                active = false;
-                slidingButton.setImageDrawable(disabledDrawable);
-            }
-        });
-
-        //Creates the fadeIn animation
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(
-                centerText, "alpha", 1);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-
-        animatorSet.playTogether(objectAnimator, widthAnimator);
-        animatorSet.start();*/
-    }
-
-    private void expandButton() {
-/*        final ValueAnimator positionAnimator =
-                ValueAnimator.ofFloat(slidingButton.getX(), 0);
-
-        positionAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float x = (Float) positionAnimator.getAnimatedValue();
-                slidingButton.setX(x);
-            }
-        });
-
-
-        final ValueAnimator widthAnimator = ValueAnimator.ofInt(
-                slidingButton.getWidth(),
-                getWidth());
-
-        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                ViewGroup.LayoutParams params = slidingButton.getLayoutParams();
-                params.width = (Integer) widthAnimator.getAnimatedValue();
-                slidingButton.setLayoutParams(params);
-            }
-        });
-
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-
-                active = true;
-                slidingButton.setImageDrawable(enabledDrawable);
-            }
-        });
-
-        animatorSet.playTogether(positionAnimator, widthAnimator);
-        animatorSet.start();*/
-    }
 
     private void moveButtonBack() {
         int initialPos = convertDpToPx(context, 3.8);
@@ -297,10 +222,9 @@ public class SwipeButton extends RelativeLayout {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                sosEmergencyListener.onFinish();
+                sosEmergencyListener.onSwipeFinish();
             }
         });
-
 
 
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(centerText, "alpha", 1);
@@ -310,12 +234,16 @@ public class SwipeButton extends RelativeLayout {
         animatorSet.playTogether(objectAnimator, positionAnimator);
         centerText.setText("Swipe Down");
         animatorSet.start();
-        sosEmergencyListener.onStop();
+        sosEmergencyListener.onSosStop();
     }
 
     public interface SOSEmergencyListener {
-        void onStart();
-        void onStop();
-        void onFinish();
+        void onSwipeStart();
+
+        void onSosStart();
+
+        void onSosStop();
+
+        void onSwipeFinish();
     }
 }

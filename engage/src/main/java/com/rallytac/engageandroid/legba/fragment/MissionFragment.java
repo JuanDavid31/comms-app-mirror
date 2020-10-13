@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -65,7 +66,6 @@ public class MissionFragment extends Fragment {
         super.onCreate(savedInstanceState);
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
         mission = missionFragmentArgs.getMission();
-
     }
 
     @Override
@@ -78,13 +78,17 @@ public class MissionFragment extends Fragment {
             activity.binding.sosSwipeButton.setSosEmergencyListener(new SwipeButton.SOSEmergencyListener() {
 
                 @Override
-                public void onStart() {
+                public void onSwipeStart() {
+                    activity.binding.sosOverlapLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.sos_overlap_gradient_shape, null));
+                }
+
+                @Override
+                public void onSosStart() {
                     activity.binding.eyesGlowAnimation.setVisibility(View.VISIBLE);
                     activity.binding.sosButtonGlowAnimation.setVisibility(View.VISIBLE);
-                    activity.binding.sosOverlapLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.sos_overlap_gradient_shape, null));
                     activity.binding.sosTxImage.animate()
                             .alpha(1f)
-                            .setDuration(600);
+                            .setDuration(900);
 
                     activity.binding.sosButtonGlowAnimation.addAnimatorListener(new Animator.AnimatorListener() {
                         @Override
@@ -115,11 +119,10 @@ public class MissionFragment extends Fragment {
 
                         }
                     });
-
                 }
 
                 @Override
-                public void onStop() {
+                public void onSosStop() {
                     activity.binding.eyesGlowAnimation.setVisibility(View.GONE);
                     activity.binding.sosButtonGlowAnimation.setVisibility(View.GONE);
                     activity.binding.sosOverlapLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.color.secondaryBlack, null));
@@ -129,10 +132,11 @@ public class MissionFragment extends Fragment {
                 }
 
                 @Override
-                public void onFinish() {
+                public void onSwipeFinish() {
                     toggleSOSLayoutVisiblity();
                 }
             });
+
         }
 
         updateToolbar();
@@ -300,32 +304,45 @@ public class MissionFragment extends Fragment {
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item = menu.findItem(R.id.sos_action);
         View root = item.getActionView();
-        root.setOnClickListener(view -> onOptionsItemSelected(item));
+        //root.setOnClickListener(view -> onOptionsItemSelected(item));
 
-/*        root.setOnTouchListener(new View.OnTouchListener() {
+        if (activity.binding.sosSwipeButton == null) return;
+        root.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                Timber.i("onTouch ");
-                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                    Timber.i("ACTION_DOWN");
-                    toggleSOSLayoutVisiblity();
-                    return true;
-                }else if(motionEvent.getAction() == MotionEvent.ACTION_UP){
-                    Timber.i("ACTION_UP");
-                    toggleSOSLayoutVisiblity();
-                    return true;
-                }
-                return false;
-            }
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        toggleSOSLayoutVisiblity();
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        activity.binding.sosSwipeButton.dispatchTouchEvent(MotionEvent.obtain(event.getDownTime(),
+                                event.getEventTime(),
+                                MotionEvent.ACTION_UP,
+                                event.getX(),
+                                event.getY(),
+                                event.getMetaState()));
 
-        });*/
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        activity.binding.sosSwipeButton.dispatchTouchEvent(MotionEvent.obtain(event.getDownTime(),
+                                event.getEventTime(),
+                                MotionEvent.ACTION_MOVE,
+                                event.getX(),
+                                event.getY(),
+                                event.getMetaState()));
+
+                        return false;
+                    default:
+                        return false;
+                }
+            }
+        });
 
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.sos_action) {
-            Timber.i("SOS PRESSED");
             toggleSOSLayoutVisiblity();
             return true;
         }
@@ -333,11 +350,11 @@ public class MissionFragment extends Fragment {
     }
 
     private void toggleSOSLayoutVisiblity() {
-        View sosLayout = activity.findViewById(R.id.sos_overlap_layout);
+        View sosLayout = activity.binding.sosOverlapLayout;
         if (sosLayout == null) return;
         if (sosLayout.getVisibility() == View.GONE) {
             sosLayout.animate()
-                    .alpha(0.9f)
+                    .alpha(0.95f)
                     .setDuration(300)
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
@@ -359,7 +376,6 @@ public class MissionFragment extends Fragment {
                     });
         }
     }
-
 
     private class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePageAdapter.GenericViewHolder> {
 

@@ -126,7 +126,7 @@
                     android:alpha="0"
                     android:background="@color/secondaryBlack"
                     android:visibility="gone"
-                    tools:alpha=".9"
+                    tools:alpha=".95"
                     android:animateLayoutChanges="true"
                     tools:background="@color/secondaryBlack"
                     tools:visibility="visible">
@@ -187,7 +187,7 @@
                         app:lottie_autoPlay="true"
                         app:lottie_loop="true"
                         app:lottie_rawRes="@raw/sos_glow_data"
-                        android:scrollY="-14dp"
+                        android:scrollY="-5.5dp"
                         android:scrollX="-17dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"

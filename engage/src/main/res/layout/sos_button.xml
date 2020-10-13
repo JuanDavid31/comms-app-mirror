@@ -6,7 +6,7 @@
         android:paddingEnd="37.5dp"
     android:clickable="true">
 
-    <!--Letter spacing does not affecta the TextView here-->
+    <!--Letter spacing does not affect the TextView here-->
 
     <TextView
             android:fontFamily="@font/built_titling_rg_bold"
@@ -16,6 +16,7 @@
             android:letterSpacing="0.02"
             android:shadowColor="#d4000000"
             android:shadowRadius="9"
+            android:layout_marginTop="9dp"
             android:text="SOS"
             android:textColor="@color/paleRed"
             android:textSize="17.6sp">
