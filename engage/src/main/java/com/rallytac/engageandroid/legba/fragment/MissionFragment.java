@@ -81,6 +81,10 @@ public class MissionFragment extends Fragment {
                 public void onStart() {
                     activity.binding.eyesGlowAnimation.setVisibility(View.VISIBLE);
                     activity.binding.sosButtonGlowAnimation.setVisibility(View.VISIBLE);
+                    activity.binding.sosOverlapLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.sos_overlap_gradient_shape, null));
+                    activity.binding.sosTxImage.animate()
+                            .alpha(1f)
+                            .setDuration(600);
 
                     activity.binding.sosButtonGlowAnimation.addAnimatorListener(new Animator.AnimatorListener() {
                         @Override
@@ -112,15 +116,13 @@ public class MissionFragment extends Fragment {
                         }
                     });
 
-                    activity.binding.sosTxImage.animate()
-                            .alpha(1f)
-                            .setDuration(600);
                 }
 
                 @Override
                 public void onStop() {
                     activity.binding.eyesGlowAnimation.setVisibility(View.GONE);
                     activity.binding.sosButtonGlowAnimation.setVisibility(View.GONE);
+                    activity.binding.sosOverlapLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.color.secondaryBlack, null));
                     activity.binding.sosTxImage.animate()
                             .alpha(0.0f)
                             .setDuration(300);
@@ -626,7 +628,7 @@ public class MissionFragment extends Fragment {
                 String displayNameText = displayName == null ? "Unknown user" : displayName;
 
                 ((TextView) incomingMessageLayout
-                    .findViewById(R.id.incoming_message_name)).setText(aliasText);
+                        .findViewById(R.id.incoming_message_name)).setText(aliasText);
 
                 lastMessageTime.setText(timeText);
                 lastMessageAlias.setText(aliasText);
