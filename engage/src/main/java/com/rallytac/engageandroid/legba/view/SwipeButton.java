@@ -91,6 +91,7 @@ public class SwipeButton extends RelativeLayout {
         redCircle.setId(SWIPE_TEXT_ID);
         redCircle.setGravity(Gravity.CENTER);
         redCircle.setText("SOS");
+        redCircle.setTextColor(getResources().getColor(R.color.paleRed, null));
         redCircle.setLetterSpacing(0.02f);
         redCircle.setTypeface(ResourcesCompat.getFont(context, R.font.call_of_ops_duty));
         redCircle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
