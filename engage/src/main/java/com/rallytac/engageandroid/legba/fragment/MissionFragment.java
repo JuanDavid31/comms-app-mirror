@@ -76,9 +76,9 @@ public class MissionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         activity = (HostActivity) requireActivity();
-        transition = transition = (TransitionDrawable) activity.binding.sosOverlapLayout.getBackground();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            transition = (TransitionDrawable) activity.binding.sosOverlapLayout.getBackground();
             activity.binding.sosSwipeButton.setSosEmergencyListener(new SwipeButton.SOSEmergencyListener() {
 
                 boolean isGradientActive = false;
