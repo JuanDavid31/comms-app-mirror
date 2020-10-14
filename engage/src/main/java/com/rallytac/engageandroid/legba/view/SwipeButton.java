@@ -37,6 +37,7 @@ public class SwipeButton extends RelativeLayout {
     private TextView centerText;
     private Context context;
     private SOSEmergencyListener sosEmergencyListener;
+    private double percentage;
 
     public static int SWIPE_TEXT_ID = 999;
 
@@ -132,17 +133,13 @@ public class SwipeButton extends RelativeLayout {
         return new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Timber.i("onTouch SwipeButton");
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        Timber.i("ACTION_DOWN");
                         return true;
                     case MotionEvent.ACTION_MOVE:
-                        Timber.i("ACTION_MOVE");
                         actionMove(event);
                         return true;
                     case MotionEvent.ACTION_UP:
-                        Timber.i("ACTION_UP");
                         moveButtonBack();
                         return true;
                 }
@@ -161,7 +158,7 @@ public class SwipeButton extends RelativeLayout {
 
         float leftSide = redCircle.getY() - paddingTop;
         int rightSide = getHeight() - (paddingTop + paddingBottom + circleHeight);
-        double percentage = leftSide / rightSide;
+        percentage = leftSide / rightSide;
         double halfPercentage = (leftSide) / (rightSide / 2);
 
         //Swipe button behavior
@@ -198,18 +195,23 @@ public class SwipeButton extends RelativeLayout {
         if(percentage > 0.10 && !onSwipeStartCalled){
             sosEmergencyListener.onSwipeStart();
             onSwipeStartCalled = true;
-        }else{
-            if(onSwipeStartCalled)onSwipeStartCalled = false;
+        }else if(percentage <= 0.10 && onSwipeStartCalled){
+            sosEmergencyListener.onSwipeStartEnd();
+            onSwipeStartCalled = false;
         }
 
-        if (percentage > 0.90) {
+        if (percentage > 0.90 && !onSosStartCalled) {
             sosEmergencyListener.onSosStart();
-        } else {
+            onSosStartCalled = true;
+        } else if(percentage <= 0.90 && onSosStartCalled){
             sosEmergencyListener.onSosStop();
+            onSosStartCalled = false;
         }
     }
 
     boolean onSwipeStartCalled = false;
+    boolean onSosStartCalled = false;
+    boolean onSosStopCalled = false;
 
 /*    private void actionUp() {
         if (slidingButton.getX() + slidingButton.getWidth() > getWidth() * 0.85) {
@@ -249,6 +251,7 @@ public class SwipeButton extends RelativeLayout {
         centerText.setText("Swipe Down");
         animatorSet.start();
         sosEmergencyListener.onSosStop();
+        sosEmergencyListener.onFreeButton(percentage * 300);
     }
 
     public interface SOSEmergencyListener {
@@ -257,9 +260,13 @@ public class SwipeButton extends RelativeLayout {
          */
         void onSwipeStart();
 
+        void onSwipeStartEnd();
+
         void onSosStart();
 
         void onSosStop();
+
+        void onFreeButton(double ms);
 
         void onSwipeFinish();
     }

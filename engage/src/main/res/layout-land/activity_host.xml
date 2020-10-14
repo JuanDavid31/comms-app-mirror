@@ -124,10 +124,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:alpha="0"
-                    android:background="@color/secondaryBlack"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/sos_overlap_background_transition"
                     android:visibility="gone"
                     tools:alpha=".95"
-                    android:animateLayoutChanges="true"
                     tools:background="@color/secondaryBlack"
                     tools:visibility="visible">
 

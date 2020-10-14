@@ -2,8 +2,11 @@ package com.rallytac.engageandroid.legba.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -60,6 +63,7 @@ public class MissionFragment extends Fragment {
     private TextView fragmentDescriptionText;
     private ImageView[] dotIndicators;
     private MenuItem sosAction;
+    private TransitionDrawable transition;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,68 +76,59 @@ public class MissionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         activity = (HostActivity) requireActivity();
+        transition = transition = (TransitionDrawable) activity.binding.sosOverlapLayout.getBackground();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            activity.findViewById(R.id.sos_overlap_layout).setOnClickListener(view -> toggleSOSLayoutVisiblity());
             activity.binding.sosSwipeButton.setSosEmergencyListener(new SwipeButton.SOSEmergencyListener() {
+
+                boolean isGradientActive = false;
 
                 @Override
                 public void onSwipeStart() {
-                    //activity.binding.sosOverlapLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.sos_overlap_gradient_shape, null));
+                    Timber.i("onSwipeStart");
                     sosAction.getActionView()
                             .animate()
                             .alpha(0f)
                             .setDuration(1);
+
+                    if(!isGradientActive){
+                        transition.startTransition(300);
+                        isGradientActive = true;
+                    }
+                }
+
+                @Override
+                public void onSwipeStartEnd() {
+                    if(isGradientActive){
+                        transition.reverseTransition(300);
+                        isGradientActive = false;
+                    }
                 }
 
                 @Override
                 public void onSosStart() {
                     activity.binding.eyesGlowAnimation.setVisibility(View.VISIBLE);
                     activity.binding.sosButtonGlowAnimation.setVisibility(View.VISIBLE);
-                    activity.binding.sosOverlapLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.sos_overlap_gradient_shape, null));
                     activity.binding.sosTxImage.animate()
                             .alpha(1f)
                             .setDuration(900);
-
-                    activity.binding.sosButtonGlowAnimation.addAnimatorListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-                            Timber.i(activity.binding.sosButtonGlowAnimation.getMinFrame() + " MINFRAME");
-                            Timber.i(activity.binding.sosButtonGlowAnimation.getMaxFrame() + " MAXFRAME");
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-                            Timber.i(activity.binding.sosButtonGlowAnimation.getMinFrame() + " MINFRAME");
-                            Timber.i(activity.binding.sosButtonGlowAnimation.getMaxFrame() + " MAXFRAME");
-                            activity.binding.sosButtonGlowAnimation.removeAllAnimatorListeners();
-                            activity.binding.sosButtonGlowAnimation.setRepeatCount(ValueAnimator.INFINITE);
-                            Timber.i(activity.binding.sosButtonGlowAnimation.getMinFrame() + " MINFRAME");
-                            Timber.i(activity.binding.sosButtonGlowAnimation.getMaxFrame() + " MAXFRAME");
-                            activity.binding.sosButtonGlowAnimation.setMinAndMaxFrame(125, 147);
-                            activity.binding.sosButtonGlowAnimation.playAnimation();
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
-
-                        }
-                    });
                 }
 
                 @Override
                 public void onSosStop() {
                     activity.binding.eyesGlowAnimation.setVisibility(View.GONE);
                     activity.binding.sosButtonGlowAnimation.setVisibility(View.GONE);
-                    activity.binding.sosOverlapLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.color.secondaryBlack, null));
                     activity.binding.sosTxImage.animate()
                             .alpha(0.0f)
                             .setDuration(300);
+                }
+
+                @Override
+                public void onFreeButton(double ms) {
+                    if(isGradientActive){
+                        transition.reverseTransition((int)ms);
+                        isGradientActive = false;
+                    }
                 }
 
                 @Override
