@@ -112,6 +112,7 @@ public class MissionFragment extends Fragment {
                     activity.binding.sosTxImage.animate()
                             .alpha(1f)
                             .setDuration(900);
+                    Globals.getEngageApplication().startTx(0, 1);
                 }
 
                 @Override
@@ -121,6 +122,7 @@ public class MissionFragment extends Fragment {
                     activity.binding.sosTxImage.animate()
                             .alpha(0.0f)
                             .setDuration(300);
+                    Globals.getEngageApplication().endTx();
                 }
 
                 @Override
