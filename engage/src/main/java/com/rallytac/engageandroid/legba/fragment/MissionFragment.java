@@ -59,7 +59,7 @@ public class MissionFragment extends Fragment {
     private Mission mission;
     private TextView fragmentDescriptionText;
     private ImageView[] dotIndicators;
-    private boolean _pttRequested;
+    private MenuItem sosAction;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,11 @@ public class MissionFragment extends Fragment {
 
                 @Override
                 public void onSwipeStart() {
-                    activity.binding.sosOverlapLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.sos_overlap_gradient_shape, null));
+                    //activity.binding.sosOverlapLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.sos_overlap_gradient_shape, null));
+                    sosAction.getActionView()
+                            .animate()
+                            .alpha(0f)
+                            .setDuration(1);
                 }
 
                 @Override
@@ -135,6 +139,10 @@ public class MissionFragment extends Fragment {
                 @Override
                 public void onSwipeFinish() {
                     toggleSOSLayoutVisiblity();
+                    sosAction.getActionView()
+                            .animate()
+                            .alpha(1f)
+                            .setDuration(300);
                 }
             });
 
@@ -178,12 +186,10 @@ public class MissionFragment extends Fragment {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 binding.txImage.setVisibility(View.VISIBLE);
                 Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
-                _pttRequested = true;
                 Globals.getEngageApplication().startTx(0, 0);
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 binding.txImage.setVisibility(View.INVISIBLE);
                 Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
-                _pttRequested = false;
                 Globals.getEngageApplication().endTx();
 
             }
@@ -303,9 +309,8 @@ public class MissionFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        MenuItem item = menu.findItem(R.id.sos_action);
-        View root = item.getActionView();
-        //root.setOnClickListener(view -> onOptionsItemSelected(item));
+        sosAction = menu.findItem(R.id.sos_action);
+        View root = sosAction.getActionView();
 
         if (activity.binding.sosSwipeButton == null) return;
         root.setOnTouchListener(new View.OnTouchListener() {

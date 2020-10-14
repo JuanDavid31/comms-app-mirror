@@ -158,26 +158,19 @@ public class SwipeButton extends RelativeLayout {
         int paddingBottom = 15;
         int circleHeight = redCircle.getHeight();
         int buttonCenter = redCircle.getHeight() / 2; // 120
-        DecimalFormat df = new DecimalFormat("0.00");
 
         float leftSide = redCircle.getY() - paddingTop;
         int rightSide = getHeight() - (paddingTop + paddingBottom + circleHeight);
         double percentage = leftSide / rightSide;
         double halfPercentage = (leftSide) / (rightSide / 2);
 
+        //Swipe button behavior
+
         if (initialY == 0) {
             initialY = redCircle.getY();
         }
         if (event.getY() > initialY + buttonCenter && event.getY() + buttonCenter < getHeight()) {
             redCircle.setY(event.getY() - buttonCenter);
-        }
-
-        if (halfPercentage < 1) {
-            centerText.setText("Swipe Down");
-            centerText.setAlpha(1 - (float) percentage);
-        } else {
-            centerText.setText("Let Go to cancel");
-            centerText.setAlpha((float) halfPercentage - 1);
         }
 
         int padding = convertDpToPx(context, 3.8);
@@ -190,12 +183,33 @@ public class SwipeButton extends RelativeLayout {
             redCircle.setY(padding);
         }
 
+        //Text switching
+
+        if (halfPercentage < 1) {
+            centerText.setText("Swipe Down");
+            centerText.setAlpha(1 - (float) percentage);
+        } else {
+            centerText.setText("Let Go to cancel");
+            centerText.setAlpha((float) halfPercentage - 1);
+        }
+
+        //SOS events
+
+        if(percentage > 0.10 && !onSwipeStartCalled){
+            sosEmergencyListener.onSwipeStart();
+            onSwipeStartCalled = true;
+        }else{
+            if(onSwipeStartCalled)onSwipeStartCalled = false;
+        }
+
         if (percentage > 0.90) {
             sosEmergencyListener.onSosStart();
         } else {
             sosEmergencyListener.onSosStop();
         }
     }
+
+    boolean onSwipeStartCalled = false;
 
 /*    private void actionUp() {
         if (slidingButton.getX() + slidingButton.getWidth() > getWidth() * 0.85) {
@@ -238,6 +252,9 @@ public class SwipeButton extends RelativeLayout {
     }
 
     public interface SOSEmergencyListener {
+        /**
+         * Called only once when the swipe button surpasses 10% of the slidable panel
+         */
         void onSwipeStart();
 
         void onSosStart();
