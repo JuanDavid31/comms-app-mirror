@@ -86,6 +86,7 @@ public class MissionFragment extends Fragment {
                 public void onSosStart() {
                     activity.binding.eyesGlowAnimation.setVisibility(View.VISIBLE);
                     activity.binding.sosButtonGlowAnimation.setVisibility(View.VISIBLE);
+                    activity.binding.sosOverlapLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.sos_overlap_gradient_shape, null));
                     activity.binding.sosTxImage.animate()
                             .alpha(1f)
                             .setDuration(900);
