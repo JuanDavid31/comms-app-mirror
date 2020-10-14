@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,7 +31,7 @@ import timber.log.Timber;
 
 import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 
-public class SwipeButton extends RelativeLayout {
+public class SwipeButton extends FrameLayout {
 
     private TextView redCircle;
     private float initialY;
@@ -73,14 +74,34 @@ public class SwipeButton extends RelativeLayout {
         //Background
         RelativeLayout background = new RelativeLayout(context);
 
-        background.setClipToPadding(false);
         background.setBackground(ContextCompat.getDrawable(context, R.drawable.swipe_button_layout_shape));
         background.setAlpha(0.18f);
         int padding = convertDpToPx(context, 3.8);
         background.setPadding(padding, padding, padding, padding);
-        LayoutParams layoutParamsView = new LayoutParams(convertDpToPx(context, 66), convertDpToPx(context, 206));
-        layoutParamsView.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        FrameLayout.LayoutParams layoutParamsView =
+                new FrameLayout.LayoutParams(convertDpToPx(context, 66), convertDpToPx(context, 206));
+        layoutParamsView.gravity = Gravity.CENTER;
         addView(background, layoutParamsView);
+
+        // Text
+
+        final TextView centerText = new TextView(context);
+        this.centerText = centerText;
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.vertical_text);
+        animation.setFillAfter(true);
+        centerText.setAlpha(0.9f);
+        LayoutParams layoutParams =
+                new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.CENTER;
+        centerText.setText("Swipe Down");
+        centerText.setLetterSpacing(0.02f);
+        centerText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        centerText.setTypeface(ResourcesCompat.getFont(context, R.font.open_sans_regular));
+        centerText.setRotation(-90);
+        centerText.setTextColor(getResources().getColor(R.color.white05, null));
+        centerText.setGravity(Gravity.FILL_VERTICAL);
+        centerText.setPadding(35, 35, 35, 35);
+        addView(centerText, layoutParams);
 
 
         // Moving icon
@@ -96,35 +117,17 @@ public class SwipeButton extends RelativeLayout {
         redCircle.setTypeface(ResourcesCompat.getFont(context, R.font.call_of_ops_duty));
         redCircle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
         redCircle.setPadding(15, 20, 15, 20);
+        redCircle.setGravity(Gravity.CENTER);
 
-        LayoutParams layoutParamsButton = new LayoutParams(
+        FrameLayout.LayoutParams layoutParamsButton = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
         int margin = convertDpToPx(context, 3.8);
         layoutParamsButton.setMargins(margin, margin, margin, margin);
-
-        layoutParamsButton.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-        layoutParamsButton.addRule(RelativeLayout.ALIGN_TOP, RelativeLayout.TRUE);
+        layoutParamsButton.gravity = Gravity.CENTER_HORIZONTAL;
         redCircle.setBackground(ContextCompat.getDrawable(context, R.drawable.swipe_button_shape));
         addView(swipeButton, layoutParamsButton);
-
-        // Text
-
-        final TextView centerText = new TextView(context);
-        this.centerText = centerText;
-        Animation animation = AnimationUtils.loadAnimation(context, R.anim.vertical_text);
-        animation.setFillAfter(true);
-        centerText.setAlpha(0.9f);
-        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        centerText.setText("Swipe Down");
-        centerText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-        centerText.setTypeface(ResourcesCompat.getFont(context, R.font.open_sans_regular));
-        centerText.setRotation(-90);
-        centerText.setTextColor(getResources().getColor(R.color.white05, null));
-        centerText.setGravity(Gravity.FILL_VERTICAL);
-        centerText.setPadding(35, 35, 35, 35);
-        background.addView(centerText, layoutParams);
 
 
         setOnTouchListener(getButtonTouchListener());
@@ -185,18 +188,20 @@ public class SwipeButton extends RelativeLayout {
 
         if (halfPercentage < 1) {
             centerText.setText("Swipe Down");
+            centerText.setLetterSpacing(0.02f);
             centerText.setAlpha(1 - (float) percentage);
         } else {
             centerText.setText("Let Go to cancel");
+            centerText.setLetterSpacing(0f);
             centerText.setAlpha((float) halfPercentage - 1);
         }
 
         //SOS events
 
-        if(percentage > 0.10 && !onSwipeStartCalled){
+        if (percentage > 0.10 && !onSwipeStartCalled) {
             sosEmergencyListener.onSwipeStart();
             onSwipeStartCalled = true;
-        }else if(percentage <= 0.10 && onSwipeStartCalled){
+        } else if (percentage <= 0.10 && onSwipeStartCalled) {
             sosEmergencyListener.onSwipeStartEnd();
             onSwipeStartCalled = false;
         }
@@ -204,7 +209,7 @@ public class SwipeButton extends RelativeLayout {
         if (percentage > 0.90 && !onSosStartCalled) {
             sosEmergencyListener.onSosStart();
             onSosStartCalled = true;
-        } else if(percentage <= 0.90 && onSosStartCalled){
+        } else if (percentage <= 0.90 && onSosStartCalled) {
             sosEmergencyListener.onSosStop();
             onSosStartCalled = false;
         }
