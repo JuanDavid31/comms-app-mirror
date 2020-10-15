@@ -684,7 +684,9 @@ public class MissionFragment extends Fragment {
                 lastMessageText.setVisibility(View.VISIBLE);
                 incomingMessageLayout.setVisibility(View.VISIBLE);
 
+                //Incoming SOS
                 toggleIncomingSOSLayoutVisiblity();
+                activity.binding.incomingSosOverlapMessageName.setText(aliasText);
             }
 
             @Override
