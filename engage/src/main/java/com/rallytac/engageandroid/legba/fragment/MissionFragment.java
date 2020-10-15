@@ -54,7 +54,6 @@ import timber.log.Timber;
 import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
-
 public class MissionFragment extends Fragment {
 
     private HostActivity activity;
@@ -316,6 +315,7 @@ public class MissionFragment extends Fragment {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         toggleSOSLayoutVisiblity();
+                        //toggleIncomingSOSLayoutVisiblity();
                         return true;
                     case MotionEvent.ACTION_UP:
                         activity.binding.sosSwipeButton.dispatchTouchEvent(MotionEvent.obtain(event.getDownTime(),
@@ -349,6 +349,7 @@ public class MissionFragment extends Fragment {
             toggleSOSLayoutVisiblity();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -375,6 +376,34 @@ public class MissionFragment extends Fragment {
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
                             sosLayout.setVisibility(View.GONE);
+                        }
+                    });
+        }
+    }
+
+    private void toggleIncomingSOSLayoutVisiblity() {
+        View incomingSosLayout = activity.binding.incomingSosOverlapLayout;
+        if (incomingSosLayout == null) return;
+        if (incomingSosLayout.getVisibility() == View.GONE) {
+            incomingSosLayout.animate()
+                    .alpha(0.95f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            incomingSosLayout.setVisibility(View.VISIBLE);
+                        }
+                    });
+        } else {
+            incomingSosLayout.animate()
+                    .alpha(0.0f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            incomingSosLayout.setVisibility(View.GONE);
                         }
                     });
         }
@@ -654,11 +683,14 @@ public class MissionFragment extends Fragment {
                 lastMessageDisplayName.setText(displayNameText);
                 lastMessageText.setVisibility(View.VISIBLE);
                 incomingMessageLayout.setVisibility(View.VISIBLE);
+
+                toggleIncomingSOSLayoutVisiblity();
             }
 
             @Override
             public void stopRx() {
                 incomingMessageLayout.setVisibility(View.INVISIBLE);
+                toggleIncomingSOSLayoutVisiblity();
             }
         }
 

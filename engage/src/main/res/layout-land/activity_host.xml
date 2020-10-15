@@ -129,7 +129,7 @@
                     android:visibility="gone"
                     tools:alpha=".95"
                     tools:background="@color/secondaryBlack"
-                    tools:visibility="visible">
+                    tools:visibility="gone">
 
                 <ImageView
                         android:id="@+id/sos_overlap_logo_image"
@@ -192,8 +192,134 @@
                         android:visibility="gone"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </FrameLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/incoming_sos_overlap_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/sos_overlap_gradient_shape"
+                    android:visibility="gone"
+                    tools:alpha=".95"
+                    tools:background="@color/secondaryBlack"
+                    tools:visibility="visible">
+
+                <ImageView
+                        android:id="@+id/incoming_sos_overlap_logo_image"
+                        android:layout_width="224dp"
+                        android:layout_height="91.3dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="center"
+                        android:scrollX="-23dp"
+                        android:scrollY="112dp"
+                        android:src="@drawable/ic_overlap_logo"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/incoming_sos_eyes_glow_animation"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:scrollY="20dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_repeatCount="0"
+                        app:lottie_rawRes="@raw/eyes_glow_data" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/incoming_sos_overlap_message_layout"
+                        android:layout_width="301.3dp"
+                        android:layout_height="108.3dp"
+                        android:layout_marginBottom="36.3dp"
+                        android:background="@drawable/incoming_sos_overlap_message_shape"
+                        android:elevation="5.3dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                    <!--android:layout_width="321.3dp"
+                    android:layout_height="58.3dp"-->
+
+                    <FrameLayout
+                            android:id="@+id/incoming_sos_overlap_message_speaker_layout"
+                            android:layout_width="29.3dp"
+                            android:layout_height="29dp"
+                            android:layout_marginStart="14.8dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="0dp"
+                            android:background="@drawable/incoming_message_speaker_red_layout_shape"
+                            android:elevation="5.3dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                                android:layout_width ="12.8dp"
+                                android:layout_height="9dp"
+                                android:layout_gravity="center"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/ic_speaker" />
+
+                    </FrameLayout>
+
+                    <TextView
+                            android:id="@+id/incoming_sos_overlap_message_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="9.8dp"
+                            android:layout_marginTop="1dp"
+                            android:fontFamily="@font/call_of_ops_duty"
+                            android:letterSpacing="0.02"
+                            android:shadowColor="#d4000000"
+                            android:shadowRadius="9"
+                            android:text="EVIN JACOBS"
+                            android:textColor="@color/white"
+                            android:textSize="12.4sp"
+                            app:layout_constraintStart_toEndOf="@id/incoming_sos_overlap_message_speaker_layout"
+                            app:layout_constraintTop_toTopOf="@id/incoming_sos_overlap_message_speaker_layout" />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="1dp"
+                            android:alpha="0.93"
+                            android:fontFamily="@font/open_sans_regular"
+                            android:text="Speaking..."
+                            android:textColor="@color/paleRed93"
+                            android:textSize="9.4sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/incoming_sos_overlap_message_speaker_layout"
+                            app:layout_constraintStart_toStartOf="@id/incoming_sos_overlap_message_name" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintGuide_begin="31.3dp" />
+
+                    <ImageView
+                            android:layout_width="102.8dp"
+                            android:layout_height="34.3dp"
+                            android:layout_marginStart="89.3dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginEnd="70.5dp"
+                            android:layout_marginBottom="0dp"
+                            app:layout_constraintStart_toEndOf="@+id/incoming_sos_overlap_message_name"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/ic_red_tx" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </FrameLayout>
 
         <com.google.android.material.navigation.NavigationView
                 android:id="@+id/nav_view"
