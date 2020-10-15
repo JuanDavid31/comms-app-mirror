@@ -76,73 +76,70 @@ public class MissionFragment extends Fragment {
                              Bundle savedInstanceState) {
         activity = (HostActivity) requireActivity();
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            transition = (TransitionDrawable) activity.binding.sosOverlapLayout.getBackground();
-            activity.binding.sosSwipeButton.setSosEmergencyListener(new SwipeButton.SOSEmergencyListener() {
+        transition = (TransitionDrawable) activity.binding.sosOverlapLayout.getBackground();
+        activity.binding.sosSwipeButton.setSosEmergencyListener(new SwipeButton.SOSEmergencyListener() {
 
-                boolean isGradientActive = false;
+            boolean isGradientActive = false;
 
-                @Override
-                public void onSwipeStart() {
-                    Timber.i("onSwipeStart");
-                    sosAction.getActionView()
-                            .animate()
-                            .alpha(0f)
-                            .setDuration(1);
+            @Override
+            public void onSwipeStart() {
+                Timber.i("onSwipeStart");
+                sosAction.getActionView()
+                        .animate()
+                        .alpha(0f)
+                        .setDuration(1);
 
-                    if(!isGradientActive){
-                        transition.startTransition(300);
-                        isGradientActive = true;
-                    }
+                if (!isGradientActive) {
+                    transition.startTransition(300);
+                    isGradientActive = true;
                 }
+            }
 
-                @Override
-                public void onSwipeStartEnd() {
-                    if(isGradientActive){
-                        transition.reverseTransition(300);
-                        isGradientActive = false;
-                    }
+            @Override
+            public void onSwipeStartEnd() {
+                if (isGradientActive) {
+                    transition.reverseTransition(300);
+                    isGradientActive = false;
                 }
+            }
 
-                @Override
-                public void onSosStart() {
-                    activity.binding.eyesGlowAnimation.setVisibility(View.VISIBLE);
-                    activity.binding.sosButtonGlowAnimation.setVisibility(View.VISIBLE);
-                    activity.binding.sosTxImage.animate()
-                            .alpha(1f)
-                            .setDuration(900);
-                    Globals.getEngageApplication().startTx(0, 1);
+            @Override
+            public void onSosStart() {
+                activity.binding.eyesGlowAnimation.setVisibility(View.VISIBLE);
+                activity.binding.sosButtonGlowAnimation.setVisibility(View.VISIBLE);
+                activity.binding.sosTxImage.animate()
+                        .alpha(1f)
+                        .setDuration(900);
+                Globals.getEngageApplication().startTx(0, 1);
+            }
+
+            @Override
+            public void onSosStop() {
+                activity.binding.eyesGlowAnimation.setVisibility(View.GONE);
+                activity.binding.sosButtonGlowAnimation.setVisibility(View.GONE);
+                activity.binding.sosTxImage.animate()
+                        .alpha(0.0f)
+                        .setDuration(300);
+                Globals.getEngageApplication().endTx();
+            }
+
+            @Override
+            public void onFreeButton(double ms) {
+                if (isGradientActive) {
+                    transition.reverseTransition((int) ms);
+                    isGradientActive = false;
                 }
+            }
 
-                @Override
-                public void onSosStop() {
-                    activity.binding.eyesGlowAnimation.setVisibility(View.GONE);
-                    activity.binding.sosButtonGlowAnimation.setVisibility(View.GONE);
-                    activity.binding.sosTxImage.animate()
-                            .alpha(0.0f)
-                            .setDuration(300);
-                    Globals.getEngageApplication().endTx();
-                }
-
-                @Override
-                public void onFreeButton(double ms) {
-                    if(isGradientActive){
-                        transition.reverseTransition((int)ms);
-                        isGradientActive = false;
-                    }
-                }
-
-                @Override
-                public void onSwipeFinish() {
-                    toggleSOSLayoutVisiblity();
-                    sosAction.getActionView()
-                            .animate()
-                            .alpha(1f)
-                            .setDuration(300);
-                }
-            });
-
-        }
+            @Override
+            public void onSwipeFinish() {
+                toggleLayoutVisiblity(activity.binding.sosOverlapLayout);
+                sosAction.getActionView()
+                        .animate()
+                        .alpha(1f)
+                        .setDuration(300);
+            }
+        });
 
         updateToolbar();
         setHasOptionsMenu(true);
@@ -308,14 +305,13 @@ public class MissionFragment extends Fragment {
         sosAction = menu.findItem(R.id.sos_action);
         View root = sosAction.getActionView();
 
-        if (activity.binding.sosSwipeButton == null) return;
         root.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        toggleSOSLayoutVisiblity();
-                        //toggleIncomingSOSLayoutVisiblity();
+                        toggleLayoutVisiblity(activity.binding.sosOverlapLayout);
+                        //toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
                         return true;
                     case MotionEvent.ACTION_UP:
                         activity.binding.sosSwipeButton.dispatchTouchEvent(MotionEvent.obtain(event.getDownTime(),
@@ -343,67 +339,27 @@ public class MissionFragment extends Fragment {
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.sos_action) {
-            toggleSOSLayoutVisiblity();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void toggleSOSLayoutVisiblity() {
-        View sosLayout = activity.binding.sosOverlapLayout;
-        if (sosLayout == null) return;
-        if (sosLayout.getVisibility() == View.GONE) {
-            sosLayout.animate()
+    private void toggleLayoutVisiblity(View layout){
+        if (layout.getVisibility() == View.GONE) {
+            layout.animate()
                     .alpha(0.95f)
                     .setDuration(300)
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationStart(Animator animation) {
                             super.onAnimationEnd(animation);
-                            sosLayout.setVisibility(View.VISIBLE);
+                            layout.setVisibility(View.VISIBLE);
                         }
                     });
         } else {
-            sosLayout.animate()
+            layout.animate()
                     .alpha(0.0f)
                     .setDuration(300)
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            sosLayout.setVisibility(View.GONE);
-                        }
-                    });
-        }
-    }
-
-    private void toggleIncomingSOSLayoutVisiblity() {
-        View incomingSosLayout = activity.binding.incomingSosOverlapLayout;
-        if (incomingSosLayout == null) return;
-        if (incomingSosLayout.getVisibility() == View.GONE) {
-            incomingSosLayout.animate()
-                    .alpha(0.95f)
-                    .setDuration(300)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            incomingSosLayout.setVisibility(View.VISIBLE);
-                        }
-                    });
-        } else {
-            incomingSosLayout.animate()
-                    .alpha(0.0f)
-                    .setDuration(300)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            incomingSosLayout.setVisibility(View.GONE);
+                            layout.setVisibility(View.GONE);
                         }
                     });
         }
@@ -685,14 +641,14 @@ public class MissionFragment extends Fragment {
                 incomingMessageLayout.setVisibility(View.VISIBLE);
 
                 //Incoming SOS
-                toggleIncomingSOSLayoutVisiblity();
+                toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
                 activity.binding.incomingSosOverlapMessageName.setText(aliasText);
             }
 
             @Override
             public void stopRx() {
                 incomingMessageLayout.setVisibility(View.INVISIBLE);
-                toggleIncomingSOSLayoutVisiblity();
+                toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
             }
         }
 

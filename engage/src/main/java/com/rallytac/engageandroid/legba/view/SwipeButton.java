@@ -71,7 +71,14 @@ public class SwipeButton extends FrameLayout {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        //Background
+        setupBackground();
+        setupRedMovingTextView();
+        setupVerticalText();
+
+        setOnTouchListener(getButtonTouchListener());
+    }
+
+    private void setupBackground() {
         RelativeLayout background = new RelativeLayout(context);
 
         background.setBackground(ContextCompat.getDrawable(context, R.drawable.swipe_button_layout_shape));
@@ -82,9 +89,9 @@ public class SwipeButton extends FrameLayout {
                 new FrameLayout.LayoutParams(convertDpToPx(context, 66), convertDpToPx(context, 206));
         layoutParamsView.gravity = Gravity.CENTER;
         addView(background, layoutParamsView);
+    }
 
-        // Text
-
+    private void setupRedMovingTextView() {
         final TextView centerText = new TextView(context);
         this.centerText = centerText;
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.vertical_text);
@@ -102,10 +109,9 @@ public class SwipeButton extends FrameLayout {
         centerText.setGravity(Gravity.FILL_VERTICAL);
         centerText.setPadding(35, 35, 35, 35);
         addView(centerText, layoutParams);
+    }
 
-
-        // Moving icon
-
+    private void setupVerticalText() {
         final TextView swipeButton = new TextView(context);
         this.redCircle = swipeButton;
         redCircle.generateViewId();
@@ -128,18 +134,14 @@ public class SwipeButton extends FrameLayout {
         layoutParamsButton.gravity = Gravity.CENTER_HORIZONTAL;
         redCircle.setBackground(ContextCompat.getDrawable(context, R.drawable.swipe_button_shape));
         addView(swipeButton, layoutParamsButton);
-
-
-        setOnTouchListener(getButtonTouchListener());
     }
+
 
     private OnTouchListener getButtonTouchListener() {
         return new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        return true;
                     case MotionEvent.ACTION_MOVE:
                         actionMove(event);
                         return true;
@@ -163,7 +165,7 @@ public class SwipeButton extends FrameLayout {
         float leftSide = redCircle.getY() - paddingTop;
         int rightSide = getHeight() - (paddingTop + paddingBottom + circleHeight);
         percentage = leftSide / rightSide;
-        double halfPercentage = (leftSide) / (rightSide / 2);
+        double halfPercentage = leftSide / (rightSide / 2);
 
         //Swipe button behavior
 
@@ -217,15 +219,6 @@ public class SwipeButton extends FrameLayout {
 
     boolean onSwipeStartCalled = false;
     boolean onSosStartCalled = false;
-    boolean onSosStopCalled = false;
-
-/*    private void actionUp() {
-        if (slidingButton.getX() + slidingButton.getWidth() > getWidth() * 0.85) {
-            //expandButton();
-        } else {
-            //moveButtonBack();
-        }
-    }*/
 
     private void moveButtonBack() {
         int initialPos = convertDpToPx(context, 3.8);
