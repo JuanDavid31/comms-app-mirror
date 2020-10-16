@@ -36,8 +36,6 @@ import timber.log.Timber;
 
 public class HostActivity extends AppCompatActivity {
 
-
-
     private static String TAG = SimpleUiMainActivity.class.getSimpleName();
 
     private static int SETTINGS_REQUEST_CODE = 42;

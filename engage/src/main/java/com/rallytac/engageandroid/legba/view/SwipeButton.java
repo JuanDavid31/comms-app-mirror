@@ -25,10 +25,6 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.rallytac.engageandroid.R;
 
-import java.text.DecimalFormat;
-
-import timber.log.Timber;
-
 import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 
 public class SwipeButton extends FrameLayout {
@@ -39,8 +35,6 @@ public class SwipeButton extends FrameLayout {
     private Context context;
     private SOSEmergencyListener sosEmergencyListener;
     private double percentage;
-
-    public static int SWIPE_TEXT_ID = 999;
 
     public void setSosEmergencyListener(SOSEmergencyListener sosEmergencyListener) {
         this.sosEmergencyListener = sosEmergencyListener;
@@ -71,7 +65,14 @@ public class SwipeButton extends FrameLayout {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        //Background
+        setupBackground();
+        setupRedMovingText();
+        setupVerticalText();
+
+        setOnTouchListener(getButtonTouchListener());
+    }
+
+    private void setupBackground() {
         RelativeLayout background = new RelativeLayout(context);
 
         background.setBackground(ContextCompat.getDrawable(context, R.drawable.swipe_button_layout_shape));
@@ -82,34 +83,13 @@ public class SwipeButton extends FrameLayout {
                 new FrameLayout.LayoutParams(convertDpToPx(context, 66), convertDpToPx(context, 206));
         layoutParamsView.gravity = Gravity.CENTER;
         addView(background, layoutParamsView);
+    }
 
-        // Text
-
-        final TextView centerText = new TextView(context);
-        this.centerText = centerText;
-        Animation animation = AnimationUtils.loadAnimation(context, R.anim.vertical_text);
-        animation.setFillAfter(true);
-        centerText.setAlpha(0.9f);
-        LayoutParams layoutParams =
-                new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParams.gravity = Gravity.CENTER;
-        centerText.setText("Swipe Down");
-        centerText.setLetterSpacing(0.02f);
-        centerText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-        centerText.setTypeface(ResourcesCompat.getFont(context, R.font.open_sans_regular));
-        centerText.setRotation(-90);
-        centerText.setTextColor(getResources().getColor(R.color.white05, null));
-        centerText.setGravity(Gravity.FILL_VERTICAL);
-        centerText.setPadding(35, 35, 35, 35);
-        addView(centerText, layoutParams);
-
-
-        // Moving icon
-
+    private void setupRedMovingText() {
         final TextView swipeButton = new TextView(context);
         this.redCircle = swipeButton;
-        redCircle.generateViewId();
-        redCircle.setId(SWIPE_TEXT_ID);
+        redCircle.setMinLines(1);
+        redCircle.setMaxLines(1);
         redCircle.setGravity(Gravity.CENTER);
         redCircle.setText("SOS");
         redCircle.setTextColor(getResources().getColor(R.color.paleRed, null));
@@ -128,18 +108,33 @@ public class SwipeButton extends FrameLayout {
         layoutParamsButton.gravity = Gravity.CENTER_HORIZONTAL;
         redCircle.setBackground(ContextCompat.getDrawable(context, R.drawable.swipe_button_shape));
         addView(swipeButton, layoutParamsButton);
-
-
-        setOnTouchListener(getButtonTouchListener());
     }
+
+    private void setupVerticalText() {
+        final TextView centerText = new TextView(context);
+        this.centerText = centerText;
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.vertical_text);
+        animation.setFillAfter(true);
+        centerText.setAlpha(0.9f);
+        LayoutParams layoutParams =
+                new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.CENTER;
+        centerText.setText("Swipe Down");
+        centerText.setLetterSpacing(0.02f);
+        centerText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        centerText.setTypeface(ResourcesCompat.getFont(context, R.font.open_sans_regular));
+        centerText.setRotation(-90);
+        centerText.setTextColor(getResources().getColor(R.color.white05, null));
+        centerText.setGravity(Gravity.FILL_VERTICAL);
+        addView(centerText, layoutParams);
+    }
+
 
     private OnTouchListener getButtonTouchListener() {
         return new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        return true;
                     case MotionEvent.ACTION_MOVE:
                         actionMove(event);
                         return true;
@@ -163,7 +158,7 @@ public class SwipeButton extends FrameLayout {
         float leftSide = redCircle.getY() - paddingTop;
         int rightSide = getHeight() - (paddingTop + paddingBottom + circleHeight);
         percentage = leftSide / rightSide;
-        double halfPercentage = (leftSide) / (rightSide / 2);
+        double halfPercentage = leftSide / (rightSide / 2);
 
         //Swipe button behavior
 
@@ -188,11 +183,9 @@ public class SwipeButton extends FrameLayout {
 
         if (halfPercentage < 1) {
             centerText.setText("Swipe Down");
-            centerText.setLetterSpacing(0.02f);
             centerText.setAlpha(1 - (float) percentage);
         } else {
             centerText.setText("Let Go to cancel");
-            centerText.setLetterSpacing(0f);
             centerText.setAlpha((float) halfPercentage - 1);
         }
 
@@ -217,15 +210,6 @@ public class SwipeButton extends FrameLayout {
 
     boolean onSwipeStartCalled = false;
     boolean onSosStartCalled = false;
-    boolean onSosStopCalled = false;
-
-/*    private void actionUp() {
-        if (slidingButton.getX() + slidingButton.getWidth() > getWidth() * 0.85) {
-            //expandButton();
-        } else {
-            //moveButtonBack();
-        }
-    }*/
 
     private void moveButtonBack() {
         int initialPos = convertDpToPx(context, 3.8);
