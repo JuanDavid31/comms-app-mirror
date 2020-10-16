@@ -2,13 +2,8 @@ package com.rallytac.engageandroid.legba.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
-import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +23,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -37,6 +34,7 @@ import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
+import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.rallytac.engageandroid.legba.HostActivity;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
@@ -64,11 +62,15 @@ public class MissionFragment extends Fragment {
     private MenuItem sosAction;
     private TransitionDrawable transition;
 
+    private MissionViewModel vm;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
         mission = missionFragmentArgs.getMission();
+        vm = new ViewModelProvider(this).get(MissionViewModel.class);
+
     }
 
     @Override
@@ -77,6 +79,42 @@ public class MissionFragment extends Fragment {
         activity = (HostActivity) requireActivity();
 
         transition = (TransitionDrawable) activity.binding.sosOverlapLayout.getBackground();
+
+        updateToolbar();
+        setHasOptionsMenu(true);
+        setupEmergencyListeners();
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
+        binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
+
+        List<Channel> nonRadioChannels = mission.channels
+                .stream()
+                .filter(channel -> channel.type != Channel.ChannelType.RADIO)
+                .collect(Collectors.toList());
+
+        binding.missionViewPager.setAdapter(new ChannelSlidePageAdapter(this, nonRadioChannels));
+
+
+        setupPTTOnMic();
+        setupViewPagerOnPageChangeListener();
+        setupViewPagerDotIndicator(nonRadioChannels);
+        setUpSlidingUpPanelListener();
+        setUpSlidingUpChannels();
+        updateDots(0);
+
+        return binding.getRoot();
+    }
+
+    private void updateToolbar() {
+        requireActivity().findViewById(R.id.logo_image).setVisibility(View.VISIBLE);
+        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
+        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(mission.name);
+        requireActivity().findViewById(R.id.fragment_description).setVisibility(View.VISIBLE);
+        fragmentDescriptionText = requireActivity().findViewById(R.id.fragment_description);
+        fragmentDescriptionText.setTextColor(this.getResources().getColor(R.color.paleRed));
+        Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
+    }
+
+    private void setupEmergencyListeners(){
         activity.binding.sosSwipeButton.setSosEmergencyListener(new SwipeButton.SOSEmergencyListener() {
 
             boolean isGradientActive = false;
@@ -140,37 +178,6 @@ public class MissionFragment extends Fragment {
                         .setDuration(300);
             }
         });
-
-        updateToolbar();
-        setHasOptionsMenu(true);
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
-
-        List<Channel> nonRadioChannels = mission.channels
-                .stream()
-                .filter(channel -> channel.type != Channel.ChannelType.RADIO)
-                .collect(Collectors.toList());
-
-        binding.missionViewPager.setAdapter(new ChannelSlidePageAdapter(this, nonRadioChannels));
-
-
-        setupPTTOnMic();
-        setupViewPagerOnPageChangeListener();
-        setupViewPagerDotIndicator(nonRadioChannels);
-        setUpSlidingUpPanelListener();
-        setUpSlidingUpChannels();
-        updateDots(0);
-
-        return binding.getRoot();
-    }
-
-    private void updateToolbar() {
-        requireActivity().findViewById(R.id.logo_image).setVisibility(View.VISIBLE);
-        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
-        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(mission.name);
-        requireActivity().findViewById(R.id.fragment_description).setVisibility(View.VISIBLE);
-        fragmentDescriptionText = requireActivity().findViewById(R.id.fragment_description);
-        fragmentDescriptionText.setTextColor(this.getResources().getColor(R.color.paleRed));
-        Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
     private void setupPTTOnMic() {
@@ -253,8 +260,10 @@ public class MissionFragment extends Fragment {
                 ImageButton toggleRadioChannelButton = binding.toggleRadioChannelButton;
                 if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
                     toggleRadioChannelButton.animate().rotation(180F).setInterpolator(new AccelerateDecelerateInterpolator());
+                    vm.setToggleRadioChannelButtonRotation(180F);
                 } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     toggleRadioChannelButton.animate().rotation(0F).setInterpolator(new AccelerateDecelerateInterpolator());
+                    vm.setToggleRadioChannelButtonRotation(0F);
                 }
             }
         });
@@ -369,7 +378,6 @@ public class MissionFragment extends Fragment {
 
         private Fragment fragment;
         private List<Channel> channels;
-        private ImageView rxImage;
 
         private int CHANNEL_ITEM = 0;
         private int RESUME_CHANNELS_ITEM = 1;
@@ -432,18 +440,13 @@ public class MissionFragment extends Fragment {
                 ChannelViewHolder channelHolder = (ChannelViewHolder) holder;
 
                 Channel currentChannel = channels.get(position);
-              /*  channelHolder.channelInfo.setOnClickListener(view -> NavHostFragment.findNavController(fragment)
-                        .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(currentChannel)));*/
+                channelHolder.channelInfo.setOnClickListener(view -> NavHostFragment.findNavController(fragment)
+                        .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(currentChannel)));
                 channelHolder.channelImage.setImageResource(getImageResource(currentChannel.image));
                 channelHolder.channelName.setText(currentChannel.name);
                 channelHolder.channelType.setText(getTypeString(currentChannel.type));
 
-                if (paleRed) {
-                    paleRed = false;
-                    waterBlue = true;
-                } else if (waterBlue) {
-                    waterBlue = false;
-                    orange = true;
+                if (currentChannel.type == Channel.ChannelType.PRIORITY && currentChannel.id ==  2) {
 
                     channelHolder.channelImage.setBorderColor(getWaterBlueColor());
                     channelHolder.channelType.setTextColor(getWaterBlueColor());
@@ -460,9 +463,7 @@ public class MissionFragment extends Fragment {
                     ((ImageView) channelHolder.incomingMessageLayout
                             .findViewById(R.id.rx_image))
                             .setImageResource(R.drawable.ic_blue_tx);
-                } else if (orange) {
-                    orange = false;
-                    paleRed = true;
+                } else if (currentChannel.type == Channel.ChannelType.PRIORITY && currentChannel.id == 3) {
 
                     channelHolder.channelImage.setBorderColor(getOrangeColor());
                     channelHolder.channelType.setTextColor(getOrangeColor());
