@@ -10,6 +10,9 @@ import android.content.SharedPreferences;
 
 import com.rallytac.engageandroid.legba.engage.RxListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Globals
 {
     private static Context _ctx = null;
@@ -17,7 +20,7 @@ public class Globals
     private static SharedPreferences _sp = null;
     private static SharedPreferences.Editor _spEd = null;
     private static AudioPlayerManager _apm = null;
-    public static RxListener actualListener = null;
+    public static List<RxListener> actualListeners = new ArrayList<>();
 
     public static void setContext(Context ctx)
     {
@@ -63,5 +66,25 @@ public class Globals
     public static AudioPlayerManager getAudioPlayerManager()
     {
         return _apm;
+    }
+
+    public static void notifyListenersStart(final String id, final String alias, final String displayname, final String eventExtraJson) {
+        for(RxListener currentListener: actualListeners) {
+            try {
+                currentListener.onJsonRX(id, alias, displayname);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void notifyListenersStop() {
+        for(RxListener currentListener: actualListeners) {
+            try {
+                currentListener.stopRx();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -3296,7 +3296,7 @@ public class EngageApplication
 
 
         try{
-            Globals.actualListener.onRx(id, eventExtraJson);
+            //Globals.actualListener.onRx(id, eventExtraJson);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -3352,7 +3352,7 @@ public class EngageApplication
 
 
         try{
-            Globals.actualListener.stopRx();
+            Globals.notifyListenersStop();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -3427,7 +3427,7 @@ public class EngageApplication
                                 if (pd != null) {
                                     displayName = pd.displayName;
                                 }
-                                Globals.actualListener.onJsonRX(id, td.alias, displayName);
+                                Globals.notifyListenersStart(id, td.alias, displayName, "");
 
                                 talkers.add(td);
                             }

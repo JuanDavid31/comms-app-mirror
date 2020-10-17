@@ -421,7 +421,7 @@ public class MissionFragment extends Fragment {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.channel_item, parent, false);
                 ChannelViewHolder channelViewHolder = new ChannelViewHolder(itemView);
-                Globals.actualListener = channelViewHolder;
+                Globals.actualListeners.add(channelViewHolder);
                 return channelViewHolder;
             } else if (viewType == RESUME_CHANNELS_ITEM) {
                 View itemView = LayoutInflater.from(parent.getContext())
@@ -593,6 +593,7 @@ public class MissionFragment extends Fragment {
 
         class ChannelViewHolder extends GenericViewHolder implements RxListener {
 
+            private View channelLayout;
             private View channelInfo;
             private RoundedImageView channelImage;
             private TextView channelName;
@@ -606,6 +607,7 @@ public class MissionFragment extends Fragment {
 
             public ChannelViewHolder(@NonNull View itemView) {
                 super(itemView);
+                channelLayout = itemView.findViewById(R.id.primary_channel_layout);
                 channelInfo = itemView.findViewById(R.id.channel_info);
                 channelImage = itemView.findViewById(R.id.channel_image);
                 channelName = itemView.findViewById(R.id.channel_name_text);
@@ -620,11 +622,13 @@ public class MissionFragment extends Fragment {
 
             @Override
             public void onRx(String id, String other) {
+                setupViewIncommingMessage();
                 incomingMessageLayout.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onJsonRX(String id, String alias, String displayName) {
+                setupViewIncommingMessage();
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm a");
                 LocalDateTime now = LocalDateTime.now();
                 String timeText = dtf.format(now);
@@ -642,14 +646,52 @@ public class MissionFragment extends Fragment {
                 incomingMessageLayout.setVisibility(View.VISIBLE);
 
                 //Incoming SOS
-                toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
-                activity.binding.incomingSosOverlapMessageName.setText(aliasText);
+                //toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
+                //activity.binding.incomingSosOverlapMessageName.setText(aliasText);
             }
 
             @Override
             public void stopRx() {
                 incomingMessageLayout.setVisibility(View.INVISIBLE);
-                toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
+                //toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
+                setupViewOutcommingMessage();
+            }
+
+            private void setupViewIncommingMessage() {
+                channelInfo.setAlpha(0.1f);
+                lastMessageTime.setAlpha(0.1f);
+                lastMessageAlias.setAlpha(0.1f);
+                lastMessageDisplayName.setAlpha(0.1f);
+                lastMessageText.setAlpha(0.1f);
+
+                setupChannelLayoutBackgroundIncommingMessage();
+            }
+
+            private void setupViewOutcommingMessage() {
+                channelInfo.setAlpha(1f);
+                lastMessageTime.setAlpha(1f);
+                lastMessageAlias.setAlpha(1f);
+                lastMessageDisplayName.setAlpha(1f);
+                lastMessageText.setAlpha(1f);
+
+                setupChannelLayoutBackgroundOutcommingMessage();
+            }
+
+            public void setupChannelLayoutBackgroundIncommingMessage() {
+                String type = channelType.getText().toString();
+                System.out.println("here: " + type + ".");
+
+                if(type.equals("Primary Channel")) {
+                    channelLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.primary_channel_item_fade_shape, null));
+                } else if(type.equals("Priority Channel 1")) {
+                    channelLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.prioritary1_channel_item_fade_shape, null));
+                } else if(type.equals("Priority Channel 2")) {
+                    channelLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.prioritary2_channel_item_fade_shape, null));
+                }
+            }
+
+            public void setupChannelLayoutBackgroundOutcommingMessage() {
+                channelLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.channel_item_shape, null));
             }
         }
 
