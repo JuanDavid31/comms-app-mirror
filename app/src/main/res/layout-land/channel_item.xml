@@ -196,7 +196,7 @@
             android:layout_marginBottom="15dp"
             android:elevation="5.3dp"
             tools:visibility="visible"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:background="@drawable/incoming_message_layout_shape"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">

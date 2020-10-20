@@ -24,12 +24,32 @@
                 android:layout_height="0dp"
                 android:layout_marginBottom="6dp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:background="@drawable/channel_resume_item_box_shape"
                 android:elevation="0.3dp"
                 app:layout_constraintBottom_toTopOf="@+id/radio_channels_layout"
                 app:layout_constraintStart_toStartOf="@+id/primary_channel_layout"
                 app:layout_constraintTop_toBottomOf="@+id/primary_channel_layout"
-                app:layout_constraintVertical_bias="1.0">
+                app:layout_constraintVertical_bias="1.0"
+                tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/rx_image_priority_channel_1"
+                android:layout_width="129.3dp"
+                android:layout_height="43.5dp"
+                android:layout_marginLeft="50.3dp"
+                android:layout_marginTop="51.3dp"
+                android:layout_marginRight="74.3dp"
+                android:layout_marginBottom="5dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline9"
+                app:layout_constraintHorizontal_bias="0.039"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline2"
+                app:layout_constraintVertical_bias="0.011"
+                app:srcCompat="@drawable/ic_blue_tx"
+                tools:visibility="visible" />
 
             <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/priority_channel_1_image"
@@ -140,11 +160,31 @@
                 android:layout_height="0dp"
                 android:layout_marginBottom="0dp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:background="@drawable/channel_resume_item_box_shape"
                 android:elevation="0.3dp"
                 app:layout_constraintBottom_toBottomOf="@+id/priority_channel_1_layout"
                 app:layout_constraintEnd_toEndOf="@+id/primary_channel_layout"
-                app:layout_constraintTop_toTopOf="@+id/priority_channel_1_layout">
+                app:layout_constraintTop_toTopOf="@+id/priority_channel_1_layout"
+                tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/rx_image_priority_channel_2"
+                android:layout_width="112.8dp"
+                android:layout_height="38dp"
+                android:layout_marginLeft="41dp"
+                android:layout_marginTop="53.3dp"
+                android:layout_marginRight="100dp"
+                android:layout_marginBottom="8.5dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.068"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_orange_tx"
+                tools:visibility="visible" />
 
             <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/priority_channel_2_image"
@@ -174,7 +214,7 @@
                     app:layout_constraintTop_toTopOf="@+id/priority_channel_2_image" />
 
             <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/priority_channel_2_description"
                     style="@style/openSansRegularFont"
                     android:layout_width="wrap_content"
 
@@ -241,9 +281,29 @@
         android:layout_marginStart="6dp"
         android:background="@drawable/channel_resume_item_box_shape"
         android:elevation="0.3dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/rx_image_primary_channel"
+            android:layout_width="140.8dp"
+            android:layout_height="47.5dp"
+            android:layout_marginTop="154.8dp"
+            android:layout_marginRight="62.5dp"
+            android:layout_marginBottom="2.8dp"
+            android:layout_marginLeft="9dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/ic_red_tx"
+            tools:visibility="visible" />
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/primary_channel_image"
@@ -275,6 +335,7 @@
             app:layout_constraintTop_toTopOf="@+id/primary_channel_image" />
 
         <TextView
+            android:id="@+id/primary_channel_description"
             style="@style/openSansRegularFont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
