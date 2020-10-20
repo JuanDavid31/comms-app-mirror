@@ -400,6 +400,8 @@ public class MissionFragment extends Fragment {
         private boolean isPriority1SpekearOn = true;
         private boolean isPriority2SpeakerOn = true;
 
+        private int position;
+
         public void setChannels(List<Channel> channels) {
             this.channels = channels;
             notifyDataSetChanged();
@@ -409,8 +411,6 @@ public class MissionFragment extends Fragment {
             this.fragment = fragment;
             this.channels = channels;
         }
-
-        int position;
 
         @Override
         public int getItemViewType(int position) {
@@ -464,7 +464,6 @@ public class MissionFragment extends Fragment {
                 channelHolder.channelImage.setImageResource(getImageResource(currentChannel.image));
                 channelHolder.channelName.setText(currentChannel.name);
                 channelHolder.channelType.setText(getTypeString(currentChannel.type));
-                channelHolder.setupChannelId();
 
                 if (currentChannel.type == Channel.ChannelType.PRIORITY && currentChannel.id ==  2) {
 
@@ -619,8 +618,6 @@ public class MissionFragment extends Fragment {
             private final static String PRIORITY_CHANNEL_1 = "Priority Channel 1";
             private final static String PRIORITY_CHANNEL_2 = "Priority Channel 2";
 
-            public int id;
-
             private View channelLayout;
             private View channelInfo;
             private RoundedImageView channelImage;
@@ -635,9 +632,9 @@ public class MissionFragment extends Fragment {
             private ChannelResumeViewHolder channelResumeViewHolder;
             private Integer channelId;
 
-            public ChannelViewHolder(@NonNull View itemView, int position) {
+            public ChannelViewHolder(@NonNull View itemView, int channelId) {
                 super(itemView);
-                this.id = position;
+
                 channelLayout = itemView.findViewById(R.id.primary_channel_layout);
                 channelInfo = itemView.findViewById(R.id.channel_info);
                 channelImage = itemView.findViewById(R.id.channel_image);
@@ -649,8 +646,9 @@ public class MissionFragment extends Fragment {
                 lastMessageDisplayName = itemView.findViewById(R.id.last_message_displayName);
                 speakerButton = itemView.findViewById(R.id.channel_speaker);
                 incomingMessageLayout = itemView.findViewById(R.id.incoming_message_layout);
+
+                this.channelId = channelId;
                 channelResumeViewHolder = null;
-                setupChannelId();
             }
 
             public ChannelResumeViewHolder getChannelResumeViewHolder() {
@@ -659,20 +657,6 @@ public class MissionFragment extends Fragment {
 
             public void setChannelResumeViewHolder(ChannelResumeViewHolder channelResumeViewHolder) {
                 this.channelResumeViewHolder = channelResumeViewHolder;
-            }
-
-            private void setupChannelId() {
-                String type = channelType.getText().toString();
-                if(type.equals(PRIMARY_CHANNEL)) {
-                    System.out.println("Here 1");
-                    channelId = 0;
-                } else if(type.equals(PRIORITY_CHANNEL_1)) {
-                    System.out.println("Here 2");
-                    channelId = 1;
-                } else if(type.equals(PRIORITY_CHANNEL_2)) {
-                    System.out.println("Here 3");
-                    channelId = 2;
-                }
             }
 
             @Override
@@ -691,7 +675,7 @@ public class MissionFragment extends Fragment {
                 String displayNameText = displayName == null ? "Unknown user" : displayName;
 
                 incomingMessageLayout.setVisibility(View.VISIBLE);
-                setupViewIncommingMessage(aliasText);
+                showIncommingMessageView(aliasText);
 
                 ((TextView) incomingMessageLayout
                         .findViewById(R.id.incoming_message_name)).setText(aliasText);
@@ -710,33 +694,33 @@ public class MissionFragment extends Fragment {
             public void stopRx() {
                 //incomingMessageLayout.setVisibility(View.INVISIBLE);
                 //toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
-                setupViewOutcommingMessage();
+                hideIncommingMessageView();
                 incomingMessageLayout.setVisibility(View.GONE);
             }
 
-            private void setupViewIncommingMessage(String alias) {
+            private void showIncommingMessageView(String alias) {
                 channelInfo.setAlpha(LOW_OPACITY);
                 lastMessageTime.setAlpha(LOW_OPACITY);
                 lastMessageAlias.setAlpha(LOW_OPACITY);
                 lastMessageDisplayName.setAlpha(LOW_OPACITY);
                 lastMessageText.setAlpha(LOW_OPACITY);
 
-                setupChannelLayoutBackgroundIncommingMessage(alias);
+                showLayoutBackgroundIncommingMessageChannel(alias);
             }
 
-            private void setupViewOutcommingMessage() {
+            private void hideIncommingMessageView() {
                 channelInfo.setAlpha(FULL_OPACITY);
                 lastMessageTime.setAlpha(FULL_OPACITY);
                 lastMessageAlias.setAlpha(FULL_OPACITY);
                 lastMessageDisplayName.setAlpha(FULL_OPACITY);
                 lastMessageText.setAlpha(FULL_OPACITY);
 
-                setupChannelLayoutBackgroundOutcommingMessage();
+                hideLayoutBackgroundIncommingMessageChannel();
             }
 
-            private void setupChannelLayoutBackgroundIncommingMessage(String alias) {
+            private void showLayoutBackgroundIncommingMessageChannel(String alias) {
                 try {
-                    if (this.id == 0) {
+                    if (this.channelId == 0) {
                         channelLayout.setBackground(ContextCompat.getDrawable(appContext,
                                 R.drawable.primary_channel_item_fade_shape));
 
@@ -754,7 +738,7 @@ public class MissionFragment extends Fragment {
                         channelResumeViewHolder.priorityChannel1.setAlpha(LOW_OPACITY);
                         channelResumeViewHolder.priorityChannel2.setAlpha(LOW_OPACITY);
                     }
-                    else if(this.id == 1) {
+                    else if(this.channelId == 1) {
                         channelLayout.setBackground(ContextCompat.getDrawable(appContext,
                                 R.drawable.prioritary1_channel_item_fade_shape));
 
@@ -771,7 +755,7 @@ public class MissionFragment extends Fragment {
                         channelResumeViewHolder.priorityChannel1Rx.setVisibility(View.VISIBLE);
                         channelResumeViewHolder.priorityChannel1.setAlpha(FULL_OPACITY);
                         channelResumeViewHolder.priorityChannel2.setAlpha(LOW_OPACITY);
-                    } else if(this.id == 2) {
+                    } else if(this.channelId == 2) {
                         channelLayout.setBackground(ContextCompat.getDrawable(appContext,
                                 R.drawable.prioritary2_channel_item_fade_shape));
 
@@ -794,7 +778,7 @@ public class MissionFragment extends Fragment {
                 }
             }
 
-            private void setupChannelLayoutBackgroundOutcommingMessage() {
+            private void hideLayoutBackgroundIncommingMessageChannel() {
                 try {
                     channelLayout.setBackground(ContextCompat.getDrawable(appContext,
                             R.drawable.channel_item_shape));
