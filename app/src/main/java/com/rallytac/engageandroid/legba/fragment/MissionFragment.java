@@ -410,9 +410,12 @@ public class MissionFragment extends Fragment {
             this.channels = channels;
         }
 
+        int position;
+
         @Override
         public int getItemViewType(int position) {
             if (position < channels.size()) {
+                this.position = position;
                 return CHANNEL_ITEM;
             } else if (channels.size() > 1 && channels.size() == position) {
                 return RESUME_CHANNELS_ITEM;
@@ -424,11 +427,10 @@ public class MissionFragment extends Fragment {
         @NonNull
         @Override
         public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
             if (viewType == CHANNEL_ITEM) {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.channel_item, parent, false);
-                ChannelViewHolder channelViewHolder = new ChannelViewHolder(itemView);
+                ChannelViewHolder channelViewHolder = new ChannelViewHolder(itemView, position);
                 Globals.actualListeners.add(channelViewHolder);
                 return channelViewHolder;
             } else if (viewType == RESUME_CHANNELS_ITEM) {
@@ -617,6 +619,8 @@ public class MissionFragment extends Fragment {
             private final static String PRIORITY_CHANNEL_1 = "Priority Channel 1";
             private final static String PRIORITY_CHANNEL_2 = "Priority Channel 2";
 
+            public int id;
+
             private View channelLayout;
             private View channelInfo;
             private RoundedImageView channelImage;
@@ -631,8 +635,9 @@ public class MissionFragment extends Fragment {
             private ChannelResumeViewHolder channelResumeViewHolder;
             private Integer channelId;
 
-            public ChannelViewHolder(@NonNull View itemView) {
+            public ChannelViewHolder(@NonNull View itemView, int position) {
                 super(itemView);
+                this.id = position;
                 channelLayout = itemView.findViewById(R.id.primary_channel_layout);
                 channelInfo = itemView.findViewById(R.id.channel_info);
                 channelImage = itemView.findViewById(R.id.channel_image);
@@ -731,7 +736,7 @@ public class MissionFragment extends Fragment {
 
             private void setupChannelLayoutBackgroundIncommingMessage(String alias) {
                 try {
-                    if (channelId == 0) {
+                    if (this.id == 0) {
                         channelLayout.setBackground(ContextCompat.getDrawable(appContext,
                                 R.drawable.primary_channel_item_fade_shape));
 
@@ -749,7 +754,7 @@ public class MissionFragment extends Fragment {
                         channelResumeViewHolder.priorityChannel1.setAlpha(LOW_OPACITY);
                         channelResumeViewHolder.priorityChannel2.setAlpha(LOW_OPACITY);
                     }
-                    else if(channelId == 1) {
+                    else if(this.id == 1) {
                         channelLayout.setBackground(ContextCompat.getDrawable(appContext,
                                 R.drawable.prioritary1_channel_item_fade_shape));
 
@@ -766,7 +771,7 @@ public class MissionFragment extends Fragment {
                         channelResumeViewHolder.priorityChannel1Rx.setVisibility(View.VISIBLE);
                         channelResumeViewHolder.priorityChannel1.setAlpha(FULL_OPACITY);
                         channelResumeViewHolder.priorityChannel2.setAlpha(LOW_OPACITY);
-                    } else if(channelId == 2) {
+                    } else if(this.id == 2) {
                         channelLayout.setBackground(ContextCompat.getDrawable(appContext,
                                 R.drawable.prioritary2_channel_item_fade_shape));
 

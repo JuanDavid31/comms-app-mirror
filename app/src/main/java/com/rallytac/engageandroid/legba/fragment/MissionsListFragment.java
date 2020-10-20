@@ -39,16 +39,14 @@ public class MissionsListFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_missions_list, container, false);
         setupToolbar();
-        List<Mission> missions = new DataManager().getMissions();
+        List<Mission> missions = new DataManager(getContext()).getMissions();
         MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), this);
         binding.missionsListRecyclerView.setHasFixedSize(true);
 
         int orientation = getResources().getConfiguration().orientation;
         if(orientation == Configuration.ORIENTATION_PORTRAIT){
-            Timber.i("Portrait mode");
             binding.missionsListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }else if(orientation == Configuration.ORIENTATION_LANDSCAPE){
-            Timber.i("Landscape mode");
             binding.missionsListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         }
 

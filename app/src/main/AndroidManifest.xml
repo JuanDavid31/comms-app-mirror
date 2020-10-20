@@ -37,9 +37,12 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".JsonEditorActivity" />
 
-        <meta-data
+        <!--<meta-data
             android:name="Launcher.LAUNCH_ACTIVITY"
-            android:value="com.rallytac.engageandroid.legba.HostActivity" />
+            android:value="com.rallytac.engageandroid.SimpleUiMainActivity" />-->
+        <meta-data
+                android:name="Launcher.LAUNCH_ACTIVITY"
+                android:value="com.rallytac.engageandroid.legba.HostActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
