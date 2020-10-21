@@ -34,6 +34,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.engage.RxListener;
+import com.rallytac.engageandroid.legba.util.RUtils;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
 import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -59,6 +60,8 @@ public class MissionFragment extends Fragment {
     private FragmentMissionBinding binding;
     private Mission mission;
     private TextView fragmentDescriptionText;
+    private ImageView addChannel;
+    private RecyclerView rvChannel;
     private ImageView[] dotIndicators;
     private MenuItem sosAction;
     private TransitionDrawable transition;
@@ -101,15 +104,9 @@ public class MissionFragment extends Fragment {
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();
         updateDots(0);
+        setupAddChannelMission();
 
         return binding.getRoot();
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (appContext == null)
-            appContext = context.getApplicationContext();
     }
 
     private void updateToolbar() {
@@ -117,8 +114,12 @@ public class MissionFragment extends Fragment {
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
         ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(mission.name);
         requireActivity().findViewById(R.id.fragment_description).setVisibility(View.VISIBLE);
+        requireActivity().findViewById(R.id.add_channel).setVisibility(View.VISIBLE);
         fragmentDescriptionText = requireActivity().findViewById(R.id.fragment_description);
         fragmentDescriptionText.setTextColor(this.getResources().getColor(R.color.paleRed));
+        addChannel = requireActivity().findViewById(R.id.add_channel);
+        addChannel.setClickable(true);
+        addChannel.setBackground(ContextCompat.getDrawable(appContext, R.drawable.ic_mic));
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
@@ -311,6 +312,27 @@ public class MissionFragment extends Fragment {
         }
     }
 
+    private void setupAddChannelMission() {
+        rvChannel = requireActivity().findViewById(R.id.rv_channels);
+        rvChannel.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        rvChannel.setLayoutManager(llm);
+
+        activity.binding.addChannel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleLayoutVisiblity(activity.binding.channelGroupLayout);
+            }
+        });
+
+        activity.binding.btnCloseView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleLayoutVisiblity(activity.binding.channelGroupLayout);
+            }
+        });
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -354,6 +376,13 @@ public class MissionFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (appContext == null)
+            appContext = context.getApplicationContext();
     }
 
     private void toggleLayoutVisiblity(View layout){
@@ -867,5 +896,47 @@ public class MissionFragment extends Fragment {
                 super(itemView);
             }
         }
+    }
+
+    public class ChannelGroupAdapter extends RecyclerView.Adapter<ChannelGroupAdapter.ChannelGroupViewHolder>{
+
+        private List<Channel> channels;
+
+        public ChannelGroupAdapter(List<Channel> channels) {
+            this.channels = channels;
+        }
+
+        @NonNull
+        @Override
+        public ChannelGroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.channel_group_item, parent, false);
+            ChannelGroupViewHolder channelGroupViewHolder = new ChannelGroupViewHolder(parent);
+            return channelGroupViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ChannelGroupViewHolder holder, int position) {
+            holder.channelPhoto.setImageResource(RUtils.getImageResource(channels.get(position).image));
+            holder.channelNameText.setText(channels.get(position).name);
+        }
+
+        @Override
+        public int getItemCount() {
+            return channels.size();
+        }
+
+        public class ChannelGroupViewHolder extends RecyclerView.ViewHolder {
+            private ImageView channelPhoto;
+            private TextView channelNameText;
+            private TextView channelTypeText;
+
+            public ChannelGroupViewHolder(View itemView) {
+                super(itemView);
+                channelPhoto = itemView.findViewById(R.id.channel_photo);
+                channelNameText = itemView.findViewById(R.id.channel_name_text);
+                channelTypeText = itemView.findViewById(R.id.channel_type_text);
+            }
+        }
+
     }
 }
