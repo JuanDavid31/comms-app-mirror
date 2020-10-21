@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.rallytac.engageandroid.ActiveConfiguration;
 import com.rallytac.engageandroid.Constants;
 import com.rallytac.engageandroid.DatabaseMission;
 import com.rallytac.engageandroid.Globals;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import okio.BufferedSource;
@@ -29,7 +31,7 @@ public class DataManager {
     private Context context;
     MissionDatabase db;
 
-    public DataManager(Context context){
+    public DataManager(Context context) {
         this.context = context;
         db = MissionDatabase.load(Globals.getSharedPreferences(), Constants.MISSION_DATABASE_NAME);
     }
@@ -39,12 +41,13 @@ public class DataManager {
         BufferedSource source = Okio.buffer(Okio.source(inputStream));
         try {
             String jsonMissions = source.readUtf8();
-            Type listType = new TypeToken<List<Mission>>() {}.getType();
+            Type listType = new TypeToken<List<Mission>>() {
+            }.getType();
             List missions = new GsonBuilder()
                     .create()
                     .fromJson(jsonMissions, listType);
             loadMissionsOnEgageEngine(missions);
-            return missions ;
+            return missions;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,12 +57,10 @@ public class DataManager {
 
     private void loadMissionsOnEgageEngine(List<Mission> missions) {
         Timber.i("Missions before->");
-        Log.i("algo", "jajajeje");
         //deleteEveryMissionOnEngageEngine();
         db._missions.forEach(System.out::println);
 
         missions.forEach(mission -> {
-
             DatabaseMission newMission = new DatabaseMission();
             newMission._id = Utils.generateMissionId();
             newMission._rpAddress = context.getString(R.string.default_rallypoint);
@@ -68,7 +69,7 @@ public class DataManager {
             newMission._mcCryptoPassword = Utils.generateCryptoPassword();
 
             /*String json = "";
-            String generatedMission = Globals.getEngageApplication().getEngine().engageGenerateMission("1234", mission.channels.size(), "demo.rallytac.com", mission.name);
+            String generatedMission = Globals.getEngageApplication().getEngine().engageGenerateMission("1234", mission.channels.size(), "demo.rallytac.com", "Prueba");
             json = Globals.getEngageApplication()
                     .applyFlavorSpecificGeneratedMissionModifications(generatedMission);
             Timber.i("Mission Unique %s", json);
@@ -81,6 +82,9 @@ public class DataManager {
     }
 
     private void deleteEveryMissionOnEngageEngine() {
-        db._missions.forEach(mission -> db.deleteMissionById(mission._id));
+        db._missions
+                .stream()
+                .map(databaseMission -> databaseMission._id)
+                .forEach(missionId -> db.deleteMissionById(missionId));
     }
 }
