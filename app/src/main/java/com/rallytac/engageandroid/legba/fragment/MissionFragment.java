@@ -32,6 +32,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.Globals;
+import com.rallytac.engageandroid.GroupDescriptor;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
@@ -44,6 +45,7 @@ import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -64,6 +66,8 @@ public class MissionFragment extends Fragment {
     private TransitionDrawable transition;
     private Context appContext;
     private MissionViewModel vm;
+    private String currentGroupId = "";
+    List<Channel> nonRadioChannels;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +91,7 @@ public class MissionFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
         binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
 
-        List<Channel> nonRadioChannels = mission.channels
+        nonRadioChannels = mission.channels
                 .stream()
                 .filter(channel -> channel.type != Channel.ChannelType.RADIO)
                 .collect(Collectors.toList());
@@ -96,7 +100,7 @@ public class MissionFragment extends Fragment {
 
 
         setupPTTOnMic();
-        setupViewPagerOnPageChangeListener();
+        setupViewPagerOnPageChangeListener(nonRadioChannels);
         setupViewPagerDotIndicator(nonRadioChannels);
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();
@@ -122,7 +126,7 @@ public class MissionFragment extends Fragment {
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
-    private void setupEmergencyListeners(){
+    private void setupEmergencyListeners() {
         activity.binding.sosSwipeButton.setSosEmergencyListener(new SwipeButton.SOSEmergencyListener() {
 
             boolean isGradientActive = false;
@@ -194,19 +198,17 @@ public class MissionFragment extends Fragment {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 binding.txImage.setVisibility(View.VISIBLE);
                 Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
-                Globals.getEngageApplication().startTx(0, 0);
+                Globals.getEngageApplication().startTxLegba(0, 0, currentGroupId);
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 binding.txImage.setVisibility(View.INVISIBLE);
                 Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
-                Globals.getEngageApplication().endTx();
-
+                //Globals.getEngageApplication().endTxLega(nonRadioChannels.stream().map(channel -> channel.id + "").col);
             }
-
             return true;
         });
     }
 
-    private void setupViewPagerOnPageChangeListener() {
+    private void setupViewPagerOnPageChangeListener(List<Channel> nonRadioChannels) {
         binding.missionViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -216,12 +218,15 @@ public class MissionFragment extends Fragment {
                 switch (position) {
                     case 0:
                         ordinalPosition = "Alpha";
+                        setCurrentGroupId(nonRadioChannels.get(0).id + "");
                         break;
                     case 1:
                         ordinalPosition = "Delta";
+                        setCurrentGroupId(nonRadioChannels.get(1).id + "");
                         break;
                     case 2:
                         ordinalPosition = "Fire";
+                        setCurrentGroupId(nonRadioChannels.get(2).id + "");
                         break;
                     case 3:
                         ordinalPosition = "All Ground";
@@ -234,6 +239,24 @@ public class MissionFragment extends Fragment {
                 fragmentDescriptionText.setText(ordinalPosition);
             }
         });
+    }
+
+    private void setCurrentGroupId(String groupId){
+        ArrayList<GroupDescriptor> missionGroups = Globals.getEngageApplication()
+                .getActiveConfiguration()
+                .getMissionGroups();
+
+        missionGroups.clear();
+        GroupDescriptor groupDescriptor = new GroupDescriptor();
+        groupDescriptor.id = groupId;
+        missionGroups.add(groupDescriptor);
+
+        //String alias = Globals.getEngageApplication().getActiveConfiguration().getUserAlias();
+        //String txInfo = Globals.getEngageApplication().buildAdvancedTxJsonPublic(0, 0, 0, true, alias);
+
+        /*Globals.getEngageApplication()
+                .getEngine()
+                .engageBeginGroupTxAdvanced(groupId, txInfo);*/
     }
 
     private void setupViewPagerDotIndicator(List<Channel> channels) {
@@ -356,7 +379,7 @@ public class MissionFragment extends Fragment {
 
     }
 
-    private void toggleLayoutVisiblity(View layout){
+    private void toggleLayoutVisiblity(View layout) {
         if (layout.getVisibility() == View.GONE) {
             layout.animate()
                     .alpha(0.95f)
@@ -438,8 +461,8 @@ public class MissionFragment extends Fragment {
                         .inflate(R.layout.channels_resume_item, parent, false);
                 ChannelResumeViewHolder channelResumeViewHolder = new ChannelResumeViewHolder(itemView);
 
-                for(RxListener currentListener: Globals.actualListeners) {
-                    if(currentListener instanceof ChannelViewHolder) {
+                for (RxListener currentListener : Globals.actualListeners) {
+                    if (currentListener instanceof ChannelViewHolder) {
                         currentListener = (ChannelViewHolder) currentListener;
                         ((ChannelViewHolder) currentListener).setChannelResumeViewHolder(channelResumeViewHolder);
                     }
@@ -466,7 +489,7 @@ public class MissionFragment extends Fragment {
                 channelHolder.channelType.setText(getTypeString(currentChannel.type));
                 channelHolder.setupChannelId();
 
-                if (currentChannel.type == Channel.ChannelType.PRIORITY && currentChannel.id ==  2) {
+                if (currentChannel.type == Channel.ChannelType.PRIORITY && currentChannel.id == 2) {
 
                     channelHolder.channelImage.setBorderColor(getWaterBlueColor());
                     channelHolder.channelType.setTextColor(getWaterBlueColor());
@@ -663,13 +686,13 @@ public class MissionFragment extends Fragment {
 
             private void setupChannelId() {
                 String type = channelType.getText().toString();
-                if(type.equals(PRIMARY_CHANNEL)) {
+                if (type.equals(PRIMARY_CHANNEL)) {
                     System.out.println("Here 1");
                     channelId = 0;
-                } else if(type.equals(PRIORITY_CHANNEL_1)) {
+                } else if (type.equals(PRIORITY_CHANNEL_1)) {
                     System.out.println("Here 2");
                     channelId = 1;
-                } else if(type.equals(PRIORITY_CHANNEL_2)) {
+                } else if (type.equals(PRIORITY_CHANNEL_2)) {
                     System.out.println("Here 3");
                     channelId = 2;
                 }
@@ -740,7 +763,7 @@ public class MissionFragment extends Fragment {
                         channelLayout.setBackground(ContextCompat.getDrawable(appContext,
                                 R.drawable.primary_channel_item_fade_shape));
 
-                        if(channelResumeViewHolder == null) return;
+                        if (channelResumeViewHolder == null) return;
                         channelResumeViewHolder.primaryChannel
                                 .setBackground(ContextCompat.getDrawable(appContext,
                                         R.drawable.primary_channel_item_fade_shape));
@@ -753,12 +776,11 @@ public class MissionFragment extends Fragment {
                         channelResumeViewHolder.primaryChannelRx.setVisibility(View.VISIBLE);
                         channelResumeViewHolder.priorityChannel1.setAlpha(LOW_OPACITY);
                         channelResumeViewHolder.priorityChannel2.setAlpha(LOW_OPACITY);
-                    }
-                    else if(this.id == 1) {
+                    } else if (this.id == 1) {
                         channelLayout.setBackground(ContextCompat.getDrawable(appContext,
                                 R.drawable.prioritary1_channel_item_fade_shape));
 
-                        if(channelResumeViewHolder == null) return;
+                        if (channelResumeViewHolder == null) return;
                         channelResumeViewHolder.priorityChannel1
                                 .setBackground(ContextCompat.getDrawable(appContext,
                                         R.drawable.prioritary1_channel_item_fade_shape));
@@ -771,11 +793,11 @@ public class MissionFragment extends Fragment {
                         channelResumeViewHolder.priorityChannel1Rx.setVisibility(View.VISIBLE);
                         channelResumeViewHolder.priorityChannel1.setAlpha(FULL_OPACITY);
                         channelResumeViewHolder.priorityChannel2.setAlpha(LOW_OPACITY);
-                    } else if(this.id == 2) {
+                    } else if (this.id == 2) {
                         channelLayout.setBackground(ContextCompat.getDrawable(appContext,
                                 R.drawable.prioritary2_channel_item_fade_shape));
 
-                        if(channelResumeViewHolder == null) return;
+                        if (channelResumeViewHolder == null) return;
                         channelResumeViewHolder.priorityChannel2
                                 .setBackground(ContextCompat.getDrawable(appContext,
                                         R.drawable.prioritary2_channel_item_fade_shape));
@@ -788,7 +810,7 @@ public class MissionFragment extends Fragment {
                         channelResumeViewHolder.priorityChannel2Rx.setVisibility(View.VISIBLE);
                         channelResumeViewHolder.priorityChannel1.setAlpha(LOW_OPACITY);
                         channelResumeViewHolder.priorityChannel2.setAlpha(FULL_OPACITY);
-                     }
+                    }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -799,7 +821,7 @@ public class MissionFragment extends Fragment {
                     channelLayout.setBackground(ContextCompat.getDrawable(appContext,
                             R.drawable.channel_item_shape));
 
-                    if(channelResumeViewHolder == null) return;
+                    if (channelResumeViewHolder == null) return;
 
                     channelResumeViewHolder.primaryChannelDescription.setText(PRIMARY_CHANNEL);
                     channelResumeViewHolder.priorityChannel1Description.setText(PRIORITY_CHANNEL_1);

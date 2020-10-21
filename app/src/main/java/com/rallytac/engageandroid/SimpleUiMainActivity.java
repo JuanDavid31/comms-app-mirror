@@ -582,7 +582,7 @@ public class SimpleUiMainActivity
 
         restoreSavedState(savedInstanceState);
 
-        assignGroupsToFragments();
+        assignGroupsToFragments(); //Come back
         setupMainScreen();
         redrawPttButton();
 

@@ -24,6 +24,14 @@ public class DatabaseGroup
     public boolean _fdx;
     public int _maxTxSecs;
 
+    public DatabaseGroup(){
+
+    }
+
+    public DatabaseGroup(String name){
+        this._name = name;
+    }
+
     @Override
     public String toString()
     {
