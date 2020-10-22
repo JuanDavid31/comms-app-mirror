@@ -133,7 +133,7 @@ public class MissionFragment extends Fragment {
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
-    private void setupEmergencyListeners(){
+    private void setupEmergencyListeners() {
         activity.binding.sosSwipeButton.setSosEmergencyListener(new SwipeButton.SOSEmergencyListener() {
 
             boolean isGradientActive = false;
@@ -221,6 +221,7 @@ public class MissionFragment extends Fragment {
         binding.missionViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                updateDots(position);
                 boolean validationSize = position + 1 > mission.channels.size();
                 String name = validationSize ? "" : StringUtils.capitalize(mission.channels.get(position).name);
                 fragmentDescriptionText.setText(name);
@@ -337,6 +338,7 @@ public class MissionFragment extends Fragment {
             mission.setChannels(channels);
             cspAdapter.setChannels(channels);
             setupLayoutVisibilityChannelGroup();
+            setupViewPagerDotIndicator(channels); //TODO: FIX.
         });
     }
 
@@ -399,7 +401,7 @@ public class MissionFragment extends Fragment {
             appContext = context.getApplicationContext();
     }
 
-    private void toggleLayoutVisiblity(View layout){
+    private void toggleLayoutVisiblity(View layout) {
         if (layout.getVisibility() == View.GONE) {
             layout.animate()
                     .alpha(0.95f)
