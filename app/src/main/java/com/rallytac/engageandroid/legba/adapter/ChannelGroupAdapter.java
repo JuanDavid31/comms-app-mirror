@@ -32,10 +32,8 @@ public class ChannelGroupAdapter extends RecyclerView.Adapter<ChannelGroupAdapte
         this.context = context;
     }
 
-    public List<Channel> getCheckChannels() {
-        return channels.stream()
-                .filter(channel -> channel.status)
-                .collect(Collectors.toList());
+    public List<Channel> getChannels() {
+        return channels;
     }
 
     @NonNull
