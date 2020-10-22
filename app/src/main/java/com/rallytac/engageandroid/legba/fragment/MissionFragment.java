@@ -2,6 +2,7 @@ package com.rallytac.engageandroid.legba.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
@@ -193,18 +194,28 @@ public class MissionFragment extends Fragment {
     }
 
     private void setupPTTOnMic() {
-        binding.icMicCard.setOnTouchListener((v, event) -> {
+        binding.icMicCard.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    binding.txImage.setVisibility(View.VISIBLE);
+                    Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
+                    Timber.i("Sending message to group %s ", currentGroupId);
 
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                binding.txImage.setVisibility(View.VISIBLE);
-                Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
-                Globals.getEngageApplication().startTxLegba(0, 0, currentGroupId);
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                binding.txImage.setVisibility(View.INVISIBLE);
-                Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
-                //Globals.getEngageApplication().endTxLega(nonRadioChannels.stream().map(channel -> channel.id + "").col);
+                    Globals.getEngageApplication().startTxLegba(0, 0, currentGroupId);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    binding.txImage.setVisibility(View.INVISIBLE);
+                    Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
+
+                    String[] groupIds = nonRadioChannels
+                            .stream()
+                            .map(channel -> channel.id + "")
+                            .collect(Collectors.toList()).toArray(new String[nonRadioChannels.size()]);
+
+                    Globals.getEngageApplication().endTxLega(groupIds);
+                }
+                return true;
             }
-            return true;
         });
     }
 
@@ -242,14 +253,15 @@ public class MissionFragment extends Fragment {
     }
 
     private void setCurrentGroupId(String groupId){
-        ArrayList<GroupDescriptor> missionGroups = Globals.getEngageApplication()
+        currentGroupId = groupId;
+        /*ArrayList<GroupDescriptor> missionGroups = Globals.getEngageApplication()
                 .getActiveConfiguration()
                 .getMissionGroups();
 
         missionGroups.clear();
         GroupDescriptor groupDescriptor = new GroupDescriptor();
         groupDescriptor.id = groupId;
-        missionGroups.add(groupDescriptor);
+        missionGroups.add(groupDescriptor);*/
 
         //String alias = Globals.getEngageApplication().getActiveConfiguration().getUserAlias();
         //String txInfo = Globals.getEngageApplication().buildAdvancedTxJsonPublic(0, 0, 0, true, alias);
@@ -706,6 +718,7 @@ public class MissionFragment extends Fragment {
 
             @Override
             public void onJsonRX(String id, String alias, String displayName) {
+                Timber.i("Incoming group id ->  %s", id);
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm a");
                 LocalDateTime now = LocalDateTime.now();
                 String timeText = dtf.format(now);

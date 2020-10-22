@@ -2002,27 +2002,42 @@ public class EngageApplication
     }
 
     public void startTxLegba(final int priority, final int flags, String... groupIds) {
+
+        ActiveConfiguration activeConfiguration = getActiveConfiguration();
+
+        //updateActiveConfiguration();
+
+
         runOnUiThread(() -> {
             synchronized (groupIds) {
                 for (String id : groupIds) {
+                    MissionDatabase database = MissionDatabase.load(Globals.getSharedPreferences(), Constants.MISSION_DATABASE_NAME);
+
+
+                    database._missions.forEach(m -> {
+                        Timber.i(m.toJson().toString());
+                        m._groups.forEach(g -> Timber.i(g.toJson().toString()));
+                    });
+
+                    String currentMissionId = activeConfiguration.getMissionId();
+
+                    Timber.i("getNodeId -> %s ", activeConfiguration.getNodeId()); //User id
+                    Timber.i("CurrentMissionId -> %s ", currentMissionId);
+                    Timber.i("CurrentMissionName ->%s ", activeConfiguration.getMissionName());
+
+
+
+
                     getEngine().engageBeginGroupTxAdvanced(id, buildAdvancedTxJson(flags, priority, 0, true, _activeConfiguration.getUserAlias()));
                 }
             }
         });
     }
 
-    public void endTxLega(String... groupIds){
+    public void endTxLega(String... groupIds) {
         runOnUiThread(() -> {
-            try {
-                // We'll just end transmit on everything
-                for (GroupDescriptor gd : _activeConfiguration.getMissionGroups()) {
-                    if (gd.type == GroupDescriptor.Type.gtAudio) {
-                        getEngine().engageEndGroupTx(gd.id);
-                    }
-                }
-                checkIfAnyTxStillActiveAndNotify();
-            } catch (Exception e) {
-                e.printStackTrace();
+            for (String id : groupIds) {
+                getEngine().engageEndGroupTx(id);
             }
         });
     }

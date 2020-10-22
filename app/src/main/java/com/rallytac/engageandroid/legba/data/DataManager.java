@@ -59,10 +59,18 @@ public class DataManager {
     }
 
     private void loadMissionsOnEgageEngine(List<Mission> missions) {
+
+        Globals.getEngageApplication().switchToMission("{9eed8720-39df-4f6e-aefb-4c669e2a7195}");
+
         Timber.i("Missions before->");
         //deleteEveryMissionOnEngageEngine();
         //db.deleteMissionById("78fdf4c8-0db0-c2a0-5ead-35b8e4acea0e");
         db._missions.forEach(System.out::println);
+
+        if(db._missions.size() == 2){
+            Timber.i("There are already 2 missions");
+            return;
+        }
 
         missions.forEach(mission -> {
             DatabaseMission newMission = new DatabaseMission();
