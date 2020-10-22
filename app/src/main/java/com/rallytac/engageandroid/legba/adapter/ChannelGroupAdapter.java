@@ -17,6 +17,7 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.util.RUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChannelGroupAdapter extends RecyclerView.Adapter<ChannelGroupAdapter.ChannelGroupViewHolder>{
 
@@ -26,9 +27,15 @@ public class ChannelGroupAdapter extends RecyclerView.Adapter<ChannelGroupAdapte
     private int priorityIndicator = 1;
     private int radioIndicator = 1;
 
-    public ChannelGroupAdapter(List<Channel> channels, Context context) {
+    public ChannelGroupAdapter(List<Channel> channels, Context context, RecyclerView.Adapter adapter) {
         this.channels = channels;
         this.context = context;
+    }
+
+    public List<Channel> getCheckChannels() {
+        return channels.stream()
+                .filter(channel -> channel.status)
+                .collect(Collectors.toList());
     }
 
     @NonNull

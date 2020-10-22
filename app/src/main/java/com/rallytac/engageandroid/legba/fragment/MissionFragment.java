@@ -61,9 +61,11 @@ public class MissionFragment extends Fragment {
     private HostActivity activity;
     private FragmentMissionBinding binding;
     private Mission mission;
+    private ChannelSlidePageAdapter cspAdapter;
+    private ChannelGroupAdapter cgAdapter;
     private TextView fragmentDescriptionText;
     private ImageView addChannel;
-    private ImageView closeLayout;
+    private View closeLayout;
     private RecyclerView rvChannel;
     private ImageView[] dotIndicators;
     private MenuItem sosAction;
@@ -98,8 +100,8 @@ public class MissionFragment extends Fragment {
                 .filter(channel -> channel.type != Channel.ChannelType.RADIO)
                 .collect(Collectors.toList());
 
-        binding.missionViewPager.setAdapter(new ChannelSlidePageAdapter(this, nonRadioChannels));
-
+        cspAdapter = new ChannelSlidePageAdapter(this, nonRadioChannels);
+        binding.missionViewPager.setAdapter(cspAdapter);
 
         setupPTTOnMic();
         setupViewPagerOnPageChangeListener();
@@ -317,12 +319,18 @@ public class MissionFragment extends Fragment {
     }
 
     private void setupAddChannelMission() {
+        cgAdapter = new ChannelGroupAdapter(mission.channels, appContext, binding.missionViewPager.getAdapter());
+
         rvChannel = requireActivity().findViewById(R.id.rv_channels);
         rvChannel.setHasFixedSize(true);
-        rvChannel.setAdapter(new ChannelGroupAdapter(mission.channels, appContext));
+        rvChannel.setAdapter(cgAdapter);
 
         addChannel.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
         closeLayout.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
+        activity.binding.btnCreate.setOnClickListener(view -> {
+            cspAdapter.setChannels(cgAdapter.getCheckChannels());
+            setupLayoutVisibilityChannelGroup();
+        });
     }
 
     private void setupLayoutVisibilityChannelGroup() {
