@@ -315,8 +315,8 @@ public class MissionFragment extends Fragment {
     private void setupAddChannelMission() {
         rvChannel = requireActivity().findViewById(R.id.rv_channels);
         rvChannel.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        rvChannel.setLayoutManager(llm);
+        rvChannel.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvChannel.setAdapter(new ChannelGroupAdapter(mission.channels));
 
         activity.binding.addChannel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -910,7 +910,7 @@ public class MissionFragment extends Fragment {
         @Override
         public ChannelGroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.channel_group_item, parent, false);
-            ChannelGroupViewHolder channelGroupViewHolder = new ChannelGroupViewHolder(parent);
+            ChannelGroupViewHolder channelGroupViewHolder = new ChannelGroupViewHolder(view);
             return channelGroupViewHolder;
         }
 
