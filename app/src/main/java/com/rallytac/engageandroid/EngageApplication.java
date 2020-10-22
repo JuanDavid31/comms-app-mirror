@@ -2021,10 +2021,10 @@ public class EngageApplication
 
                     String currentMissionId = activeConfiguration.getMissionId();
 
-                    Timber.i("getNodeId -> %s ", activeConfiguration.getNodeId()); //User id
+                    //Timber.i("getNodeId -> %s ", activeConfiguration.getNodeId()); //User id
                     Timber.i("CurrentMissionId -> %s ", currentMissionId);
                     Timber.i("CurrentMissionName ->%s ", activeConfiguration.getMissionName());
-
+                    Timber.i("group id %s", id);
 
 
 
@@ -2917,7 +2917,7 @@ public class EngageApplication
                                 if (pd != null) {
                                     displayName = pd.displayName;
                                 }
-                                Globals.notifyListenersStart(id, td.alias, displayName, "");
+                                Globals.notifyListenersStart(id, td.alias, displayName);
 
                                 talkers.add(td);
                             }

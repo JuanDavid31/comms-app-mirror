@@ -33,7 +33,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.Globals;
-import com.rallytac.engageandroid.GroupDescriptor;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
@@ -46,7 +45,6 @@ import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -193,8 +191,10 @@ public class MissionFragment extends Fragment {
         });
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setupPTTOnMic() {
         binding.icMicCard.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -209,7 +209,7 @@ public class MissionFragment extends Fragment {
 
                     String[] groupIds = nonRadioChannels
                             .stream()
-                            .map(channel -> channel.id + "")
+                            .map(channel -> channel.id)
                             .collect(Collectors.toList()).toArray(new String[nonRadioChannels.size()]);
 
                     Globals.getEngageApplication().endTxLega(groupIds);
@@ -229,15 +229,15 @@ public class MissionFragment extends Fragment {
                 switch (position) {
                     case 0:
                         ordinalPosition = "Alpha";
-                        setCurrentGroupId(nonRadioChannels.get(0).id + "");
+                        setCurrentGroupId(nonRadioChannels.get(0).id);
                         break;
                     case 1:
                         ordinalPosition = "Delta";
-                        setCurrentGroupId(nonRadioChannels.get(1).id + "");
+                        setCurrentGroupId(nonRadioChannels.get(1).id);
                         break;
                     case 2:
                         ordinalPosition = "Fire";
-                        setCurrentGroupId(nonRadioChannels.get(2).id + "");
+                        setCurrentGroupId(nonRadioChannels.get(2).id);
                         break;
                     case 3:
                         ordinalPosition = "All Ground";
@@ -254,21 +254,6 @@ public class MissionFragment extends Fragment {
 
     private void setCurrentGroupId(String groupId){
         currentGroupId = groupId;
-        /*ArrayList<GroupDescriptor> missionGroups = Globals.getEngageApplication()
-                .getActiveConfiguration()
-                .getMissionGroups();
-
-        missionGroups.clear();
-        GroupDescriptor groupDescriptor = new GroupDescriptor();
-        groupDescriptor.id = groupId;
-        missionGroups.add(groupDescriptor);*/
-
-        //String alias = Globals.getEngageApplication().getActiveConfiguration().getUserAlias();
-        //String txInfo = Globals.getEngageApplication().buildAdvancedTxJsonPublic(0, 0, 0, true, alias);
-
-        /*Globals.getEngageApplication()
-                .getEngine()
-                .engageBeginGroupTxAdvanced(groupId, txInfo);*/
     }
 
     private void setupViewPagerDotIndicator(List<Channel> channels) {
@@ -445,12 +430,9 @@ public class MissionFragment extends Fragment {
             this.channels = channels;
         }
 
-        int position;
-
         @Override
         public int getItemViewType(int position) {
             if (position < channels.size()) {
-                this.position = position;
                 return CHANNEL_ITEM;
             } else if (channels.size() > 1 && channels.size() == position) {
                 return RESUME_CHANNELS_ITEM;
@@ -465,7 +447,8 @@ public class MissionFragment extends Fragment {
             if (viewType == CHANNEL_ITEM) {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.channel_item, parent, false);
-                ChannelViewHolder channelViewHolder = new ChannelViewHolder(itemView, position);
+                ChannelViewHolder channelViewHolder = new ChannelViewHolder(itemView);
+                Timber.i("Currently there are %s listeners", Globals.actualListeners.size());
                 Globals.actualListeners.add(channelViewHolder);
                 return channelViewHolder;
             } else if (viewType == RESUME_CHANNELS_ITEM) {
@@ -501,7 +484,7 @@ public class MissionFragment extends Fragment {
                 channelHolder.channelType.setText(getTypeString(currentChannel.type));
                 channelHolder.setupChannelId();
 
-                if (currentChannel.type == Channel.ChannelType.PRIORITY && currentChannel.id == 2) {
+                if (currentChannel.type == Channel.ChannelType.PRIORITY && currentChannel.id.equals("{G2})")) {
 
                     channelHolder.channelImage.setBorderColor(getWaterBlueColor());
                     channelHolder.channelType.setTextColor(getWaterBlueColor());
@@ -518,7 +501,7 @@ public class MissionFragment extends Fragment {
                     ((ImageView) channelHolder.incomingMessageLayout
                             .findViewById(R.id.rx_image))
                             .setImageResource(R.drawable.ic_blue_tx);
-                } else if (currentChannel.type == Channel.ChannelType.PRIORITY && currentChannel.id == 3) {
+                } else if (currentChannel.type == Channel.ChannelType.PRIORITY && currentChannel.id.equals("{G3})")) {
 
                     channelHolder.channelImage.setBorderColor(getOrangeColor());
                     channelHolder.channelType.setTextColor(getOrangeColor());
@@ -670,9 +653,8 @@ public class MissionFragment extends Fragment {
             private ChannelResumeViewHolder channelResumeViewHolder;
             private Integer channelId;
 
-            public ChannelViewHolder(@NonNull View itemView, int position) {
+            public ChannelViewHolder(@NonNull View itemView) {
                 super(itemView);
-                this.id = position;
                 channelLayout = itemView.findViewById(R.id.primary_channel_layout);
                 channelInfo = itemView.findViewById(R.id.channel_info);
                 channelImage = itemView.findViewById(R.id.channel_image);
@@ -711,14 +693,9 @@ public class MissionFragment extends Fragment {
             }
 
             @Override
-            public void onRx(String id, String other) {
-                //setupViewIncommingMessage();
-                //toggleLayoutVisiblity(incomingMessageLayout);
-            }
-
-            @Override
-            public void onJsonRX(String id, String alias, String displayName) {
-                Timber.i("Incoming group id ->  %s", id);
+            public void onRx(String id, String alias, String displayName) {
+                 if(!id.equals(channels.get(getAdapterPosition()).id))return;
+                Timber.i("Incoming rx from group %s", id);
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm a");
                 LocalDateTime now = LocalDateTime.now();
                 String timeText = dtf.format(now);
@@ -736,16 +713,10 @@ public class MissionFragment extends Fragment {
                 lastMessageAlias.setText(aliasText);
                 lastMessageDisplayName.setText(displayNameText);
                 lastMessageText.setVisibility(View.VISIBLE);
-
-                //Incoming SOS
-                //toggleLayoutVisiblity(incomingMessageLayout);
-                //activity.binding.incomingSosOverlapMessageName.setText(aliasText);
             }
 
             @Override
             public void stopRx() {
-                //incomingMessageLayout.setVisibility(View.INVISIBLE);
-                //toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
                 setupViewOutcommingMessage();
                 incomingMessageLayout.setVisibility(View.GONE);
             }
