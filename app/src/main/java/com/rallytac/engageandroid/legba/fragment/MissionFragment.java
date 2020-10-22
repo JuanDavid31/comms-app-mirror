@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -310,6 +312,26 @@ public class MissionFragment extends Fragment {
 
         addChannel.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
         closeLayout.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
+        activity.binding.groupName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String channelNameSearch = activity.binding.groupName.getText().toString().toLowerCase();
+                List<Channel> channelsSearch = mission.channels.stream()
+                        .filter(channel -> channel.name.toLowerCase().startsWith(channelNameSearch))
+                        .collect(Collectors.toList());
+                cgAdapter.setChannels(channelsSearch);
+            }
+        });
         activity.binding.btnCreate.setOnClickListener(view -> {
             List<Channel> channels = cgAdapter.getChannels();
             mission.setChannels(channels);

@@ -36,6 +36,10 @@ public class ChannelGroupAdapter extends RecyclerView.Adapter<ChannelGroupAdapte
         return channels;
     }
 
+    public void setChannels(List<Channel> channels) {
+        this.channels = channels;
+    }
+
     @NonNull
     @Override
     public ChannelGroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
