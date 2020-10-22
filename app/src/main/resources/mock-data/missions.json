@@ -8,6 +8,7 @@
                 "image": "primary",
                 "name": "ALPHA",
                 "type": "primary",
+                "status": true,
                 "subChannelsAndMembers": [
                     {
                         "id": 1,
@@ -117,25 +118,29 @@
                 "id": 2,
                 "image": "secondary",
                 "name": "DELTA",
-                "type": "priority"
+                "type": "priority",
+                "status": true
             },
             {
                 "id": 3,
                 "image": "tertiary",
                 "name": "ECHO",
-                "type": "priority"
+                "type": "priority",
+                "status": true
             },
             {
                 "id": 4,
                 "image": "quaternary",
                 "name": "CHARLIE",
-                "type": "radio"
+                "type": "radio",
+                "status": false
             },
             {
                 "id": 5,
                 "image": "quinary",
                 "name": "GROUND TEAM",
-                "type": "radio"
+                "type": "radio",
+                "status": false
             }
         ]
     }

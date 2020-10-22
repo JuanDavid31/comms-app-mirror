@@ -26,6 +26,7 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
         JsonElement nameJsonElement = jsonObject.get("name");
         JsonElement typeJsonElement = jsonObject.get("type");
         JsonElement imageJsonElement = jsonObject.get("image");
+        JsonElement statusJsonElement = jsonObject.get("status");
 
         JsonElement subChannelsAndMembers = jsonObject.get("subChannelsAndMembers");
         Type listType = new TypeToken<List<ChannelElement>>() {}.getType();
@@ -36,6 +37,7 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
                 nameJsonElement != null ? nameJsonElement.getAsString() : "",
                 getChannelType(typeJsonElement != null ? typeJsonElement.getAsString() : ""),
                 imageJsonElement != null ? imageJsonElement.getAsString() : "",
+                statusJsonElement != null ? statusJsonElement.getAsBoolean() : false,
                 channelElements != null ? channelElements : Collections.emptyList()
         );
     }

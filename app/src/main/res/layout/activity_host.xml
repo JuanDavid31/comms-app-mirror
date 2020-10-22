@@ -91,8 +91,7 @@
                             android:layout_height="13dp"
                             android:layout_marginLeft="6.3dp"
                             android:layout_marginBottom="12.3dp"
-
-                            android:background="#FFFFFF"
+                            android:src="@mipmap/edit_4_copy"
                             android:visibility="invisible"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -100,7 +99,7 @@
                             app:layout_constraintStart_toEndOf="@+id/fragment_description"
                             app:layout_constraintTop_toBottomOf="@+id/toolbar_title_text"
                             app:layout_constraintVertical_bias="1.0"
-                            app:srcCompat="@drawable/ic_settings"
+                            app:srcCompat="@mipmap/edit_4_copy"
                             tools:visibility="visible" />
 
                         <androidx.constraintlayout.widget.Guideline
@@ -204,28 +203,39 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.0" />
 
-                    <Button
-                        android:id="@+id/btn_close_view"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/close_layout"
                         android:layout_width="40dp"
                         android:layout_height="36.3dp"
                         android:layout_marginLeft="277.5dp"
                         android:layout_marginTop="12dp"
                         android:layout_marginRight="10.5dp"
                         android:layout_marginBottom="464.3dp"
-
-                        android:background="@drawable/ic_close"
-                        android:paddingLeft="16dp"
-                        android:paddingTop="14.3dp"
-                        android:paddingRight="15.8dp"
-
-                        android:paddingBottom="13.8dp"
+                        android:background="@color/black"
 
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintVertical_bias="0.0" >
+
+                        <Button
+                            android:id="@+id/btn_close_view"
+                            android:layout_width="8.5dp"
+                            android:layout_height="8.5dp"
+                            android:background="@mipmap/close_3_copy"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="14.3dp"
+                            android:paddingRight="15.8dp"
+                            android:paddingBottom="13.8dp"
+
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_channels"

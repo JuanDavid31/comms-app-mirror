@@ -15,13 +15,16 @@ public class Channel implements Serializable {
     public String name;
     public ChannelType type;
     public String image;
+    public boolean status;
     public List<ChannelElement> channelElements;
 
-    public Channel(int id, String name, ChannelType type, String image, List<ChannelElement> channelElements) {
+    public Channel(int id, String name, ChannelType type, String image,
+                   boolean status, List<ChannelElement> channelElements) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.image = image;
+        this.status = status;
         this.channelElements = channelElements;
     }
 
@@ -32,6 +35,7 @@ public class Channel implements Serializable {
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", image='" + image + '\'' +
+                ", status='" + status + '\'' +
                 ", subChannelsAndMembers=" + channelElements +
                 '}';
     }

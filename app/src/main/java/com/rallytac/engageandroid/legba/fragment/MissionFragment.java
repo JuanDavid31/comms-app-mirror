@@ -33,6 +33,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.legba.adapter.ChannelGroupAdapter;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.util.RUtils;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
@@ -119,7 +120,6 @@ public class MissionFragment extends Fragment {
         fragmentDescriptionText.setTextColor(this.getResources().getColor(R.color.paleRed));
         addChannel = requireActivity().findViewById(R.id.add_channel);
         addChannel.setClickable(true);
-        addChannel.setBackground(ContextCompat.getDrawable(appContext, R.drawable.ic_mic));
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
@@ -316,7 +316,7 @@ public class MissionFragment extends Fragment {
         rvChannel = requireActivity().findViewById(R.id.rv_channels);
         rvChannel.setHasFixedSize(true);
         rvChannel.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvChannel.setAdapter(new ChannelGroupAdapter(mission.channels));
+        rvChannel.setAdapter(new ChannelGroupAdapter(mission.channels, appContext));
 
         activity.binding.addChannel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,7 +325,7 @@ public class MissionFragment extends Fragment {
             }
         });
 
-        activity.binding.btnCloseView.setOnClickListener(new View.OnClickListener() {
+        activity.binding.closeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toggleLayoutVisiblity(activity.binding.channelGroupLayout);
@@ -896,47 +896,5 @@ public class MissionFragment extends Fragment {
                 super(itemView);
             }
         }
-    }
-
-    public class ChannelGroupAdapter extends RecyclerView.Adapter<ChannelGroupAdapter.ChannelGroupViewHolder>{
-
-        private List<Channel> channels;
-
-        public ChannelGroupAdapter(List<Channel> channels) {
-            this.channels = channels;
-        }
-
-        @NonNull
-        @Override
-        public ChannelGroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.channel_group_item, parent, false);
-            ChannelGroupViewHolder channelGroupViewHolder = new ChannelGroupViewHolder(view);
-            return channelGroupViewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ChannelGroupViewHolder holder, int position) {
-            holder.channelPhoto.setImageResource(RUtils.getImageResource(channels.get(position).image));
-            holder.channelNameText.setText(channels.get(position).name);
-        }
-
-        @Override
-        public int getItemCount() {
-            return channels.size();
-        }
-
-        public class ChannelGroupViewHolder extends RecyclerView.ViewHolder {
-            private ImageView channelPhoto;
-            private TextView channelNameText;
-            private TextView channelTypeText;
-
-            public ChannelGroupViewHolder(View itemView) {
-                super(itemView);
-                channelPhoto = itemView.findViewById(R.id.channel_photo);
-                channelNameText = itemView.findViewById(R.id.channel_name_text);
-                channelTypeText = itemView.findViewById(R.id.channel_type_text);
-            }
-        }
-
     }
 }
