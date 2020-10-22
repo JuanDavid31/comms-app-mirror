@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="71.5dp"
     android:layout_marginTop="6.5dp"
-    android:background="@drawable/channel_group_item_shape">
+    android:layout_marginHorizontal="3dp"
+    android:background="@drawable/channel_group_check_item_shape">
 
     <ImageView
         android:id="@+id/channel_photo"

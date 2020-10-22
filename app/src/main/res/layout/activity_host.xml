@@ -149,7 +149,7 @@
                     android:id="@+id/principal_channel_group_layout"
                     android:layout_width="328dp"
                     android:layout_height="512.5dp"
-                    android:background="@color/primaryBlack"
+                    android:background="@drawable/channel_group_layout_shape"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -167,6 +167,7 @@
                         android:layout_marginBottom="464.3dp"
                         android:background="@drawable/channel_group_item_shape"
                         android:ems="100"
+                        android:hint="New View Name"
                         android:inputType="textPersonName"
                         android:paddingLeft="17.5dp"
                         android:paddingTop="13.3dp"
@@ -179,7 +180,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.0"
-                        tools:text="Choose a name" />
+                        tools:text="New View Name" />
 
                     <Button
                         android:id="@+id/btn_create"
@@ -243,11 +244,12 @@
                         android:layout_height="461dp"
                         android:layout_marginTop="3dp"
                         android:orientation="vertical"
+
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.476"
                         app:layout_constraintStart_toStartOf="parent"
-
                         app:layout_constraintTop_toBottomOf="@+id/group_name"
                         app:layout_constraintVertical_bias="0.0"
                         tools:itemCount="7"

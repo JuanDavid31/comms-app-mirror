@@ -26,6 +26,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -62,6 +63,7 @@ public class MissionFragment extends Fragment {
     private Mission mission;
     private TextView fragmentDescriptionText;
     private ImageView addChannel;
+    private ImageView closeLayout;
     private RecyclerView rvChannel;
     private ImageView[] dotIndicators;
     private MenuItem sosAction;
@@ -120,6 +122,8 @@ public class MissionFragment extends Fragment {
         fragmentDescriptionText.setTextColor(this.getResources().getColor(R.color.paleRed));
         addChannel = requireActivity().findViewById(R.id.add_channel);
         addChannel.setClickable(true);
+        closeLayout = requireActivity().findViewById(R.id.close_layout);
+        closeLayout.setClickable(true);
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
@@ -315,22 +319,17 @@ public class MissionFragment extends Fragment {
     private void setupAddChannelMission() {
         rvChannel = requireActivity().findViewById(R.id.rv_channels);
         rvChannel.setHasFixedSize(true);
-        rvChannel.setLayoutManager(new LinearLayoutManager(getContext()));
         rvChannel.setAdapter(new ChannelGroupAdapter(mission.channels, appContext));
 
-        activity.binding.addChannel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleLayoutVisiblity(activity.binding.channelGroupLayout);
-            }
-        });
+        addChannel.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
+        closeLayout.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
+    }
 
-        activity.binding.closeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleLayoutVisiblity(activity.binding.channelGroupLayout);
-            }
-        });
+    private void setupLayoutVisibilityChannelGroup() {
+        addChannel.setClickable(addChannel.isClickable());
+        toggleLayoutVisiblity(binding.icMicCard);
+        toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
+        toggleLayoutVisiblity(activity.binding.channelGroupLayout);
     }
 
     @Override
