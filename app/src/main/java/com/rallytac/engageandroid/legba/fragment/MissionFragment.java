@@ -254,6 +254,7 @@ public class MissionFragment extends Fragment {
 
     private void setCurrentGroupId(String groupId){
         currentGroupId = groupId;
+        Globals.getEngageApplication().getEngine().engageJoinGroup(groupId);
     }
 
     private void setupViewPagerDotIndicator(List<Channel> channels) {
