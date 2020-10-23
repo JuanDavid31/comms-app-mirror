@@ -156,7 +156,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <EditText
-                        android:id="@+id/group_name"
+                        android:id="@+id/channel_group_name"
                         style="@style/openSansRegularFont"
                         android:layout_width="176.8dp"
                         android:layout_height="36.3dp"
@@ -183,14 +183,14 @@
                         tools:text="New View Name" />
 
                     <Button
-                        android:id="@+id/btn_create"
+                        android:id="@+id/btn_edit"
                         android:layout_width="70.8dp"
                         android:layout_height="36.3dp"
                         android:layout_marginLeft="197.5dp"
                         android:layout_marginTop="12dp"
                         android:layout_marginRight="59.8dp"
                         android:layout_marginBottom="464.3dp"
-                        android:background="@drawable/btn_create_group_name"
+                        android:background="@drawable/edit_channel_group_btn_fade_shape"
 
                         android:text="Create"
                         android:textAllCaps="false"
@@ -250,7 +250,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.476"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/group_name"
+                        app:layout_constraintTop_toBottomOf="@+id/channel_group_name"
                         app:layout_constraintVertical_bias="0.0"
                         tools:itemCount="7"
                         tools:listitem="@layout/channel_group_item" />

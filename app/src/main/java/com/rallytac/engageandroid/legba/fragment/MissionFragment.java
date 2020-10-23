@@ -16,6 +16,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,23 +25,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.adapter.ChannelGroupAdapter;
 import com.rallytac.engageandroid.legba.adapter.ChannelSlidePageAdapter;
-import com.rallytac.engageandroid.legba.engage.RxListener;
-import com.rallytac.engageandroid.legba.util.RUtils;
+import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.util.StringUtils;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
 import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
@@ -49,8 +46,8 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -58,7 +55,6 @@ import java.util.stream.Collectors;
 import timber.log.Timber;
 
 import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
-import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
 public class MissionFragment extends Fragment {
 
@@ -68,7 +64,9 @@ public class MissionFragment extends Fragment {
     private ChannelSlidePageAdapter cspAdapter;
     private ChannelGroupAdapter cgAdapter;
     private TextView fragmentDescriptionText;
-    private ImageView addChannel;
+    private ImageView editChannel;
+    private EditText channelGroupName;
+    private Button btnEdit;
     private View closeLayout;
     private RecyclerView rvChannel;
     private ImageView[] dotIndicators;
@@ -76,6 +74,7 @@ public class MissionFragment extends Fragment {
     private TransitionDrawable transition;
     private Context appContext;
     private MissionViewModel vm;
+    private List<ChannelGroup> channelsGroup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +82,6 @@ public class MissionFragment extends Fragment {
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
         mission = missionFragmentArgs.getMission();
         vm = new ViewModelProvider(this).get(MissionViewModel.class);
-
     }
 
     @Override
@@ -99,21 +97,18 @@ public class MissionFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
         binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
 
-        List<Channel> activeChannels = mission.channels
-                .stream()
-                .filter(channel -> channel.status)
-                .collect(Collectors.toList());
-
-        cspAdapter = new ChannelSlidePageAdapter(this, activeChannels);
+        channelsGroup = Arrays.asList(new ChannelGroup("Alpha", mission.channels),
+                new ChannelGroup("Delta", new ArrayList<>()));
+        cspAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
         binding.missionViewPager.setAdapter(cspAdapter);
 
         setupPTTOnMic();
         setupViewPagerOnPageChangeListener();
-        setupViewPagerDotIndicator(activeChannels);
+        setupViewPagerDotIndicator(channelsGroup);
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();
         updateDots(0);
-        setupAddChannelMission();
+        setupEditChannelGroup();
 
         return binding.getRoot();
     }
@@ -126,8 +121,8 @@ public class MissionFragment extends Fragment {
         requireActivity().findViewById(R.id.add_channel).setVisibility(View.VISIBLE);
         fragmentDescriptionText = requireActivity().findViewById(R.id.fragment_description);
         fragmentDescriptionText.setTextColor(this.getResources().getColor(R.color.paleRed));
-        addChannel = requireActivity().findViewById(R.id.add_channel);
-        addChannel.setClickable(true);
+        editChannel = requireActivity().findViewById(R.id.add_channel);
+        editChannel.setClickable(true);
         closeLayout = requireActivity().findViewById(R.id.close_layout);
         closeLayout.setClickable(true);
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
@@ -222,20 +217,16 @@ public class MissionFragment extends Fragment {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 updateDots(position);
-                List<Channel> activeChannels = mission.channels.stream()
-                        .filter(channel -> channel.status)
-                        .collect(Collectors.toList());
-
-                boolean validationSize = position + 1 > activeChannels.size();
-                String name = validationSize ? "" : StringUtils.capitalize(activeChannels.get(position).name);
+                boolean validationSize = position + 1 > channelsGroup.size();
+                String name = validationSize ? "" : StringUtils.capitalize(channelsGroup.get(position).name);
                 fragmentDescriptionText.setText(name);
             }
         });
     }
 
-    private void setupViewPagerDotIndicator(List<Channel> channels) {
+    private void setupViewPagerDotIndicator(List<ChannelGroup> channelGroup) {
         binding.tabLayout.removeAllViews();
-        int dotNumber = channels.size() > 1 ? channels.size() + 1 + 1 : channels.size() + 1;
+        int dotNumber = channelGroup.size() > 1 ? channelGroup.size() + 2 : channelGroup.size() + 1;
         dotIndicators = new ImageView[dotNumber];
         for (int i = 0; i < dotNumber; i++) {
             dotIndicators[i] = new ImageView(getContext());
@@ -308,16 +299,22 @@ public class MissionFragment extends Fragment {
         }
     }
 
-    private void setupAddChannelMission() {
+    private void setupEditChannelGroup() {
         cgAdapter = new ChannelGroupAdapter(mission.channels, appContext, binding.missionViewPager.getAdapter());
-
         rvChannel = requireActivity().findViewById(R.id.rv_channels);
         rvChannel.setHasFixedSize(true);
         rvChannel.setAdapter(cgAdapter);
 
-        addChannel.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
+        btnEdit = requireActivity().findViewById(R.id.btn_edit);
+        channelGroupName = requireActivity().findViewById(R.id.channel_group_name);
+        channelGroupName.setText(fragmentDescriptionText.getText());
+        btnEdit.setClickable(true);
+
+        editChannel.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
         closeLayout.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
-        activity.binding.groupName.addTextChangedListener(new TextWatcher() {
+        btnEdit.setOnClickListener(view -> editChannelGroup());
+
+        channelGroupName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -331,27 +328,60 @@ public class MissionFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 String channelNameSearch = editable.toString().toLowerCase();
-                List<Channel> channelsSearch = mission.channels.stream()
-                        .filter(channel -> channel.name.toLowerCase().startsWith(channelNameSearch))
-                        .collect(Collectors.toList());
-                cgAdapter.setChannels(channelsSearch);
+                String lastName = fragmentDescriptionText.getText().toString().toLowerCase();
+                Long validation = channelsGroup.stream()
+                        .filter(channelGroup ->
+                                thereIsAChannelGroupWith(channelNameSearch, channelGroup))
+                        .count();
+
+                if((validation < 1L && channelNameSearch.length() > 0) || lastName.equals(channelNameSearch)) {
+                    btnEdit.setClickable(true);
+                    btnEdit.setBackground(ContextCompat.getDrawable(appContext, R.drawable.edit_channel_group_btn_shape));
+                } else {
+                    btnEdit.setClickable(false);
+                    btnEdit.setBackground(ContextCompat.getDrawable(appContext, R.drawable.edit_channel_group_btn_fade_shape));
+                }
             }
-        });
-        activity.binding.btnCreate.setOnClickListener(view -> {
-            List<Channel> channels = cgAdapter.getChannels();
-            List<Channel> activeChannels = cgAdapter.getCheckChannels();
-            mission.setChannels(channels);
-            cspAdapter.setChannels(channels);
-            setupLayoutVisibilityChannelGroup();
-            setupViewPagerDotIndicator(activeChannels);
         });
     }
 
+    private void editChannelGroup() {
+        List<Channel> channels = cgAdapter.getChannels();
+        List<Channel> activeChannels = cgAdapter.getCheckChannels();
+
+        updateChannelsGroup(activeChannels);
+        setupLayoutVisibilityChannelGroup();
+        setupViewPagerDotIndicator(channelsGroup);
+
+        //mission.setChannels(channels);
+        cspAdapter.setChannelsGroup(channelsGroup);
+        updateDots(0);
+    }
+
+    private void updateChannelsGroup(List<Channel> activeChannels) {
+        String lastName = fragmentDescriptionText.getText().toString();
+        String newName = channelGroupName.getText().toString();
+
+        for(ChannelGroup channelGroup: channelsGroup) {
+            if(channelGroup.name.equals(lastName)) {
+                channelGroup.name = newName;
+                channelGroup.channels = activeChannels;
+                fragmentDescriptionText.setText(newName);
+                break;
+            }
+        }
+    }
+
     private void setupLayoutVisibilityChannelGroup() {
-        addChannel.setClickable(addChannel.isClickable());
+        channelGroupName.setText(fragmentDescriptionText.getText().toString());
+        editChannel.setClickable(!editChannel.isClickable());
         toggleLayoutVisiblity(binding.icMicCard);
         toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
         toggleLayoutVisiblity(activity.binding.channelGroupLayout);
+    }
+
+    private boolean thereIsAChannelGroupWith(String channelNameSearch, ChannelGroup channelGroup) {
+        return channelGroup.name.toLowerCase().equals(channelNameSearch);
     }
 
     @Override
