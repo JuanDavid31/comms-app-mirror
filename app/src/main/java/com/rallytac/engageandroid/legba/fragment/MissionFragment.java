@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,6 +35,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
 import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
@@ -74,7 +76,7 @@ public class MissionFragment extends Fragment {
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
         mission = missionFragmentArgs.getMission();
         vm = new ViewModelProvider(this).get(MissionViewModel.class);
-
+        //DataManager.getInstance(appContext).switchToMissionOnEngageEngine(mission.id);
     }
 
     @Override
@@ -253,6 +255,7 @@ public class MissionFragment extends Fragment {
     }
 
     private void setCurrentGroupId(String groupId){
+        Timber.i("Before joining a new group %s ", Globals.getEngageApplication().getActiveConfiguration().getMissionId());
         currentGroupId = groupId;
         Globals.getEngageApplication().getEngine().engageJoinGroup(groupId);
     }

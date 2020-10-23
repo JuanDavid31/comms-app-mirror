@@ -2008,7 +2008,7 @@ public class SimpleUiMainActivity
 
     private void recreateWhenEngineIsRestarted()
     {
-        Globals.getEngageApplication().restartEngine();
+        Globals.getEngageApplication().restartEngine(); //Come back
 
         _waitForEngineStartedTimer = new Timer();
         _waitForEngineStartedTimer.scheduleAtFixedRate(new TimerTask()

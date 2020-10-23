@@ -2012,21 +2012,10 @@ public class EngageApplication
             synchronized (groupIds) {
                 for (String id : groupIds) {
                     MissionDatabase database = MissionDatabase.load(Globals.getSharedPreferences(), Constants.MISSION_DATABASE_NAME);
-
-
-                    database._missions.forEach(m -> {
-                        Timber.i(m.toJson().toString());
-                        m._groups.forEach(g -> Timber.i(g.toJson().toString()));
-                    });
-
                     String currentMissionId = activeConfiguration.getMissionId();
 
-                    //Timber.i("getNodeId -> %s ", activeConfiguration.getNodeId()); //User id
                     Timber.i("CurrentMissionId -> %s ", currentMissionId);
                     Timber.i("CurrentMissionName ->%s ", activeConfiguration.getMissionName());
-                    Timber.i("group id %s", id);
-
-
 
                     getEngine().engageBeginGroupTxAdvanced(id, buildAdvancedTxJson(flags, priority, 0, true, _activeConfiguration.getUserAlias()));
                 }

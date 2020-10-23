@@ -2,6 +2,7 @@ package com.rallytac.engageandroid.legba.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -111,7 +112,7 @@ public class DataManager {
                 }).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private void updateDB() {
+    public void updateDB() {
         SharedPreferences sharedPreferences = Globals.getSharedPreferences();
         db.save(sharedPreferences, Constants.MISSION_DATABASE_NAME);
     }
@@ -123,8 +124,11 @@ public class DataManager {
                 .findAny()
                 .ifPresent(m -> {
                     Globals.getEngageApplication().switchToMission(missionId);
+                    Globals.getEngageApplication().getActiveConfiguration().set_missionId(missionId);
                     Timber.i("MissionId updated to %s ", missionId);
                 });
+        updateDB();
+        Globals.getEngageApplication().restartEngine();
     }
 
 }
