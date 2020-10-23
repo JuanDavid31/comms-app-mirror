@@ -97,8 +97,9 @@ public class MissionFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
         binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
 
-        channelsGroup = Arrays.asList(new ChannelGroup("Alpha", mission.channels),
+        channelsGroup = Arrays.asList(new ChannelGroup("Alpha", mission.channels.stream().limit(3).collect(Collectors.toList())),
                 new ChannelGroup("Delta", new ArrayList<>()));
+        fragmentDescriptionText.setText(channelsGroup.get(0).name);
         cspAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
         binding.missionViewPager.setAdapter(cspAdapter);
 
@@ -378,6 +379,29 @@ public class MissionFragment extends Fragment {
         toggleLayoutVisiblity(binding.icMicCard);
         toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
         toggleLayoutVisiblity(activity.binding.channelGroupLayout);
+
+        String channelName = fragmentDescriptionText.getText().toString();
+        ChannelGroup channelGroup = channelsGroup.stream()
+                .filter(channelCurrent -> channelCurrent.name.equals(channelName))
+                .findFirst()
+                .get();
+
+        for(Channel currentChannel: mission.channels) {
+            currentChannel.status = false;
+        }
+
+        List<Channel> activeChannels = mission.channels.stream()
+                .map(channel -> {
+                    for(Channel currentChannel: channelGroup.channels) {
+                        if(currentChannel.name.equals(channel.name)) {
+                            channel.status = true;
+                            break;
+                        }
+                    }
+                    return channel;
+                })
+                .collect(Collectors.toList());
+        cgAdapter.setChannels(activeChannels);
     }
 
     private boolean thereIsAChannelGroupWith(String channelNameSearch, ChannelGroup channelGroup) {
