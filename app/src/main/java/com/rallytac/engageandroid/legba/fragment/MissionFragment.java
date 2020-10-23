@@ -99,17 +99,17 @@ public class MissionFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
         binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
 
-        List<Channel> nonRadioChannels = mission.channels
+        List<Channel> activeChannels = mission.channels
                 .stream()
                 .filter(channel -> channel.status)
                 .collect(Collectors.toList());
 
-        cspAdapter = new ChannelSlidePageAdapter(this, nonRadioChannels);
+        cspAdapter = new ChannelSlidePageAdapter(this, activeChannels);
         binding.missionViewPager.setAdapter(cspAdapter);
 
         setupPTTOnMic();
         setupViewPagerOnPageChangeListener();
-        setupViewPagerDotIndicator(nonRadioChannels);
+        setupViewPagerDotIndicator(activeChannels);
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();
         updateDots(0);
@@ -222,8 +222,12 @@ public class MissionFragment extends Fragment {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 updateDots(position);
-                boolean validationSize = position + 1 > mission.channels.size();
-                String name = validationSize ? "" : StringUtils.capitalize(mission.channels.get(position).name);
+                List<Channel> activeChannels = mission.channels.stream()
+                        .filter(channel -> channel.status)
+                        .collect(Collectors.toList());
+
+                boolean validationSize = position + 1 > activeChannels.size();
+                String name = validationSize ? "" : StringUtils.capitalize(activeChannels.get(position).name);
                 fragmentDescriptionText.setText(name);
             }
         });
@@ -326,7 +330,7 @@ public class MissionFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String channelNameSearch = activity.binding.groupName.getText().toString().toLowerCase();
+                String channelNameSearch = editable.toString().toLowerCase();
                 List<Channel> channelsSearch = mission.channels.stream()
                         .filter(channel -> channel.name.toLowerCase().startsWith(channelNameSearch))
                         .collect(Collectors.toList());
@@ -335,10 +339,11 @@ public class MissionFragment extends Fragment {
         });
         activity.binding.btnCreate.setOnClickListener(view -> {
             List<Channel> channels = cgAdapter.getChannels();
+            List<Channel> activeChannels = cgAdapter.getCheckChannels();
             mission.setChannels(channels);
             cspAdapter.setChannels(channels);
             setupLayoutVisibilityChannelGroup();
-            setupViewPagerDotIndicator(channels); //TODO: FIX.
+            setupViewPagerDotIndicator(activeChannels);
         });
     }
 
