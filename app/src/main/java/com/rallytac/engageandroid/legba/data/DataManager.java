@@ -129,12 +129,13 @@ public class DataManager {
                     Timber.i("MissionId updated to %s ", mission);
                 });
         updateDB();
-        Globals.getEngageApplication().restartEngine();
 
+        Globals.getEngageApplication().restartEngine();
         mission.channels.forEach(channel -> {
             Globals.getEngageApplication().getEngine().engageSetGroupRxVolume(channel.id, 100, 100);
             Globals.getEngageApplication().getEngine().engageJoinGroup(channel.id);
         });
+        Globals.getEngageApplication().updateActiveConfiguration();
     }
 
     private void initEngine(){

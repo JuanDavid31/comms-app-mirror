@@ -1135,7 +1135,7 @@ public class EngageApplication
             obj.put(Engine.JsonFields.AdvancedTxParams.priority, priority);
             obj.put(Engine.JsonFields.AdvancedTxParams.subchannelTag, subchannelTag);
             obj.put(Engine.JsonFields.AdvancedTxParams.includeNodeId, includeNodeId);
-            obj.put(Engine.JsonFields.AdvancedTxParams.muted, true);
+            obj.put(Engine.JsonFields.AdvancedTxParams.muted, false);
 
             if (!Utils.isEmptyString(alias)) {
                 obj.put("alias", alias);
@@ -1248,6 +1248,7 @@ public class EngageApplication
                 getEngine().engageCreateGroup(buildFinalGroupJsonConfiguration(gd.jsonConfiguration));
                 if (gd.type == GroupDescriptor.Type.gtAudio) {
                     VolumeLevels vl = loadVolumeLevels(gd.id);
+                    Timber.i("Group id %s Volume left %s Volume right %s", gd.id, vl.left, vl.right);
                     getEngine().engageSetGroupRxVolume(gd.id, vl.left, vl.right);
                 }
             }
