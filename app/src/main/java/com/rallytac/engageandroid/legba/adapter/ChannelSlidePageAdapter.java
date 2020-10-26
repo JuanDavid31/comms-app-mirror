@@ -1,6 +1,5 @@
 package com.rallytac.engageandroid.legba.adapter;
 
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -24,12 +20,10 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.fragment.MissionFragment;
-import com.rallytac.engageandroid.legba.fragment.MissionFragmentDirections;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
@@ -48,7 +42,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
     private boolean orange = false;
 
     private boolean isPrimarySpeakerOn = true;
-    private boolean isPriority1SpekearOn = true;
+    private boolean isPriority1SpeakerOn = true;
     private boolean isPriority2SpeakerOn = true;
 
     private int position;
@@ -66,7 +60,12 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
     @Override
     public int getItemViewType(int position) {
         if (position < channelsGroup.size()) {
-            return RESUME_CHANNELS_ITEM;
+            if(channelsGroup.get(position).channels.size() < 4){
+                return RESUME_CHANNELS_ITEM;
+            }else {
+                // TODO: new holder type
+                return ADD_CHANNEL_ITEM;
+            }
         } else {
             return ADD_CHANNEL_ITEM;
         }
@@ -95,23 +94,27 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) channelResumeHolder.primaryChannel.getLayoutParams();
             int currentOrientation = fragment.getResources().getConfiguration().orientation;
 
-            if (channelsGroup.get(position).channels.size() < 1) {
+            int currentChannelGroupSize = channelsGroup.get(position).channels.size();
+
+            if (currentChannelGroupSize < 1) {
                 channelResumeHolder.primaryChannel.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             }
 
+            Channel firstGroup = channelsGroup.get(position).channels.get(0);
+
             channelResumeHolder.primaryChannel.setVisibility(View.VISIBLE);
-            channelResumeHolder.primaryChannelImage.setImageResource(getImageResource(channelsGroup.get(position).channels.get(0).image));
-            channelResumeHolder.primaryChannelName.setText(channelsGroup.get(position).channels.get(0).name);
+            channelResumeHolder.primaryChannelImage.setImageResource(getImageResource(firstGroup.image));
+            channelResumeHolder.primaryChannelName.setText(firstGroup.name);
             toggleSpeakerIcon(isPrimarySpeakerOn, channelResumeHolder.primaryChannelSpeaker);
             channelResumeHolder.primaryChannelSpeaker.setOnClickListener(view -> {
                 isPrimarySpeakerOn = !isPrimarySpeakerOn;
                 toggleSpeakerIcon(isPrimarySpeakerOn, (ImageView) view);
             });
 
-            if (channelsGroup.get(position).channels.size() < 2) {
+            if (currentChannelGroupSize < 2) {
                 lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
                 lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 lp.bottomMargin = 0;
@@ -132,23 +135,27 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 channelResumeHolder.primaryChannel.setLayoutParams(lp);
             }
 
+            Channel secondGroup = channelsGroup.get(position).channels.get(1);
+
             channelResumeHolder.priorityChannel1.setVisibility(View.VISIBLE);
-            channelResumeHolder.priorityChannel1Image.setImageResource(getImageResource(channelsGroup.get(position).channels.get(1).image));
-            channelResumeHolder.priorityChannel1Name.setText(channelsGroup.get(position).channels.get(1).name);
-            toggleSpeakerIcon(isPriority1SpekearOn, channelResumeHolder.priorityChannel1Speaker);
+            channelResumeHolder.priorityChannel1Image.setImageResource(getImageResource(secondGroup.image));
+            channelResumeHolder.priorityChannel1Name.setText(secondGroup.name);
+            toggleSpeakerIcon(isPriority1SpeakerOn, channelResumeHolder.priorityChannel1Speaker);
             channelResumeHolder.priorityChannel1Speaker.setOnClickListener(view -> {
-                isPriority1SpekearOn = !isPriority1SpekearOn;
-                toggleSpeakerIcon(isPriority1SpekearOn, (ImageView) view);
+                isPriority1SpeakerOn = !isPriority1SpeakerOn;
+                toggleSpeakerIcon(isPriority1SpeakerOn, (ImageView) view);
             });
 
-            if (channelsGroup.get(position).channels.size() < 3) {
+            if (currentChannelGroupSize < 3) {
                 channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             }
 
+            Channel thirdChannel = channelsGroup.get(position).channels.get(2);
+
             channelResumeHolder.priorityChannel2.setVisibility(View.VISIBLE);
-            channelResumeHolder.priorityChannel2Image.setImageResource(getImageResource(channelsGroup.get(position).channels.get(2).image));
-            channelResumeHolder.priorityChannel2Name.setText(channelsGroup.get(position).channels.get(2).name);
+            channelResumeHolder.priorityChannel2Image.setImageResource(getImageResource(thirdChannel.image));
+            channelResumeHolder.priorityChannel2Name.setText(thirdChannel.name);
             toggleSpeakerIcon(isPriority2SpeakerOn, channelResumeHolder.priorityChannel2Speaker);
             channelResumeHolder.priorityChannel2Speaker.setOnClickListener(view -> {
                 isPriority2SpeakerOn = !isPriority2SpeakerOn;
@@ -539,11 +546,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             this.fragment = (MissionFragment) fragment;
 
             imgCreateChannelGroup = itemView.findViewById(R.id.img_create_channel_group);
-            imgCreateChannelGroup.setOnClickListener(view -> {
-                this.fragment.setupLayoutVisibilityChannelGroup();
-                this.fragment.getBtnEdit().setClickable(false);
-
-            });
+            imgCreateChannelGroup.setOnClickListener(view -> this.fragment.toggleCreateEditChannelsGroupLayoutvisibility());
         }
     }
 }

@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rallytac.engageandroid.R;
@@ -20,18 +19,16 @@ import com.rallytac.engageandroid.legba.util.RUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ChannelGroupAdapter extends RecyclerView.Adapter<ChannelGroupAdapter.ChannelGroupViewHolder>{
+public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.ChannelGroupViewHolder>{
 
     private List<Channel> channels;
-    private MissionFragment fragment;
     private Context context;
 
     private int priorityIndicator = 1;
     private int radioIndicator = 1;
 
-    public ChannelGroupAdapter(List<Channel> channels, MissionFragment fragment) {
+    public ChannelListAdapter(List<Channel> channels, MissionFragment fragment) {
         this.channels = channels;
-        this.fragment = fragment;
         this.context = fragment.getAppContext();
     }
 
@@ -39,7 +36,7 @@ public class ChannelGroupAdapter extends RecyclerView.Adapter<ChannelGroupAdapte
         return channels;
     }
 
-    public List<Channel> getCheckChannels() {
+    public List<Channel> getCheckedChannels() {
         return channels.stream()
                 .filter(channel -> channel.status)
                 .collect(Collectors.toList());
@@ -70,7 +67,7 @@ public class ChannelGroupAdapter extends RecyclerView.Adapter<ChannelGroupAdapte
         holder.principalLayoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getCheckChannels().size() < 2 && channel.status) return;
+                if(getCheckedChannels().size() < 2 && channel.status) return;
                 channel.status = !channel.status;
                 channels.set(position, channel);
                 setupCheckChannel(holder, channel);

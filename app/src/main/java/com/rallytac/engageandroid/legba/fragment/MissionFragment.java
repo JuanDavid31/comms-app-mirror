@@ -16,12 +16,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -34,7 +31,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
-import com.rallytac.engageandroid.legba.adapter.ChannelGroupAdapter;
+import com.rallytac.engageandroid.legba.adapter.ChannelListAdapter;
 import com.rallytac.engageandroid.legba.adapter.ChannelSlidePageAdapter;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.util.StringUtils;
@@ -46,7 +43,6 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -61,20 +57,14 @@ public class MissionFragment extends Fragment {
     private HostActivity activity;
     private FragmentMissionBinding binding;
     private Mission mission;
-    private ChannelSlidePageAdapter cspAdapter;
-    private ChannelGroupAdapter cgAdapter;
-    private TextView fragmentDescriptionText;
-    private ImageView editChannel;
-    private EditText channelGroupName;
-    private Button btnEdit;
-    private View closeLayout;
-    private RecyclerView rvChannel;
+    private ChannelSlidePageAdapter channelSlidePageAdapter;
+    private ChannelListAdapter channelListAdapter;
     private ImageView[] dotIndicators;
     private MenuItem sosAction;
     private TransitionDrawable transition;
     private Context appContext;
     private MissionViewModel vm;
-    private List<ChannelGroup> channelsGroup;
+    private int currentPage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,10 +87,10 @@ public class MissionFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
         binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
 
-        channelsGroup = Arrays.asList(new ChannelGroup("Alpha", mission.channels.stream().limit(3).collect(Collectors.toList())),
-                new ChannelGroup("Delta", new ArrayList<>()));
-        cspAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
-        binding.missionViewPager.setAdapter(cspAdapter);
+        List<ChannelGroup> channelsGroup = getInitialChannelsGroup();
+
+        channelSlidePageAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
+        binding.missionViewPager.setAdapter(channelSlidePageAdapter);
 
         setupPTTOnMic();
         setupViewPagerOnPageChangeListener();
@@ -108,7 +98,7 @@ public class MissionFragment extends Fragment {
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();
         updateDots(0);
-        setupEditChannelGroup();
+        setupEditCurrentChannelGroupLayout();
 
         return binding.getRoot();
     }
@@ -121,30 +111,13 @@ public class MissionFragment extends Fragment {
         return appContext;
     }
 
-    public ChannelGroupAdapter getCgAdapter() {
-        return cgAdapter;
-    }
-
-    public View getCloseLayout() {
-        return closeLayout;
-    }
-
-    public Button getBtnEdit() {
-        return btnEdit;
-    }
-
     private void updateToolbar() {
-        requireActivity().findViewById(R.id.logo_image).setVisibility(View.VISIBLE);
-        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
-        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(mission.name);
-        requireActivity().findViewById(R.id.fragment_description).setVisibility(View.VISIBLE);
-        requireActivity().findViewById(R.id.add_channel).setVisibility(View.VISIBLE);
-        fragmentDescriptionText = requireActivity().findViewById(R.id.fragment_description);
-        fragmentDescriptionText.setTextColor(this.getResources().getColor(R.color.paleRed));
-        editChannel = requireActivity().findViewById(R.id.add_channel);
-        editChannel.setClickable(true);
-        closeLayout = requireActivity().findViewById(R.id.close_layout);
-        closeLayout.setClickable(true);
+        activity.binding.logoImage.setVisibility(View.VISIBLE);
+        activity.binding.toolbarTitleText.setVisibility(View.VISIBLE);
+        activity.binding.toolbarTitleText.setText(mission.name);
+        activity.binding.fragmentDescription.setVisibility(View.VISIBLE);
+        activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
+        activity.binding.fragmentDescription.setTextColor(this.getResources().getColor(R.color.paleRed));
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
@@ -214,6 +187,26 @@ public class MissionFragment extends Fragment {
         });
     }
 
+    private List<ChannelGroup> getInitialChannelsGroup() {
+        if (vm.getChannelsGroup().size() > 0) {
+            return vm.getChannelsGroup();
+        }
+        List<Channel> page1List = mission.channels.stream().limit(1).collect(Collectors.toList());
+        List<Channel> page2List = mission.channels.stream().limit(2).collect(Collectors.toList());
+        List<Channel> page3List = mission.channels.stream().limit(3).collect(Collectors.toList());
+        List<Channel> page4List = mission.channels.stream().limit(4).collect(Collectors.toList());
+        List<Channel> page5List = mission.channels.stream().limit(5).collect(Collectors.toList());
+
+        ChannelGroup channelGroup = new ChannelGroup("First", page1List);
+        ChannelGroup channelGroup1 = new ChannelGroup("Delta", page2List);
+        ChannelGroup channelGroup2 = new ChannelGroup("Third", page3List);
+        ChannelGroup channelGroup3 = new ChannelGroup("Echo", page4List);
+        ChannelGroup channelGroup4 = new ChannelGroup("charlie", page5List);
+
+        vm.setChannelGroups(Arrays.asList(channelGroup, channelGroup1, channelGroup2, channelGroup3, channelGroup4));
+        return vm.getChannelsGroup();
+    }
+
     private void setupPTTOnMic() {
         binding.icMicCard.setOnTouchListener((v, event) -> {
 
@@ -236,21 +229,22 @@ public class MissionFragment extends Fragment {
         binding.missionViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                currentPage = position;
                 updateDots(position);
-                if(position < channelsGroup.size()) {
-                    editChannel.setVisibility(View.VISIBLE);
-                    String name = StringUtils.capitalize(channelsGroup.get(position).name);
-                    fragmentDescriptionText.setText(name);
-                } else {
-                    fragmentDescriptionText.setText("");
-                    editChannel.setVisibility(View.GONE);
-                }
 
+                if (position < vm.getChannelsGroup().size()) {
+                    activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
+                    String name = StringUtils.capitalize(vm.getChannelsGroup().get(position).name);
+                    activity.binding.fragmentDescription.setText(name);
+                } else {
+                    activity.binding.fragmentDescription.setText("");
+                    activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
+                }
             }
         });
     }
 
-    private void setupViewPagerDotIndicator(List<ChannelGroup> channelGroup) {
+    private void setupViewPagerDotIndicator(List channelGroup) {
         binding.tabLayout.removeAllViews();
         int dotNumber = channelGroup.size() + 1;
         dotIndicators = new ImageView[dotNumber];
@@ -295,7 +289,6 @@ public class MissionFragment extends Fragment {
         List<Channel> radioChannels = mission.channels
                 .stream()
                 .filter(channel -> channel.type != null)
-                //.filter(channel -> channel.type == Channel.ChannelType.RADIO)
                 .collect(Collectors.toList());
 
         RadioChannelsRecyclerViewAdapter adapter = new RadioChannelsRecyclerViewAdapter(new RadioChannelsRecyclerViewAdapter.AdapterDiffCallback(), this);
@@ -325,20 +318,17 @@ public class MissionFragment extends Fragment {
         }
     }
 
-    private void setupEditChannelGroup() {
-        cgAdapter = new ChannelGroupAdapter(mission.channels, this);
-        rvChannel = requireActivity().findViewById(R.id.rv_channels);
-        rvChannel.setHasFixedSize(true);
-        rvChannel.setAdapter(cgAdapter);
+    private void setupEditCurrentChannelGroupLayout() {
+        channelListAdapter = new ChannelListAdapter(mission.channels, this);
+        activity.binding.channelsRecycler.setHasFixedSize(true);
+        activity.binding.channelsRecycler.setAdapter(channelListAdapter);
 
-        btnEdit = requireActivity().findViewById(R.id.btn_edit);
-        channelGroupName = requireActivity().findViewById(R.id.channel_group_name);
+        activity.binding.editCurrentChannelGroupButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility());
+        activity.binding.closeCreateEditChannelsViewLayout.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility());
+        activity.binding.closeCreateEditChannelsViewButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility()); //TODO: Replace for a proper fix
+        activity.binding.createEditChannelsGroupButton.setOnClickListener(view -> updateCurrentChannelsGroup());
 
-        editChannel.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
-        closeLayout.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
-        btnEdit.setOnClickListener(view -> editChannelGroup());
-
-        channelGroupName.addTextChangedListener(new TextWatcher() {
+        activity.binding.channelGroupNameText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -351,84 +341,63 @@ public class MissionFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String channelNameSearch = editable.toString().toLowerCase();
-                String lastName = fragmentDescriptionText.getText().toString().toLowerCase();
-                Long validation = channelsGroup.stream()
-                        .filter(channelGroup ->
-                                thereIsAChannelGroupWith(channelNameSearch, channelGroup))
+                String channelGroupNameSearch = editable.toString().toLowerCase();
+                Long coincidences = vm.getChannelsGroup().stream()
+                        .filter(channelGroup -> channelGroup.name.equalsIgnoreCase(channelGroupNameSearch))
                         .count();
 
-                if((validation < 1L && channelNameSearch.length() > 0) || lastName.equals(channelNameSearch)) {
-                    btnEdit.setClickable(true);
-                    btnEdit.setBackground(ContextCompat.getDrawable(appContext, R.drawable.edit_channel_group_btn_shape));
+                if (coincidences < 1L && channelGroupNameSearch.length() > 0) {
+                    activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(appContext, R.drawable.edit_channel_group_btn_shape));
                 } else {
-                    btnEdit.setClickable(false);
-                    btnEdit.setBackground(ContextCompat.getDrawable(appContext, R.drawable.edit_channel_group_btn_fade_shape));
+                    activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(appContext, R.drawable.edit_channel_group_btn_fade_shape));
                 }
             }
         });
     }
 
-    private void editChannelGroup() {
-        List<Channel> channels = cgAdapter.getChannels();
-        List<Channel> activeChannels = cgAdapter.getCheckChannels();
+    private void updateCurrentChannelsGroup() { //TODO: Come back here
+        List<Channel> channels = channelListAdapter.getChannels();
 
-        updateChannelsGroup(activeChannels);
-        setupLayoutVisibilityChannelGroup();
-        setupViewPagerDotIndicator(channelsGroup);
+        updateNameAndActiveChannelsOnCurrentChannelsGroup(channels);
+        toggleCreateEditChannelsGroupLayoutvisibility();
+        //setupViewPagerDotIndicator(channelsGroup); //Makes no sense unless you can delete or create pages
 
-        //mission.setChannels(channels);
-        cspAdapter.setChannelsGroup(channelsGroup);
+        channelSlidePageAdapter.setChannelsGroup(vm.getChannelsGroup());
         updateDots(0);
     }
 
-    private void updateChannelsGroup(List<Channel> activeChannels) {
-        String lastName = fragmentDescriptionText.getText().toString();
-        String newName = channelGroupName.getText().toString();
+    private void updateNameAndActiveChannelsOnCurrentChannelsGroup(List<Channel> channels) {
+        String oldName = activity.binding.fragmentDescription.getText().toString();
+        String newName = activity.binding.channelGroupNameText.getText().toString();
 
-        for(ChannelGroup channelGroup: channelsGroup) {
-            if(channelGroup.name.equals(lastName)) {
-                channelGroup.name = newName;
-                channelGroup.channels = activeChannels;
-                fragmentDescriptionText.setText(newName);
-                break;
-            }
-        }
+        vm.getChannelsGroup()
+                .stream()
+                .filter(channelGroup -> channelGroup.name.equals(oldName))
+                .findFirst()
+                .ifPresent(channelGroup -> {
+                    channelGroup.name = newName;
+                    channelGroup.channels = channels;
+                });
     }
 
-    public void setupLayoutVisibilityChannelGroup() {
-        channelGroupName.setText(fragmentDescriptionText.getText().toString());
-        editChannel.setClickable(!editChannel.isClickable());
+    public void toggleCreateEditChannelsGroupLayoutvisibility() {
+        activity.binding.channelGroupNameText.setText(activity.binding.fragmentDescription.getText().toString());
         toggleLayoutVisiblity(binding.icMicCard);
         toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
         toggleLayoutVisiblity(activity.binding.channelGroupLayout);
 
-        String channelName = fragmentDescriptionText.getText().toString();
-        ChannelGroup channelGroup = channelsGroup.stream()
-                .filter(channelCurrent -> channelCurrent.name.equals(channelName))
+        String currentChannelGroupName = activity.binding.fragmentDescription.getText().toString();
+        ChannelGroup currentChannelGroup = vm.getChannelsGroup()
+                .stream()
+                .filter(channelGroup -> channelGroup.name.equals(currentChannelGroupName)) // channelGroup.name.toLowerCase().equals(channelNameSearch)
                 .findFirst()
                 .get();
 
-        for(Channel currentChannel: mission.channels) {
+        for (Channel currentChannel : mission.channels) {
             currentChannel.status = false;
         }
 
-        List<Channel> activeChannels = mission.channels.stream()
-                .map(channel -> {
-                    for(Channel currentChannel: channelGroup.channels) {
-                        if(currentChannel.name.equals(channel.name)) {
-                            channel.status = true;
-                            break;
-                        }
-                    }
-                    return channel;
-                })
-                .collect(Collectors.toList());
-        cgAdapter.setChannels(activeChannels);
-    }
-
-    private boolean thereIsAChannelGroupWith(String channelNameSearch, ChannelGroup channelGroup) {
-        return channelGroup.name.toLowerCase().equals(channelNameSearch);
+        channelListAdapter.setChannels(currentChannelGroup.channels);
     }
 
     @Override
@@ -448,7 +417,6 @@ public class MissionFragment extends Fragment {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         toggleLayoutVisiblity(activity.binding.sosOverlapLayout);
-                        //toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
                         return true;
                     case MotionEvent.ACTION_UP:
                         activity.binding.sosSwipeButton.dispatchTouchEvent(MotionEvent.obtain(event.getDownTime(),
