@@ -93,6 +93,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         if (holder instanceof ChannelResumeViewHolder) {
             ChannelResumeViewHolder channelResumeHolder = (ChannelResumeViewHolder) holder;
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) channelResumeHolder.primaryChannel.getLayoutParams();
+            int currentOrientation = fragment.getResources().getConfiguration().orientation;
 
             if (channelsGroup.get(position).channels.size() < 1) {
                 channelResumeHolder.primaryChannel.setVisibility(View.GONE);
@@ -113,13 +114,11 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             if (channelsGroup.get(position).channels.size() < 2) {
                 lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
                 lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                lp.setMarginStart(6);
                 channelResumeHolder.primaryChannel.setLayoutParams(lp);
                 channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             } else {
-                int currentOrientation = fragment.getResources().getConfiguration().orientation;
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
                     lp.width = (int) fragment.getResources().getDimension(R.dimen.primary_channel_width_landscape);
                 }
@@ -128,7 +127,6 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 }
                 channelResumeHolder.primaryChannel.setLayoutParams(lp);
             }
-
 
             channelResumeHolder.priorityChannel1.setVisibility(View.VISIBLE);
             channelResumeHolder.priorityChannel1Image.setImageResource(getImageResource(channelsGroup.get(position).channels.get(1).image));
