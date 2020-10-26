@@ -613,8 +613,12 @@ public class MissionFragment extends Fragment {
 
         private void toggleSpeakerIcon(boolean isOn, ImageView button) {
             if (isOn) {
+                Timber.i("Unmuting");
+                Globals.getEngageApplication().getEngine().engageUnmuteGroupRx("{G1}");
                 button.setImageResource(R.drawable.ic_speaker);
             } else {
+                Timber.i("Muting");
+                Globals.getEngageApplication().getEngine().engageMuteGroupRx("{G1}");
                 button.setImageResource(R.drawable.ic_speaker_off);
             }
         }

@@ -132,7 +132,16 @@ public class DataManager {
 
         Globals.getEngageApplication().restartEngine();
         mission.channels.forEach(channel -> {
-            Globals.getEngageApplication().getEngine().engageSetGroupRxVolume(channel.id, 100, 100);
+
+            if (channel.id.equals("{G1}")){
+                Timber.i("No volume");
+                //Globals.getEngageApplication().getEngine().engageSetGroupRxVolume(channel.id, 0, 0);
+                Globals.getEngageApplication().getEngine().engageMuteGroupRx(channel.id);
+            }else {
+                Timber.i("Very loud volume");
+                //Globals.getEngageApplication().getEngine().engageSetGroupRxVolume(channel.id, 100, 100);
+            }
+
             Globals.getEngageApplication().getEngine().engageJoinGroup(channel.id);
         });
         Globals.getEngageApplication().updateActiveConfiguration();
