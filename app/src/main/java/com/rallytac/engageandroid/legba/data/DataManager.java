@@ -6,6 +6,7 @@ import android.provider.Settings;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.rallytac.engage.engine.Engine;
 import com.rallytac.engageandroid.Constants;
 import com.rallytac.engageandroid.DatabaseGroup;
 import com.rallytac.engageandroid.DatabaseMission;
@@ -117,18 +118,31 @@ public class DataManager {
         db.save(sharedPreferences, Constants.MISSION_DATABASE_NAME);
     }
 
-    public void switchToMissionOnEngageEngine(String missionId) {
+    public void switchToMissionOnEngageEngine(Mission mission) {
         db._missions
                 .stream()
-                .filter(m -> m._id.equals(missionId))
+                .filter(m -> m._id.equals(mission.id))
                 .findAny()
                 .ifPresent(m -> {
-                    Globals.getEngageApplication().switchToMission(missionId);
-                    Globals.getEngageApplication().getActiveConfiguration().set_missionId(missionId);
-                    Timber.i("MissionId updated to %s ", missionId);
+                    Globals.getEngageApplication().switchToMission(mission.id);
+                    Globals.getEngageApplication().getActiveConfiguration().set_missionId(mission.id);
+                    Timber.i("MissionId updated to %s ", mission);
                 });
         updateDB();
         Globals.getEngageApplication().restartEngine();
+
+        mission.channels.forEach(channel -> {
+            Globals.getEngageApplication().getEngine().engageSetGroupRxVolume(channel.id, 100, 100);
+            Globals.getEngageApplication().getEngine().engageJoinGroup(channel.id);
+        });
+    }
+
+    private void initEngine(){
+        Engine engine = Globals.getEngageApplication().getEngine();
+
+        //engine.engageOpenCertStore() // ?
+        //engine.engageInitialize() // ?
+        engine.engageStart();
     }
 
 }

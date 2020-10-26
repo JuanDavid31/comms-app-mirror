@@ -2402,8 +2402,8 @@ public class EngageApplication
                 _engineRunning = true;
                 createAllGroupObjects();
                 joinSelectedGroups();
-                startLocationUpdates();
-                startHardwareButtonManager();
+                startLocationUpdates(); // Bussiness logic
+                startHardwareButtonManager(); // Bussiness logic
             }
         });
     }
