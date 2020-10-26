@@ -192,6 +192,7 @@
                         android:layout_marginBottom="464.3dp"
                         android:background="@drawable/edit_channel_group_btn_fade_shape"
 
+                        android:clickable="true"
                         android:text="Create"
                         android:textAllCaps="false"
                         android:textColor="#fefefe"

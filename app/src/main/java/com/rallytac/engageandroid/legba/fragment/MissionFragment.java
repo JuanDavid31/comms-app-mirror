@@ -99,7 +99,6 @@ public class MissionFragment extends Fragment {
 
         channelsGroup = Arrays.asList(new ChannelGroup("Alpha", mission.channels.stream().limit(3).collect(Collectors.toList())),
                 new ChannelGroup("Delta", new ArrayList<>()));
-        fragmentDescriptionText.setText(channelsGroup.get(0).name);
         cspAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
         binding.missionViewPager.setAdapter(cspAdapter);
 
@@ -112,6 +111,26 @@ public class MissionFragment extends Fragment {
         setupEditChannelGroup();
 
         return binding.getRoot();
+    }
+
+    public Mission getMission() {
+        return mission;
+    }
+
+    public Context getAppContext() {
+        return appContext;
+    }
+
+    public ChannelGroupAdapter getCgAdapter() {
+        return cgAdapter;
+    }
+
+    public View getCloseLayout() {
+        return closeLayout;
+    }
+
+    public Button getBtnEdit() {
+        return btnEdit;
     }
 
     private void updateToolbar() {
@@ -218,16 +237,22 @@ public class MissionFragment extends Fragment {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 updateDots(position);
-                boolean validationSize = position + 1 > channelsGroup.size();
-                String name = validationSize ? "" : StringUtils.capitalize(channelsGroup.get(position).name);
-                fragmentDescriptionText.setText(name);
+                if(position < channelsGroup.size()) {
+                    editChannel.setVisibility(View.VISIBLE);
+                    String name = StringUtils.capitalize(channelsGroup.get(position).name);
+                    fragmentDescriptionText.setText(name);
+                } else {
+                    fragmentDescriptionText.setText("Create View");
+                    editChannel.setVisibility(View.GONE);
+                }
+
             }
         });
     }
 
     private void setupViewPagerDotIndicator(List<ChannelGroup> channelGroup) {
         binding.tabLayout.removeAllViews();
-        int dotNumber = channelGroup.size() > 1 ? channelGroup.size() + 2 : channelGroup.size() + 1;
+        int dotNumber = channelGroup.size() + 1;
         dotIndicators = new ImageView[dotNumber];
         for (int i = 0; i < dotNumber; i++) {
             dotIndicators[i] = new ImageView(getContext());
@@ -301,15 +326,13 @@ public class MissionFragment extends Fragment {
     }
 
     private void setupEditChannelGroup() {
-        cgAdapter = new ChannelGroupAdapter(mission.channels, appContext, binding.missionViewPager.getAdapter());
+        cgAdapter = new ChannelGroupAdapter(mission.channels, this);
         rvChannel = requireActivity().findViewById(R.id.rv_channels);
         rvChannel.setHasFixedSize(true);
         rvChannel.setAdapter(cgAdapter);
 
         btnEdit = requireActivity().findViewById(R.id.btn_edit);
         channelGroupName = requireActivity().findViewById(R.id.channel_group_name);
-        channelGroupName.setText(fragmentDescriptionText.getText());
-        btnEdit.setClickable(true);
 
         editChannel.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
         closeLayout.setOnClickListener(view -> setupLayoutVisibilityChannelGroup());
@@ -373,7 +396,7 @@ public class MissionFragment extends Fragment {
         }
     }
 
-    private void setupLayoutVisibilityChannelGroup() {
+    public void setupLayoutVisibilityChannelGroup() {
         channelGroupName.setText(fragmentDescriptionText.getText().toString());
         editChannel.setClickable(!editChannel.isClickable());
         toggleLayoutVisiblity(binding.icMicCard);

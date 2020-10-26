@@ -6,7 +6,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <ImageButton
-            android:id="@+id/imageButton2"
+            android:id="@+id/img_create_channel_group"
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:scaleType="centerCrop"
@@ -25,9 +25,9 @@
             android:fontFamily="@font/open_sans_semi_bold"
             android:textColor="#8d8d8d"
             android:textSize="10.1sp"
-            app:layout_constraintEnd_toEndOf="@+id/imageButton2"
-            app:layout_constraintStart_toStartOf="@+id/imageButton2"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton2"
+            app:layout_constraintEnd_toEndOf="@+id/img_create_channel_group"
+            app:layout_constraintStart_toStartOf="@+id/img_create_channel_group"
+            app:layout_constraintTop_toBottomOf="@+id/img_create_channel_group"
             android:text="Add Channels" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

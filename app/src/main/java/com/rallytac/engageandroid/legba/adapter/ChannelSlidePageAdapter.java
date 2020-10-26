@@ -19,6 +19,7 @@ import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.engage.RxListener;
+import com.rallytac.engageandroid.legba.fragment.MissionFragment;
 import com.rallytac.engageandroid.legba.fragment.MissionFragmentDirections;
 
 import java.time.LocalDateTime;
@@ -79,7 +80,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         } else {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.add_channel_item, parent, false);
-            return new AddChannelViewHolder(itemView);
+            return new AddChannelViewHolder(itemView, fragment);
         }
     }
 
@@ -89,6 +90,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             ChannelResumeViewHolder channelResumeHolder = (ChannelResumeViewHolder) holder;
             if (channelsGroup.get(position).channels.size() < 1) {
                 channelResumeHolder.primaryChannel.setVisibility(View.GONE);
+                channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
+                channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             }
 
@@ -103,6 +106,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
             if (channelsGroup.get(position).channels.size() < 2) {
                 channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
+                channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             }
 
@@ -504,10 +508,20 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         }
     }
 
-    class AddChannelViewHolder extends GenericViewHolder {
+    public class AddChannelViewHolder extends GenericViewHolder {
+        private MissionFragment fragment;
+        private ImageView imgCreateChannelGroup;
 
-        public AddChannelViewHolder(@NonNull View itemView) {
+        public AddChannelViewHolder(@NonNull View itemView, Fragment fragment) {
             super(itemView);
+            this.fragment = (MissionFragment) fragment;
+
+            imgCreateChannelGroup = itemView.findViewById(R.id.img_create_channel_group);
+            imgCreateChannelGroup.setOnClickListener(view -> {
+                this.fragment.setupLayoutVisibilityChannelGroup();
+                this.fragment.getBtnEdit().setClickable(false);
+
+            });
         }
     }
 }
