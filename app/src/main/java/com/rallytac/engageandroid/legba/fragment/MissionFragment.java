@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,7 +34,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
-import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
 import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
@@ -526,24 +524,24 @@ public class MissionFragment extends Fragment {
 
                 switch (position) {
                     case 0:
-                        toggleSpeakerIcon(isPrimarySpeakerOn, channelHolder.speakerButton);
+                        toggleSpeakerIcon(isPrimarySpeakerOn, channelHolder.speakerButton, "{G1}");
                         channelHolder.speakerButton.setOnClickListener(view -> {
                             isPrimarySpeakerOn = !isPrimarySpeakerOn;
-                            toggleSpeakerIcon(isPrimarySpeakerOn, (ImageView) view);
+                            toggleSpeakerIcon(isPrimarySpeakerOn, (ImageView) view, "{G1}");
                         });
                         return;
                     case 1:
-                        toggleSpeakerIcon(isPriority1SpekearOn, channelHolder.speakerButton);
+                        toggleSpeakerIcon(isPriority1SpekearOn, channelHolder.speakerButton, "{G1}");
                         channelHolder.speakerButton.setOnClickListener(view -> {
                             isPriority1SpekearOn = !isPriority1SpekearOn;
-                            toggleSpeakerIcon(isPriority1SpekearOn, (ImageView) view);
+                            toggleSpeakerIcon(isPriority1SpekearOn, (ImageView) view, "{G2}");
                         });
                         return;
                     case 2:
-                        toggleSpeakerIcon(isPriority2SpeakerOn, channelHolder.speakerButton);
+                        toggleSpeakerIcon(isPriority2SpeakerOn, channelHolder.speakerButton, "{G1}");
                         channelHolder.speakerButton.setOnClickListener(view -> {
                             isPriority2SpeakerOn = !isPriority2SpeakerOn;
-                            toggleSpeakerIcon(isPriority2SpeakerOn, (ImageView) view);
+                            toggleSpeakerIcon(isPriority2SpeakerOn, (ImageView) view, "{G3}");
                         });
                         return;
                     default:
@@ -555,20 +553,20 @@ public class MissionFragment extends Fragment {
                 channelResumeHolder.primaryChannel.setVisibility(View.VISIBLE);
                 channelResumeHolder.primaryChannelImage.setImageResource(getImageResource(channels.get(0).image));
                 channelResumeHolder.primaryChannelName.setText(channels.get(0).name);
-                toggleSpeakerIcon(isPrimarySpeakerOn, channelResumeHolder.primaryChannelSpeaker);
+                toggleSpeakerIcon(isPrimarySpeakerOn, channelResumeHolder.primaryChannelSpeaker, "{G1}");
                 channelResumeHolder.primaryChannelSpeaker.setOnClickListener(view -> {
                     isPrimarySpeakerOn = !isPrimarySpeakerOn;
-                    toggleSpeakerIcon(isPrimarySpeakerOn, (ImageView) view);
+                    toggleSpeakerIcon(isPrimarySpeakerOn, (ImageView) view, "{G1}");
                 });
 
 
                 channelResumeHolder.priorityChannel1.setVisibility(View.VISIBLE);
                 channelResumeHolder.priorityChannel1Image.setImageResource(getImageResource(channels.get(1).image));
                 channelResumeHolder.priorityChannel1Name.setText(channels.get(1).name);
-                toggleSpeakerIcon(isPriority1SpekearOn, channelResumeHolder.priorityChannel1Speaker);
+                toggleSpeakerIcon(isPriority1SpekearOn, channelResumeHolder.priorityChannel1Speaker, "{G1}");
                 channelResumeHolder.priorityChannel1Speaker.setOnClickListener(view -> {
                     isPriority1SpekearOn = !isPriority1SpekearOn;
-                    toggleSpeakerIcon(isPriority1SpekearOn, (ImageView) view);
+                    toggleSpeakerIcon(isPriority1SpekearOn, (ImageView) view, "{G1}");
                 });
 
                 if (channels.size() < 3) return;
@@ -576,10 +574,10 @@ public class MissionFragment extends Fragment {
                 channelResumeHolder.priorityChannel2.setVisibility(View.VISIBLE);
                 channelResumeHolder.priorityChannel2Image.setImageResource(getImageResource(channels.get(2).image));
                 channelResumeHolder.priorityChannel2Name.setText(channels.get(2).name);
-                toggleSpeakerIcon(isPriority2SpeakerOn, channelResumeHolder.priorityChannel2Speaker);
+                toggleSpeakerIcon(isPriority2SpeakerOn, channelResumeHolder.priorityChannel2Speaker, "{G1}");
                 channelResumeHolder.priorityChannel2Speaker.setOnClickListener(view -> {
                     isPriority2SpeakerOn = !isPriority2SpeakerOn;
-                    toggleSpeakerIcon(isPriority2SpeakerOn, (ImageView) view);
+                    toggleSpeakerIcon(isPriority2SpeakerOn, (ImageView) view, "{G1}");
                 });
 
 
@@ -611,14 +609,14 @@ public class MissionFragment extends Fragment {
             }
         }
 
-        private void toggleSpeakerIcon(boolean isOn, ImageView button) {
+        private void toggleSpeakerIcon(boolean isOn, ImageView button, String groupId) {
             if (isOn) {
                 Timber.i("Unmuting");
-                Globals.getEngageApplication().getEngine().engageUnmuteGroupRx("{G1}");
+                Globals.getEngageApplication().getEngine().engageUnmuteGroupRx(groupId);
                 button.setImageResource(R.drawable.ic_speaker);
             } else {
                 Timber.i("Muting");
-                Globals.getEngageApplication().getEngine().engageMuteGroupRx("{G1}");
+                Globals.getEngageApplication().getEngine().engageMuteGroupRx(groupId);
                 button.setImageResource(R.drawable.ic_speaker_off);
             }
         }
