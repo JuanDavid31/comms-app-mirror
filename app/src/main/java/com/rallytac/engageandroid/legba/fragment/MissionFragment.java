@@ -34,6 +34,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
 import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
@@ -611,12 +612,10 @@ public class MissionFragment extends Fragment {
 
         private void toggleSpeakerIcon(boolean isOn, ImageView button, String groupId) {
             if (isOn) {
-                Timber.i("Unmuting");
-                Globals.getEngageApplication().getEngine().engageUnmuteGroupRx(groupId);
+                DataManager.getInstance(appContext).unmuteGroup(groupId);
                 button.setImageResource(R.drawable.ic_speaker);
             } else {
-                Timber.i("Muting");
-                Globals.getEngageApplication().getEngine().engageMuteGroupRx(groupId);
+                DataManager.getInstance(appContext).muteGroup(groupId);
                 button.setImageResource(R.drawable.ic_speaker_off);
             }
         }

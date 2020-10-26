@@ -131,28 +131,21 @@ public class DataManager {
         updateDB();
 
         Globals.getEngageApplication().restartEngine();
-        mission.channels.forEach(channel -> {
-
-            if (channel.id.equals("{G1}")){
-                Timber.i("No volume");
-                //Globals.getEngageApplication().getEngine().engageSetGroupRxVolume(channel.id, 0, 0);
-                Globals.getEngageApplication().getEngine().engageMuteGroupRx(channel.id);
-            }else {
-                Timber.i("Very loud volume");
-                //Globals.getEngageApplication().getEngine().engageSetGroupRxVolume(channel.id, 100, 100);
-            }
-
-            Globals.getEngageApplication().getEngine().engageJoinGroup(channel.id);
-        });
-        Globals.getEngageApplication().updateActiveConfiguration();
+        mission.channels.forEach(channel -> Globals.getEngageApplication().getEngine().engageJoinGroup(channel.id));
     }
 
     private void initEngine(){
         Engine engine = Globals.getEngageApplication().getEngine();
-
         //engine.engageOpenCertStore() // ?
         //engine.engageInitialize() // ?
         engine.engageStart();
     }
 
+    public void unmuteGroup(String groupId) {
+        Globals.getEngageApplication().getEngine().engageUnmuteGroupRx(groupId);
+    }
+
+    public void muteGroup(String groupId) {
+        Globals.getEngageApplication().getEngine().engageMuteGroupRx(groupId);
+    }
 }
