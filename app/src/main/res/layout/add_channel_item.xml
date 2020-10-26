@@ -28,6 +28,6 @@
             app:layout_constraintEnd_toEndOf="@+id/img_create_channel_group"
             app:layout_constraintStart_toStartOf="@+id/img_create_channel_group"
             app:layout_constraintTop_toBottomOf="@+id/img_create_channel_group"
-            android:text="Add Channels" />
+            android:text="Create new view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

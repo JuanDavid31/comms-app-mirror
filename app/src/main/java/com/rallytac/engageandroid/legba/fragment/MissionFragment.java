@@ -242,7 +242,7 @@ public class MissionFragment extends Fragment {
                     String name = StringUtils.capitalize(channelsGroup.get(position).name);
                     fragmentDescriptionText.setText(name);
                 } else {
-                    fragmentDescriptionText.setText("Create View");
+                    fragmentDescriptionText.setText("");
                     editChannel.setVisibility(View.GONE);
                 }
 
