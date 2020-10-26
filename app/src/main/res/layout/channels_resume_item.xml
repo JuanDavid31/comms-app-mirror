@@ -260,6 +260,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="0dp"
             android:layout_weight="1"
             android:background="@drawable/channel_resume_item_box_shape"
             android:elevation="0.3dp"
