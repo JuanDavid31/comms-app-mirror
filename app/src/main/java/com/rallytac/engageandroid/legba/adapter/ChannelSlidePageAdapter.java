@@ -577,9 +577,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
             imgCreateChannelGroup = itemView.findViewById(R.id.img_create_channel_group);
             imgCreateChannelGroup.setOnClickListener(view -> {
-                this.fragment.setupLayoutVisibilityChannelGroup();
-                this.fragment.getBtnEdit().setClickable(false);
-
+                //this.fragment.setupLayoutVisibilityChannelGroup();
+                //this.fragment.getBtnEdit().setClickable(false);
             });
         }
     }

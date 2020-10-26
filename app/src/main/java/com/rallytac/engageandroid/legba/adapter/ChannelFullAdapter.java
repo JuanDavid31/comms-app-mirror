@@ -68,8 +68,8 @@ public class ChannelFullAdapter extends RecyclerView.Adapter<ChannelFullAdapter.
 
         }
         holder.channelSpeaker.setOnClickListener(view -> {
-            holder.isSpeakerOn = !holder.isSpeakerOn;
             toggleSpeakerIcon(holder.isSpeakerOn, (ImageView) view);
+            holder.isSpeakerOn = !holder.isSpeakerOn;
         });
     }
 
