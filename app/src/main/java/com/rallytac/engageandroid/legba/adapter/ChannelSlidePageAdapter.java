@@ -1,12 +1,16 @@
 package com.rallytac.engageandroid.legba.adapter;
 
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -88,6 +92,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
     public void onBindViewHolder(@NonNull GenericViewHolder holder, int position) {
         if (holder instanceof ChannelResumeViewHolder) {
             ChannelResumeViewHolder channelResumeHolder = (ChannelResumeViewHolder) holder;
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) channelResumeHolder.primaryChannel.getLayoutParams();
+
             if (channelsGroup.get(position).channels.size() < 1) {
                 channelResumeHolder.primaryChannel.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
@@ -105,10 +111,24 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             });
 
             if (channelsGroup.get(position).channels.size() < 2) {
+                lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                lp.setMarginStart(6);
+                channelResumeHolder.primaryChannel.setLayoutParams(lp);
                 channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
+            } else {
+                int currentOrientation = fragment.getResources().getConfiguration().orientation;
+                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    lp.width = (int) fragment.getResources().getDimension(R.dimen.primary_channel_width_landscape);
+                }
+                else {
+                    lp.height = (int) fragment.getResources().getDimension(R.dimen.primary_channel_height_portrait);
+                }
+                channelResumeHolder.primaryChannel.setLayoutParams(lp);
             }
+
 
             channelResumeHolder.priorityChannel1.setVisibility(View.VISIBLE);
             channelResumeHolder.priorityChannel1Image.setImageResource(getImageResource(channelsGroup.get(position).channels.get(1).image));

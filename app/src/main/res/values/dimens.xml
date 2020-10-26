@@ -1,3 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="primary_channel_height_portrait">145dp</dimen>
+    <dimen name="primary_channel_width_landscape">235dp</dimen>
 </resources>

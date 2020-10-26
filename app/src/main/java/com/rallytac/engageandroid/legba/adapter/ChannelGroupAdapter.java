@@ -70,6 +70,7 @@ public class ChannelGroupAdapter extends RecyclerView.Adapter<ChannelGroupAdapte
         holder.principalLayoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(getCheckChannels().size() < 2 && channel.status) return;
                 channel.status = !channel.status;
                 channels.set(position, channel);
                 setupCheckChannel(holder, channel);
