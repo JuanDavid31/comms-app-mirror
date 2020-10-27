@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Mission implements Serializable {
-    public int id;
+    public String id;
     public String name;
     public List<Channel> channels;
 

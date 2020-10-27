@@ -46,6 +46,7 @@ import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import timber.log.Timber;
@@ -355,8 +356,8 @@ public class MissionFragment extends Fragment {
         });
     }
 
-    private void updateCurrentChannelsGroup() { //TODO: Come back here
-        List<Channel> channels = channelListAdapter.getChannels();
+    private void updateCurrentChannelsGroup() {
+        List<Channel> channels = channelListAdapter.getCheckedChannels();
 
         updateNameAndActiveChannelsOnCurrentChannelsGroup(channels);
         toggleCreateEditChannelsGroupLayoutvisibility();
@@ -367,17 +368,11 @@ public class MissionFragment extends Fragment {
     }
 
     private void updateNameAndActiveChannelsOnCurrentChannelsGroup(List<Channel> channels) {
-        String oldName = activity.binding.fragmentDescription.getText().toString();
         String newName = activity.binding.channelGroupNameText.getText().toString();
 
-        vm.getChannelsGroup()
-                .stream()
-                .filter(channelGroup -> channelGroup.name.equals(oldName))
-                .findFirst()
-                .ifPresent(channelGroup -> {
-                    channelGroup.name = newName;
-                    channelGroup.channels = channels;
-                });
+        ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
+        currentChannelGroup.name = newName;
+        currentChannelGroup.channels = channels;
     }
 
     public void toggleCreateEditChannelsGroupLayoutvisibility() {
@@ -386,18 +381,27 @@ public class MissionFragment extends Fragment {
         toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
         toggleLayoutVisiblity(activity.binding.channelGroupLayout);
 
-        String currentChannelGroupName = activity.binding.fragmentDescription.getText().toString();
-        ChannelGroup currentChannelGroup = vm.getChannelsGroup()
+        List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).channels;
+        List<Channel> allChannels = mission
+                .channels
                 .stream()
-                .filter(channelGroup -> channelGroup.name.equals(currentChannelGroupName)) // channelGroup.name.toLowerCase().equals(channelNameSearch)
-                .findFirst()
-                .get();
+                .peek(channel -> channel.status = false)
+                .collect(Collectors.toList());
 
-        for (Channel currentChannel : mission.channels) {
-            currentChannel.status = false;
-        }
+        List<Channel> mixedChannels = allChannels
+                .stream()
+                .map(channel -> {
+                    activeChannels
+                            .stream()
+                            .filter(activeChannel -> activeChannel.id.equals(channel.id))
+                            .findFirst()
+                            .ifPresent(activeChannel -> {
+                                channel.status = true;
+                            });
+                    return channel;
+                }).collect(Collectors.toList());
 
-        channelListAdapter.setChannels(currentChannelGroup.channels);
+        channelListAdapter.setChannels(mixedChannels);
     }
 
     @Override

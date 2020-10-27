@@ -33,7 +33,7 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
         List<ChannelElement> channelElements = new Gson().fromJson(subChannelsAndMembers, listType);
 
         return new Channel(
-                idJsonElement != null ? idJsonElement.getAsInt() : -1,
+                idJsonElement != null ? idJsonElement.getAsString() : "",
                 nameJsonElement != null ? nameJsonElement.getAsString() : "",
                 getChannelType(typeJsonElement != null ? typeJsonElement.getAsString() : ""),
                 imageJsonElement != null ? imageJsonElement.getAsString() : "",
