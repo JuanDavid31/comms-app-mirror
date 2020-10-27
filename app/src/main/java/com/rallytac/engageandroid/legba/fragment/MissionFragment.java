@@ -434,6 +434,7 @@ public class MissionFragment extends Fragment {
         }
 
         activity.binding.fragmentDescription.setText(newName);
+        activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
     }
 
     public void toggleCreateEditChannelsGroupLayoutvisibility() {
