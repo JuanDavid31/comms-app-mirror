@@ -367,7 +367,8 @@ public class MissionFragment extends Fragment {
 
         channelSlidePageAdapter.setChannelsGroup(vm.getChannelsGroup());
         setupViewPagerDotIndicator(vm.getChannelsGroup());
-        if(lastPage) updateDots(currentPage + 1);
+
+        if(lastPage) updateDots(vm.getChannelsGroup().size() - 1);
         else updateDots(currentPage);
     }
 
