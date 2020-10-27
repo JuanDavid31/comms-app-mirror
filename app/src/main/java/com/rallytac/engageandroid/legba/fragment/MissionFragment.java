@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,24 +20,23 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.legba.adapter.ChannelListAdapter;
+import com.rallytac.engageandroid.legba.adapter.ChannelSlidePageAdapter;
 import com.rallytac.engageandroid.legba.data.DataManager;
-import com.rallytac.engageandroid.legba.engage.RxListener;
+import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
+import com.rallytac.engageandroid.legba.util.StringUtils;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
 import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -44,8 +45,7 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -53,21 +53,20 @@ import java.util.stream.Collectors;
 import timber.log.Timber;
 
 import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
-import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
 public class MissionFragment extends Fragment {
 
     private HostActivity activity;
-    private FragmentMissionBinding binding;
+    public FragmentMissionBinding binding;
     private Mission mission;
-    private TextView fragmentDescriptionText;
+    private ChannelSlidePageAdapter channelSlidePageAdapter;
+    private ChannelListAdapter channelListAdapter;
     private ImageView[] dotIndicators;
     private MenuItem sosAction;
     private TransitionDrawable transition;
-    private Context appContext;
+    private Context context;
     private MissionViewModel vm;
-    private String currentGroupId = "";
-    List<Channel> nonRadioChannels;
+    private int currentPage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +74,7 @@ public class MissionFragment extends Fragment {
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
         mission = missionFragmentArgs.getMission();
         vm = new ViewModelProvider(this).get(MissionViewModel.class);
-        //DataManager.getInstance(appContext).switchToMissionOnEngageEngine(mission.id);
+        context = getContext();
     }
 
     @Override
@@ -91,38 +90,33 @@ public class MissionFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
         binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
 
-        nonRadioChannels = mission.channels
-                .stream()
-                .filter(channel -> channel.type != Channel.ChannelType.RADIO)
-                .collect(Collectors.toList());
+        List<ChannelGroup> channelsGroup = getInitialChannelsGroup();
 
-        binding.missionViewPager.setAdapter(new ChannelSlidePageAdapter(this, nonRadioChannels));
-
+        channelSlidePageAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
+        binding.missionViewPager.setAdapter(channelSlidePageAdapter);
 
         setupPTTOnMic();
-        setupViewPagerOnPageChangeListener(nonRadioChannels);
-        setupViewPagerDotIndicator(nonRadioChannels);
+        setupViewPagerOnPageChangeListener();
+        setupViewPagerDotIndicator(channelsGroup);
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();
         updateDots(0);
+        setupEditCurrentChannelGroupLayout();
 
         return binding.getRoot();
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (appContext == null)
-            appContext = context.getApplicationContext();
+    public Mission getMission() {
+        return mission;
     }
 
     private void updateToolbar() {
-        requireActivity().findViewById(R.id.logo_image).setVisibility(View.VISIBLE);
-        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
-        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(mission.name);
-        requireActivity().findViewById(R.id.fragment_description).setVisibility(View.VISIBLE);
-        fragmentDescriptionText = requireActivity().findViewById(R.id.fragment_description);
-        fragmentDescriptionText.setTextColor(this.getResources().getColor(R.color.paleRed));
+        activity.binding.logoImage.setVisibility(View.VISIBLE);
+        activity.binding.toolbarTitleText.setVisibility(View.VISIBLE);
+        activity.binding.toolbarTitleText.setText(mission.name);
+        activity.binding.fragmentDescription.setVisibility(View.VISIBLE);
+        activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
+        activity.binding.fragmentDescription.setTextColor(this.getResources().getColor(R.color.paleRed));
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
@@ -192,76 +186,98 @@ public class MissionFragment extends Fragment {
         });
     }
 
+    private List<ChannelGroup> getInitialChannelsGroup() {
+        if (vm.getChannelsGroup().size() > 0) {
+            return vm.getChannelsGroup();
+        }
+        List<Channel> page1List = mission.channels.stream().limit(1).collect(Collectors.toList());
+        List<Channel> page2List = mission.channels.stream().limit(2).collect(Collectors.toList());
+        List<Channel> page3List = mission.channels.stream().limit(3).collect(Collectors.toList());
+        List<Channel> page4List = mission.channels.stream().limit(4).collect(Collectors.toList());
+        List<Channel> page5List = mission.channels.stream().limit(5).collect(Collectors.toList());
+
+        ChannelGroup channelGroup = new ChannelGroup("First", page1List);
+        ChannelGroup channelGroup1 = new ChannelGroup("Delta", page2List);
+        ChannelGroup channelGroup2 = new ChannelGroup("Third", page3List);
+        ChannelGroup channelGroup3 = new ChannelGroup("Echo", page4List);
+        ChannelGroup channelGroup4 = new ChannelGroup("charlie", page5List);
+
+        vm.setChannelGroups(Arrays.asList(channelGroup, channelGroup1, channelGroup2, channelGroup3, channelGroup4));
+        return vm.getChannelsGroup();
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private void setupPTTOnMic() {
-        binding.icMicCard.setOnTouchListener(new View.OnTouchListener() {
+        binding.icMicCard.setOnTouchListener((view, event) -> {
 
+            List<String> activeGroupIds = vm.getChannelsGroup()
+                    .get(currentPage)
+                    .channels
+                    .stream()
+                    .filter(channel -> channel.isActive)
+                    .map(channel -> channel.id)
+                    .collect(Collectors.toList());
+
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                binding.txImage.setVisibility(View.VISIBLE);
+                Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
+                activeGroupIds.forEach(groupId -> DataManager.getInstance(context).startTx(groupId));
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                binding.txImage.setVisibility(View.INVISIBLE);
+                Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
+                activeGroupIds.forEach(groupId -> DataManager.getInstance(context).endTx(groupId));
+            }
+            return true;
+        });
+    }
+
+    private void setupViewPagerOnPageChangeListener() {
+        binding.missionViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    binding.txImage.setVisibility(View.VISIBLE);
-                    Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
-                    Timber.i("Sending message to group %s ", currentGroupId);
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                currentPage = position;
+                updateDots(position);
+                muteEverybody();
 
-                    Globals.getEngageApplication().startTxLegba(0, 0, currentGroupId);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    binding.txImage.setVisibility(View.INVISIBLE);
-                    Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
+                if (position < vm.getChannelsGroup().size()) {
+                    activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
+                    String name = StringUtils.capitalize(vm.getChannelsGroup().get(position).name);
+                    activity.binding.fragmentDescription.setText(name);
 
-                    String[] groupIds = nonRadioChannels
-                            .stream()
-                            .map(channel -> channel.id)
-                            .collect(Collectors.toList()).toArray(new String[nonRadioChannels.size()]);
-
-                    Globals.getEngageApplication().endTxLega(groupIds);
+                    unMuteActiveChannels(vm.getChannelsGroup().get(currentPage));
+                } else {
+                    activity.binding.fragmentDescription.setText("");
+                    activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
                 }
-                return true;
             }
         });
     }
 
-    private void setupViewPagerOnPageChangeListener(List<Channel> nonRadioChannels) {
-        binding.missionViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                updateDots(position);
+    private void muteEverybody(){
+        mission.channels
+                .stream()
+                .map(channel -> channel.id)
+                .forEach(channelId -> DataManager.getInstance(context).muteGroup(channelId));
+    }
 
-                String ordinalPosition;
-                switch (position) {
-                    case 0:
-                        ordinalPosition = "Alpha";
-                        setCurrentGroupId(nonRadioChannels.get(0).id);
-                        break;
-                    case 1:
-                        ordinalPosition = "Delta";
-                        setCurrentGroupId(nonRadioChannels.get(1).id);
-                        break;
-                    case 2:
-                        ordinalPosition = "Fire";
-                        setCurrentGroupId(nonRadioChannels.get(2).id);
-                        break;
-                    case 3:
-                        ordinalPosition = "All Ground";
-                        break;
-                    default:
-                        ordinalPosition = "";
-                        break;
-                }
-
-                fragmentDescriptionText.setText(ordinalPosition);
-            }
-        });
+    private void unMuteActiveChannels(ChannelGroup currentChannelGroup){
+        currentChannelGroup
+                .channels
+                .stream()
+                .filter(channel -> channel.isSpeakerOn)
+                .filter(channel -> channel.isActive)
+                .map(channel -> channel.id)
+                .forEach(channelId -> DataManager.getInstance(context).unmuteGroup(channelId));
     }
 
     private void setCurrentGroupId(String groupId){
         Timber.i("Before joining a new group %s ", Globals.getEngageApplication().getActiveConfiguration().getMissionId());
-        currentGroupId = groupId;
-        Globals.getEngageApplication().getEngine().engageJoinGroup(groupId);
+
     }
 
-    private void setupViewPagerDotIndicator(List<Channel> channels) {
+    private void setupViewPagerDotIndicator(List channelGroup) {
         binding.tabLayout.removeAllViews();
-        int dotNumber = channels.size() > 1 ? channels.size() + 1 + 1 : channels.size() + 1;
+        int dotNumber = channelGroup.size() + 1;
         dotIndicators = new ImageView[dotNumber];
         for (int i = 0; i < dotNumber; i++) {
             dotIndicators[i] = new ImageView(getContext());
@@ -304,7 +320,6 @@ public class MissionFragment extends Fragment {
         List<Channel> radioChannels = mission.channels
                 .stream()
                 .filter(channel -> channel.type != null)
-                //.filter(channel -> channel.type == Channel.ChannelType.RADIO)
                 .collect(Collectors.toList());
 
         RadioChannelsRecyclerViewAdapter adapter = new RadioChannelsRecyclerViewAdapter(new RadioChannelsRecyclerViewAdapter.AdapterDiffCallback(), this);
@@ -334,6 +349,91 @@ public class MissionFragment extends Fragment {
         }
     }
 
+    private void setupEditCurrentChannelGroupLayout() {
+        channelListAdapter = new ChannelListAdapter(mission.channels, this);
+        activity.binding.channelsRecycler.setHasFixedSize(true);
+        activity.binding.channelsRecycler.setAdapter(channelListAdapter);
+
+        activity.binding.editCurrentChannelGroupButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility());
+        activity.binding.closeCreateEditChannelsViewLayout.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility());
+        activity.binding.closeCreateEditChannelsViewButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility()); //TODO: Replace for a proper fix
+        activity.binding.createEditChannelsGroupButton.setOnClickListener(view -> updateCurrentChannelsGroup());
+
+        activity.binding.channelGroupNameText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String channelGroupNameSearch = editable.toString().toLowerCase();
+                Long coincidences = vm.getChannelsGroup().stream()
+                        .filter(channelGroup -> channelGroup.name.equalsIgnoreCase(channelGroupNameSearch))
+                        .count();
+
+                if (coincidences < 1L && channelGroupNameSearch.length() > 0) {
+                    activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_shape));
+                } else {
+                    activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_fade_shape));
+                }
+            }
+        });
+    }
+
+    private void updateCurrentChannelsGroup() {
+        List<Channel> channels = channelListAdapter.getCheckedChannels();
+
+        updateNameAndActiveChannelsOnCurrentChannelsGroup(channels);
+        toggleCreateEditChannelsGroupLayoutvisibility();
+        //setupViewPagerDotIndicator(channelsGroup); //Makes no sense unless you can delete or create pages
+
+        channelSlidePageAdapter.setChannelsGroup(vm.getChannelsGroup());
+        updateDots(0);
+    }
+
+    private void updateNameAndActiveChannelsOnCurrentChannelsGroup(List<Channel> channels) {
+        String newName = activity.binding.channelGroupNameText.getText().toString();
+
+        ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
+        currentChannelGroup.name = newName;
+        currentChannelGroup.channels = channels;
+    }
+
+    public void toggleCreateEditChannelsGroupLayoutvisibility() {
+        activity.binding.channelGroupNameText.setText(activity.binding.fragmentDescription.getText().toString());
+        toggleLayoutVisiblity(binding.icMicCard);
+        toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
+        toggleLayoutVisiblity(activity.binding.channelGroupLayout);
+
+        List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).channels;
+        List<Channel> allChannels = mission
+                .channels
+                .stream()
+                .peek(channel -> channel.isActive = false)
+                .collect(Collectors.toList());
+
+        List<Channel> mixedChannels = allChannels
+                .stream()
+                .map(channel -> {
+                    activeChannels
+                            .stream()
+                            .filter(activeChannel -> activeChannel.id.equals(channel.id))
+                            .findFirst()
+                            .ifPresent(activeChannel -> {
+                                channel.isActive = true;
+                            });
+                    return channel;
+                }).collect(Collectors.toList());
+
+        channelListAdapter.setChannels(mixedChannels);
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -351,7 +451,6 @@ public class MissionFragment extends Fragment {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         toggleLayoutVisiblity(activity.binding.sosOverlapLayout);
-                        //toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
                         return true;
                     case MotionEvent.ACTION_UP:
                         activity.binding.sosSwipeButton.dispatchTouchEvent(MotionEvent.obtain(event.getDownTime(),
@@ -402,497 +501,6 @@ public class MissionFragment extends Fragment {
                             layout.setVisibility(View.GONE);
                         }
                     });
-        }
-    }
-
-    private class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePageAdapter.GenericViewHolder> {
-
-        private Fragment fragment;
-        private List<Channel> channels;
-
-        private int CHANNEL_ITEM = 0;
-        private int RESUME_CHANNELS_ITEM = 1;
-        private int ADD_CHANNEL_ITEM = 2;
-
-        private int priorityIndicator = 1;
-        private boolean paleRed = true;
-        private boolean waterBlue = false;
-        private boolean orange = false;
-
-        private boolean isPrimarySpeakerOn = true;
-        private boolean isPriority1SpekearOn = true;
-        private boolean isPriority2SpeakerOn = true;
-
-        public void setChannels(List<Channel> channels) {
-            this.channels = channels;
-            notifyDataSetChanged();
-        }
-
-        public ChannelSlidePageAdapter(Fragment fragment, List<Channel> channels) {
-            this.fragment = fragment;
-            this.channels = channels;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (position < channels.size()) {
-                return CHANNEL_ITEM;
-            } else if (channels.size() > 1 && channels.size() == position) {
-                return RESUME_CHANNELS_ITEM;
-            } else {
-                return ADD_CHANNEL_ITEM;
-            }
-        }
-
-        @NonNull
-        @Override
-        public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            if (viewType == CHANNEL_ITEM) {
-                View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.channel_item, parent, false);
-                ChannelViewHolder channelViewHolder = new ChannelViewHolder(itemView);
-                Timber.i("Currently there are %s listeners", Globals.actualListeners.size());
-                Globals.actualListeners.add(channelViewHolder);
-                return channelViewHolder;
-            } else if (viewType == RESUME_CHANNELS_ITEM) {
-                View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.channels_resume_item, parent, false);
-                ChannelResumeViewHolder channelResumeViewHolder = new ChannelResumeViewHolder(itemView);
-
-                for (RxListener currentListener : Globals.actualListeners) {
-                    if (currentListener instanceof ChannelViewHolder) {
-                        currentListener = (ChannelViewHolder) currentListener;
-                        ((ChannelViewHolder) currentListener).setChannelResumeViewHolder(channelResumeViewHolder);
-                    }
-                }
-
-                return channelResumeViewHolder;
-            } else {
-                View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.add_channel_item, parent, false);
-                return new AddChannelViewHolder(itemView);
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull GenericViewHolder holder, int position) {
-            if (holder instanceof ChannelViewHolder) {
-                ChannelViewHolder channelHolder = (ChannelViewHolder) holder;
-
-                Channel currentChannel = channels.get(position);
-                channelHolder.channelInfo.setOnClickListener(view -> NavHostFragment.findNavController(fragment)
-                        .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(currentChannel)));
-                channelHolder.channelImage.setImageResource(getImageResource(currentChannel.image));
-                channelHolder.channelName.setText(currentChannel.name);
-                channelHolder.channelType.setText(getTypeString(currentChannel.type));
-                channelHolder.setupChannelId();
-
-                if (currentChannel.type == Channel.ChannelType.PRIORITY && currentChannel.id.equals("{G2})")) {
-
-                    channelHolder.channelImage.setBorderColor(getWaterBlueColor());
-                    channelHolder.channelType.setTextColor(getWaterBlueColor());
-                    channelHolder.lastMessageTime.setTextColor(getWaterBlueColor());
-                    channelHolder.incomingMessageLayout
-                            .findViewById(R.id.incoming_message_speaker_layout)
-                            .setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.incoming_message_speaker_blue_layout_shape, null));
-                    ((ImageView) channelHolder.incomingMessageLayout
-                            .findViewById(R.id.incoming_message_speaker))
-                            .setImageResource(R.drawable.ic_blue_speaker);
-                    ((TextView) channelHolder.incomingMessageLayout
-                            .findViewById(R.id.incoming_message_speaking_text))
-                            .setTextColor(getResources().getColor(R.color.waterBlue93, null));
-                    ((ImageView) channelHolder.incomingMessageLayout
-                            .findViewById(R.id.rx_image))
-                            .setImageResource(R.drawable.ic_blue_tx);
-                } else if (currentChannel.type == Channel.ChannelType.PRIORITY && currentChannel.id.equals("{G3})")) {
-
-                    channelHolder.channelImage.setBorderColor(getOrangeColor());
-                    channelHolder.channelType.setTextColor(getOrangeColor());
-                    channelHolder.lastMessageTime.setTextColor(getOrangeColor());
-                    channelHolder.incomingMessageLayout
-                            .findViewById(R.id.incoming_message_speaker_layout)
-                            .setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.incoming_message_speaker_orange_layout_shape, null));
-                    ((ImageView) channelHolder.incomingMessageLayout
-                            .findViewById(R.id.incoming_message_speaker))
-                            .setImageResource(R.drawable.ic_orange_speaker);
-                    ((TextView) channelHolder.incomingMessageLayout
-                            .findViewById(R.id.incoming_message_speaking_text))
-                            .setTextColor(getResources().getColor(R.color.orange93, null));
-                    ((ImageView) channelHolder.incomingMessageLayout
-                            .findViewById(R.id.rx_image))
-                            .setImageResource(R.drawable.ic_orange_tx);
-                }
-
-                switch (position) {
-                    case 0:
-                        toggleSpeakerIcon(isPrimarySpeakerOn, channelHolder.speakerButton, "{G1}");
-                        channelHolder.speakerButton.setOnClickListener(view -> {
-                            isPrimarySpeakerOn = !isPrimarySpeakerOn;
-                            toggleSpeakerIcon(isPrimarySpeakerOn, (ImageView) view, "{G1}");
-                        });
-                        return;
-                    case 1:
-                        toggleSpeakerIcon(isPriority1SpekearOn, channelHolder.speakerButton, "{G1}");
-                        channelHolder.speakerButton.setOnClickListener(view -> {
-                            isPriority1SpekearOn = !isPriority1SpekearOn;
-                            toggleSpeakerIcon(isPriority1SpekearOn, (ImageView) view, "{G2}");
-                        });
-                        return;
-                    case 2:
-                        toggleSpeakerIcon(isPriority2SpeakerOn, channelHolder.speakerButton, "{G1}");
-                        channelHolder.speakerButton.setOnClickListener(view -> {
-                            isPriority2SpeakerOn = !isPriority2SpeakerOn;
-                            toggleSpeakerIcon(isPriority2SpeakerOn, (ImageView) view, "{G3}");
-                        });
-                        return;
-                    default:
-                }
-
-            } else if (holder instanceof ChannelResumeViewHolder) {
-                ChannelResumeViewHolder channelResumeHolder = (ChannelResumeViewHolder) holder;
-
-                channelResumeHolder.primaryChannel.setVisibility(View.VISIBLE);
-                channelResumeHolder.primaryChannelImage.setImageResource(getImageResource(channels.get(0).image));
-                channelResumeHolder.primaryChannelName.setText(channels.get(0).name);
-                toggleSpeakerIcon(isPrimarySpeakerOn, channelResumeHolder.primaryChannelSpeaker, "{G1}");
-                channelResumeHolder.primaryChannelSpeaker.setOnClickListener(view -> {
-                    isPrimarySpeakerOn = !isPrimarySpeakerOn;
-                    toggleSpeakerIcon(isPrimarySpeakerOn, (ImageView) view, "{G1}");
-                });
-
-
-                channelResumeHolder.priorityChannel1.setVisibility(View.VISIBLE);
-                channelResumeHolder.priorityChannel1Image.setImageResource(getImageResource(channels.get(1).image));
-                channelResumeHolder.priorityChannel1Name.setText(channels.get(1).name);
-                toggleSpeakerIcon(isPriority1SpekearOn, channelResumeHolder.priorityChannel1Speaker, "{G1}");
-                channelResumeHolder.priorityChannel1Speaker.setOnClickListener(view -> {
-                    isPriority1SpekearOn = !isPriority1SpekearOn;
-                    toggleSpeakerIcon(isPriority1SpekearOn, (ImageView) view, "{G1}");
-                });
-
-                if (channels.size() < 3) return;
-
-                channelResumeHolder.priorityChannel2.setVisibility(View.VISIBLE);
-                channelResumeHolder.priorityChannel2Image.setImageResource(getImageResource(channels.get(2).image));
-                channelResumeHolder.priorityChannel2Name.setText(channels.get(2).name);
-                toggleSpeakerIcon(isPriority2SpeakerOn, channelResumeHolder.priorityChannel2Speaker, "{G1}");
-                channelResumeHolder.priorityChannel2Speaker.setOnClickListener(view -> {
-                    isPriority2SpeakerOn = !isPriority2SpeakerOn;
-                    toggleSpeakerIcon(isPriority2SpeakerOn, (ImageView) view, "{G1}");
-                });
-
-
-            } else if (holder instanceof AddChannelViewHolder) {
-                //TODO: Add redirection to addChannelButton.
-            }
-        }
-
-        private int getWaterBlueColor() {
-            return fragment.getResources().getColor(R.color.waterBlue);
-        }
-
-        private int getOrangeColor() {
-            return fragment.getResources().getColor(R.color.orange);
-        }
-
-        private String getTypeString(Channel.ChannelType type) {
-            switch (type) {
-                case PRIMARY:
-                    return "Primary Channel";
-                case PRIORITY:
-                    String priority = "Priority Channel " + priorityIndicator;
-                    priorityIndicator++;
-                    return priority;
-                case RADIO:
-                    return "Radio Channel";
-                default:
-                    return "";
-            }
-        }
-
-        private void toggleSpeakerIcon(boolean isOn, ImageView button, String groupId) {
-            if (isOn) {
-                DataManager.getInstance(appContext).unmuteGroup(groupId);
-                button.setImageResource(R.drawable.ic_speaker);
-            } else {
-                DataManager.getInstance(appContext).muteGroup(groupId);
-                button.setImageResource(R.drawable.ic_speaker_off);
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            int resumeItems = 1;
-            int addChannelItems = 1;
-            return channels.size() > 1 ? channels.size() + resumeItems + addChannelItems : channels.size() + addChannelItems;
-        }
-
-        class GenericViewHolder extends RecyclerView.ViewHolder {
-
-            public GenericViewHolder(@NonNull View itemView) {
-                super(itemView);
-            }
-        }
-
-        class ChannelViewHolder extends GenericViewHolder implements RxListener {
-            private final static float LOW_OPACITY = 0.1f;
-            private final static float FULL_OPACITY = 1f;
-
-            private final static String PRIMARY_CHANNEL = "Primary Channel";
-            private final static String PRIORITY_CHANNEL_1 = "Priority Channel 1";
-            private final static String PRIORITY_CHANNEL_2 = "Priority Channel 2";
-
-            public int id;
-
-            private View channelLayout;
-            private View channelInfo;
-            private RoundedImageView channelImage;
-            private TextView channelName;
-            private TextView channelType;
-            private TextView lastMessageText;
-            private TextView lastMessageTime;
-            private TextView lastMessageAlias;
-            private TextView lastMessageDisplayName;
-            private ImageView speakerButton;
-            private View incomingMessageLayout;
-            private ChannelResumeViewHolder channelResumeViewHolder;
-            private Integer channelId;
-
-            public ChannelViewHolder(@NonNull View itemView) {
-                super(itemView);
-                channelLayout = itemView.findViewById(R.id.primary_channel_layout);
-                channelInfo = itemView.findViewById(R.id.channel_info);
-                channelImage = itemView.findViewById(R.id.channel_image);
-                channelName = itemView.findViewById(R.id.channel_name_text);
-                channelType = itemView.findViewById(R.id.channel_type_text);
-                lastMessageText = itemView.findViewById(R.id.last_message_text);
-                lastMessageTime = itemView.findViewById(R.id.last_message_time);
-                lastMessageAlias = itemView.findViewById(R.id.last_message_alias);
-                lastMessageDisplayName = itemView.findViewById(R.id.last_message_displayName);
-                speakerButton = itemView.findViewById(R.id.channel_speaker);
-                incomingMessageLayout = itemView.findViewById(R.id.incoming_message_layout);
-                channelResumeViewHolder = null;
-                setupChannelId();
-            }
-
-            public ChannelResumeViewHolder getChannelResumeViewHolder() {
-                return channelResumeViewHolder;
-            }
-
-            public void setChannelResumeViewHolder(ChannelResumeViewHolder channelResumeViewHolder) {
-                this.channelResumeViewHolder = channelResumeViewHolder;
-            }
-
-            private void setupChannelId() {
-                String type = channelType.getText().toString();
-                if (type.equals(PRIMARY_CHANNEL)) {
-                    System.out.println("Here 1");
-                    channelId = 0;
-                } else if (type.equals(PRIORITY_CHANNEL_1)) {
-                    System.out.println("Here 2");
-                    channelId = 1;
-                } else if (type.equals(PRIORITY_CHANNEL_2)) {
-                    System.out.println("Here 3");
-                    channelId = 2;
-                }
-            }
-
-            @Override
-            public void onRx(String id, String alias, String displayName) {
-                 if(!id.equals(channels.get(getAdapterPosition()).id))return;
-                Timber.i("Incoming rx from group %s", id);
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm a");
-                LocalDateTime now = LocalDateTime.now();
-                String timeText = dtf.format(now);
-
-                String aliasText = alias == null ? "UNKNOWN" : alias;
-                String displayNameText = displayName == null ? "Unknown user" : displayName;
-
-                incomingMessageLayout.setVisibility(View.VISIBLE);
-                setupViewIncommingMessage(aliasText);
-
-                ((TextView) incomingMessageLayout
-                        .findViewById(R.id.incoming_message_name)).setText(aliasText);
-
-                lastMessageTime.setText(timeText);
-                lastMessageAlias.setText(aliasText);
-                lastMessageDisplayName.setText(displayNameText);
-                lastMessageText.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void stopRx() {
-                setupViewOutcommingMessage();
-                incomingMessageLayout.setVisibility(View.GONE);
-            }
-
-            private void setupViewIncommingMessage(String alias) {
-                channelInfo.setAlpha(LOW_OPACITY);
-                lastMessageTime.setAlpha(LOW_OPACITY);
-                lastMessageAlias.setAlpha(LOW_OPACITY);
-                lastMessageDisplayName.setAlpha(LOW_OPACITY);
-                lastMessageText.setAlpha(LOW_OPACITY);
-
-                setupChannelLayoutBackgroundIncommingMessage(alias);
-            }
-
-            private void setupViewOutcommingMessage() {
-                channelInfo.setAlpha(FULL_OPACITY);
-                lastMessageTime.setAlpha(FULL_OPACITY);
-                lastMessageAlias.setAlpha(FULL_OPACITY);
-                lastMessageDisplayName.setAlpha(FULL_OPACITY);
-                lastMessageText.setAlpha(FULL_OPACITY);
-
-                setupChannelLayoutBackgroundOutcommingMessage();
-            }
-
-            private void setupChannelLayoutBackgroundIncommingMessage(String alias) {
-                try {
-                    if (this.id == 0) {
-                        channelLayout.setBackground(ContextCompat.getDrawable(appContext,
-                                R.drawable.primary_channel_item_fade_shape));
-
-                        if (channelResumeViewHolder == null) return;
-                        channelResumeViewHolder.primaryChannel
-                                .setBackground(ContextCompat.getDrawable(appContext,
-                                        R.drawable.primary_channel_item_fade_shape));
-
-                        channelResumeViewHolder.primaryChannelDescription.setText(alias);
-                        channelResumeViewHolder.priorityChannel1Description.setText(PRIORITY_CHANNEL_1);
-                        channelResumeViewHolder.priorityChannel2Description.setText(PRIORITY_CHANNEL_2);
-
-                        channelResumeViewHolder.primaryChannel.setAlpha(FULL_OPACITY);
-                        channelResumeViewHolder.primaryChannelRx.setVisibility(View.VISIBLE);
-                        channelResumeViewHolder.priorityChannel1.setAlpha(LOW_OPACITY);
-                        channelResumeViewHolder.priorityChannel2.setAlpha(LOW_OPACITY);
-                    } else if (this.id == 1) {
-                        channelLayout.setBackground(ContextCompat.getDrawable(appContext,
-                                R.drawable.prioritary1_channel_item_fade_shape));
-
-                        if (channelResumeViewHolder == null) return;
-                        channelResumeViewHolder.priorityChannel1
-                                .setBackground(ContextCompat.getDrawable(appContext,
-                                        R.drawable.prioritary1_channel_item_fade_shape));
-
-                        channelResumeViewHolder.primaryChannelDescription.setText(PRIMARY_CHANNEL);
-                        channelResumeViewHolder.priorityChannel1Description.setText(alias);
-                        channelResumeViewHolder.priorityChannel2Description.setText(PRIORITY_CHANNEL_2);
-
-                        channelResumeViewHolder.primaryChannel.setAlpha(LOW_OPACITY);
-                        channelResumeViewHolder.priorityChannel1Rx.setVisibility(View.VISIBLE);
-                        channelResumeViewHolder.priorityChannel1.setAlpha(FULL_OPACITY);
-                        channelResumeViewHolder.priorityChannel2.setAlpha(LOW_OPACITY);
-                    } else if (this.id == 2) {
-                        channelLayout.setBackground(ContextCompat.getDrawable(appContext,
-                                R.drawable.prioritary2_channel_item_fade_shape));
-
-                        if (channelResumeViewHolder == null) return;
-                        channelResumeViewHolder.priorityChannel2
-                                .setBackground(ContextCompat.getDrawable(appContext,
-                                        R.drawable.prioritary2_channel_item_fade_shape));
-
-                        channelResumeViewHolder.primaryChannelDescription.setText(PRIMARY_CHANNEL);
-                        channelResumeViewHolder.priorityChannel1Description.setText(PRIORITY_CHANNEL_1);
-                        channelResumeViewHolder.priorityChannel2Description.setText(alias);
-
-                        channelResumeViewHolder.primaryChannel.setAlpha(LOW_OPACITY);
-                        channelResumeViewHolder.priorityChannel2Rx.setVisibility(View.VISIBLE);
-                        channelResumeViewHolder.priorityChannel1.setAlpha(LOW_OPACITY);
-                        channelResumeViewHolder.priorityChannel2.setAlpha(FULL_OPACITY);
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-            private void setupChannelLayoutBackgroundOutcommingMessage() {
-                try {
-                    channelLayout.setBackground(ContextCompat.getDrawable(appContext,
-                            R.drawable.channel_item_shape));
-
-                    if (channelResumeViewHolder == null) return;
-
-                    channelResumeViewHolder.primaryChannelDescription.setText(PRIMARY_CHANNEL);
-                    channelResumeViewHolder.priorityChannel1Description.setText(PRIORITY_CHANNEL_1);
-                    channelResumeViewHolder.priorityChannel2Description.setText(PRIORITY_CHANNEL_2);
-
-                    channelResumeViewHolder.primaryChannel.setAlpha(FULL_OPACITY);
-                    channelResumeViewHolder.priorityChannel1.setAlpha(FULL_OPACITY);
-                    channelResumeViewHolder.priorityChannel2.setAlpha(FULL_OPACITY);
-
-                    channelResumeViewHolder.primaryChannelRx.setVisibility(View.GONE);
-                    channelResumeViewHolder.priorityChannel1Rx.setVisibility(View.GONE);
-                    channelResumeViewHolder.priorityChannel2Rx.setVisibility(View.GONE);
-
-                    channelResumeViewHolder.primaryChannel
-                            .setBackground(ContextCompat.getDrawable(appContext,
-                                    R.drawable.channel_item_shape));
-                    channelResumeViewHolder.priorityChannel1
-                            .setBackground(ContextCompat.getDrawable(appContext,
-                                    R.drawable.channel_item_shape));
-                    channelResumeViewHolder.priorityChannel2
-                            .setBackground(ContextCompat.getDrawable(appContext,
-                                    R.drawable.channel_item_shape));
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-
-        class ChannelResumeViewHolder extends GenericViewHolder {
-
-            private View primaryChannel;
-            private RoundedImageView primaryChannelImage;
-            private TextView primaryChannelName;
-            private TextView primaryChannelDescription;
-            private ImageView primaryChannelSpeaker;
-            private ImageView primaryChannelRx;
-
-            private View priorityChannel1;
-            private RoundedImageView priorityChannel1Image;
-            private TextView priorityChannel1Name;
-            private TextView priorityChannel1Description;
-            private ImageView priorityChannel1Speaker;
-            private ImageView priorityChannel1Rx;
-
-            private View priorityChannel2;
-            private RoundedImageView priorityChannel2Image;
-            private TextView priorityChannel2Name;
-            private TextView priorityChannel2Description;
-            private ImageView priorityChannel2Speaker;
-            private ImageView priorityChannel2Rx;
-
-            public ChannelResumeViewHolder(@NonNull View itemView) {
-                super(itemView);
-
-                primaryChannel = itemView.findViewById(R.id.primary_channel_layout);
-                primaryChannelImage = itemView.findViewById(R.id.primary_channel_image);
-                primaryChannelName = itemView.findViewById(R.id.primary_channel_name_text);
-                primaryChannelDescription = itemView.findViewById(R.id.primary_channel_description);
-                primaryChannelSpeaker = itemView.findViewById(R.id.primary_channel_speaker);
-                primaryChannelRx = itemView.findViewById(R.id.rx_image_primary_channel);
-
-                priorityChannel1 = itemView.findViewById(R.id.priority_channel_1_layout);
-                priorityChannel1Name = itemView.findViewById(R.id.priority_channel_1_name_text);
-                priorityChannel1Description = itemView.findViewById(R.id.priority_channel_1_description);
-                priorityChannel1Image = itemView.findViewById(R.id.priority_channel_1_image);
-                priorityChannel1Speaker = itemView.findViewById(R.id.priority_channel_1_speaker);
-                priorityChannel1Rx = itemView.findViewById(R.id.rx_image_priority_channel_1);
-
-                priorityChannel2 = itemView.findViewById(R.id.priority_channel_2_layout);
-                priorityChannel2Name = itemView.findViewById(R.id.priority_channel_2_name_text);
-                priorityChannel2Description = itemView.findViewById(R.id.priority_channel_2_description);
-                priorityChannel2Image = itemView.findViewById(R.id.priority_channel_2_image);
-                priorityChannel2Speaker = itemView.findViewById(R.id.priority_channel_2_speaker);
-                priorityChannel2Rx = itemView.findViewById(R.id.rx_image_priority_channel_2);
-            }
-        }
-
-        class AddChannelViewHolder extends GenericViewHolder {
-
-            public AddChannelViewHolder(@NonNull View itemView) {
-                super(itemView);
-            }
         }
     }
 }

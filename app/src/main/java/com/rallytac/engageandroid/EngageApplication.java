@@ -2006,13 +2006,9 @@ public class EngageApplication
 
         ActiveConfiguration activeConfiguration = getActiveConfiguration();
 
-        //updateActiveConfiguration();
-
-
         runOnUiThread(() -> {
             synchronized (groupIds) {
                 for (String id : groupIds) {
-                    MissionDatabase database = MissionDatabase.load(Globals.getSharedPreferences(), Constants.MISSION_DATABASE_NAME);
                     String currentMissionId = activeConfiguration.getMissionId();
 
                     Timber.i("CurrentMissionId -> %s ", currentMissionId);

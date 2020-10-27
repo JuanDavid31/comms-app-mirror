@@ -2,14 +2,18 @@ package com.rallytac.engageandroid.legba.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 
+import com.rallytac.engageandroid.legba.data.dto.Channel;
+import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MissionViewModel extends ViewModel {
 
-    private float toggleRadioChannelButtonRotation = 0;
+    private List<ChannelGroup> channelGroups = new ArrayList<>();
 
-    private List<SpeakerState> speakerStates = new ArrayList<>();
+    private float toggleRadioChannelButtonRotation = 0;
 
     public float getToggleRadioChannelButtonRotation() {
         return toggleRadioChannelButtonRotation;
@@ -19,15 +23,11 @@ public class MissionViewModel extends ViewModel {
         this.toggleRadioChannelButtonRotation = toggleRadioChannelButtonRotation;
     }
 
-    class SpeakerState {
-        public String groupId;
-        public boolean isSpeakerOn;
+    public List<ChannelGroup> getChannelsGroup() {
+        return channelGroups;
+    }
 
-        public SpeakerState(){}
-
-        public SpeakerState(String groupId, boolean isSpeakerOn) {
-            this.groupId = groupId;
-            this.isSpeakerOn = isSpeakerOn;
-        }
+    public void setChannelGroups(List<ChannelGroup> channelGroups) {
+        this.channelGroups = channelGroups;
     }
 }

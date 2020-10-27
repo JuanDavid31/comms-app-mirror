@@ -148,4 +148,12 @@ public class DataManager {
     public void muteGroup(String groupId) {
         Globals.getEngageApplication().getEngine().engageMuteGroupRx(groupId);
     }
+
+    public void startTx(String groupId){
+        Globals.getEngageApplication().startTxLegba(0, 0, groupId);
+    }
+
+    public void endTx(String groupId){
+        Globals.getEngageApplication().endTxLega(groupId);
+    }
 }

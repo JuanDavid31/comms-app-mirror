@@ -85,13 +85,29 @@
                                 app:layout_constraintTop_toBottomOf="@+id/toolbar_title_text"
                                 tools:visibility="visible" />
 
+                        <ImageButton
+                                android:id="@+id/edit_current_channel_group_button"
+                                android:layout_width="13dp"
+                                android:layout_height="13dp"
+                                android:layout_marginLeft="6.3dp"
+                                android:layout_marginBottom="12.3dp"
+                                android:src="@mipmap/edit_4_copy"
+                                android:visibility="invisible"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toEndOf="@+id/fragment_description"
+                                app:layout_constraintTop_toBottomOf="@+id/toolbar_title_text"
+                                app:layout_constraintVertical_bias="1.0"
+                                app:srcCompat="@mipmap/edit_4_copy"
+                                tools:visibility="visible" />
+
                         <androidx.constraintlayout.widget.Guideline
                                 android:id="@+id/guideline12"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 app:layout_constraintGuide_end="14.3dp" />
-
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -119,11 +135,136 @@
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/sos_overlap_layout"
+                    android:id="@+id/channel_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:alpha="0"
+                    android:background="@color/secondaryBlack"
+                    android:visibility="gone"
+                    tools:alpha=".95"
+                    tools:background="@color/secondaryBlack"
+                    tools:visibility="visible">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/create_edit_channels_group_layout"
+                        android:layout_width="328dp"
+                        android:layout_height="512.5dp"
+                        android:background="@drawable/channel_group_layout_shape"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    <EditText
+                            android:id="@+id/channel_group_name_text"
+                            style="@style/openSansRegularFont"
+                            android:layout_width="176.8dp"
+                            android:layout_height="36.3dp"
+
+                            android:layout_marginLeft="10.8dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginRight="140.5dp"
+                            android:layout_marginBottom="464.3dp"
+                            android:background="@drawable/channel_group_item_shape"
+                            android:ems="100"
+                            android:hint="New View Name"
+                            android:inputType="textPersonName"
+                            android:paddingLeft="17.5dp"
+                            android:paddingTop="13.3dp"
+                            android:paddingBottom="9.5dp"
+                            android:textColor="#fffefe"
+                            android:textSize="12sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0"
+                            tools:text="New View Name" />
+
+                    <Button
+                            android:id="@+id/create_edit_channels_group_button"
+                            android:layout_width="70.8dp"
+                            android:layout_height="36.3dp"
+                            android:layout_marginLeft="197.5dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginRight="59.8dp"
+                            android:layout_marginBottom="464.3dp"
+                            android:background="@drawable/edit_channel_group_btn_fade_shape"
+
+                            android:clickable="true"
+                            android:text="Create"
+                            android:textAllCaps="false"
+                            android:textColor="#fefefe"
+                            android:textSize="10.1sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/close_create_edit_channels_view_layout"
+                            android:layout_width="40dp"
+                            android:layout_height="36.3dp"
+                            android:layout_marginLeft="277.5dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginRight="10.5dp"
+                            android:layout_marginBottom="464.3dp"
+                            android:background="@color/black"
+                            android:clickable="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0">
+
+                        <ImageButton
+                                android:id="@+id/close_create_edit_channels_view_button"
+                                android:layout_width="8.5dp"
+                                android:layout_height="8.5dp"
+                                android:background="@mipmap/close_3_copy"
+                                android:clickable="true"
+                                android:paddingLeft="16dp"
+                                android:paddingTop="14.3dp"
+                                android:paddingRight="15.8dp"
+                                android:paddingBottom="13.8dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/channels_recycler"
+                            android:layout_width="306.8dp"
+                            android:layout_height="461dp"
+                            android:layout_marginTop="3dp"
+                            android:orientation="vertical"
+
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.476"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/channel_group_name_text"
+                            app:layout_constraintVertical_bias="0.0"
+                            tools:itemCount="7"
+                            tools:listitem="@layout/channel_group_item" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/sos_overlap_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="bottom"
+                    android:alpha="0"
                     android:background="@drawable/sos_overlap_background_transition"
                     android:visibility="gone"
                     tools:alpha=".95"
@@ -147,49 +288,49 @@
 
                 <com.rallytac.engageandroid.legba.view.SwipeButton
                         android:id="@+id/sos_swipe_button"
-                        android:layout_marginTop="17.4dp"
                         android:layout_width="102dp"
                         android:layout_height="206dp"
+                        android:layout_marginTop="17.4dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                         android:id="@+id/sos_tx_image"
                         android:layout_width="300.8dp"
-                        android:alpha="0"
-                        tools:alpha="1"
                         android:layout_height="101dp"
-                        android:src="@drawable/ic_red_tx"
                         android:layout_marginBottom="55.8dp"
+                        android:alpha="0"
+                        android:src="@drawable/ic_red_tx"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        tools:alpha="1" />
 
                 <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/eyes_glow_animation"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:scrollY="245dp"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:scrollY="245dp"
                         app:lottie_autoPlay="true"
-                        app:lottie_repeatCount="0"
                         app:lottie_rawRes="@raw/eyes_glow_data"
-                        android:visibility="gone"/>
+                        app:lottie_repeatCount="0" />
 
                 <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/sos_button_glow_animation"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:scrollX="28dp"
+                        android:scrollY="168dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:lottie_autoPlay="true"
                         app:lottie_loop="true"
-                        app:lottie_rawRes="@raw/sos_glow_data"
-                        android:scrollY="168dp"
-                        android:scrollX="28dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:visibility="gone"/>
+                        app:lottie_rawRes="@raw/sos_glow_data" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -197,13 +338,13 @@
                     android:id="@+id/incoming_sos_overlap_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:alpha="0"
                     android:layout_gravity="bottom"
+                    android:alpha="0"
                     android:background="@drawable/sos_overlap_gradient_shape"
                     android:visibility="gone"
                     tools:alpha=".95"
                     tools:background="@color/secondaryBlack"
-                    tools:visibility="visible">
+                    tools:visibility="gone">
 
                 <ImageView
                         android:id="@+id/incoming_sos_overlap_logo_image"
@@ -224,13 +365,13 @@
                         android:id="@+id/incoming_sos_eyes_glow_animation"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:scrollY="245dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:scrollY="245dp"
                         app:lottie_autoPlay="true"
-                        app:lottie_repeatCount="0"
-                        app:lottie_rawRes="@raw/eyes_glow_data" />
+                        app:lottie_rawRes="@raw/eyes_glow_data"
+                        app:lottie_repeatCount="0" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/incoming_sos_overlap_message_layout"
@@ -260,7 +401,7 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                                android:layout_width ="12.8dp"
+                                android:layout_width="12.8dp"
                                 android:layout_height="9dp"
                                 android:layout_gravity="center"
                                 android:scaleType="centerCrop"
@@ -309,9 +450,9 @@
                             android:layout_marginTop="0dp"
                             android:layout_marginEnd="70.5dp"
                             android:layout_marginBottom="0dp"
-                            app:layout_constraintStart_toEndOf="@+id/incoming_sos_overlap_message_name"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/incoming_sos_overlap_message_name"
                             app:layout_constraintTop_toTopOf="parent"
                             app:srcCompat="@drawable/ic_red_tx" />
 

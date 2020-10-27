@@ -15,6 +15,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:visibility="gone"
+            tools:visibility="visible"
             android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +24,7 @@
                 style="@style/priorityChannelLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="6dp"
+                android:layout_marginBottom="0dp"
                 android:layout_weight="1"
                 android:visibility="gone"
                 android:background="@drawable/channel_resume_item_box_shape"
@@ -97,7 +99,6 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="2dp"
-
                     android:padding="13dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_speaker"
@@ -158,6 +159,7 @@
                 style="@style/priorityChannelLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="6dp"
                 android:layout_marginBottom="0dp"
                 android:layout_weight="1"
                 android:visibility="gone"
@@ -272,7 +274,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/primary_channel_layout"

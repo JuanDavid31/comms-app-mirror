@@ -8,6 +8,10 @@ public class Mission implements Serializable {
     public String name;
     public List<Channel> channels;
 
+    public void setChannels(List<Channel> channels) {
+        this.channels = channels;
+    }
+
     @Override
     public String toString() {
         return "Mission{" +
