@@ -20,12 +20,12 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.fragment.MissionFragment;
-import com.rallytac.engageandroid.legba.util.DimUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
@@ -73,7 +73,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         } else if (viewType == FULL_CHANNELS_ITEM) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.channels_general_full_item, parent, false);
-            return new ChannelGeneralFullViewHolder(itemView);
+            return new ChannelBigListViewHolder(itemView);
         } else {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.add_channel_item, parent, false);
@@ -90,10 +90,11 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
             ChannelGroup currentChannelGroup = channelsGroup.get(position);
             int currentChannelGroupSize = currentChannelGroup.channels.size();
-
+            Timber.i("Page %s channels %s", position + 1, currentChannelGroupSize);
             if (currentChannelGroupSize < 1) {
                 return;
             }
+            Timber.i("Setting 1");
 
             Channel firstChannel = currentChannelGroup.channels.get(0);
 
@@ -124,6 +125,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 channelResumeHolder.primaryChannel.setLayoutParams(lp);
             }
 
+            Timber.i("Setting 2");
+
             Channel secondChannel = currentChannelGroup.channels.get(1);
 
             channelResumeHolder.priorityChannel1.setVisibility(View.VISIBLE);
@@ -135,9 +138,13 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 notifyDataSetChanged();
             });
 
+            channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
+
             if (currentChannelGroupSize < 3) {
                 return;
             }
+
+            Timber.i("Setting 3");
 
             Channel thirdChannel = currentChannelGroup.channels.get(2);
 
@@ -150,10 +157,10 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 notifyDataSetChanged();
             });
 
-        } else if (holder instanceof ChannelGeneralFullViewHolder) {
-            ChannelGeneralFullViewHolder channelGeneralFullViewHolder = (ChannelGeneralFullViewHolder) holder;
+        } else if (holder instanceof ChannelBigListViewHolder) {
+            ChannelBigListViewHolder channelBigListViewHolder = (ChannelBigListViewHolder) holder;
             ChannelGroup currentChannelGroup = channelsGroup.get(position);
-            channelGeneralFullViewHolder.setChannels(currentChannelGroup.channels);
+            channelBigListViewHolder.setChannels(currentChannelGroup.channels);
         } else if (holder instanceof AddChannelViewHolder) {
             //TODO: Add redirection to addChannelButton.
         }
@@ -504,28 +511,21 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         }
     }
 
-    public class ChannelGeneralFullViewHolder extends GenericViewHolder {
-        private ChannelFullAdapter channelFullAdapter;
-        private List<Channel> channels;
+    public class ChannelBigListViewHolder extends GenericViewHolder {
+        private ChannelBigListAdapter channelBigListAdapter;
         private RecyclerView rvChannels;
 
-        public ChannelGeneralFullViewHolder(@NonNull View itemView) {
+        public ChannelBigListViewHolder(@NonNull View itemView) {
             super(itemView);
-            channelFullAdapter = new ChannelFullAdapter(fragment);
-            channels = new ArrayList<>();
+            channelBigListAdapter = new ChannelBigListAdapter(fragment);
             rvChannels = itemView.findViewById(R.id.rv_channels);
             rvChannels.setHasFixedSize(true);
-            rvChannels.setAdapter(channelFullAdapter);
-        }
-
-        public List<Channel> getChannels() {
-            return channels;
+            rvChannels.setAdapter(channelBigListAdapter);
         }
 
         public void setChannels(List<Channel> channels) {
-            this.channels = channels;
-            this.channelFullAdapter.setChannels(channels);
-            this.channelFullAdapter.notifyDataSetChanged();
+            this.channelBigListAdapter.setChannels(channels);
+            this.channelBigListAdapter.notifyDataSetChanged();
         }
     }
 

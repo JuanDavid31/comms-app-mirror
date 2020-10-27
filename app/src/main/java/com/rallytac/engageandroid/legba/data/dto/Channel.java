@@ -27,18 +27,19 @@ public class Channel implements Serializable {
         this.image = image;
         this.isActive = isActive;
         this.channelElements = channelElements;
-        this.isSpeakerOn = false;
+        this.isSpeakerOn = true;
     }
 
     @Override
     public String toString() {
         return "Channel{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
+                ", type=" + type +
                 ", image='" + image + '\'' +
-                ", status='" + isActive + '\'' +
-                ", subChannelsAndMembers=" + channelElements +
+                ", isActive=" + isActive +
+                ", isSpeakerOn=" + isSpeakerOn +
+                ", channelElements=" + channelElements +
                 '}';
     }
 }
