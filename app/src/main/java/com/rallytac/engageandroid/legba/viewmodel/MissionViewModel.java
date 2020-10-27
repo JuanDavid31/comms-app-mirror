@@ -30,4 +30,14 @@ public class MissionViewModel extends ViewModel {
     public void setChannelGroups(List<ChannelGroup> channelGroups) {
         this.channelGroups = channelGroups;
     }
+
+    public void addChannelGroup(ChannelGroup channelGroup) {
+        this.channelGroups.add(channelGroup);
+    }
+
+    public void addChannelsGroup(ChannelGroup... channelGroup) {
+        for(ChannelGroup current: channelGroup) {
+            addChannelGroup(current);
+        }
+    }
 }

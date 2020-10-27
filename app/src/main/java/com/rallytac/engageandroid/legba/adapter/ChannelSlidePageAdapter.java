@@ -92,6 +92,9 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             int currentChannelGroupSize = currentChannelGroup.channels.size();
 
             if (currentChannelGroupSize < 1) {
+                channelResumeHolder.primaryChannel.setVisibility(View.GONE);
+                channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
+                channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             }
 
@@ -112,6 +115,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 lp.bottomMargin = 0;
                 lp.leftMargin = 0;
                 channelResumeHolder.primaryChannel.setLayoutParams(lp);
+                channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
+                channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             } else {
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //Note: Do not use DimUtils.converDpToPx or will bug the current page
@@ -136,6 +141,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             });
 
             if (currentChannelGroupSize < 3) {
+                channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             }
 

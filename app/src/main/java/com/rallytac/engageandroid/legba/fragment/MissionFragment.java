@@ -43,6 +43,7 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -65,6 +66,7 @@ public class MissionFragment extends Fragment {
     private Context appContext;
     private MissionViewModel vm;
     private int currentPage;
+    private boolean lastPage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -203,7 +205,7 @@ public class MissionFragment extends Fragment {
         ChannelGroup channelGroup3 = new ChannelGroup("Echo", page4List);
         ChannelGroup channelGroup4 = new ChannelGroup("charlie", page5List);
 
-        vm.setChannelGroups(Arrays.asList(channelGroup, channelGroup1, channelGroup2, channelGroup3, channelGroup4));
+        vm.addChannelsGroup(channelGroup, channelGroup1, channelGroup2, channelGroup3, channelGroup4);
         return vm.getChannelsGroup();
     }
 
@@ -230,6 +232,7 @@ public class MissionFragment extends Fragment {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 currentPage = position;
+                lastPage = currentPage == vm.getChannelsGroup().size();
                 updateDots(position);
 
                 if (position < vm.getChannelsGroup().size()) {
@@ -363,15 +366,23 @@ public class MissionFragment extends Fragment {
         //setupViewPagerDotIndicator(channelsGroup); //Makes no sense unless you can delete or create pages
 
         channelSlidePageAdapter.setChannelsGroup(vm.getChannelsGroup());
-        updateDots(0);
+        setupViewPagerDotIndicator(vm.getChannelsGroup());
+        if(lastPage) updateDots(currentPage + 1);
+        else updateDots(currentPage);
     }
 
     private void updateNameAndActiveChannelsOnCurrentChannelsGroup(List<Channel> channels) {
         String newName = activity.binding.channelGroupNameText.getText().toString();
 
-        ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
-        currentChannelGroup.name = newName;
-        currentChannelGroup.channels = channels;
+        if(lastPage) {
+            ChannelGroup newChannelGroup = new ChannelGroup(newName, channels);
+            activity.binding.fragmentDescription.setText(newName);
+            vm.addChannelGroup(newChannelGroup);
+        } else {
+            ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
+            currentChannelGroup.name = newName;
+            currentChannelGroup.channels = channels;
+        }
     }
 
     public void toggleCreateEditChannelsGroupLayoutvisibility() {
@@ -380,27 +391,30 @@ public class MissionFragment extends Fragment {
         toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
         toggleLayoutVisiblity(activity.binding.channelGroupLayout);
 
-        List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).channels;
         List<Channel> allChannels = mission
                 .channels
                 .stream()
                 .peek(channel -> channel.isActive = false)
                 .collect(Collectors.toList());
 
-        List<Channel> mixedChannels = allChannels
-                .stream()
-                .map(channel -> {
-                    activeChannels
-                            .stream()
-                            .filter(activeChannel -> activeChannel.id.equals(channel.id))
-                            .findFirst()
-                            .ifPresent(activeChannel -> {
-                                channel.isActive = true;
-                            });
-                    return channel;
-                }).collect(Collectors.toList());
+        if(!lastPage) {
+            List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).channels;
+            allChannels = allChannels
+                    .stream()
+                    .map(channel -> {
+                        activeChannels
+                                .stream()
+                                .filter(activeChannel -> activeChannel.id.equals(channel.id))
+                                .findFirst()
+                                .ifPresent(activeChannel -> {
+                                    channel.isActive = true;
+                                });
+                        return channel;
+                    })
+                    .collect(Collectors.toList());
+        }
 
-        channelListAdapter.setChannels(mixedChannels);
+        channelListAdapter.setChannels(allChannels);
     }
 
     @Override
