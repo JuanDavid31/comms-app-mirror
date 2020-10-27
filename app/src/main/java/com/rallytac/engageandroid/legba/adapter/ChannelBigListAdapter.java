@@ -7,12 +7,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.R;
-import com.rallytac.engageandroid.legba.HostActivity;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.fragment.MissionFragment;
@@ -23,16 +21,13 @@ import java.util.List;
 
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
-public class ChannelFullAdapter extends RecyclerView.Adapter<ChannelFullAdapter.ChannelFullViewHolder> {
+public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAdapter.ChannelFullViewHolder> {
 
     private MissionFragment fragment;
     private List<Channel> channels;
-    private Integer generalPosition;
-    private int priorityIndicator = 1;
 
-    public ChannelFullAdapter(MissionFragment fragment) {
+    public ChannelBigListAdapter(MissionFragment fragment) {
         this.fragment = fragment;
-        generalPosition = 0;
     }
 
     public List<Channel> getChannels() {
@@ -49,17 +44,15 @@ public class ChannelFullAdapter extends RecyclerView.Adapter<ChannelFullAdapter.
     public ChannelFullViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.channels_full_item, parent, false);
-        generalPosition++;
-        return new ChannelFullViewHolder(itemView, generalPosition);
+        return new ChannelFullViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ChannelFullViewHolder holder, int position) {
         Channel currentChannel = channels.get(position);
-        //holder.channelInfo.setOnClickListener(view -> NavHostFragment.findNavController(fragment).navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(currentChannel)));
         holder.channelImage.setImageResource(getImageResource(currentChannel.image));
         holder.channelName.setText(currentChannel.name);
-        holder.channelType.setText(getTypeString(currentChannel.type));
+        holder.channelType.setText(getTypeString(currentChannel.type, position + 1));
 
         if (currentChannel.id.equals("{G2}")) {
             holder.channelImage.setBorderColor(getWaterBlueColor());
@@ -69,6 +62,7 @@ public class ChannelFullAdapter extends RecyclerView.Adapter<ChannelFullAdapter.
             holder.channelType.setTextColor(getOrangeColor());
         }
 
+        setupSpeakerIcon(currentChannel.isSpeakerOn, holder.channelSpeaker);
         holder.channelSpeaker.setOnClickListener(view -> {
             currentChannel.isSpeakerOn = !currentChannel.isSpeakerOn;
             this.fragment.binding.missionViewPager.getAdapter().notifyDataSetChanged();
@@ -83,14 +77,12 @@ public class ChannelFullAdapter extends RecyclerView.Adapter<ChannelFullAdapter.
         return fragment.getResources().getColor(R.color.orange);
     }
 
-    private String getTypeString(Channel.ChannelType type) {
+    private String getTypeString(Channel.ChannelType type, int priorityIndicator) {
         switch (type) {
             case PRIMARY:
                 return "Primary Channel";
             case PRIORITY:
-                String priority = "Priority Channel " + priorityIndicator;
-                priorityIndicator++;
-                return priority;
+                return String.format("Priority Channel %s", priorityIndicator);
             case RADIO:
                 return "Radio Channel";
             default:
@@ -98,7 +90,7 @@ public class ChannelFullAdapter extends RecyclerView.Adapter<ChannelFullAdapter.
         }
     }
 
-    private void toggleSpeakerIcon(boolean isOn, ImageView button) {
+    private void setupSpeakerIcon(boolean isOn, ImageView button) {
         if (isOn) {
             button.setImageResource(R.drawable.ic_speaker);
         } else {
@@ -124,9 +116,8 @@ public class ChannelFullAdapter extends RecyclerView.Adapter<ChannelFullAdapter.
         private TextView channelType;
         private ImageView channelMic;
         private ImageView channelSpeaker;
-        private Integer channelId;
 
-        public ChannelFullViewHolder(@NonNull View itemView, Integer channelId) {
+        public ChannelFullViewHolder(@NonNull View itemView) {
             super(itemView);
 
             channelImage = itemView.findViewById(R.id.channel_photo);
@@ -134,7 +125,6 @@ public class ChannelFullAdapter extends RecyclerView.Adapter<ChannelFullAdapter.
             channelType = itemView.findViewById(R.id.channel_type_text);
             channelSpeaker = itemView.findViewById(R.id.channel_speaker);
             channelMic = itemView.findViewById(R.id.channel_mic);
-            this.channelId = channelId;
         }
 
         @Override
