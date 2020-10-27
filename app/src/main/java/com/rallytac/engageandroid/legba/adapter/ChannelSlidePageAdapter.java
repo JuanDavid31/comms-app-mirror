@@ -91,6 +91,9 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             ChannelGroup currentChannelGroup = channelsGroup.get(position);
             int currentChannelGroupSize = currentChannelGroup.channels.size();
             if (currentChannelGroupSize < 1) {
+                channelResumeHolder.primaryChannel.setVisibility(View.GONE);
+                channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
+                channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             }
 
@@ -111,11 +114,12 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 lp.bottomMargin = 0;
                 lp.leftMargin = 0;
                 channelResumeHolder.primaryChannel.setLayoutParams(lp);
+                channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
+                channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             } else {
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //Note: Do not use DimUtils.converDpToPx or will bug the current page
                     lp.width = (int)fragment.getResources().getDimension(R.dimen.primary_channel_width_landscape);
-                    lp.leftMargin = (int)fragment.getResources().getDimension(R.dimen.primary_channel_margin_left_landscape);
                 } else {
                     lp.height = (int)fragment.getResources().getDimension(R.dimen.primary_channel_height_portrait);
                     lp.bottomMargin = (int)fragment.getResources().getDimension(R.dimen.primary_channel_margin_bottom_portrait);
@@ -138,6 +142,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
 
             if (currentChannelGroupSize < 3) {
+                channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             }
 
