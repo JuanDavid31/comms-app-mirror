@@ -52,7 +52,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         Channel currentChannel = channels.get(position);
         holder.channelImage.setImageResource(getImageResource(currentChannel.image));
         holder.channelName.setText(currentChannel.name);
-        holder.channelType.setText(getTypeString(currentChannel.type, position + 1));
+        holder.channelType.setText(getTypeString(currentChannel.type));
 
         if (currentChannel.id.equals("{G2}")) {
             holder.channelImage.setBorderColor(getWaterBlueColor());
@@ -77,12 +77,12 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         return fragment.getResources().getColor(R.color.orange);
     }
 
-    private String getTypeString(Channel.ChannelType type, int priorityIndicator) {
+    private String getTypeString(Channel.ChannelType type) {
         switch (type) {
             case PRIMARY:
                 return "Primary Channel";
             case PRIORITY:
-                return String.format("Priority Channel %s", priorityIndicator);
+                return "Priority Channel";
             case RADIO:
                 return "Radio Channel";
             default:
@@ -108,8 +108,8 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         private final static float FULL_OPACITY = 1f;
 
         private final static String PRIMARY_CHANNEL = "Primary Channel";
-        private final static String PRIORITY_CHANNEL_1 = "Priority Channel 1";
-        private final static String PRIORITY_CHANNEL_2 = "Priority Channel 2";
+        private final static String PRIORITY_CHANNEL_1 = "Priority Channel";
+        private final static String PRIORITY_CHANNEL_2 = "Priority Channel";
 
         private RoundedImageView channelImage;
         private TextView channelName;

@@ -24,9 +24,6 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
     private List<Channel> channels;
     private Context context;
 
-    private int priorityIndicator = 1;
-    private int radioIndicator = 1;
-
     public ChannelListAdapter(List<Channel> channels, MissionFragment fragment) {
         this.channels = channels;
         this.context = fragment.getAppContext();
@@ -91,12 +88,10 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
             case PRIMARY:
                 return "Primary Channel";
             case PRIORITY:
-                String priority = "Priority Channel " + priorityIndicator;
-                priorityIndicator++;
+                String priority = "Priority Channel";
                 return priority;
             case RADIO:
-                String radio = "Radio Channel " + radioIndicator;
-                radioIndicator++;
+                String radio = "Radio Channel";
                 return radio;
             default:
                 return "";

@@ -104,6 +104,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             channelResumeHolder.primaryChannel.setVisibility(View.VISIBLE);
             channelResumeHolder.primaryChannelImage.setImageResource(getImageResource(firstChannel.image));
             channelResumeHolder.primaryChannelName.setText(firstChannel.name);
+            channelResumeHolder.primaryChannelDescription.setText(getTypeString(firstChannel.type));
             toggleSpeakerIcon(firstChannel.isSpeakerOn, channelResumeHolder.primaryChannelSpeaker);
             channelResumeHolder.primaryChannelSpeaker.setOnClickListener(view -> {
                 firstChannel.isSpeakerOn = !firstChannel.isSpeakerOn;
@@ -136,6 +137,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             channelResumeHolder.priorityChannel1.setVisibility(View.VISIBLE);
             channelResumeHolder.priorityChannel1Image.setImageResource(getImageResource(secondChannel.image));
             channelResumeHolder.priorityChannel1Name.setText(secondChannel.name);
+            channelResumeHolder.priorityChannel1Description.setText(getTypeString(secondChannel.type));
             toggleSpeakerIcon(secondChannel.isSpeakerOn, channelResumeHolder.priorityChannel1Speaker);
             channelResumeHolder.priorityChannel1Speaker.setOnClickListener(view -> {
                 secondChannel.isSpeakerOn = !secondChannel.isSpeakerOn;
@@ -156,6 +158,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             channelResumeHolder.priorityChannel2.setVisibility(View.VISIBLE);
             channelResumeHolder.priorityChannel2Image.setImageResource(getImageResource(thirdChannel.image));
             channelResumeHolder.priorityChannel2Name.setText(thirdChannel.name);
+            channelResumeHolder.priorityChannel2Description.setText(getTypeString(thirdChannel.type));
             toggleSpeakerIcon(thirdChannel.isSpeakerOn, channelResumeHolder.priorityChannel2Speaker);
             channelResumeHolder.priorityChannel2Speaker.setOnClickListener(view -> {
                 thirdChannel.isSpeakerOn = !thirdChannel.isSpeakerOn;
@@ -168,6 +171,19 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             channelBigListViewHolder.setChannels(currentChannelGroup.channels);
         } else if (holder instanceof AddChannelViewHolder) {
             //TODO: Add redirection to addChannelButton.
+        }
+    }
+
+    private String getTypeString(Channel.ChannelType type) {
+        switch (type) {
+            case PRIMARY:
+                return "Primary Channel";
+            case PRIORITY:
+                return "Priority Channel";
+            case RADIO:
+                return "Radio Channel";
+            default:
+                return "";
         }
     }
 
@@ -196,8 +212,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private final static float FULL_OPACITY = 1f;
 
         private final static String PRIMARY_CHANNEL = "Primary Channel";
-        private final static String PRIORITY_CHANNEL_1 = "Priority Channel 1";
-        private final static String PRIORITY_CHANNEL_2 = "Priority Channel 2";
+        private final static String PRIORITY_CHANNEL_1 = "Priority Channel";
+        private final static String PRIORITY_CHANNEL_2 = "Priority Channel";
 
         private View channelLayout;
         private View channelInfo;
@@ -397,8 +413,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private final static float FULL_OPACITY = 1f;
 
         private final static String PRIMARY_CHANNEL = "Primary Channel";
-        private final static String PRIORITY_CHANNEL_1 = "Priority Channel 1";
-        private final static String PRIORITY_CHANNEL_2 = "Priority Channel 2";
+        private final static String PRIORITY_CHANNEL_1 = "Priority Channel";
+        private final static String PRIORITY_CHANNEL_2 = "Priority Channel";
 
         private View primaryChannel;
         private RoundedImageView primaryChannelImage;
