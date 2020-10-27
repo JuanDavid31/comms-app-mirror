@@ -122,7 +122,6 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             } else {
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //Note: Do not use DimUtils.converDpToPx or will bug the current page
                     lp.width = (int)fragment.getResources().getDimension(R.dimen.primary_channel_width_landscape);
-                    lp.leftMargin = (int)fragment.getResources().getDimension(R.dimen.primary_channel_margin_left_landscape);
                 } else {
                     lp.height = (int)fragment.getResources().getDimension(R.dimen.primary_channel_height_portrait);
                     lp.bottomMargin = (int)fragment.getResources().getDimension(R.dimen.primary_channel_margin_bottom_portrait);
