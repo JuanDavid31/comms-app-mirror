@@ -68,7 +68,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.channels_resume_item, parent, false);
             ChannelResumeViewHolder channelResumeViewHolder = new ChannelResumeViewHolder(itemView);
-            Globals.actualListeners.add(channelResumeViewHolder);
+            //Globals.actualListeners.add(channelResumeViewHolder);
             return channelResumeViewHolder;
         } else if (viewType == FULL_CHANNELS_ITEM) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -90,14 +90,12 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
             ChannelGroup currentChannelGroup = channelsGroup.get(position);
             int currentChannelGroupSize = currentChannelGroup.channels.size();
-            Timber.i("Page %s channels %s", position + 1, currentChannelGroupSize);
             if (currentChannelGroupSize < 1) {
                 channelResumeHolder.primaryChannel.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             }
-            Timber.i("Setting 1");
 
             Channel firstChannel = currentChannelGroup.channels.get(0);
 
@@ -130,7 +128,6 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 channelResumeHolder.primaryChannel.setLayoutParams(lp);
             }
 
-            Timber.i("Setting 2");
 
             Channel secondChannel = currentChannelGroup.channels.get(1);
 
@@ -150,8 +147,6 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
             }
-
-            Timber.i("Setting 3");
 
             Channel thirdChannel = currentChannelGroup.channels.get(2);
 
@@ -207,7 +202,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         }
     }
 
-    class ChannelViewHolder extends GenericViewHolder implements RxListener {
+    class ChannelViewHolder extends GenericViewHolder{
         private final static float LOW_OPACITY = 0.1f;
         private final static float FULL_OPACITY = 1f;
 
@@ -256,7 +251,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             this.channelResumeViewHolder = channelResumeViewHolder;
         }
 
-        @Override
+        /*@Override
         public void onRx(String id, String other) {
             //setupViewIncommingMessage();
             //toggleLayoutVisiblity(incomingMessageLayout);
@@ -293,7 +288,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             //toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
             hideIncommingMessageView();
             incomingMessageLayout.setVisibility(View.GONE);
-        }
+        }*/
 
         private void showIncommingMessageView(String alias) {
             channelInfo.setAlpha(LOW_OPACITY);
@@ -408,7 +403,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         }
     }
 
-    class ChannelResumeViewHolder extends GenericViewHolder implements RxListener {
+    class ChannelResumeViewHolder extends GenericViewHolder {
         private final static float LOW_OPACITY = 0.1f;
         private final static float FULL_OPACITY = 1f;
 
@@ -462,7 +457,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             priorityChannel2Rx = itemView.findViewById(R.id.rx_image_priority_channel_2);
         }
 
-        @Override
+/*        @Override
         public void onRx(String id, String other) {
 
         }
@@ -484,7 +479,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             String displayNameText = displayName == null ? "Unknown user" : displayName;
 
             showLayoutBackgroundIncommingMessageChannel(aliasText);
-        }
+        }*/
 
         private void showLayoutBackgroundIncommingMessageChannel(String alias) {
             try {

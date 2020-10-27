@@ -2,6 +2,7 @@ package com.rallytac.engageandroid.legba.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.adapter.ChannelListAdapter;
 import com.rallytac.engageandroid.legba.adapter.ChannelSlidePageAdapter;
+import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.util.StringUtils;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
@@ -63,7 +65,7 @@ public class MissionFragment extends Fragment {
     private ImageView[] dotIndicators;
     private MenuItem sosAction;
     private TransitionDrawable transition;
-    private Context appContext;
+    private Context context;
     private MissionViewModel vm;
     private int currentPage;
     private boolean lastPage;
@@ -74,6 +76,7 @@ public class MissionFragment extends Fragment {
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
         mission = missionFragmentArgs.getMission();
         vm = new ViewModelProvider(this).get(MissionViewModel.class);
+        context = getContext();
     }
 
     @Override
@@ -107,10 +110,6 @@ public class MissionFragment extends Fragment {
 
     public Mission getMission() {
         return mission;
-    }
-
-    public Context getAppContext() {
-        return appContext;
     }
 
     private void updateToolbar() {
@@ -209,20 +208,27 @@ public class MissionFragment extends Fragment {
         return vm.getChannelsGroup();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setupPTTOnMic() {
-        binding.icMicCard.setOnTouchListener((v, event) -> {
+        binding.icMicCard.setOnTouchListener((view, event) -> {
+
+            List<String> activeGroupIds = vm.getChannelsGroup()
+                    .get(currentPage)
+                    .channels
+                    .stream()
+                    .filter(channel -> channel.isActive)
+                    .map(channel -> channel.id)
+                    .collect(Collectors.toList());
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 binding.txImage.setVisibility(View.VISIBLE);
                 Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
-                Globals.getEngageApplication().startTx(0, 0);
+                activeGroupIds.forEach(groupId -> DataManager.getInstance(context).startTx(groupId));
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 binding.txImage.setVisibility(View.INVISIBLE);
                 Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
-                Globals.getEngageApplication().endTx();
-
+                activeGroupIds.forEach(groupId -> DataManager.getInstance(context).endTx(groupId));
             }
-
             return true;
         });
     }
@@ -234,17 +240,42 @@ public class MissionFragment extends Fragment {
                 currentPage = position;
                 lastPage = currentPage == vm.getChannelsGroup().size();
                 updateDots(position);
+                muteEverybody();
 
                 if (position < vm.getChannelsGroup().size()) {
                     activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
                     String name = StringUtils.capitalize(vm.getChannelsGroup().get(position).name);
                     activity.binding.fragmentDescription.setText(name);
+
+                    unMuteActiveChannels(vm.getChannelsGroup().get(currentPage));
                 } else {
                     activity.binding.fragmentDescription.setText("");
                     activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
                 }
             }
         });
+    }
+
+    private void muteEverybody(){
+        mission.channels
+                .stream()
+                .map(channel -> channel.id)
+                .forEach(channelId -> DataManager.getInstance(context).muteGroup(channelId));
+    }
+
+    private void unMuteActiveChannels(ChannelGroup currentChannelGroup){
+        currentChannelGroup
+                .channels
+                .stream()
+                .filter(channel -> channel.isSpeakerOn)
+                .filter(channel -> channel.isActive)
+                .map(channel -> channel.id)
+                .forEach(channelId -> DataManager.getInstance(context).unmuteGroup(channelId));
+    }
+
+    private void setCurrentGroupId(String groupId){
+        Timber.i("Before joining a new group %s ", Globals.getEngageApplication().getActiveConfiguration().getMissionId());
+
     }
 
     private void setupViewPagerDotIndicator(List channelGroup) {
@@ -333,7 +364,7 @@ public class MissionFragment extends Fragment {
 
         if (lastPage) {
             activity.binding.createEditChannelsGroupButton.setClickable(false);
-            activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(appContext, R.drawable.edit_channel_group_btn_fade_shape));
+            activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_fade_shape));
         }
 
         activity.binding.channelGroupNameText.addTextChangedListener(new TextWatcher() {
@@ -357,10 +388,10 @@ public class MissionFragment extends Fragment {
 
                 if ((coincidences < 1L || channelGroupNameSearch.equals(currentChannelGroupName)) && channelGroupNameSearch.length() > 0) {
                     activity.binding.createEditChannelsGroupButton.setClickable(true);
-                    activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(appContext, R.drawable.edit_channel_group_btn_shape));
+                    activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_shape));
                 } else {
                     activity.binding.createEditChannelsGroupButton.setClickable(false);
-                    activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(appContext, R.drawable.edit_channel_group_btn_fade_shape));
+                    activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_fade_shape));
                 }
             }
         });
@@ -479,13 +510,6 @@ public class MissionFragment extends Fragment {
             }
         });
 
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (appContext == null)
-            appContext = context.getApplicationContext();
     }
 
     private void toggleLayoutVisiblity(View layout) {

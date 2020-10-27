@@ -68,10 +68,10 @@ public class Globals
         return _apm;
     }
 
-    public static void notifyListenersStart(final String id, final String alias, final String displayname, final String eventExtraJson) {
+    public static void notifyListenersStart(final String id, final String alias, final String displayname) {
         for(RxListener currentListener: actualListeners) {
             try {
-                currentListener.onJsonRX(id, alias, displayname);
+                currentListener.onRx(id, alias, displayname);
             } catch (Exception e) {
                 e.printStackTrace();
             }

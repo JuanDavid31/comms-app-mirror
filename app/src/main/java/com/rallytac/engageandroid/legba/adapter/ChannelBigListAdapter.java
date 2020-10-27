@@ -103,7 +103,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         return channels.size();
     }
 
-    public class ChannelFullViewHolder extends RecyclerView.ViewHolder implements RxListener {
+    public class ChannelFullViewHolder extends RecyclerView.ViewHolder{
         private final static float LOW_OPACITY = 0.1f;
         private final static float FULL_OPACITY = 1f;
 
@@ -127,7 +127,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
             channelMic = itemView.findViewById(R.id.channel_mic);
         }
 
-        @Override
+/*        @Override
         public void onRx(String id, String other) {
             //setupViewIncommingMessage();
             //toggleLayoutVisiblity(incomingMessageLayout);
@@ -151,6 +151,6 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         public void stopRx() {
             //incomingMessageLayout.setVisibility(View.INVISIBLE);
             //toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
-        }
+        }*/
     }
 }

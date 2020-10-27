@@ -26,7 +26,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
 
     public ChannelListAdapter(List<Channel> channels, MissionFragment fragment) {
         this.channels = channels;
-        this.context = fragment.getAppContext();
+        this.context = fragment.getContext();
     }
 
     public List<Channel> getChannels() {

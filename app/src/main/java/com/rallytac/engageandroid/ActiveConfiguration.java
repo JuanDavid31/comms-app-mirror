@@ -410,6 +410,10 @@ public class ActiveConfiguration
         return _missionId;
     }
 
+    public void set_missionId(String id){
+        this._missionId = id;
+    }
+
     public String getMissionName()
     {
         return _missionName;
@@ -1576,6 +1580,8 @@ public class ActiveConfiguration
 
         return rc;
     }
+
+
 
     public void updateGroupStates(ActiveConfiguration ac)
     {

@@ -39,7 +39,7 @@ public class MissionsListFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_missions_list, container, false);
         setupToolbar();
-        List<Mission> missions = new DataManager(getContext()).getMissions();
+        List<Mission> missions = DataManager.getInstance(getContext()).getMissions();
         MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), this);
         binding.missionsListRecyclerView.setHasFixedSize(true);
 
@@ -52,7 +52,7 @@ public class MissionsListFragment extends Fragment {
 
 
         binding.missionsListRecyclerView.setAdapter(adapter);
-        adapter.setMissions(missions);
+        adapter.setMissions(missions, getContext());
         return binding.getRoot();
     }
 
