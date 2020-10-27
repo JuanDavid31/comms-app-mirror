@@ -23,6 +23,7 @@ import com.rallytac.engageandroid.legba.fragment.MissionFragment;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
@@ -32,8 +33,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
     private Fragment fragment;
     private List<ChannelGroup> channelsGroup;
 
-    private int CHANNEL_ITEM = 0;
-    private int RESUME_CHANNELS_ITEM = 1;
+    private int RESUME_CHANNELS_ITEM = 0;
+    private int FULL_CHANNELS_ITEM = 1;
     private int ADD_CHANNEL_ITEM = 2;
 
     private int priorityIndicator = 1;
@@ -60,11 +61,10 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
     @Override
     public int getItemViewType(int position) {
         if (position < channelsGroup.size()) {
-            if(channelsGroup.get(position).channels.size() < 4){
+            if (channelsGroup.get(position).channels.size() < 4) {
                 return RESUME_CHANNELS_ITEM;
-            }else {
-                // TODO: new holder type
-                return ADD_CHANNEL_ITEM;
+            } else {
+                return FULL_CHANNELS_ITEM;
             }
         } else {
             return ADD_CHANNEL_ITEM;
@@ -80,6 +80,10 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             ChannelResumeViewHolder channelResumeViewHolder = new ChannelResumeViewHolder(itemView);
             Globals.actualListeners.add(channelResumeViewHolder);
             return channelResumeViewHolder;
+        } else if (viewType == FULL_CHANNELS_ITEM) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.channels_general_full_item, parent, false);
+            return new ChannelGeneralFullViewHolder(itemView);
         } else {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.add_channel_item, parent, false);
@@ -127,10 +131,10 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
                     lp.width = (int) fragment.getResources().getDimension(R.dimen.primary_channel_width_landscape);
                     lp.leftMargin = (int) fragment.getResources().getDimension(R.dimen.primary_channel_margin_left_landscape);
-                }
-                else {
+                } else {
                     lp.height = (int) fragment.getResources().getDimension(R.dimen.primary_channel_height_portrait);
-                    lp.bottomMargin = (int) fragment.getResources().getDimension(R.dimen.primary_channel_margin_bottom_portrait);;
+                    lp.bottomMargin = (int) fragment.getResources().getDimension(R.dimen.primary_channel_margin_bottom_portrait);
+                    ;
                 }
                 channelResumeHolder.primaryChannel.setLayoutParams(lp);
             }
@@ -163,6 +167,9 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             });
 
 
+        } else if (holder instanceof ChannelGeneralFullViewHolder) {
+            ChannelGeneralFullViewHolder channelGeneralFullViewHolder = (ChannelGeneralFullViewHolder) holder;
+            channelGeneralFullViewHolder.setChannels(channelsGroup.get(position).channels);
         } else if (holder instanceof AddChannelViewHolder) {
             //TODO: Add redirection to addChannelButton.
         }
@@ -325,7 +332,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                     channelLayout.setBackground(ContextCompat.getDrawable(fragment.getContext(),
                             R.drawable.primary_channel_item_fade_shape));
 
-                    if(channelResumeViewHolder == null) return;
+                    if (channelResumeViewHolder == null) return;
                     channelResumeViewHolder.primaryChannel
                             .setBackground(ContextCompat.getDrawable(fragment.getContext(),
                                     R.drawable.primary_channel_item_fade_shape));
@@ -338,12 +345,11 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                     channelResumeViewHolder.primaryChannelRx.setVisibility(View.VISIBLE);
                     channelResumeViewHolder.priorityChannel1.setAlpha(LOW_OPACITY);
                     channelResumeViewHolder.priorityChannel2.setAlpha(LOW_OPACITY);
-                }
-                else if(this.channelId == 1) {
+                } else if (this.channelId == 1) {
                     channelLayout.setBackground(ContextCompat.getDrawable(fragment.getContext(),
                             R.drawable.prioritary1_channel_item_fade_shape));
 
-                    if(channelResumeViewHolder == null) return;
+                    if (channelResumeViewHolder == null) return;
                     channelResumeViewHolder.priorityChannel1
                             .setBackground(ContextCompat.getDrawable(fragment.getContext(),
                                     R.drawable.prioritary1_channel_item_fade_shape));
@@ -356,11 +362,11 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                     channelResumeViewHolder.priorityChannel1Rx.setVisibility(View.VISIBLE);
                     channelResumeViewHolder.priorityChannel1.setAlpha(FULL_OPACITY);
                     channelResumeViewHolder.priorityChannel2.setAlpha(LOW_OPACITY);
-                } else if(this.channelId == 2) {
+                } else if (this.channelId == 2) {
                     channelLayout.setBackground(ContextCompat.getDrawable(fragment.getContext(),
                             R.drawable.prioritary2_channel_item_fade_shape));
 
-                    if(channelResumeViewHolder == null) return;
+                    if (channelResumeViewHolder == null) return;
                     channelResumeViewHolder.priorityChannel2
                             .setBackground(ContextCompat.getDrawable(fragment.getContext(),
                                     R.drawable.prioritary2_channel_item_fade_shape));
@@ -384,7 +390,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 channelLayout.setBackground(ContextCompat.getDrawable(fragment.getContext(),
                         R.drawable.channel_item_shape));
 
-                if(channelResumeViewHolder == null) return;
+                if (channelResumeViewHolder == null) return;
 
                 channelResumeViewHolder.primaryChannelDescription.setText(PRIMARY_CHANNEL);
                 channelResumeViewHolder.priorityChannel1Description.setText(PRIORITY_CHANNEL_1);
@@ -534,6 +540,38 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+
+    public class ChannelGeneralFullViewHolder extends GenericViewHolder {
+        private ChannelFullAdapter channelFullAdapter;
+        private List<Channel> channels;
+        private RecyclerView rvChannels;
+
+        public ChannelGeneralFullViewHolder(@NonNull View itemView) {
+            super(itemView);
+            channelFullAdapter = new ChannelFullAdapter(fragment);
+            channels = new ArrayList<>();
+            rvChannels = itemView.findViewById(R.id.rv_channels);
+            rvChannels.setHasFixedSize(true);
+            rvChannels.setAdapter(channelFullAdapter);
+        }
+
+        public ChannelFullAdapter getChannelFullAdapter() {
+            return channelFullAdapter;
+        }
+
+        public void setChannelFullAdapter(ChannelFullAdapter channelFullAdapter) {
+            this.channelFullAdapter = channelFullAdapter;
+        }
+
+        public List<Channel> getChannels() {
+            return channels;
+        }
+
+        public void setChannels(List<Channel> channels) {
+            this.channels = channels;
+            this.channelFullAdapter.setChannels(channels);
         }
     }
 
