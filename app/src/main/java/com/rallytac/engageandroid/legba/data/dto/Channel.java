@@ -15,17 +15,19 @@ public class Channel implements Serializable {
     public String name;
     public ChannelType type;
     public String image;
-    public boolean status;
+    public boolean isActive;
+    public boolean isSpeakerOn;
     public List<ChannelElement> channelElements;
 
     public Channel(String id, String name, ChannelType type, String image,
-                   boolean status, List<ChannelElement> channelElements) {
+                   boolean isActive, List<ChannelElement> channelElements) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.image = image;
-        this.status = status;
+        this.isActive = isActive;
         this.channelElements = channelElements;
+        this.isSpeakerOn = false;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class Channel implements Serializable {
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", image='" + image + '\'' +
-                ", status='" + status + '\'' +
+                ", status='" + isActive + '\'' +
                 ", subChannelsAndMembers=" + channelElements +
                 '}';
     }

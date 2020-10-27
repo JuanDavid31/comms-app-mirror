@@ -46,7 +46,6 @@ import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import timber.log.Timber;
@@ -56,7 +55,7 @@ import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 public class MissionFragment extends Fragment {
 
     private HostActivity activity;
-    private FragmentMissionBinding binding;
+    public FragmentMissionBinding binding;
     private Mission mission;
     private ChannelSlidePageAdapter channelSlidePageAdapter;
     private ChannelListAdapter channelListAdapter;
@@ -385,7 +384,7 @@ public class MissionFragment extends Fragment {
         List<Channel> allChannels = mission
                 .channels
                 .stream()
-                .peek(channel -> channel.status = false)
+                .peek(channel -> channel.isActive = false)
                 .collect(Collectors.toList());
 
         List<Channel> mixedChannels = allChannels
@@ -396,7 +395,7 @@ public class MissionFragment extends Fragment {
                             .filter(activeChannel -> activeChannel.id.equals(channel.id))
                             .findFirst()
                             .ifPresent(activeChannel -> {
-                                channel.status = true;
+                                channel.isActive = true;
                             });
                     return channel;
                 }).collect(Collectors.toList());

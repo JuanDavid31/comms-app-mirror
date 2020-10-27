@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.legba.HostActivity;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.engage.RxListener;
+import com.rallytac.engageandroid.legba.fragment.MissionFragment;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,12 +25,12 @@ import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
 public class ChannelFullAdapter extends RecyclerView.Adapter<ChannelFullAdapter.ChannelFullViewHolder> {
 
-    private Fragment fragment;
+    private MissionFragment fragment;
     private List<Channel> channels;
     private Integer generalPosition;
     private int priorityIndicator = 1;
 
-    public ChannelFullAdapter(Fragment fragment) {
+    public ChannelFullAdapter(MissionFragment fragment) {
         this.fragment = fragment;
         generalPosition = 0;
     }
@@ -59,17 +61,17 @@ public class ChannelFullAdapter extends RecyclerView.Adapter<ChannelFullAdapter.
         holder.channelName.setText(currentChannel.name);
         holder.channelType.setText(getTypeString(currentChannel.type));
 
-        if (currentChannel.id ==  2) {
+        if (currentChannel.id.equals("{G2}")) {
             holder.channelImage.setBorderColor(getWaterBlueColor());
             holder.channelType.setTextColor(getWaterBlueColor());
-        } else if (currentChannel.id == 3) {
+        } else if (currentChannel.id.equals("{G3}")) {
             holder.channelImage.setBorderColor(getOrangeColor());
             holder.channelType.setTextColor(getOrangeColor());
-
         }
+
         holder.channelSpeaker.setOnClickListener(view -> {
-            toggleSpeakerIcon(holder.isSpeakerOn, (ImageView) view);
-            holder.isSpeakerOn = !holder.isSpeakerOn;
+            currentChannel.isSpeakerOn = !currentChannel.isSpeakerOn;
+            this.fragment.binding.missionViewPager.getAdapter().notifyDataSetChanged();
         });
     }
 
@@ -122,7 +124,6 @@ public class ChannelFullAdapter extends RecyclerView.Adapter<ChannelFullAdapter.
         private TextView channelType;
         private ImageView channelMic;
         private ImageView channelSpeaker;
-        private boolean isSpeakerOn ;
         private Integer channelId;
 
         public ChannelFullViewHolder(@NonNull View itemView, Integer channelId) {
@@ -133,7 +134,6 @@ public class ChannelFullAdapter extends RecyclerView.Adapter<ChannelFullAdapter.
             channelType = itemView.findViewById(R.id.channel_type_text);
             channelSpeaker = itemView.findViewById(R.id.channel_speaker);
             channelMic = itemView.findViewById(R.id.channel_mic);
-            isSpeakerOn = true;
             this.channelId = channelId;
         }
 

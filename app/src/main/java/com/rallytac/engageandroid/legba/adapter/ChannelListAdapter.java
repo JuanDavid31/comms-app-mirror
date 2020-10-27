@@ -38,7 +38,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
 
     public List<Channel> getCheckedChannels() {
         return channels.stream()
-                .filter(channel -> channel.status)
+                .filter(channel -> channel.isActive)
                 .collect(Collectors.toList());
     }
 
@@ -67,8 +67,8 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
         holder.principalLayoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getCheckedChannels().size() < 2 && channel.status) return;
-                channel.status = !channel.status;
+                if(getCheckedChannels().size() < 2 && channel.isActive) return;
+                channel.isActive = !channel.isActive;
                 channels.set(position, channel);
                 setupCheckChannel(holder, channel);
             }
@@ -76,7 +76,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
     }
 
     private void setupCheckChannel(ChannelGroupViewHolder holder, Channel channel) {
-        if(channel.status) {
+        if(channel.isActive) {
             holder.principalLayoutItem.setBackground(ContextCompat.getDrawable(context,
                     R.drawable.channel_group_check_item_shape));
             holder.channelCheckImg.setImageResource(R.mipmap.group_158);
