@@ -40,4 +40,8 @@ public class MissionViewModel extends ViewModel {
             addChannelGroup(current);
         }
     }
+
+    public void deleteChannelGroup(int currentPage) {
+        this.channelGroups.remove(currentPage);
+    }
 }

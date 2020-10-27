@@ -331,6 +331,11 @@ public class MissionFragment extends Fragment {
         activity.binding.closeCreateEditChannelsViewButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility()); //TODO: Replace for a proper fix
         activity.binding.createEditChannelsGroupButton.setOnClickListener(view -> updateCurrentChannelsGroup());
 
+        if (lastPage) {
+            activity.binding.createEditChannelsGroupButton.setClickable(false);
+            activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(appContext, R.drawable.edit_channel_group_btn_fade_shape));
+        }
+
         activity.binding.channelGroupNameText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -344,14 +349,17 @@ public class MissionFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String channelGroupNameSearch = editable.toString().toLowerCase();
+                String channelGroupNameSearch = editable.toString().toLowerCase().trim();
+                String currentChannelGroupName = activity.binding.fragmentDescription.getText().toString().toLowerCase().trim();
                 Long coincidences = vm.getChannelsGroup().stream()
                         .filter(channelGroup -> channelGroup.name.equalsIgnoreCase(channelGroupNameSearch))
                         .count();
 
-                if (coincidences < 1L && channelGroupNameSearch.length() > 0) {
+                if ((coincidences < 1L || channelGroupNameSearch.equals(currentChannelGroupName)) && channelGroupNameSearch.length() > 0) {
+                    activity.binding.createEditChannelsGroupButton.setClickable(true);
                     activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(appContext, R.drawable.edit_channel_group_btn_shape));
                 } else {
+                    activity.binding.createEditChannelsGroupButton.setClickable(false);
                     activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(appContext, R.drawable.edit_channel_group_btn_fade_shape));
                 }
             }
@@ -360,16 +368,26 @@ public class MissionFragment extends Fragment {
 
     private void updateCurrentChannelsGroup() {
         List<Channel> channels = channelListAdapter.getCheckedChannels();
+        if(channels.size() > 0) {
+            updateNameAndActiveChannelsOnCurrentChannelsGroup(channels);
+        } else if(!lastPage){
+            vm.deleteChannelGroup(currentPage);
+            boolean channelGroupSize = currentPage >= vm.getChannelsGroup().size();
 
-        updateNameAndActiveChannelsOnCurrentChannelsGroup(channels);
+            if(channelGroupSize) {
+                lastPage = true;
+                activity.binding.fragmentDescription.setText("");
+                activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
+            }
+            else {
+                activity.binding.fragmentDescription.setText(vm.getChannelsGroup().get(currentPage).name);
+            }
+        }
+
         toggleCreateEditChannelsGroupLayoutvisibility();
-        //setupViewPagerDotIndicator(channelsGroup); //Makes no sense unless you can delete or create pages
-
         channelSlidePageAdapter.setChannelsGroup(vm.getChannelsGroup());
         setupViewPagerDotIndicator(vm.getChannelsGroup());
-
-        if(lastPage) updateDots(vm.getChannelsGroup().size() - 1);
-        else updateDots(currentPage);
+        updateDots(currentPage);
     }
 
     private void updateNameAndActiveChannelsOnCurrentChannelsGroup(List<Channel> channels) {
@@ -377,13 +395,14 @@ public class MissionFragment extends Fragment {
 
         if(lastPage) {
             ChannelGroup newChannelGroup = new ChannelGroup(newName, channels);
-            activity.binding.fragmentDescription.setText(newName);
             vm.addChannelGroup(newChannelGroup);
         } else {
             ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
             currentChannelGroup.name = newName;
             currentChannelGroup.channels = channels;
         }
+
+        activity.binding.fragmentDescription.setText(newName);
     }
 
     public void toggleCreateEditChannelsGroupLayoutvisibility() {

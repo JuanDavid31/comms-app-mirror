@@ -67,7 +67,6 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
         holder.principalLayoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(getCheckedChannels().size() < 2 && channel.isActive) return;
                 channel.isActive = !channel.isActive;
                 channels.set(position, channel);
                 setupCheckChannel(holder, channel);
