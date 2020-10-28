@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.engage.RxListener;
@@ -106,6 +107,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             toggleSpeakerIcon(firstChannel.isSpeakerOn, channelResumeHolder.primaryChannelSpeaker);
             channelResumeHolder.primaryChannelSpeaker.setOnClickListener(view -> {
                 firstChannel.isSpeakerOn = !firstChannel.isSpeakerOn;
+                DataManager.getInstance(fragment.getContext()).toggleMute(firstChannel.id, firstChannel.isSpeakerOn);
                 notifyDataSetChanged();
             });
 
@@ -138,6 +140,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             toggleSpeakerIcon(secondChannel.isSpeakerOn, channelResumeHolder.priorityChannel1Speaker);
             channelResumeHolder.priorityChannel1Speaker.setOnClickListener(view -> {
                 secondChannel.isSpeakerOn = !secondChannel.isSpeakerOn;
+                DataManager.getInstance(fragment.getContext()).toggleMute(secondChannel.id, secondChannel.isSpeakerOn);
                 notifyDataSetChanged();
             });
 
@@ -157,6 +160,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             toggleSpeakerIcon(thirdChannel.isSpeakerOn, channelResumeHolder.priorityChannel2Speaker);
             channelResumeHolder.priorityChannel2Speaker.setOnClickListener(view -> {
                 thirdChannel.isSpeakerOn = !thirdChannel.isSpeakerOn;
+                DataManager.getInstance(fragment.getContext()).toggleMute(thirdChannel.id, thirdChannel.isSpeakerOn);
                 notifyDataSetChanged();
             });
 

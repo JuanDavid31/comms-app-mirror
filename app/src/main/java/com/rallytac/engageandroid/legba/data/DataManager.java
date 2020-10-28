@@ -2,8 +2,8 @@ package com.rallytac.engageandroid.legba.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.provider.Settings;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.rallytac.engage.engine.Engine;
@@ -130,11 +130,58 @@ public class DataManager {
                 });
         updateDB();
 
-        Globals.getEngageApplication().restartEngine();
+        mission.channels
+                .forEach(channel -> {
+                    String txData = new Gson().toJson(new TxData(channel.id, channel.name));
+                    Timber.i("txData -> %s", txData);
+                    String realTxData = Globals.getEngageApplication().buildFinalGroupJsonConfiguration(txData);
+                    Globals.getEngageApplication().getEngine().engageCreateGroup(realTxData);
+                });
+
         mission.channels.forEach(channel -> Globals.getEngageApplication().getEngine().engageJoinGroup(channel.id));
+        Globals.getEngageApplication().updateActiveConfiguration();
     }
 
-    private void initEngine(){
+    public void toggleMute(String groupId, boolean isSpeakerOn) {
+        if(isSpeakerOn){
+            Globals.getEngageApplication().getEngine().engageUnmuteGroupRx(groupId);
+        }else{
+            Globals.getEngageApplication().getEngine().engageMuteGroupRx(groupId);
+        }
+    }
+
+    class TxData{
+        String id;
+        String name;
+        int type = 1;
+        RxTx rx = new RxTx("");
+        RxTx tx = new RxTx("239.42.43.1");
+        TxAudio txAudio = new TxAudio();
+
+        public TxData(String id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        class RxTx {
+            String address = "";
+            int port = 49000;
+
+            public RxTx(String address) {
+                this.address = address;
+            }
+        }
+
+        class TxAudio {//{"encoder":25,"framingMs":60,"noHdrExt":false,"fdx":false,"maxTxSecs":120}
+            int encoder = 25;
+            int framingMs = 60;
+            boolean noHdrExt = false;
+            boolean fdx = false;
+            int maxTxSecs = 120;
+        }
+    }
+
+    private void initEngine() {
         Engine engine = Globals.getEngageApplication().getEngine();
         //engine.engageOpenCertStore() // ?
         //engine.engageInitialize() // ?
@@ -149,11 +196,11 @@ public class DataManager {
         Globals.getEngageApplication().getEngine().engageMuteGroupRx(groupId);
     }
 
-    public void startTx(String groupId){
-        Globals.getEngageApplication().startTxLegba(0, 0, groupId);
+    public void startTx(String... groupIds) {
+        Globals.getEngageApplication().startTxLegba(0, 0, groupIds);
     }
 
-    public void endTx(String groupId){
-        Globals.getEngageApplication().endTxLega(groupId);
+    public void endTx(String... groupIds) {
+        Globals.getEngageApplication().endTxLega(groupIds);
     }
 }
