@@ -216,7 +216,6 @@ public class MissionFragment extends Fragment {
                     .get(currentPage)
                     .channels
                     .stream()
-                    .filter(channel -> channel.isActive)
                     .map(channel -> channel.id)
                     .collect(Collectors.toList());
 

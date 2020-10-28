@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.fragment.MissionFragment;
@@ -65,6 +66,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         setupSpeakerIcon(currentChannel.isSpeakerOn, holder.channelSpeaker);
         holder.channelSpeaker.setOnClickListener(view -> {
             currentChannel.isSpeakerOn = !currentChannel.isSpeakerOn;
+            DataManager.getInstance(fragment.getContext()).toggleMute(currentChannel.id, currentChannel.isSpeakerOn);
             this.fragment.binding.missionViewPager.getAdapter().notifyDataSetChanged();
         });
     }

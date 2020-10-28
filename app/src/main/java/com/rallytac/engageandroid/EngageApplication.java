@@ -1179,7 +1179,7 @@ public class EngageApplication
         return rc;
     }
 
-    private String buildFinalGroupJsonConfiguration(String groupJson) {
+    public String buildFinalGroupJsonConfiguration(String groupJson) {
         String rc;
 
         try {
@@ -2401,10 +2401,10 @@ public class EngageApplication
 
                 Log.d(TAG, "onEngineStarted");
                 _engineRunning = true;
-                createAllGroupObjects();
-                joinSelectedGroups();
-                startLocationUpdates(); // Bussiness logic
-                startHardwareButtonManager(); // Bussiness logic
+//                createAllGroupObjects();
+//                joinSelectedGroups();
+//                startLocationUpdates(); // Bussiness logic
+//                startHardwareButtonManager(); // Bussiness logic
             }
         });
     }

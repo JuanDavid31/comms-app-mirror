@@ -13,6 +13,8 @@ import com.rallytac.engageandroid.legba.engage.RxListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class Globals
 {
     private static Context _ctx = null;
@@ -69,6 +71,7 @@ public class Globals
     }
 
     public static void notifyListenersStart(final String id, final String alias, final String displayname) {
+        Timber.i("Rx from %s", id);
         for(RxListener currentListener: actualListeners) {
             try {
                 currentListener.onRx(id, alias, displayname);
