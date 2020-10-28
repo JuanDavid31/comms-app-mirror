@@ -1245,10 +1245,10 @@ public class EngageApplication
         try {
             for (GroupDescriptor gd : _activeConfiguration.getMissionGroups()) {
                 Log.d(TAG, "creating " + gd.id + " of mission " + _activeConfiguration.getMissionName());
+                Timber.i(String.format("creating %s of mission %s", gd.id, _activeConfiguration.getMissionName()));
                 getEngine().engageCreateGroup(buildFinalGroupJsonConfiguration(gd.jsonConfiguration));
                 if (gd.type == GroupDescriptor.Type.gtAudio) {
                     VolumeLevels vl = loadVolumeLevels(gd.id);
-                    Timber.i("Group id %s Volume left %s Volume right %s", gd.id, vl.left, vl.right);
                     getEngine().engageSetGroupRxVolume(gd.id, vl.left, vl.right);
                 }
             }
@@ -1274,7 +1274,7 @@ public class EngageApplication
                 } else if (gd.type == GroupDescriptor.Type.gtRaw) {
                     // All raw groups get joined
                     joinIt = true;
-                } else if (gd.type == GroupDescriptor.Type.gtAudio) {
+                } /*else if (gd.type == GroupDescriptor.Type.gtAudio) {
                     // Maybe just the one that's the single view
                     if (_activeConfiguration.getUiMode() == Constants.UiMode.vSingle) {
                         if (gd.selectedForSingleView) {
@@ -1287,13 +1287,16 @@ public class EngageApplication
                             joinIt = true;
                         }
                     }
-                }
+                }*/
+
+                joinIt = true;
 
                 if (joinIt) {
                     if (gd.joined) {
                         Log.w(TAG, "joining a group which is already joined");
                     }
 
+                    Timber.i("Joining %s", gd.id);
                     getEngine().engageJoinGroup(gd.id);
                 }
             }
@@ -2013,6 +2016,7 @@ public class EngageApplication
 
                     Timber.i("CurrentMissionId -> %s ", currentMissionId);
                     Timber.i("CurrentMissionName ->%s ", activeConfiguration.getMissionName());
+                    Timber.i("CurrentMissionGroupId -> %s", id);
 
                     getEngine().engageBeginGroupTxAdvanced(id, buildAdvancedTxJson(flags, priority, 0, true, _activeConfiguration.getUserAlias()));
                 }

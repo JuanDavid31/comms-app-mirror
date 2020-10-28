@@ -221,11 +221,12 @@ public class MissionFragment extends Fragment {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 binding.txImage.setVisibility(View.VISIBLE);
                 Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
-                activeGroupIds.forEach(groupId -> DataManager.getInstance(context).startTx(groupId));
+                Timber.i("Tx to %s", activeGroupIds);
+                DataManager.getInstance(context).startTx(activeGroupIds.toArray(new String[activeGroupIds.size()]));
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 binding.txImage.setVisibility(View.INVISIBLE);
                 Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
-                activeGroupIds.forEach(groupId -> DataManager.getInstance(context).endTx(groupId));
+                DataManager.getInstance(context).endTx(activeGroupIds.toArray(new String[activeGroupIds.size()]));
             }
             return true;
         });
@@ -254,20 +255,21 @@ public class MissionFragment extends Fragment {
     }
 
     private void muteEverybody(){
-        mission.channels
+        //DataManager.getInstance(context).joinGroups();
+        /*mission.channels
                 .stream()
                 .map(channel -> channel.id)
-                .forEach(channelId -> DataManager.getInstance(context).muteGroup(channelId));
+                .forEach(channelId -> DataManager.getInstance(context).muteGroup(channelId));*/
     }
 
     private void unMuteActiveChannels(ChannelGroup currentChannelGroup){
-        currentChannelGroup
+/*        currentChannelGroup
                 .channels
                 .stream()
                 .filter(channel -> channel.isSpeakerOn)
                 .filter(channel -> channel.isActive)
                 .map(channel -> channel.id)
-                .forEach(channelId -> DataManager.getInstance(context).unmuteGroup(channelId));
+                .forEach(channelId -> DataManager.getInstance(context).unmuteGroup(channelId));*/
     }
 
     private void setCurrentGroupId(String groupId){

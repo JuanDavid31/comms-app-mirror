@@ -130,8 +130,10 @@ public class DataManager {
                 });
         updateDB();
 
-        Globals.getEngageApplication().restartEngine();
-        mission.channels.forEach(channel -> Globals.getEngageApplication().getEngine().engageJoinGroup(channel.id));
+        /*Globals.getEngageApplication().createAllGroupObjects();
+        Globals.getEngageApplication().joinSelectedGroups();*/
+        Globals.getEngageApplication().updateActiveConfiguration();
+        //mission.channels.forEach(channel -> Globals.getEngageApplication().getEngine().engageJoinGroup(channel.id));
     }
 
     private void initEngine(){
@@ -139,6 +141,14 @@ public class DataManager {
         //engine.engageOpenCertStore() // ?
         //engine.engageInitialize() // ?
         engine.engageStart();
+    }
+
+    public void createGroups(){
+        Globals.getEngageApplication().createAllGroupObjects();
+    }
+
+    public void joinGroups(){
+        Globals.getEngageApplication().joinSelectedGroups();
     }
 
     public void unmuteGroup(String groupId) {
@@ -149,11 +159,11 @@ public class DataManager {
         Globals.getEngageApplication().getEngine().engageMuteGroupRx(groupId);
     }
 
-    public void startTx(String groupId){
-        Globals.getEngageApplication().startTxLegba(0, 0, groupId);
+    public void startTx(String... groupIds){
+        Globals.getEngageApplication().startTxLegba(0, 0, groupIds);
     }
 
-    public void endTx(String groupId){
-        Globals.getEngageApplication().endTxLega(groupId);
+    public void endTx(String... groupIds){
+        Globals.getEngageApplication().endTxLega(groupIds);
     }
 }
