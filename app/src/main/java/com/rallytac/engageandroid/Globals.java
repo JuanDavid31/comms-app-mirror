@@ -22,7 +22,7 @@ public class Globals
     private static SharedPreferences _sp = null;
     private static SharedPreferences.Editor _spEd = null;
     private static AudioPlayerManager _apm = null;
-    public static List<RxListener> actualListeners = new ArrayList<>();
+    public static List<RxListener> rxListeners = new ArrayList();
 
     public static void setContext(Context ctx)
     {
@@ -71,23 +71,12 @@ public class Globals
     }
 
     public static void notifyListenersStart(final String id, final String alias, final String displayname) {
-        Timber.i("Rx from %s", id);
-        for(RxListener currentListener: actualListeners) {
-            try {
-                currentListener.onRx(id, alias, displayname);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        Timber.i("notifyListenersStart id -> %s alias -> %s displayName -> %s", id, alias, displayname);
+        rxListeners.forEach(rxListener -> rxListener.onRx(id, alias, displayname));
     }
 
-    public static void notifyListenersStop() {
-        for(RxListener currentListener: actualListeners) {
-            try {
-                currentListener.stopRx();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    public static void notifyListenersStop(String id, String eventExtraJson) {
+        Timber.i("notifyListenerStop id -> %s eventExtraJson -> %s", id, eventExtraJson);
+        rxListeners.forEach(rxListener -> rxListener.stopRx(id, eventExtraJson));
     }
 }

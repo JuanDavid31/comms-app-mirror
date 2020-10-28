@@ -2843,7 +2843,7 @@ public class EngageApplication
 
 
         try {
-            Globals.notifyListenersStop();
+            Globals.notifyListenersStop(id, eventExtraJson);
         } catch (Exception e) {
             e.printStackTrace();
         }

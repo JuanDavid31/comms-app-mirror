@@ -24,23 +24,113 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/incoming_message_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56.5dp"
+                android:layout_marginHorizontal="14.5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="74.8dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="270dp"
+                android:background="@drawable/incoming_message_layout_shape"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:visibility="visible">
+
+            <FrameLayout
+                    android:id="@+id/incoming_message_speaker_layout"
+                    android:layout_width="29.3dp"
+                    android:layout_height="29dp"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:background="@drawable/incoming_message_speaker_red_layout_shape"
+                    android:elevation="5.3dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                        android:id="@+id/incoming_message_speaker"
+                        android:layout_width="12.8dp"
+                        android:layout_height="9dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_speaker" />
+
+            </FrameLayout>
+
+            <TextView
+                    android:id="@+id/incoming_message_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="9.8dp"
+                    android:layout_marginTop="1dp"
+                    android:fontFamily="@font/call_of_ops_duty"
+                    android:letterSpacing="0.02"
+                    android:shadowColor="#d4000000"
+                    android:shadowRadius="9"
+                    android:text="EVIN JACOBS"
+                    android:textColor="@color/white"
+                    android:textSize="12.4sp"
+                    app:layout_constraintStart_toEndOf="@id/incoming_message_speaker_layout"
+                    app:layout_constraintTop_toTopOf="@id/incoming_message_speaker_layout" />
+
+            <TextView
+                    android:id="@+id/incoming_message_speaking_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:alpha="0.93"
+                    android:fontFamily="@font/open_sans_regular"
+                    android:text="Speaking..."
+                    android:textColor="@color/paleRed93"
+                    android:textSize="9.4sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/incoming_message_speaker_layout"
+                    app:layout_constraintStart_toStartOf="@id/incoming_message_name" />
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_begin="31.3dp" />
+
+            <ImageView
+                    android:id="@+id/rx_image"
+                    android:layout_width="102.8dp"
+                    android:layout_height="34.3dp"
+                    android:layout_marginTop="11.5dp"
+                    android:layout_marginEnd="14.5dp"
+                    android:layout_marginBottom="10.8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_red_tx" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <ImageView
-            android:id="@+id/rx_image_primary_channel"
-            android:layout_width="193.8dp"
-            android:layout_height="65.5dp"
-            android:layout_marginTop="63.8dp"
-            android:layout_marginRight="82.3dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="48.5dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.338"
-            app:srcCompat="@drawable/ic_red_tx"
-            tools:visibility="visible"/>
+                android:id="@+id/rx_image_primary_channel"
+                android:layout_width="193.8dp"
+                android:layout_height="65.5dp"
+                android:layout_marginLeft="48.5dp"
+                android:layout_marginTop="63.8dp"
+                android:layout_marginRight="82.3dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.338"
+                app:srcCompat="@drawable/ic_red_tx" />
 
         <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/primary_channel_image"
@@ -54,8 +144,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:riv_border_color="@color/paleRed"
                 app:riv_border_width="0.8dp"
-                app:riv_corner_radius="5.3dp"
-        />
+                app:riv_corner_radius="5.3dp" />
 
         <TextView
                 android:id="@+id/primary_channel_name_text"
@@ -103,7 +192,6 @@
                 android:layout_height="45dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="2dp"
-
                 android:padding="13dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_speaker_off"
@@ -116,7 +204,6 @@
                 android:layout_height="23.5dp"
                 android:layout_marginRight="15.3dp"
                 android:layout_marginBottom="16dp"
-
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_filled_mic"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -135,6 +222,60 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_end="34.3dp" />
+
+        <TextView
+                android:id="@+id/last_message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:fontFamily="@font/open_sans_regular"
+                android:text="@string/last_message"
+                android:textColor="@color/pinkish_grey"
+                android:textSize="10.1sp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@id/last_message_alias"
+                app:layout_constraintStart_toStartOf="@id/last_message_alias" />
+
+        <TextView
+                android:id="@+id/last_message_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:fontFamily="@font/open_sans_regular"
+                android:text=""
+                android:textColor="@color/paleRed"
+                android:textSize="10.1sp"
+                app:layout_constraintBottom_toBottomOf="@+id/last_message_text"
+                app:layout_constraintStart_toEndOf="@id/last_message_text" />
+
+        <TextView
+                android:id="@+id/last_message_alias"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/built_titling_rg_bold"
+                android:letterSpacing="0.02"
+                android:shadowColor="#d4000000"
+                android:shadowRadius="9"
+                android:text=""
+                android:textColor="@color/pinkish_grey"
+                android:textSize="12.4sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+                android:id="@+id/last_message_displayName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginBottom="2dp"
+                android:fontFamily="@font/open_sans_light"
+                android:text=""
+                android:textColor="@color/greyish_93"
+                android:textSize="10.1sp"
+                app:layout_constraintBottom_toBottomOf="@id/last_message_alias"
+                app:layout_constraintStart_toEndOf="@id/last_message_alias" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -155,22 +296,22 @@
             tools:visibility="visible">
 
         <ImageView
-            android:id="@+id/rx_image_priority_channel_1"
-            android:layout_width="193.8dp"
-            android:layout_height="65.5dp"
-            android:layout_marginTop="63.8dp"
-            android:layout_marginRight="82.3dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="48.5dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.338"
-            app:srcCompat="@drawable/ic_blue_tx"
-            tools:visibility="visible"/>
+                android:id="@+id/rx_image_priority_channel_1"
+                android:layout_width="193.8dp"
+                android:layout_height="65.5dp"
+                android:layout_marginLeft="48.5dp"
+                android:layout_marginTop="63.8dp"
+                android:layout_marginRight="82.3dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.338"
+                app:srcCompat="@drawable/ic_blue_tx"
+                tools:visibility="visible" />
 
         <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/priority_channel_1_image"
@@ -184,8 +325,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:riv_border_color="@color/waterBlue"
                 app:riv_border_width="0.8dp"
-                app:riv_corner_radius="5.3dp"
-              />
+                app:riv_corner_radius="5.3dp" />
 
         <TextView
                 android:id="@+id/priority_channel_1_name_text"
@@ -236,7 +376,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_filled_mic"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"  />
+                app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline2"
@@ -271,22 +411,22 @@
             tools:visibility="visible">
 
         <ImageView
-            android:id="@+id/rx_image_priority_channel_2"
-            android:layout_width="193.8dp"
-            android:layout_height="65.5dp"
-            android:layout_marginTop="63.8dp"
-            android:layout_marginRight="82.3dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="48.5dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.338"
-            app:srcCompat="@drawable/ic_orange_tx"
-            tools:visibility="visible"/>
+                android:id="@+id/rx_image_priority_channel_2"
+                android:layout_width="193.8dp"
+                android:layout_height="65.5dp"
+                android:layout_marginLeft="48.5dp"
+                android:layout_marginTop="63.8dp"
+                android:layout_marginRight="82.3dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.338"
+                app:srcCompat="@drawable/ic_orange_tx"
+                tools:visibility="visible" />
 
         <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/priority_channel_2_image"
@@ -300,8 +440,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:riv_border_color="@color/orange"
                 app:riv_border_width="0.8dp"
-                app:riv_corner_radius="5.3dp"
-                 />
+                app:riv_corner_radius="5.3dp" />
 
         <TextView
                 android:id="@+id/priority_channel_2_name_text"
@@ -349,7 +488,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_filled_mic"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"  />
+                app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline4"

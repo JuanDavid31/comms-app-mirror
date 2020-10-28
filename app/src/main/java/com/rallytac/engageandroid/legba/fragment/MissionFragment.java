@@ -36,6 +36,7 @@ import com.rallytac.engageandroid.legba.adapter.ChannelListAdapter;
 import com.rallytac.engageandroid.legba.adapter.ChannelSlidePageAdapter;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
+import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.util.StringUtils;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
 import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
@@ -45,8 +46,6 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -55,7 +54,7 @@ import timber.log.Timber;
 
 import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 
-public class MissionFragment extends Fragment {
+public class MissionFragment extends Fragment implements RxListener {
 
     private HostActivity activity;
     public FragmentMissionBinding binding;
@@ -77,6 +76,7 @@ public class MissionFragment extends Fragment {
         mission = missionFragmentArgs.getMission();
         vm = new ViewModelProvider(this).get(MissionViewModel.class);
         context = getContext();
+        Globals.rxListeners.add(this);
     }
 
     @Override
@@ -212,22 +212,22 @@ public class MissionFragment extends Fragment {
     private void setupPTTOnMic() {
         binding.icMicCard.setOnTouchListener((view, event) -> {
 
-            List<String> activeGroupIds = vm.getChannelsGroup()
+            String[] activeGroupIds = vm.getChannelsGroup()
                     .get(currentPage)
                     .channels
                     .stream()
                     .map(channel -> channel.id)
-                    .collect(Collectors.toList());
+                    .toArray(String[]::new);
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 binding.txImage.setVisibility(View.VISIBLE);
                 Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
                 Timber.i("Tx to %s", activeGroupIds);
-                DataManager.getInstance(context).startTx(activeGroupIds.toArray(new String[activeGroupIds.size()]));
+                DataManager.getInstance(context).startTx(activeGroupIds);
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 binding.txImage.setVisibility(View.INVISIBLE);
                 Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
-                DataManager.getInstance(context).endTx(activeGroupIds.toArray(new String[activeGroupIds.size()]));
+                DataManager.getInstance(context).endTx(activeGroupIds);
             }
             return true;
         });
@@ -240,43 +240,17 @@ public class MissionFragment extends Fragment {
                 currentPage = position;
                 lastPage = currentPage == vm.getChannelsGroup().size();
                 updateDots(position);
-                muteEverybody();
 
                 if (position < vm.getChannelsGroup().size()) {
                     activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
                     String name = StringUtils.capitalize(vm.getChannelsGroup().get(position).name);
                     activity.binding.fragmentDescription.setText(name);
-
-                    unMuteActiveChannels(vm.getChannelsGroup().get(currentPage));
                 } else {
                     activity.binding.fragmentDescription.setText("");
                     activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
                 }
             }
         });
-    }
-
-    private void muteEverybody(){
-        //DataManager.getInstance(context).joinGroups();
-        /*mission.channels
-                .stream()
-                .map(channel -> channel.id)
-                .forEach(channelId -> DataManager.getInstance(context).muteGroup(channelId));*/
-    }
-
-    private void unMuteActiveChannels(ChannelGroup currentChannelGroup){
-/*        currentChannelGroup
-                .channels
-                .stream()
-                .filter(channel -> channel.isSpeakerOn)
-                .filter(channel -> channel.isActive)
-                .map(channel -> channel.id)
-                .forEach(channelId -> DataManager.getInstance(context).unmuteGroup(channelId));*/
-    }
-
-    private void setCurrentGroupId(String groupId){
-        Timber.i("Before joining a new group %s ", Globals.getEngageApplication().getActiveConfiguration().getMissionId());
-
     }
 
     private void setupViewPagerDotIndicator(List channelGroup) {
@@ -400,18 +374,17 @@ public class MissionFragment extends Fragment {
 
     private void updateCurrentChannelsGroup() {
         List<Channel> channels = channelListAdapter.getCheckedChannels();
-        if(channels.size() > 0) {
+        if (channels.size() > 0) {
             updateNameAndActiveChannelsOnCurrentChannelsGroup(channels);
-        } else if(!lastPage){
+        } else if (!lastPage) {
             vm.deleteChannelGroup(currentPage);
             boolean channelGroupSize = currentPage >= vm.getChannelsGroup().size();
 
-            if(channelGroupSize) {
+            if (channelGroupSize) {
                 lastPage = true;
                 activity.binding.fragmentDescription.setText("");
                 activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
-            }
-            else {
+            } else {
                 activity.binding.fragmentDescription.setText(vm.getChannelsGroup().get(currentPage).name);
             }
         }
@@ -425,7 +398,7 @@ public class MissionFragment extends Fragment {
     private void updateNameAndActiveChannelsOnCurrentChannelsGroup(List<Channel> channels) {
         String newName = activity.binding.channelGroupNameText.getText().toString();
 
-        if(lastPage) {
+        if (lastPage) {
             ChannelGroup newChannelGroup = new ChannelGroup(newName, channels);
             vm.addChannelGroup(newChannelGroup);
         } else {
@@ -450,7 +423,7 @@ public class MissionFragment extends Fragment {
                 .peek(channel -> channel.isActive = false)
                 .collect(Collectors.toList());
 
-        if(!lastPage) {
+        if (!lastPage) {
             List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).channels;
             allChannels = allChannels
                     .stream()
@@ -537,6 +510,50 @@ public class MissionFragment extends Fragment {
                             layout.setVisibility(View.GONE);
                         }
                     });
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Globals.rxListeners.remove(this);
+    }
+
+    @Override
+    public void onRx(String id, String alias, String displayName) {
+        boolean isIdPresent = vm.getChannelsGroup()
+                .get(currentPage)
+                .channels
+                .stream()
+                .anyMatch(channel -> channel.id.equals(id));
+
+        if(!isIdPresent)return;;
+
+        int channelsSize = vm.getChannelsGroup().get(currentPage).channels.size();
+
+        if (channelsSize == 0) {
+            //TODO: Standalone animation
+            int currentItem = this.binding.missionViewPager.getCurrentItem();
+            View viewById = this.binding.missionViewPager.findViewById(currentItem);
+            Timber.i("viewById %s", viewById.getClass());
+        } else {
+            //TODO: Compound animation
+            //this.channelSlidePageAdapter.initCompoundAnimation();
+        }
+    }
+
+    @Override
+    public void stopRx(String id, String eventExtraJson) {
+        int channelsSize = vm.getChannelsGroup().get(currentPage).channels.size();
+
+        if (channelsSize == 0) {
+            //TODO: Standalone animation
+            int currentItem = this.binding.missionViewPager.getCurrentItem();
+            View viewById = this.binding.missionViewPager.findViewById(currentItem);
+            Timber.i("viewById %s", viewById.getClass());
+
+        } else {
+            //TODO: Compound animation
         }
     }
 }
