@@ -45,6 +45,7 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -67,6 +68,7 @@ public class MissionFragment extends Fragment {
     private Context context;
     private MissionViewModel vm;
     private int currentPage;
+    private boolean lastPage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -202,7 +204,7 @@ public class MissionFragment extends Fragment {
         ChannelGroup channelGroup3 = new ChannelGroup("Echo", page4List);
         ChannelGroup channelGroup4 = new ChannelGroup("charlie", page5List);
 
-        vm.setChannelGroups(Arrays.asList(channelGroup, channelGroup1, channelGroup2, channelGroup3, channelGroup4));
+        vm.addChannelsGroup(channelGroup, channelGroup1, channelGroup2, channelGroup3, channelGroup4);
         return vm.getChannelsGroup();
     }
 
@@ -237,6 +239,7 @@ public class MissionFragment extends Fragment {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 currentPage = position;
+                lastPage = currentPage == vm.getChannelsGroup().size();
                 updateDots(position);
                 muteEverybody();
 
@@ -361,6 +364,11 @@ public class MissionFragment extends Fragment {
         activity.binding.closeCreateEditChannelsViewButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility()); //TODO: Replace for a proper fix
         activity.binding.createEditChannelsGroupButton.setOnClickListener(view -> updateCurrentChannelsGroup());
 
+        if (lastPage) {
+            activity.binding.createEditChannelsGroupButton.setClickable(false);
+            activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_fade_shape));
+        }
+
         activity.binding.channelGroupNameText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -374,14 +382,17 @@ public class MissionFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String channelGroupNameSearch = editable.toString().toLowerCase();
+                String channelGroupNameSearch = editable.toString().toLowerCase().trim();
+                String currentChannelGroupName = activity.binding.fragmentDescription.getText().toString().toLowerCase().trim();
                 Long coincidences = vm.getChannelsGroup().stream()
                         .filter(channelGroup -> channelGroup.name.equalsIgnoreCase(channelGroupNameSearch))
                         .count();
 
-                if (coincidences < 1L && channelGroupNameSearch.length() > 0) {
+                if ((coincidences < 1L || channelGroupNameSearch.equals(currentChannelGroupName)) && channelGroupNameSearch.length() > 0) {
+                    activity.binding.createEditChannelsGroupButton.setClickable(true);
                     activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_shape));
                 } else {
+                    activity.binding.createEditChannelsGroupButton.setClickable(false);
                     activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_fade_shape));
                 }
             }
@@ -390,21 +401,41 @@ public class MissionFragment extends Fragment {
 
     private void updateCurrentChannelsGroup() {
         List<Channel> channels = channelListAdapter.getCheckedChannels();
+        if(channels.size() > 0) {
+            updateNameAndActiveChannelsOnCurrentChannelsGroup(channels);
+        } else if(!lastPage){
+            vm.deleteChannelGroup(currentPage);
+            boolean channelGroupSize = currentPage >= vm.getChannelsGroup().size();
 
-        updateNameAndActiveChannelsOnCurrentChannelsGroup(channels);
+            if(channelGroupSize) {
+                lastPage = true;
+                activity.binding.fragmentDescription.setText("");
+                activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
+            }
+            else {
+                activity.binding.fragmentDescription.setText(vm.getChannelsGroup().get(currentPage).name);
+            }
+        }
+
         toggleCreateEditChannelsGroupLayoutvisibility();
-        //setupViewPagerDotIndicator(channelsGroup); //Makes no sense unless you can delete or create pages
-
         channelSlidePageAdapter.setChannelsGroup(vm.getChannelsGroup());
-        updateDots(0);
+        setupViewPagerDotIndicator(vm.getChannelsGroup());
+        updateDots(currentPage);
     }
 
     private void updateNameAndActiveChannelsOnCurrentChannelsGroup(List<Channel> channels) {
         String newName = activity.binding.channelGroupNameText.getText().toString();
 
-        ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
-        currentChannelGroup.name = newName;
-        currentChannelGroup.channels = channels;
+        if(lastPage) {
+            ChannelGroup newChannelGroup = new ChannelGroup(newName, channels);
+            vm.addChannelGroup(newChannelGroup);
+        } else {
+            ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
+            currentChannelGroup.name = newName;
+            currentChannelGroup.channels = channels;
+        }
+
+        activity.binding.fragmentDescription.setText(newName);
     }
 
     public void toggleCreateEditChannelsGroupLayoutvisibility() {
@@ -413,27 +444,30 @@ public class MissionFragment extends Fragment {
         toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
         toggleLayoutVisiblity(activity.binding.channelGroupLayout);
 
-        List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).channels;
         List<Channel> allChannels = mission
                 .channels
                 .stream()
                 .peek(channel -> channel.isActive = false)
                 .collect(Collectors.toList());
 
-        List<Channel> mixedChannels = allChannels
-                .stream()
-                .map(channel -> {
-                    activeChannels
-                            .stream()
-                            .filter(activeChannel -> activeChannel.id.equals(channel.id))
-                            .findFirst()
-                            .ifPresent(activeChannel -> {
-                                channel.isActive = true;
-                            });
-                    return channel;
-                }).collect(Collectors.toList());
+        if(!lastPage) {
+            List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).channels;
+            allChannels = allChannels
+                    .stream()
+                    .map(channel -> {
+                        activeChannels
+                                .stream()
+                                .filter(activeChannel -> activeChannel.id.equals(channel.id))
+                                .findFirst()
+                                .ifPresent(activeChannel -> {
+                                    channel.isActive = true;
+                                });
+                        return channel;
+                    })
+                    .collect(Collectors.toList());
+        }
 
-        channelListAdapter.setChannels(mixedChannels);
+        channelListAdapter.setChannels(allChannels);
     }
 
     @Override
