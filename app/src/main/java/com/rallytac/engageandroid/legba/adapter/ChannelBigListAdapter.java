@@ -104,10 +104,10 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
     }
 
     private void setViewState(Channel currentChannel, ChannelViewHolder holder){
-        if(currentChannel.isOnRx){
-            holder.showIncomingMessage(currentChannel.rxAlias);
+        if(currentChannel.isOnRx()){
+            holder.showIncomingMessage(currentChannel.getRxAlias());
         }else{
-            boolean brotherViewIsOnRx = this.channels.stream().anyMatch(channel -> channel.isOnRx);
+            boolean brotherViewIsOnRx = this.channels.stream().anyMatch(channel -> channel.isOnRx());
             if(brotherViewIsOnRx){
                 holder.fadeOut();
             }

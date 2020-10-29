@@ -39,8 +39,9 @@ public class Channel implements Serializable {
     @Property(nameInDb = "is_speaker_on")
     private boolean isSpeakerOn;
 
-    public boolean isOnRx;
-    public String rxAlias;
+    private boolean isOnRx;
+    private String rxAlias;
+    private String rxDisplayName;
 
     @Convert(converter = ChannelTypeConverter.class, columnType = String.class)
     private ChannelType type;
@@ -68,8 +69,9 @@ public class Channel implements Serializable {
         this.id = id;
     }
 
-    @Generated(hash = 1023099897)
-    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, boolean isOnRx, String rxAlias, ChannelType type) {
+    @Generated(hash = 1072659048)
+    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, boolean isOnRx, String rxAlias, String rxDisplayName,
+            ChannelType type) {
         this.id = id;
         this.missionId = missionId;
         this.name = name;
@@ -78,6 +80,7 @@ public class Channel implements Serializable {
         this.isSpeakerOn = isSpeakerOn;
         this.isOnRx = isOnRx;
         this.rxAlias = rxAlias;
+        this.rxDisplayName = rxDisplayName;
         this.type = type;
     }
 
@@ -146,6 +149,14 @@ public class Channel implements Serializable {
 
     public void setType(ChannelType type) {
         this.type = type;
+    }
+
+    public String getRxDisplayName() {
+        return rxDisplayName;
+    }
+
+    public void setRxDisplayName(String rxDisplayName) {
+        this.rxDisplayName = rxDisplayName;
     }
 
     /**
@@ -248,7 +259,7 @@ public class Channel implements Serializable {
         myDao.update(this);
     }
 
-    public boolean getIsOnRx() {
+    public boolean isOnRx() {
         return this.isOnRx;
     }
 
@@ -262,6 +273,10 @@ public class Channel implements Serializable {
 
     public void setRxAlias(String rxAlias) {
         this.rxAlias = rxAlias;
+    }
+
+    public boolean getIsOnRx() {
+        return this.isOnRx;
     }
 
     /** called by internal mechanisms, do not call yourself. */
