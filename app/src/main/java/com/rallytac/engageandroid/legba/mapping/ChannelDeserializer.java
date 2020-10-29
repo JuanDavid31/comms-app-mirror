@@ -39,7 +39,7 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
                 nameJsonElement != null ? nameJsonElement.getAsString() : "",
                 imageJsonElement != null ? imageJsonElement.getAsString() : "",
                 statusJsonElement != null ? statusJsonElement.getAsBoolean() : false,
-                false,
+                true,
                 getChannelType(typeJsonElement != null ? typeJsonElement.getAsString() : ""),
                 channelElements != null ? channelElements : Collections.emptyList()
         );

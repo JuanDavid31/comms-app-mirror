@@ -30,26 +30,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.rallytac.engageandroid.EngageApplication;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.adapter.ChannelListAdapter;
 import com.rallytac.engageandroid.legba.adapter.ChannelSlidePageAdapter;
 import com.rallytac.engageandroid.legba.data.DataManager;
-import com.rallytac.engageandroid.legba.data.dto.ChannelDao;
-import com.rallytac.engageandroid.legba.data.dto.ChannelElement;
-import com.rallytac.engageandroid.legba.data.dto.ChannelElementDao;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.engage.RxListener;
-import com.rallytac.engageandroid.legba.data.dto.ChannelGroupDao;
-import com.rallytac.engageandroid.legba.data.dto.ChannelsGroupsWithChannelsDao;
-import com.rallytac.engageandroid.legba.data.dto.DaoSession;
-import com.rallytac.engageandroid.legba.data.dto.Member;
-import com.rallytac.engageandroid.legba.data.dto.MissionDao;
-import com.rallytac.engageandroid.legba.data.dto.Subchannel;
 import com.rallytac.engageandroid.legba.util.StringUtils;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
 import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
+import com.rallytac.engageandroid.legba.viewmodel.ViewModelFactory;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.rallytac.engageandroid.legba.HostActivity;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
@@ -69,7 +60,6 @@ public class MissionFragment extends Fragment implements RxListener {
 
     private HostActivity activity;
     public FragmentMissionBinding binding;
-    private Mission mission;
     private ChannelSlidePageAdapter channelSlidePageAdapter;
     private ChannelListAdapter channelListAdapter;
     private ImageView[] dotIndicators;
@@ -79,41 +69,22 @@ public class MissionFragment extends Fragment implements RxListener {
     private MissionViewModel vm;
     private int currentPage;
     private boolean lastPage;
-    private MissionDao missionDao;
-    private ChannelElementDao channelElementDao;
-    private ChannelDao channelDao;
-    private ChannelGroupDao channelGroupDao;
-    private ChannelsGroupsWithChannelsDao channelsGroupsWithChannelsDao;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        vm = new ViewModelProvider(this).get(MissionViewModel.class);
+        ViewModelFactory vmFactory = new ViewModelFactory(getActivity());
+        vm = new ViewModelProvider(this, vmFactory).get(MissionViewModel.class);
         context = getContext();
         Globals.rxListeners.add(this);
 
-        setupDatabase();
+        setupMission();
     }
 
-    private void setupDatabase() {
-        DaoSession daoSession = ((EngageApplication) this.getActivity().getApplication()).getDaoSession();
-        missionDao = daoSession.getMissionDao();
-        channelGroupDao = daoSession.getChannelGroupDao();
-        channelDao = daoSession.getChannelDao();
-        channelElementDao = daoSession.getChannelElementDao();
-
-        boolean firstTime = missionDao.loadAll().size() == 0;
-
-        if(firstTime) {
-            MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
-            mission = missionFragmentArgs.getMission();
-
-            channelElementDao.insertInTx(mission.getChannels().get(0).getChannelElements());
-            channelDao.insertInTx(mission.getChannels());
-            missionDao.insert(mission);
-        }
-
-        mission = missionDao.loadAll().get(0);
+    private void setupMission() {
+        MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
+        Mission mission = missionFragmentArgs.getMission(); //TODO: the id should be the only one to be passed as an argument instead of a Mission instance
+        vm.setupMission(mission);
     }
 
     @Override
@@ -129,8 +100,6 @@ public class MissionFragment extends Fragment implements RxListener {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
         binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
 
-        mission = missionDao.loadAll().get(0);
-
         channelSlidePageAdapter = new ChannelSlidePageAdapter(this, getChannelsGroup());
         binding.missionViewPager.setAdapter(channelSlidePageAdapter);
 
@@ -145,18 +114,18 @@ public class MissionFragment extends Fragment implements RxListener {
         return binding.getRoot();
     }
 
-    public Mission getMission() {
+    /*public Mission getMission() {
         return mission;
-    }
+    }*/
 
     public List<ChannelGroup> getChannelsGroup() {
-        return mission.getChannelsGroups() == null ? new ArrayList<>() : mission.getChannelsGroups();
+        return vm.getChannelsGroup() == null ? new ArrayList<>() : vm.getChannelsGroup();
     }
 
     private void updateToolbar() {
         activity.binding.logoImage.setVisibility(View.VISIBLE);
         activity.binding.toolbarTitleText.setVisibility(View.VISIBLE);
-        activity.binding.toolbarTitleText.setText(mission.getName());
+        activity.binding.toolbarTitleText.setText(vm.getMission().getName());
         activity.binding.fragmentDescription.setVisibility(View.VISIBLE);
         activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
         activity.binding.fragmentDescription.setTextColor(this.getResources().getColor(R.color.paleRed));
@@ -229,36 +198,15 @@ public class MissionFragment extends Fragment implements RxListener {
         });
     }
 
-    private List<ChannelGroup> getInitialChannelsGroup() {
-        if (vm.getChannelsGroup().size() > 0) {
-            return vm.getChannelsGroup();
-        }
-        List<Channel> page1List = mission.getChannels().stream().limit(1).collect(Collectors.toList());
-        List<Channel> page2List = mission.getChannels().stream().limit(2).collect(Collectors.toList());
-        List<Channel> page3List = mission.getChannels().stream().limit(3).collect(Collectors.toList());
-        List<Channel> page4List = mission.getChannels().stream().limit(4).collect(Collectors.toList());
-        List<Channel> page5List = mission.getChannels().stream().limit(5).collect(Collectors.toList());
-
-        ChannelGroup channelGroup = new ChannelGroup("First", mission.getId(), page1List);
-        ChannelGroup channelGroup1 = new ChannelGroup("Delta", mission.getId(), page2List);
-        ChannelGroup channelGroup2 = new ChannelGroup("Third", mission.getId(), page3List);
-        ChannelGroup channelGroup3 = new ChannelGroup("Echo", mission.getId(), page4List);
-        ChannelGroup channelGroup4 = new ChannelGroup("charlie", mission.getId(), page5List);
-
-        vm.addChannelsGroup(channelGroup, channelGroup1, channelGroup2, channelGroup3, channelGroup4);
-        return vm.getChannelsGroup();
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     private void setupPTTOnMic() {
         binding.icMicCard.setOnTouchListener((view, event) -> {
 
-            String[] activeGroupIds = mission.getChannelsGroups()
+            String[] activeGroupIds = vm.getChannelsGroup()
                     .get(currentPage)
                     .getChannels()
                     .stream()
-                    .filter(channel -> channel.isActive())
-                    .map(channel -> channel.getId())
+                    .map(Channel::getId)
                     .toArray(String[]::new);
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -280,13 +228,13 @@ public class MissionFragment extends Fragment implements RxListener {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 currentPage = position;
-                int channelsGroupsSize = mission.getChannelsGroups().size();
+                int channelsGroupsSize = vm.getChannelsGroup().size();
                 lastPage = currentPage == channelsGroupsSize;
                 updateDots(position);
 
                 if (position < channelsGroupsSize) {
                     activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
-                    String name = StringUtils.capitalize(mission.getChannelsGroups().get(position).getName());
+                    String name = StringUtils.capitalize(vm.getChannelsGroup().get(position).getName());
                     activity.binding.fragmentDescription.setText(name);
                 } else {
                     activity.binding.fragmentDescription.setText("");
@@ -338,16 +286,11 @@ public class MissionFragment extends Fragment implements RxListener {
     }
 
     private void setUpSlidingUpChannels() {
-        List<Channel> radioChannels = mission.getChannels()
-                .stream()
-                .filter(channel -> channel.getType() != null)
-                .collect(Collectors.toList());
-
         RadioChannelsRecyclerViewAdapter adapter = new RadioChannelsRecyclerViewAdapter(new RadioChannelsRecyclerViewAdapter.AdapterDiffCallback(), this);
         binding.radioChannelsRecycler.setHasFixedSize(true);
         binding.radioChannelsRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         binding.radioChannelsRecycler.setAdapter(adapter);
-        adapter.setRadioChannels(radioChannels);
+        adapter.setRadioChannels(vm.getAllChannels());
     }
 
     private void updateDots(int position) {
@@ -371,7 +314,7 @@ public class MissionFragment extends Fragment implements RxListener {
     }
 
     private void setupEditCurrentChannelGroupLayout() {
-        channelListAdapter = new ChannelListAdapter(mission.getChannels(), this);
+        channelListAdapter = new ChannelListAdapter(vm.getAllChannels(), this);
         activity.binding.channelsRecycler.setHasFixedSize(true);
         activity.binding.channelsRecycler.setAdapter(channelListAdapter);
 
@@ -400,7 +343,7 @@ public class MissionFragment extends Fragment implements RxListener {
             public void afterTextChanged(Editable editable) {
                 String channelGroupNameSearch = editable.toString().toLowerCase().trim();
                 String currentChannelGroupName = activity.binding.fragmentDescription.getText().toString().toLowerCase().trim();
-                Long coincidences = mission.getChannelsGroups().stream()
+                Long coincidences = vm.getChannelsGroup().stream()
                         .filter(channelGroup -> channelGroup.getName().equalsIgnoreCase(channelGroupNameSearch))
                         .count();
 
@@ -419,37 +362,33 @@ public class MissionFragment extends Fragment implements RxListener {
         List<Channel> channels = channelListAdapter.getCheckedChannels();
         if (channels.size() > 0) {
             updateNameAndActiveChannelsOnCurrentChannelsGroup(channels);
-        } else if(!lastPage){
-            mission.getChannelsGroups().remove(currentPage);
-            mission.update();
-            //todo:revisar el otro dao
-            boolean channelGroupSize = currentPage >= mission.getChannelsGroups().size();
+        } else if (!lastPage) {
+            vm.deleteChannelGroup(currentPage);
+            boolean channelGroupSize = currentPage >= vm.getChannelsGroup().size();
 
             if (channelGroupSize) {
                 lastPage = true;
                 activity.binding.fragmentDescription.setText("");
                 activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
-            }  else {
-                activity.binding.fragmentDescription.setText(mission.getChannelsGroups().get(currentPage).getName());
+            } else {
+                activity.binding.fragmentDescription.setText(vm.getChannelsGroup().get(currentPage).getName());
             }
         }
 
         toggleCreateEditChannelsGroupLayoutvisibility();
-        channelSlidePageAdapter.setChannelsGroup(mission.getChannelsGroups());
-        setupViewPagerDotIndicator(mission.getChannelsGroups());
+        channelSlidePageAdapter.setChannelsGroup(vm.getChannelsGroup());
+        setupViewPagerDotIndicator(vm.getChannelsGroup());
         updateDots(currentPage);
     }
 
     private void updateNameAndActiveChannelsOnCurrentChannelsGroup(List<Channel> channels) {
         String newName = activity.binding.channelGroupNameText.getText().toString();
 
-        if(lastPage) {
-            ChannelGroup newChannelGroup = new ChannelGroup(newName, mission.getId(), channels);
-            mission.getChannelsGroups().add(newChannelGroup);
-            mission.update();
-            //todo:revisar el otro dao
+        if (lastPage) {
+            ChannelGroup newChannelGroup = new ChannelGroup(newName, vm.getMission().getId(), channels);
+            vm.addChannelGroup(newChannelGroup);
         } else {
-            ChannelGroup currentChannelGroup = mission.getChannelsGroups().get(currentPage);
+            ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
             currentChannelGroup.setName(newName);
             currentChannelGroup.setChannels(channels);
         }
@@ -464,14 +403,14 @@ public class MissionFragment extends Fragment implements RxListener {
         toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
         toggleLayoutVisiblity(activity.binding.channelGroupLayout);
 
-        List<Channel> allChannels = mission
-                .getChannels()
+        List<Channel> allChannels = vm
+                .getAllChannels()
                 .stream()
                 .peek(channel -> channel.setActive(false))
                 .collect(Collectors.toList());
 
-        if(!lastPage) {
-            List<Channel> activeChannels = mission.getChannelsGroups().get(currentPage).getChannels();
+        if (!lastPage) {
+            List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).getChannels();
             allChannels = allChannels
                     .stream()
                     .map(channel -> {
@@ -574,9 +513,10 @@ public class MissionFragment extends Fragment implements RxListener {
                 .stream()
                 .anyMatch(channel -> channel.getId().equals(id));
 
-        if(!isIdPresent)return;;
+        if (!isIdPresent) return;
+        ;
 
-        int channelsSize = vm.getChannelsGroup().get(currentPage).getChannels().size();
+        int channelsSize = getChannelsGroup().get(currentPage).getChannels().size();
 
         if (channelsSize == 0) {
             //TODO: Standalone animation
@@ -591,7 +531,7 @@ public class MissionFragment extends Fragment implements RxListener {
 
     @Override
     public void stopRx(String id, String eventExtraJson) {
-        int channelsSize = vm.getChannelsGroup().get(currentPage).getChannels().size();
+        int channelsSize = getChannelsGroup().get(currentPage).getChannels().size();
 
         if (channelsSize == 0) {
             //TODO: Standalone animation
