@@ -46,6 +46,11 @@ public class Channel implements Serializable {
     @Property(nameInDb = "rx_alias")
     private String rxAlias;
 
+    private String rxDisplayName;
+
+
+
+
     @Convert(converter = ChannelTypeConverter.class, columnType = String.class)
     private ChannelType type;
 
@@ -71,9 +76,8 @@ public class Channel implements Serializable {
     public Channel(String id) {
         this.id = id;
     }
-    
 
-    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, boolean isOnRx, String rxAlias, ChannelType type, List<ChannelElement> channelElements) {
+    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, boolean isOnRx, String rxAlias, String rxDisplayName, ChannelType type, List<ChannelElement> channelElements) {
         this.id = id;
         this.missionId = missionId;
         this.name = name;
@@ -82,12 +86,13 @@ public class Channel implements Serializable {
         this.isSpeakerOn = isSpeakerOn;
         this.isOnRx = isOnRx;
         this.rxAlias = rxAlias;
+        this.rxDisplayName = rxDisplayName;
         this.type = type;
         this.channelElements = channelElements;
     }
 
-    @Generated(hash = 540068585)
-    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, String rxAlias, ChannelType type) {
+    @Generated(hash = 589946337)
+    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, String rxAlias, String rxDisplayName, ChannelType type) {
         this.id = id;
         this.missionId = missionId;
         this.name = name;
@@ -95,6 +100,7 @@ public class Channel implements Serializable {
         this.isActive = isActive;
         this.isSpeakerOn = isSpeakerOn;
         this.rxAlias = rxAlias;
+        this.rxDisplayName = rxDisplayName;
         this.type = type;
     }
 
@@ -168,6 +174,14 @@ public class Channel implements Serializable {
 
     public void setType(ChannelType type) {
         this.type = type;
+    }
+
+    public String getRxDisplayName() {
+        return rxDisplayName;
+    }
+
+    public void setRxDisplayName(String rxDisplayName) {
+        this.rxDisplayName = rxDisplayName;
     }
 
     /**
@@ -254,6 +268,7 @@ public class Channel implements Serializable {
         myDao.update(this);
     }
 
+
     public boolean getIsActive() {
         return this.isActive;
     }
@@ -268,14 +283,6 @@ public class Channel implements Serializable {
 
     public void setIsSpeakerOn(boolean isSpeakerOn) {
         this.isSpeakerOn = isSpeakerOn;
-    }
-
-    public boolean getIsOnRx() {
-        return this.isOnRx;
-    }
-
-    public void setIsOnRx(boolean isOnRx) {
-        this.isOnRx = isOnRx;
     }
 
     /** called by internal mechanisms, do not call yourself. */
