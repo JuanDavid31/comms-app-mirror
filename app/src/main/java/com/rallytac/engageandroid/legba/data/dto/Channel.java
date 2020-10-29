@@ -10,6 +10,7 @@ import org.greenrobot.greendao.annotation.JoinEntity;
 import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.ToMany;
+import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.converter.PropertyConverter;
 
 import java.io.Serializable;
@@ -39,7 +40,7 @@ public class Channel implements Serializable {
     @Property(nameInDb = "is_speaker_on")
     private boolean isSpeakerOn;
 
-    @Property(nameInDb = "is_on_rx")
+    @Transient
     private boolean isOnRx;
 
     @Property(nameInDb = "rx_alias")
@@ -85,15 +86,14 @@ public class Channel implements Serializable {
         this.channelElements = channelElements;
     }
 
-    @Generated(hash = 1023099897)
-    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, boolean isOnRx, String rxAlias, ChannelType type) {
+    @Generated(hash = 540068585)
+    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, String rxAlias, ChannelType type) {
         this.id = id;
         this.missionId = missionId;
         this.name = name;
         this.image = image;
         this.isActive = isActive;
         this.isSpeakerOn = isSpeakerOn;
-        this.isOnRx = isOnRx;
         this.rxAlias = rxAlias;
         this.type = type;
     }

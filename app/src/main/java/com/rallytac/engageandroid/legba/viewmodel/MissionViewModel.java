@@ -79,9 +79,11 @@ public class MissionViewModel extends ViewModel {
     }
 
     public Optional<Mission> getMissionById(String id) {
-        channelElementDao.insertOrReplaceInTx(mission.getChannels().get(0).getChannelElements());
-        channelDao.insertOrReplaceInTx(mission.getChannels());
-        missionDao.insertOrReplace(mission);
+        if(missionDao.loadAll().size() == 0) {
+            channelElementDao.insertOrReplaceInTx(mission.getChannels().get(0).getChannelElements());
+            channelDao.insertOrReplaceInTx(mission.getChannels());
+            missionDao.insertOrReplace(mission);
+        }
 
         return missionDao.loadAll()
                 .stream()
