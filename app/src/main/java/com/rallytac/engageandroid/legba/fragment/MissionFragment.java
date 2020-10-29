@@ -387,6 +387,7 @@ public class MissionFragment extends Fragment implements RxListener {
         if (lastPage) {
             ChannelGroup newChannelGroup = new ChannelGroup(newName, vm.getMission().getId(), channels);
             vm.addChannelGroup(newChannelGroup);
+            lastPage = false;
         } else {
             ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
             currentChannelGroup.setName(newName);
