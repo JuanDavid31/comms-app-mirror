@@ -34,7 +34,7 @@ public class Channel implements Serializable {
 
     private String image;
 
-    @Property(nameInDb = "is_active")
+    @Transient
     private boolean isActive;
 
     @Property(nameInDb = "is_speaker_on")
@@ -91,13 +91,12 @@ public class Channel implements Serializable {
         this.channelElements = channelElements;
     }
 
-    @Generated(hash = 589946337)
-    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, String rxAlias, String rxDisplayName, ChannelType type) {
+    @Generated(hash = 561664152)
+    public Channel(String id, String missionId, String name, String image, boolean isSpeakerOn, String rxAlias, String rxDisplayName, ChannelType type) {
         this.id = id;
         this.missionId = missionId;
         this.name = name;
         this.image = image;
-        this.isActive = isActive;
         this.isSpeakerOn = isSpeakerOn;
         this.rxAlias = rxAlias;
         this.rxDisplayName = rxDisplayName;
