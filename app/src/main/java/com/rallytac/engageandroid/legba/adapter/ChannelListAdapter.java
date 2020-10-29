@@ -35,7 +35,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
 
     public List<Channel> getCheckedChannels() {
         return channels.stream()
-                .filter(channel -> channel.isActive())
+                .filter(Channel::isActive)
                 .collect(Collectors.toList());
     }
 

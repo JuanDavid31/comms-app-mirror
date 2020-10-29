@@ -1,5 +1,6 @@
 package com.rallytac.engageandroid.legba.adapter;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -120,6 +121,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 channelResumeHolder.primaryChannel.setLayoutParams(lp);
                 channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
+
+                setFirstChannelViewState(firstChannel, channelResumeHolder, currentChannelGroup.getChannels());
                 return;
             } else {
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //Note: Do not use DimUtils.converDpToPx or will bug the current page
@@ -148,6 +151,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
             channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
 
+            setSecondChannelViewState(secondChannel, channelResumeHolder, currentChannelGroup.getChannels());
+
             if (currentChannelGroupSize < 3) {
                 channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
                 return;
@@ -167,10 +172,51 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 notifyDataSetChanged();
             });
 
+            setThirdChannelViewState(thirdChannel, channelResumeHolder, currentChannelGroup.getChannels());
+
         } else if (holder instanceof ChannelBigListViewHolder) {
             ChannelBigListViewHolder channelBigListViewHolder = (ChannelBigListViewHolder) holder;
             ChannelGroup currentChannelGroup = channelsGroup.get(position);
             channelBigListViewHolder.setChannels(currentChannelGroup.getChannels());
+        }
+    }
+
+    private void setFirstChannelViewState(Channel firstChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
+        if(firstChannel.isOnRx){
+            RxListener holder1 = holder;
+            holder1.onRx(firstChannel.getId(), firstChannel.getRxAlias(), "");
+            //holder.showIncomingMessage(currentChannel.rxAlias);
+        }else{
+            boolean brotherViewIsOnRx = channels.stream().anyMatch(channel -> channel.isOnRx);
+            if(brotherViewIsOnRx){
+                holder.fadeOutFirstChannel();
+            }
+        }
+    }
+
+    private void setSecondChannelViewState(Channel secondChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
+        if(secondChannel.isOnRx){
+            RxListener holder1 = holder;
+            holder1.onRx(secondChannel.getId(), secondChannel.getRxAlias(), "");
+            //holder.showIncomingMessage(currentChannel.rxAlias);
+        }else{
+            boolean brotherViewIsOnRx = channels.stream().anyMatch(channel -> channel.isOnRx);
+            if(brotherViewIsOnRx){
+                holder.fadeOutSecondChannel();
+            }
+        }
+    }
+
+    private void setThirdChannelViewState(Channel currentChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
+        if(currentChannel.isOnRx){
+            RxListener holder1 = holder;
+            holder1.onRx(currentChannel.getId(), currentChannel.getRxAlias(), "");
+            //holder.showIncomingMessage(currentChannel.rxAlias);
+        }else{
+            boolean brotherViewIsOnRx = channels.stream().anyMatch(channel -> channel.isOnRx);
+            if(brotherViewIsOnRx){
+                holder.fadeOutThirdChannel();
+            }
         }
     }
 
@@ -305,7 +351,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
         private void showIncomingMessageLayout(String alias, String displayName) {
             incomingMessageLayout.setVisibility(View.VISIBLE);
-            fadeOutEverything();
+            fadeOutFirstChannel();
             updateBackground();
 
             String time = DateTimeFormatter
@@ -317,7 +363,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             updateLastMessage(time, alias, displayName);
         }
 
-        private void fadeOutEverything() {
+        private void fadeOutFirstChannel() {
             //Channel info
             primaryChannelImage.setAlpha(LOW_OPACITY);
             primaryChannelName.setAlpha(LOW_OPACITY);
@@ -388,22 +434,28 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private void fadeOutFreeChannels() {
 
             if (!this.channels.get(0).isOnRx) {
-                primaryChannelImage.setAlpha(LOW_OPACITY);
-                primaryChannelName.setAlpha(LOW_OPACITY);
-                primaryChannelDescription.setAlpha(LOW_OPACITY);
+                fadeOutFirstChannel();
             }
 
             if (this.channels.size() > 1 && !this.channels.get(1).isOnRx) {
-                priorityChannel1Image.setAlpha(LOW_OPACITY);
-                priorityChannel1Name.setAlpha(LOW_OPACITY);
-                priorityChannel1Description.setAlpha(LOW_OPACITY);
+                fadeOutSecondChannel();
             }
 
             if (this.channels.size() > 2 && !this.channels.get(2).isOnRx) {
-                priorityChannel2Image.setAlpha(LOW_OPACITY);
-                priorityChannel2Name.setAlpha(LOW_OPACITY);
-                priorityChannel2Description.setAlpha(LOW_OPACITY);
+                fadeOutThirdChannel();
             }
+        }
+
+        private void fadeOutSecondChannel() {
+            priorityChannel1Image.setAlpha(LOW_OPACITY);
+            priorityChannel1Name.setAlpha(LOW_OPACITY);
+            priorityChannel1Description.setAlpha(LOW_OPACITY);
+        }
+
+        private void fadeOutThirdChannel() {
+            priorityChannel2Image.setAlpha(LOW_OPACITY);
+            priorityChannel2Name.setAlpha(LOW_OPACITY);
+            priorityChannel2Description.setAlpha(LOW_OPACITY);
         }
 
         @Override
@@ -425,12 +477,12 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         }
 
         private void hideIncomingMessageLayout() {
-            fadeInEverything();
+            fadeInFirstchannel();
             incomingMessageLayout.setVisibility(View.GONE);
             primaryChannel.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.channel_resume_item_box_shape));
         }
 
-        private void fadeInEverything() {
+        private void fadeInFirstchannel() {
             //Channel info
             primaryChannelImage.setAlpha(FULL_OPACITY);
             primaryChannelName.setAlpha(FULL_OPACITY);
