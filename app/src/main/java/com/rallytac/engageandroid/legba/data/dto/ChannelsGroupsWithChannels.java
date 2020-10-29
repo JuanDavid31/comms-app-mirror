@@ -18,8 +18,9 @@ public class ChannelsGroupsWithChannels {
 
     }
 
-    public ChannelsGroupsWithChannels(Long id) {
-        this.id = id;
+    public ChannelsGroupsWithChannels(String channelGroupId, String channelId) {
+        this.channelGroupId = channelGroupId;
+        this.channelId = channelId;
     }
 
     @Generated(hash = 1812320717)

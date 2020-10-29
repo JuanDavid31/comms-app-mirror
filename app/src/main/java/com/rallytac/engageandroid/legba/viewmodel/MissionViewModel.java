@@ -10,6 +10,7 @@ import com.rallytac.engageandroid.legba.data.dto.ChannelDao;
 import com.rallytac.engageandroid.legba.data.dto.ChannelElementDao;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroupDao;
+import com.rallytac.engageandroid.legba.data.dto.ChannelsGroupsWithChannels;
 import com.rallytac.engageandroid.legba.data.dto.ChannelsGroupsWithChannelsDao;
 import com.rallytac.engageandroid.legba.data.dto.DaoSession;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
@@ -38,6 +39,7 @@ public class MissionViewModel extends ViewModel {
         channelGroupDao = daoSession.getChannelGroupDao();
         channelDao = daoSession.getChannelDao();
         channelElementDao = daoSession.getChannelElementDao();
+        channelsGroupsWithChannelsDao = daoSession.getChannelsGroupsWithChannelsDao();
     }
 
     public float getToggleRadioChannelButtonRotation() {
@@ -60,19 +62,25 @@ public class MissionViewModel extends ViewModel {
 
     public void addChannelGroup(ChannelGroup channelGroup) {
         mission.getChannelsGroups().add(channelGroup);
+        channelGroupDao.insert(channelGroup);
+        for(Channel channel: channelGroup.getChannels()) {
+            channelsGroupsWithChannelsDao.insert(new ChannelsGroupsWithChannels(channelGroup.getName(), channel.getId()));
+        }
         mission.update();
-        //todo:revisar el otro dao
     }
 
     public void deleteChannelGroup(int currentPage) {
+        ChannelGroup channelGroup = mission.getChannelsGroups().get(currentPage);
+        channelsGroupsWithChannelsDao.queryBuilder()
+                .where(ChannelsGroupsWithChannelsDao.Properties.ChannelGroupId.eq(channelGroup.getName()))
+                .buildDelete().executeDeleteWithoutDetachingEntities();
+        List<ChannelsGroupsWithChannels> asd = channelsGroupsWithChannelsDao.loadAll();
+        channelGroupDao.deleteByKey(channelGroup.getName());
         mission.getChannelsGroups().remove(currentPage);
-        mission.update(); //todo:revisar el otro dao
+        mission.update();
     }
 
-
-
-    public void
-    setupMission(Mission mission) {
+    public void setupMission(Mission mission) {
         this.mission = mission;
         getMissionById(mission.getId())
                 .ifPresent(updatedMission -> this.mission = updatedMission);
