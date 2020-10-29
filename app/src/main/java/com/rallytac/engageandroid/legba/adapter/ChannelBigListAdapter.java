@@ -7,22 +7,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
-import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.fragment.MissionFragment;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
-public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAdapter.ChannelFullViewHolder> {
+public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAdapter.ChannelViewHolder> {
 
     private MissionFragment fragment;
     private List<Channel> channels;
@@ -42,26 +40,29 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
 
     @NonNull
     @Override
-    public ChannelFullViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.channels_full_item, parent, false);
-        return new ChannelFullViewHolder(itemView);
+        return new ChannelViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChannelFullViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChannelViewHolder holder, int position) {
         Channel currentChannel = channels.get(position);
         holder.channelImage.setImageResource(getImageResource(currentChannel.image));
         holder.channelName.setText(currentChannel.name);
-        holder.channelType.setText(getTypeString(currentChannel.type));
+        holder.channelTypeText.setText(getTypeString(currentChannel.type));
+        holder.type = currentChannel.type;
 
         if (currentChannel.id.equals("{G2}")) {
             holder.channelImage.setBorderColor(getWaterBlueColor());
-            holder.channelType.setTextColor(getWaterBlueColor());
+            holder.channelTypeText.setTextColor(getWaterBlueColor());
         } else if (currentChannel.id.equals("{G3}")) {
             holder.channelImage.setBorderColor(getOrangeColor());
-            holder.channelType.setTextColor(getOrangeColor());
+            holder.channelTypeText.setTextColor(getOrangeColor());
         }
+
+        holder.channelId = currentChannel.id;
 
         setupSpeakerIcon(currentChannel.isSpeakerOn, holder.channelSpeaker);
         holder.channelSpeaker.setOnClickListener(view -> {
@@ -69,6 +70,8 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
             DataManager.getInstance(fragment.getContext()).toggleMute(currentChannel.id, currentChannel.isSpeakerOn);
             this.fragment.binding.missionViewPager.getAdapter().notifyDataSetChanged();
         });
+
+        setViewState(currentChannel, holder);
     }
 
     private int getWaterBlueColor() {
@@ -100,59 +103,76 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         }
     }
 
+    private void setViewState(Channel currentChannel, ChannelViewHolder holder){
+        if(currentChannel.isOnRx){
+            holder.showIncomingMessage(currentChannel.rxAlias);
+        }else{
+            boolean brotherViewIsOnRx = this.channels.stream().anyMatch(channel -> channel.isOnRx);
+            if(brotherViewIsOnRx){
+                holder.fadeOut();
+            }
+        }
+    }
+
     @Override
     public int getItemCount() {
         return channels.size();
     }
 
-    public class ChannelFullViewHolder extends RecyclerView.ViewHolder{
+    public class ChannelViewHolder extends RecyclerView.ViewHolder{
         private final static float LOW_OPACITY = 0.1f;
         private final static float FULL_OPACITY = 1f;
 
-        private final static String PRIMARY_CHANNEL = "Primary Channel";
-        private final static String PRIORITY_CHANNEL_1 = "Priority Channel";
-        private final static String PRIORITY_CHANNEL_2 = "Priority Channel";
-
+        private View root;
         private RoundedImageView channelImage;
         private TextView channelName;
-        private TextView channelType;
-        private ImageView channelMic;
+        private TextView channelTypeText;
+        //private ImageView channelMic;
         private ImageView channelSpeaker;
+        private ImageView rxImage;
 
-        public ChannelFullViewHolder(@NonNull View itemView) {
+        private Channel.ChannelType type;
+        public String channelId;
+
+        public ChannelViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            root = itemView;
             channelImage = itemView.findViewById(R.id.channel_photo);
             channelName = itemView.findViewById(R.id.channel_name_text);
-            channelType = itemView.findViewById(R.id.channel_type_text);
+            channelTypeText = itemView.findViewById(R.id.channel_type_text);
             channelSpeaker = itemView.findViewById(R.id.channel_speaker);
-            channelMic = itemView.findViewById(R.id.channel_mic);
+            //channelMic = itemView.findViewById(R.id.channel_mic);
+            rxImage = itemView.findViewById(R.id.rx_image_primary_channel);
         }
 
-/*        @Override
-        public void onRx(String id, String other) {
-            //setupViewIncommingMessage();
-            //toggleLayoutVisiblity(incomingMessageLayout);
+        public void showIncomingMessage(String alias) {
+            channelTypeText.setText(alias);
+            rxImage.setVisibility(View.VISIBLE);
+            root.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.primary_channel_item_fade_shape));
+
+            //This prevents the following bug:
+            //If there are multiple RX, the first channel will update correctly but from the second and so on,
+            //a mix between fadeIn and fadeout state will happen
+            fadeIn();
         }
 
-        @Override
-        public void onJsonRX(String id, String alias, String displayName) {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm a");
-            LocalDateTime now = LocalDateTime.now();
-            String timeText = dtf.format(now);
-
-            String aliasText = alias == null ? "UNKNOWN" : alias;
-            String displayNameText = displayName == null ? "Unknown user" : displayName;
-
-            //Incoming SOS
-            //toggleLayoutVisiblity(incomingMessageLayout);
-            //activity.binding.incomingSosOverlapMessageName.setText(aliasText);
+        public void fadeIn() {
+            channelImage.setAlpha(FULL_OPACITY);
+            channelName.setAlpha(FULL_OPACITY);
+            channelTypeText.setAlpha(FULL_OPACITY);
         }
 
-        @Override
-        public void stopRx() {
-            //incomingMessageLayout.setVisibility(View.INVISIBLE);
-            //toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
-        }*/
+        public void fadeOut(){
+            channelImage.setAlpha(LOW_OPACITY);
+            channelName.setAlpha(LOW_OPACITY);
+            channelTypeText.setAlpha(LOW_OPACITY);
+        }
+
+        public void hideIncomingMessage(){
+            channelTypeText.setText(getTypeString(type));
+            rxImage.setVisibility(View.GONE);
+            root.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.channel_item_shape));
+        }
     }
 }

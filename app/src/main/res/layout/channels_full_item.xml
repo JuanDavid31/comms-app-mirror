@@ -32,7 +32,6 @@
         android:layout_marginTop="22.8dp"
         android:layout_marginRight="167.8dp"
         android:layout_marginBottom="36.3dp"
-
         android:textSize="16.1sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,11 +50,9 @@
         android:layout_marginTop="41.3dp"
         android:layout_marginRight="164dp"
         android:layout_marginBottom="20dp"
-
         android:letterSpacing="0.02"
         android:textColor="@color/paleRed"
         android:textSize="10.1sp"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

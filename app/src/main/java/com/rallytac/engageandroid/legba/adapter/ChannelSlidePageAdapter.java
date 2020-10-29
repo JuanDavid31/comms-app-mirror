@@ -26,8 +26,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import timber.log.Timber;
-
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
 public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePageAdapter.GenericViewHolder> {
@@ -74,7 +72,9 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         } else if (viewType == FULL_CHANNELS_ITEM) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.channels_general_full_item, parent, false);
-            return new ChannelBigListViewHolder(itemView);
+            ChannelBigListViewHolder channelBigListViewHolder = new ChannelBigListViewHolder(itemView);
+            Globals.rxListeners.add(channelBigListViewHolder);
+            return channelBigListViewHolder;
         } else {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.add_channel_item, parent, false);
@@ -205,207 +205,6 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         }
     }
 
-    class ChannelViewHolder extends GenericViewHolder {
-        private final static float LOW_OPACITY = 0.1f;
-        private final static float FULL_OPACITY = 1f;
-
-        private final static String PRIMARY_CHANNEL = "Primary Channel";
-        private final static String PRIORITY_CHANNEL_1 = "Priority Channel";
-        private final static String PRIORITY_CHANNEL_2 = "Priority Channel";
-
-        private View channelLayout;
-        private View channelInfo;
-        private RoundedImageView channelImage;
-        private TextView channelName;
-        private TextView channelType;
-        private TextView lastMessageText;
-        private TextView lastMessageTime;
-        private TextView lastMessageAlias;
-        private TextView lastMessageDisplayName;
-        private ImageView speakerButton;
-        private View incomingMessageLayout;
-        private ChannelResumeViewHolder channelResumeViewHolder;
-        private Integer channelId;
-
-        public ChannelViewHolder(@NonNull View itemView, int channelId) {
-            super(itemView);
-
-            channelLayout = itemView.findViewById(R.id.primary_channel_layout);
-            channelInfo = itemView.findViewById(R.id.channel_info);
-            channelImage = itemView.findViewById(R.id.channel_image);
-            channelName = itemView.findViewById(R.id.channel_name_text);
-            channelType = itemView.findViewById(R.id.channel_type_text);
-            lastMessageText = itemView.findViewById(R.id.last_message_text);
-            lastMessageTime = itemView.findViewById(R.id.last_message_time);
-            lastMessageAlias = itemView.findViewById(R.id.last_message_alias);
-            lastMessageDisplayName = itemView.findViewById(R.id.last_message_displayName);
-            speakerButton = itemView.findViewById(R.id.channel_speaker);
-            incomingMessageLayout = itemView.findViewById(R.id.incoming_message_layout);
-
-            this.channelId = channelId;
-            channelResumeViewHolder = null;
-        }
-
-        public ChannelResumeViewHolder getChannelResumeViewHolder() {
-            return channelResumeViewHolder;
-        }
-
-        public void setChannelResumeViewHolder(ChannelResumeViewHolder channelResumeViewHolder) {
-            this.channelResumeViewHolder = channelResumeViewHolder;
-        }
-
-        /*@Override
-        public void onRx(String id, String other) {
-            //setupViewIncommingMessage();
-            //toggleLayoutVisiblity(incomingMessageLayout);
-        }
-
-        @Override
-        public void onJsonRX(String id, String alias, String displayName) {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("hh:mm a");
-            LocalDateTime now = LocalDateTime.now();
-            String timeText = dtf.format(now);
-
-            String aliasText = alias == null ? "UNKNOWN" : alias;
-            String displayNameText = displayName == null ? "Unknown user" : displayName;
-
-            incomingMessageLayout.setVisibility(View.VISIBLE);
-            showIncommingMessageView(aliasText);
-
-            ((TextView) incomingMessageLayout
-                    .findViewById(R.id.incoming_message_name)).setText(aliasText);
-
-            lastMessageTime.setText(timeText);
-            lastMessageAlias.setText(aliasText);
-            lastMessageDisplayName.setText(displayNameText);
-            lastMessageText.setVisibility(View.VISIBLE);
-
-            //Incoming SOS
-            //toggleLayoutVisiblity(incomingMessageLayout);
-            //activity.binding.incomingSosOverlapMessageName.setText(aliasText);
-        }
-
-        @Override
-        public void stopRx() {
-            //incomingMessageLayout.setVisibility(View.INVISIBLE);
-            //toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
-            hideIncommingMessageView();
-            incomingMessageLayout.setVisibility(View.GONE);
-        }*/
-
-        private void showIncommingMessageView(String alias) {
-            channelInfo.setAlpha(LOW_OPACITY);
-            lastMessageTime.setAlpha(LOW_OPACITY);
-            lastMessageAlias.setAlpha(LOW_OPACITY);
-            lastMessageDisplayName.setAlpha(LOW_OPACITY);
-            lastMessageText.setAlpha(LOW_OPACITY);
-
-            showLayoutBackgroundIncommingMessageChannel(alias);
-        }
-
-        private void hideIncommingMessageView() {
-            channelInfo.setAlpha(FULL_OPACITY);
-            lastMessageTime.setAlpha(FULL_OPACITY);
-            lastMessageAlias.setAlpha(FULL_OPACITY);
-            lastMessageDisplayName.setAlpha(FULL_OPACITY);
-            lastMessageText.setAlpha(FULL_OPACITY);
-
-            hideLayoutBackgroundIncommingMessageChannel();
-        }
-
-        private void showLayoutBackgroundIncommingMessageChannel(String alias) {
-            try {
-                if (this.channelId == 0) {
-                    /*channelLayout.setBackground(ContextCompat.getDrawable(fragment.getContext(),
-                            R.drawable.primary_channel_item_fade_shape));
-
-                    if (channelResumeViewHolder == null) return;
-                    channelResumeViewHolder.primaryChannel
-                            .setBackground(ContextCompat.getDrawable(fragment.getContext(),
-                                    R.drawable.primary_channel_item_fade_shape));
-
-                    channelResumeViewHolder.primaryChannelDescription.setText(alias);
-                    channelResumeViewHolder.priorityChannel1Description.setText(PRIORITY_CHANNEL_1);
-                    channelResumeViewHolder.priorityChannel2Description.setText(PRIORITY_CHANNEL_2);
-
-                    channelResumeViewHolder.primaryChannel.setAlpha(FULL_OPACITY);
-                    channelResumeViewHolder.primaryChannelRxImage.setVisibility(View.VISIBLE);
-                    channelResumeViewHolder.priorityChannel1.setAlpha(LOW_OPACITY);
-                    channelResumeViewHolder.priorityChannel2.setAlpha(LOW_OPACITY);*/
-                } else if (this.channelId == 1) {
-                    channelLayout.setBackground(ContextCompat.getDrawable(fragment.getContext(),
-                            R.drawable.prioritary1_channel_item_fade_shape));
-
-                    if (channelResumeViewHolder == null) return;
-                    channelResumeViewHolder.priorityChannel1
-                            .setBackground(ContextCompat.getDrawable(fragment.getContext(),
-                                    R.drawable.prioritary1_channel_item_fade_shape));
-
-                    channelResumeViewHolder.primaryChannelDescription.setText(PRIMARY_CHANNEL);
-                    channelResumeViewHolder.priorityChannel1Description.setText(alias);
-                    channelResumeViewHolder.priorityChannel2Description.setText(PRIORITY_CHANNEL_2);
-
-                    channelResumeViewHolder.primaryChannel.setAlpha(LOW_OPACITY);
-                    channelResumeViewHolder.priorityChannel1RxImage.setVisibility(View.VISIBLE);
-                    channelResumeViewHolder.priorityChannel1.setAlpha(FULL_OPACITY);
-                    channelResumeViewHolder.priorityChannel2.setAlpha(LOW_OPACITY);
-                } else if (this.channelId == 2) {
-                    channelLayout.setBackground(ContextCompat.getDrawable(fragment.getContext(),
-                            R.drawable.prioritary2_channel_item_fade_shape));
-
-                    if (channelResumeViewHolder == null) return;
-                    channelResumeViewHolder.priorityChannel2
-                            .setBackground(ContextCompat.getDrawable(fragment.getContext(),
-                                    R.drawable.prioritary2_channel_item_fade_shape));
-
-                    channelResumeViewHolder.primaryChannelDescription.setText(PRIMARY_CHANNEL);
-                    channelResumeViewHolder.priorityChannel1Description.setText(PRIORITY_CHANNEL_1);
-                    channelResumeViewHolder.priorityChannel2Description.setText(alias);
-
-                    channelResumeViewHolder.primaryChannel.setAlpha(LOW_OPACITY);
-                    channelResumeViewHolder.priorityChannel2RxImage.setVisibility(View.VISIBLE);
-                    channelResumeViewHolder.priorityChannel1.setAlpha(LOW_OPACITY);
-                    channelResumeViewHolder.priorityChannel2.setAlpha(FULL_OPACITY);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        private void hideLayoutBackgroundIncommingMessageChannel() {
-            try {
-                channelLayout.setBackground(ContextCompat.getDrawable(fragment.getContext(),
-                        R.drawable.channel_item_shape));
-
-                if (channelResumeViewHolder == null) return;
-
-                channelResumeViewHolder.primaryChannelDescription.setText(PRIMARY_CHANNEL);
-                channelResumeViewHolder.priorityChannel1Description.setText(PRIORITY_CHANNEL_1);
-                channelResumeViewHolder.priorityChannel2Description.setText(PRIORITY_CHANNEL_2);
-
-                channelResumeViewHolder.primaryChannel.setAlpha(FULL_OPACITY);
-                channelResumeViewHolder.priorityChannel1.setAlpha(FULL_OPACITY);
-                channelResumeViewHolder.priorityChannel2.setAlpha(FULL_OPACITY);
-
-                channelResumeViewHolder.primaryChannelRxImage.setVisibility(View.GONE);
-                channelResumeViewHolder.priorityChannel1RxImage.setVisibility(View.GONE);
-                channelResumeViewHolder.priorityChannel2RxImage.setVisibility(View.GONE);
-
-                channelResumeViewHolder.primaryChannel
-                        .setBackground(ContextCompat.getDrawable(fragment.getContext(),
-                                R.drawable.channel_item_shape));
-                channelResumeViewHolder.priorityChannel1
-                        .setBackground(ContextCompat.getDrawable(fragment.getContext(),
-                                R.drawable.channel_item_shape));
-                channelResumeViewHolder.priorityChannel2
-                        .setBackground(ContextCompat.getDrawable(fragment.getContext(),
-                                R.drawable.channel_item_shape));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
     class ChannelResumeViewHolder extends GenericViewHolder implements RxListener {
         private final static float LOW_OPACITY = 0.1f;
         private final static float FULL_OPACITY = 1f;
@@ -444,10 +243,6 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private ImageView priorityChannel2RxImage;
 
         private List<Channel> channels;
-
-        private boolean isPrimaryChannelOnTx;
-        private boolean isPriority1ChannelOnTx;
-        private boolean isPriority2ChannelOnTx;
 
         public ChannelResumeViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -497,7 +292,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                     .findFirst()
                     .ifPresent(channel -> {
                         if (this.channels.size() == 1) {
-                            isPrimaryChannelOnTx = true;
+                            channel.isOnRx = true;
                             showIncomingMessageLayout(formattedAlias, formattedDisplayName);
                         } else {
                             showIncomingMessageImage(id, formattedAlias);
@@ -548,12 +343,12 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
             Channel firstChannel = channels.get(0);
 
-            if(firstChannel.id.equals(channelId)){
-                isPrimaryChannelOnTx = true;
+            if (firstChannel.id.equals(channelId)) {
+                firstChannel.isOnRx = true;
                 primaryChannelDescription.setText(alias);
                 primaryChannelRxImage.setVisibility(View.VISIBLE);
                 primaryChannel.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.primary_channel_item_fade_shape));
-                
+
                 /*primaryChannelImage.setAlpha(FULL_OPACITY);
                 primaryChannelName.setAlpha(FULL_OPACITY);
                 primaryChannelDescription.setAlpha(FULL_OPACITY);*/
@@ -561,8 +356,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
             Channel secondChannel = channels.get(1);
 
-            if(secondChannel.id.equals(channelId)){
-                isPriority1ChannelOnTx = true;
+            if (secondChannel.id.equals(channelId)) {
+                secondChannel.isOnRx = true;
                 priorityChannel1Description.setText(alias);
                 priorityChannel1RxImage.setVisibility(View.VISIBLE);
                 priorityChannel1.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.prioritary1_channel_item_fade_shape));
@@ -574,8 +369,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 priorityChannel1Description.setAlpha(FULL_OPACITY);
             }
 
-            if(channels.size() == 3 && channels.get(2).id.equals(channelId)){
-                isPriority2ChannelOnTx = true;
+            if (channels.size() == 3 && channels.get(2).id.equals(channelId)) {
+                channels.get(2).isOnRx = true;
                 priorityChannel2Description.setText(alias);
                 priorityChannel2RxImage.setVisibility(View.VISIBLE);
                 priorityChannel2.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.prioritary2_channel_item_fade_shape));
@@ -588,23 +383,21 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             }
         }
 
-        private void fadeOutFreeChannels(){
-            Timber.i("isPrimaryChannelOnTx %s", isPrimaryChannelOnTx);
-            if(!isPrimaryChannelOnTx){
+        private void fadeOutFreeChannels() {
+
+            if (!this.channels.get(0).isOnRx) {
                 primaryChannelImage.setAlpha(LOW_OPACITY);
                 primaryChannelName.setAlpha(LOW_OPACITY);
                 primaryChannelDescription.setAlpha(LOW_OPACITY);
             }
 
-            Timber.i("isPriority1ChannelOnTx %s", isPriority1ChannelOnTx);
-            if(!isPriority1ChannelOnTx){
+            if (this.channels.size() > 1 && !this.channels.get(1).isOnRx) {
                 priorityChannel1Image.setAlpha(LOW_OPACITY);
                 priorityChannel1Name.setAlpha(LOW_OPACITY);
                 priorityChannel1Description.setAlpha(LOW_OPACITY);
             }
 
-            Timber.i("isPriority2ChannelOnTx %s", isPriority2ChannelOnTx);
-            if(!isPriority2ChannelOnTx){
+            if (this.channels.size() > 2 && !this.channels.get(2).isOnRx) {
                 priorityChannel2Image.setAlpha(LOW_OPACITY);
                 priorityChannel2Name.setAlpha(LOW_OPACITY);
                 priorityChannel2Description.setAlpha(LOW_OPACITY);
@@ -620,7 +413,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                     .findFirst()
                     .ifPresent(channel -> {
                         if (this.channels.size() == 1) {
-                            isPrimaryChannelOnTx = false;
+                            channel.isOnRx = false;
                             hideIncomingMessageLayout();
                         } else {
                             hideIncomingMessageImage(id);
@@ -650,8 +443,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private void hideIncomingMessageImage(String channelId) {
             Channel firstChannel = channels.get(0);
 
-            if(firstChannel.id.equals(channelId)){
-                isPrimaryChannelOnTx = false;
+            if (firstChannel.id.equals(channelId)) {
+                firstChannel.isOnRx = false;
                 primaryChannelDescription.setText(PRIMARY_CHANNEL);
                 primaryChannel.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.channel_item_shape));
                 primaryChannelRxImage.setVisibility(View.GONE);
@@ -659,35 +452,35 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
             Channel secondChannel = channels.get(1);
 
-            if(secondChannel.id.equals(channelId)){
-                isPriority1ChannelOnTx = false;
+            if (secondChannel.id.equals(channelId)) {
+                secondChannel.isOnRx = false;
                 priorityChannel1Description.setText(PRIORITY_CHANNEL_1);
                 priorityChannel1RxImage.setVisibility(View.GONE);
                 priorityChannel1.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.channel_item_shape));
             }
 
-            if(channels.size() == 3 && channels.get(2).id.equals(channelId)){
-                isPriority2ChannelOnTx = false;
+            if (channels.size() == 3 && channels.get(2).id.equals(channelId)) {
+                channels.get(2).isOnRx = false;
                 priorityChannel2.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.channel_item_shape));
                 priorityChannel2Description.setText(PRIORITY_CHANNEL_2);
                 priorityChannel2RxImage.setVisibility(View.GONE);
             }
         }
 
-        private void fadeInFreeChannels(){
-            if(!isPrimaryChannelOnTx){
+        private void fadeInFreeChannels() {
+            if (!this.channels.get(0).isOnRx) {
                 primaryChannelImage.setAlpha(FULL_OPACITY);
                 primaryChannelName.setAlpha(FULL_OPACITY);
                 primaryChannelDescription.setAlpha(FULL_OPACITY);
             }
 
-            if(!isPriority1ChannelOnTx){
+            if (this.channels.size() > 1 && !this.channels.get(1).isOnRx) {
                 priorityChannel1Image.setAlpha(FULL_OPACITY);
                 priorityChannel1Name.setAlpha(FULL_OPACITY);
                 priorityChannel1Description.setAlpha(FULL_OPACITY);
             }
 
-            if(!isPriority2ChannelOnTx){
+            if (this.channels.size() > 2 && !this.channels.get(2).isOnRx) {
                 priorityChannel2Image.setAlpha(FULL_OPACITY);
                 priorityChannel2Name.setAlpha(FULL_OPACITY);
                 priorityChannel2Description.setAlpha(FULL_OPACITY);
@@ -695,21 +488,96 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         }
     }
 
-    public class ChannelBigListViewHolder extends GenericViewHolder {
+    public class ChannelBigListViewHolder extends GenericViewHolder implements RxListener {
+
         private ChannelBigListAdapter channelBigListAdapter;
-        private RecyclerView rvChannels;
+        private RecyclerView channelsRecyclerView;
+        private List<Channel> channels;
 
         public ChannelBigListViewHolder(@NonNull View itemView) {
             super(itemView);
             channelBigListAdapter = new ChannelBigListAdapter(fragment);
-            rvChannels = itemView.findViewById(R.id.rv_channels);
-            rvChannels.setHasFixedSize(true);
-            rvChannels.setAdapter(channelBigListAdapter);
+            channelsRecyclerView = itemView.findViewById(R.id.rv_channels);
+            channelsRecyclerView.setHasFixedSize(true);
+            channelsRecyclerView.setAdapter(channelBigListAdapter);
         }
 
         public void setChannels(List<Channel> channels) {
+            this.channels = channels;
             this.channelBigListAdapter.setChannels(channels);
             this.channelBigListAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onRx(String id, String alias, String displayName) {
+            String formattedAlias = alias == null ? "UNKNOWN" : alias;
+
+            this.channels
+                    .stream()
+                    .filter(channel -> channel.id.equals(id))
+                    .findFirst()
+                    .ifPresent(channel -> {
+                        channel.isOnRx = true;
+                        channel.rxAlias = formattedAlias;
+                        showIncomingMessage(id, formattedAlias);
+                        fadeOutFreeChannels();
+                        channelsRecyclerView.getAdapter().notifyDataSetChanged();
+                    });
+        }
+
+        private void showIncomingMessage(String id, String alias) {
+            for (int i = 0; i < channels.size(); i++) {
+                ChannelBigListAdapter.ChannelViewHolder currentHolder =
+                        (ChannelBigListAdapter.ChannelViewHolder) channelsRecyclerView.findViewHolderForAdapterPosition(i);
+                if(currentHolder != null && currentHolder.channelId.equals(id)){
+                    currentHolder.showIncomingMessage(alias);
+                }
+            }
+        }
+
+        private void fadeOutFreeChannels() {
+            for (int i = 0; i < channels.size(); i++) {
+                ChannelBigListAdapter.ChannelViewHolder currentHolder =
+                        (ChannelBigListAdapter.ChannelViewHolder) channelsRecyclerView.findViewHolderForAdapterPosition(i);
+                if(currentHolder != null && !this.channels.get(i).isOnRx){
+                    currentHolder.fadeOut();
+                }
+            }
+        }
+
+        @Override
+        public void stopRx(String id, String eventExtraJson) {
+            this.channels
+                    .stream()
+                    .filter(channel -> channel.id.equals(id))
+                    .findFirst()
+                    .ifPresent(channel -> {
+                        channel.isOnRx = false;
+                        channel.rxAlias = "";
+                        hideIncomingMessage(id);
+                        fadeInFreeChannels();
+                        channelsRecyclerView.getAdapter().notifyDataSetChanged();
+                    });
+        }
+
+        private void hideIncomingMessage(String id) {
+            for (int i = 0; i < channels.size(); i++) {
+                ChannelBigListAdapter.ChannelViewHolder currentHolder =
+                        (ChannelBigListAdapter.ChannelViewHolder) channelsRecyclerView.findViewHolderForAdapterPosition(i);
+                if(currentHolder != null && currentHolder.channelId.equals(id)){
+                    currentHolder.hideIncomingMessage();
+                }
+            }
+        }
+
+        private void fadeInFreeChannels() {
+            for (int i = 0; i < channels.size(); i++) {
+                ChannelBigListAdapter.ChannelViewHolder currentHolder =
+                        (ChannelBigListAdapter.ChannelViewHolder) channelsRecyclerView.findViewHolderForAdapterPosition(i);
+                if(currentHolder != null && !this.channels.get(i).isOnRx){
+                    currentHolder.fadeIn();
+                }
+            }
         }
     }
 

@@ -17,6 +17,8 @@ public class Channel implements Serializable {
     public String image;
     public boolean isActive;
     public boolean isSpeakerOn;
+    public boolean isOnRx; //TODO: Perhaps should the toString be updated?
+    public String rxAlias;
     public List<ChannelElement> channelElements;
 
     public Channel(String id, String name, ChannelType type, String image,
@@ -39,6 +41,7 @@ public class Channel implements Serializable {
                 ", image='" + image + '\'' +
                 ", isActive=" + isActive +
                 ", isSpeakerOn=" + isSpeakerOn +
+                ", isOnRx=" + isOnRx +
                 ", channelElements=" + channelElements +
                 '}';
     }
