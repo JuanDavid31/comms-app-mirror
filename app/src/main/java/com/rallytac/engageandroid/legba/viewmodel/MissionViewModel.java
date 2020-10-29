@@ -71,19 +71,17 @@ public class MissionViewModel extends ViewModel {
 
 
 
-    public void setupMission(Mission mission) {
+    public void
+    setupMission(Mission mission) {
         this.mission = mission;
         getMissionById(mission.getId())
                 .ifPresent(updatedMission -> this.mission = updatedMission);
     }
 
     public Optional<Mission> getMissionById(String id) {
-
-        /*if (firstTime) {
-            channelElementDao.insertInTx(mission.getChannels().get(0).getChannelElements());
-            channelDao.insertInTx(mission.getChannels());
-            missionDao.insert(mission);
-        }*/
+        channelElementDao.insertOrReplaceInTx(mission.getChannels().get(0).getChannelElements());
+        channelDao.insertOrReplaceInTx(mission.getChannels());
+        missionDao.insertOrReplace(mission);
 
         return missionDao.loadAll()
                 .stream()
