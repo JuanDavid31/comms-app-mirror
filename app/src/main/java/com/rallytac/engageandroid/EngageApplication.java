@@ -46,7 +46,10 @@ import com.google.zxing.integration.android.IntentResult;
 import com.rallytac.engage.engine.Engine;
 import com.rallytac.engageandroid.Biometrics.DataSeries;
 import com.rallytac.engageandroid.Biometrics.RandomHumanBiometricGenerator;
+import com.rallytac.engageandroid.legba.data.dto.DaoMaster;
+import com.rallytac.engageandroid.legba.data.dto.DaoSession;
 
+import org.greenrobot.greendao.database.Database;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -81,6 +84,8 @@ public class EngageApplication
         BluetoothManager.IBtNotification,
         LicenseActivationTask.ITaskCompletionNotification {
     private static String TAG = EngageApplication.class.getSimpleName();
+
+    private DaoSession daoSession;
 
     public interface IGroupTextMessageListener {
         void onGroupTextMessageRx(PresenceDescriptor sourcePd, String message);
@@ -548,12 +553,26 @@ public class EngageApplication
         }
     }
 
+    public DaoSession getDaoSession() {
+        return daoSession;
+    }
+
     @Override
     public void onCreate() {
         Timber.plant(new Timber.DebugTree());
         Log.d(TAG, "onCreate");
 
         super.onCreate();
+
+        // regular SQLite database
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "legba-test");
+        Database db = helper.getWritableDb();
+
+        // encrypted SQLCipher database
+        // note: you need to add SQLCipher to your dependencies, check the build.gradle file
+        // DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "notes-db-encrypted");
+        // Database db = helper.getEncryptedWritableDb("encryption-key");
+        daoSession = new DaoMaster(db).newSession();
 
         // Its important to set this as soon as possible!
         Engine.setApplicationContext(this.getApplicationContext());

@@ -23,6 +23,7 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
         JsonObject jsonObject = json.getAsJsonObject();
 
         JsonElement idJsonElement = jsonObject.get("id");
+        JsonElement missionIdJsonElement = jsonObject.get("missionId");
         JsonElement nameJsonElement = jsonObject.get("name");
         JsonElement typeJsonElement = jsonObject.get("type");
         JsonElement imageJsonElement = jsonObject.get("image");
@@ -34,10 +35,12 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
 
         return new Channel(
                 idJsonElement != null ? idJsonElement.getAsString() : "",
+                missionIdJsonElement != null ? missionIdJsonElement.getAsString() : "",
                 nameJsonElement != null ? nameJsonElement.getAsString() : "",
-                getChannelType(typeJsonElement != null ? typeJsonElement.getAsString() : ""),
                 imageJsonElement != null ? imageJsonElement.getAsString() : "",
                 statusJsonElement != null ? statusJsonElement.getAsBoolean() : false,
+                false,
+                getChannelType(typeJsonElement != null ? typeJsonElement.getAsString() : ""),
                 channelElements != null ? channelElements : Collections.emptyList()
         );
     }

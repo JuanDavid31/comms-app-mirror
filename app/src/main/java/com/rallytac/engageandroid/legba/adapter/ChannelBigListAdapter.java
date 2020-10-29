@@ -49,25 +49,25 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
     @Override
     public void onBindViewHolder(@NonNull ChannelViewHolder holder, int position) {
         Channel currentChannel = channels.get(position);
-        holder.channelImage.setImageResource(getImageResource(currentChannel.image));
-        holder.channelName.setText(currentChannel.name);
-        holder.channelTypeText.setText(getTypeString(currentChannel.type));
-        holder.type = currentChannel.type;
+        holder.channelImage.setImageResource(getImageResource(currentChannel.getImage()));
+        holder.channelName.setText(currentChannel.getName());
+        holder.channelTypeText.setText(getTypeString(currentChannel.getType()));
+        holder.type = currentChannel.getType();
 
-        if (currentChannel.id.equals("{G2}")) {
+        if (currentChannel.getId().equals("{G2}")) {
             holder.channelImage.setBorderColor(getWaterBlueColor());
             holder.channelTypeText.setTextColor(getWaterBlueColor());
-        } else if (currentChannel.id.equals("{G3}")) {
+        } else if (currentChannel.getId().equals("{G3}")) {
             holder.channelImage.setBorderColor(getOrangeColor());
             holder.channelTypeText.setTextColor(getOrangeColor());
         }
 
-        holder.channelId = currentChannel.id;
+        holder.channelId = currentChannel.getId();
 
-        setupSpeakerIcon(currentChannel.isSpeakerOn, holder.channelSpeaker);
+        setupSpeakerIcon(currentChannel.isSpeakerOn(), holder.channelSpeaker);
         holder.channelSpeaker.setOnClickListener(view -> {
-            currentChannel.isSpeakerOn = !currentChannel.isSpeakerOn;
-            DataManager.getInstance(fragment.getContext()).toggleMute(currentChannel.id, currentChannel.isSpeakerOn);
+            currentChannel.setSpeakerOn(!currentChannel.isSpeakerOn());
+               DataManager.getInstance(fragment.getContext()).toggleMute(currentChannel.getId(), currentChannel.isSpeakerOn());
             this.fragment.binding.missionViewPager.getAdapter().notifyDataSetChanged();
         });
 

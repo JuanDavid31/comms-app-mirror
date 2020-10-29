@@ -82,14 +82,14 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
             Member member = (Member) element;
             MemberViewHolder memberViewHolder = (MemberViewHolder) holder;
 
-            String name = getFirstLetterCapsFrom(member.name);
+            String name = getFirstLetterCapsFrom(member.getName());
 
             memberViewHolder.membersCaps.setText(name);
-            memberViewHolder.name.setText(member.name);
-            memberViewHolder.memberNickName.setText(member.nickName);
-            memberViewHolder.memberNumber.setText(member.number);
-            memberViewHolder.micImage.setImageResource(getStateImage(member.state));
-            memberViewHolder.requestPendingText.setVisibility(member.state == Member.RequestType.PENDING ? View.VISIBLE : View.INVISIBLE);
+            memberViewHolder.name.setText(member.getName());
+            memberViewHolder.memberNickName.setText(member.getNickName());
+            memberViewHolder.memberNumber.setText(member.getNumber());
+            memberViewHolder.micImage.setImageResource(getStateImage(member.getState()));
+            memberViewHolder.requestPendingText.setVisibility(member.getState() == Member.RequestType.PENDING ? View.VISIBLE : View.INVISIBLE);
         } else if(element instanceof Subchannel){
             Subchannel subChannel = (Subchannel) element;
             SubchannelViewHolder subchannelViewHolder = (SubchannelViewHolder) holder;
@@ -97,21 +97,21 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
             subchannelViewHolder.root.setOnClickListener(view -> NavHostFragment.findNavController(fragment)
                     .navigate(ChannelFragmentDirections.actionChannelFragmentToSubchannelFragment(subChannel)));
 
-            subchannelViewHolder.subchannelImage.setImageResource(getImageResource(subChannel.image));
-            subchannelViewHolder.name.setText(subChannel.name);
+            subchannelViewHolder.subchannelImage.setImageResource(getImageResource(subChannel.getImage()));
+            subchannelViewHolder.name.setText(subChannel.getName());
 
             subchannelViewHolder.membersLayout.removeAllViews();
-            for (int i = 0; (i < 6) && (i < subChannel.members.size()); i++) {
+            for (int i = 0; (i < 6) && (i < subChannel.getMembers().size()); i++) {
                 FrameLayout newMember = (FrameLayout) LayoutInflater.from(fragment.getContext()).inflate(R.layout.member_caps_layout, null);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(DimUtils.convertDpToPx(fragment, 26.4), ViewGroup.LayoutParams.MATCH_PARENT);
                 layoutParams.setMarginEnd(DimUtils.convertDpToPx(fragment, 5.3));
                 newMember.setLayoutParams(layoutParams);
-                String memberCaps = getFirstLetterCapsFrom(subChannel.members.get(i).name);
+                String memberCaps = getFirstLetterCapsFrom(subChannel.getMembers().get(i).getName());
                 ((TextView)newMember.findViewById(R.id.member_caps_text)).setText(memberCaps);
                 subchannelViewHolder.membersLayout.addView(newMember);
             }
 
-            int remainingChannels = subChannel.members.size() - 6;
+            int remainingChannels = subChannel.getMembers().size() - 6;
             if (remainingChannels <= 0) { return; }
             TextView remainingChannelsView = (TextView) LayoutInflater.from(fragment.getContext()).inflate(R.layout.remaining_channels_number, null);
             remainingChannelsView.setLayoutParams(new LinearLayout.LayoutParams(convertDpToPx(fragment, 26.8), ViewGroup.LayoutParams.MATCH_PARENT));
@@ -197,7 +197,7 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
 
         @Override
         public boolean areItemsTheSame(@NonNull ChannelElement oldItem, @NonNull ChannelElement newItem) {
-            return oldItem.id == newItem.id;
+            return oldItem.getId() == newItem.getId();
         }
 
         @Override

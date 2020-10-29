@@ -44,11 +44,12 @@ public class ChannelElementDeserializer<T extends ChannelElement> implements Jso
         }
 
         return new Member(
-                jsonObject.get("id").getAsInt(),
+                jsonObject.get("id").getAsLong(),
                 jsonObject.get("name").getAsString(),
+                jsonObject.get("subchannelId") != null ? jsonObject.get("subchannelId").getAsLong() : null,
                 jsonObject.get("nickName").getAsString(),
-                requestType,
-                jsonObject.get("number").getAsString()
+                jsonObject.get("number").getAsString(),
+                requestType
         );
     }
 

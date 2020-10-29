@@ -5,6 +5,7 @@
         "channels": [
             {
                 "id": "{G1}",
+                "missionId": "{M1}",
                 "image": "primary",
                 "name": "ALPHA",
                 "type": "primary",
@@ -34,54 +35,63 @@
                         "members": [
                             {
                                 "id": 1,
+                                "subchannelId": 3,
                                 "name": "JOHN WAREN",
                                 "nickName": "johnister",
                                 "number": "544321124"
                             },
                             {
                                 "id": 2,
+                                "subchannelId": 3,
                                 "name": "DONALD MIKE",
                                 "nickName": "Archie",
                                 "number": "544321125"
                             },
                             {
                                 "id": 3,
+                                "subchannelId": 3,
                                 "name": "EDWARD WATKIN",
                                 "nickName": "Edi",
                                 "number": "544321132"
                             },
                             {
                                 "id": 4,
+                                "subchannelId": 3,
                                 "name": "JULIUS HODGES",
                                 "nickName": "Juli",
                                 "number": "544321352"
                             },
                             {
                                 "id": 5,
+                                "subchannelId": 3,
                                 "name": "SMITH RICHARDSON",
                                 "nickName": "Kiah",
                                 "number": "544321563"
                             },
                             {
                                 "id": 6,
+                                "subchannelId": 3,
                                 "name": "RUBEN COLEMAN",
                                 "nickName": "Rubby",
                                 "number": "544321668"
                             },
                             {
                                 "id": 7,
+                                "subchannelId": 3,
                                 "name": "EUNICE FLEMING",
                                 "nickName": "Nice",
                                 "number": "54321003"
                             },
                             {
                                 "id": 8,
+                                "subchannelId": 3,
                                 "name": "STELLA JOHNSTON",
                                 "nickName": "The steal",
                                 "number": "544321591"
                             },
                             {
                                 "id": 9,
+                                "subchannelId": 3,
                                 "name": "MARLON BARNES",
                                 "nickName": "Marly",
                                 "number": "544321777"
@@ -116,6 +126,7 @@
             },
             {
                 "id": "{G2}",
+                "missionId": "{M1}",
                 "image": "secondary",
                 "name": "DELTA",
                 "type": "priority",
@@ -123,6 +134,7 @@
             },
             {
                 "id": "{G3}",
+                "missionId": "{M1}",
                 "image": "tertiary",
                 "name": "ECHO",
                 "type": "priority",
@@ -130,6 +142,7 @@
             },
             {
                 "id": "{G4}",
+                "missionId": "{M1}",
                 "image": "quaternary",
                 "name": "CHARLIE",
                 "type": "radio",
@@ -137,6 +150,7 @@
             },
             {
                 "id": "{G5}",
+                "missionId": "{M1}",
                 "image": "quinary",
                 "name": "GROUND TEAM",
                 "type": "radio",

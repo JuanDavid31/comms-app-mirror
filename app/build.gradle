@@ -8,6 +8,9 @@ apply plugin: 'com.android.application'
 // google-services.json file for Firebase.
 apply plugin: 'com.google.gms.google-services'
 
+//plugin GreenDao
+apply plugin: 'org.greenrobot.greendao'
+
 // Addition flavors that we want to build for
 def additionalFlavorsFile = "flavors/flavors.gradle"
 
@@ -69,6 +72,10 @@ android {
             url 'https://dl.bintray.com/rallytac/maven'
         }
     }
+}
+
+greendao {
+    schemaVersion 1000
 }
 
 dependencies {
@@ -136,4 +143,7 @@ dependencies {
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
+
+    //GreenDao
+    implementation 'org.greenrobot:greendao:3.3.0'
 }

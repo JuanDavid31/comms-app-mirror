@@ -77,8 +77,8 @@ public class DataManager {
 
         missions.forEach(mission -> {
             DatabaseMission newMission = new DatabaseMission();
-            newMission._id = mission.id;
-            newMission._name = mission.name;
+            newMission._id = mission.getId();
+            newMission._name = mission.getName();
             newMission._rpAddress = context.getString(R.string.default_rallypoint);
             newMission._rpPort = Utils.intOpt(context.getString(R.string.default_rallypoint_port), Constants.DEF_RP_PORT);
             newMission._mcId = Utils.generateGroupId();
@@ -96,11 +96,11 @@ public class DataManager {
 
     private ArrayList<DatabaseGroup> getGroupsByMission(Mission mission) {
         return mission
-                .channels
+                .getChannels()
                 .stream()
                 .map(channel -> {
-                    DatabaseGroup group = new DatabaseGroup(channel.name);
-                    group._id = channel.id;
+                    DatabaseGroup group = new DatabaseGroup(channel.getName());
+                    group._id = channel.getId();
                     group._txFramingMs = Constants.DEFAULT_TX_FRAMING_MS;
                     group._txCodecId = Constants.DEFAULT_ENCODER;
                     group._maxTxSecs = Constants.DEFAULT_TX_SECS;
@@ -121,24 +121,24 @@ public class DataManager {
     public void switchToMissionOnEngageEngine(Mission mission) {
         db._missions
                 .stream()
-                .filter(m -> m._id.equals(mission.id))
+                .filter(m -> m._id.equals(mission.getId()))
                 .findAny()
                 .ifPresent(m -> {
-                    Globals.getEngageApplication().switchToMission(mission.id);
-                    Globals.getEngageApplication().getActiveConfiguration().set_missionId(mission.id);
+                    Globals.getEngageApplication().switchToMission(mission.getId());
+                    Globals.getEngageApplication().getActiveConfiguration().set_missionId(mission.getId());
                     Timber.i("MissionId updated to %s ", mission);
                 });
         updateDB();
 
-        mission.channels
+        mission.getChannels()
                 .forEach(channel -> {
-                    String txData = new Gson().toJson(new TxData(channel.id, channel.name));
+                    String txData = new Gson().toJson(new TxData(channel.getId(), channel.getName()));
                     Timber.i("txData -> %s", txData);
                     String realTxData = Globals.getEngageApplication().buildFinalGroupJsonConfiguration(txData);
                     Globals.getEngageApplication().getEngine().engageCreateGroup(realTxData);
                 });
 
-        mission.channels.forEach(channel -> Globals.getEngageApplication().getEngine().engageJoinGroup(channel.id));
+        mission.getChannels().forEach(channel -> Globals.getEngageApplication().getEngine().engageJoinGroup(channel.getId()));
         Globals.getEngageApplication().updateActiveConfiguration();
     }
 

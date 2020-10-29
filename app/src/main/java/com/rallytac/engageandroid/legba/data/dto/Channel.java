@@ -3,31 +3,174 @@ package com.rallytac.engageandroid.legba.data.dto;
 import com.google.gson.annotations.JsonAdapter;
 import com.rallytac.engageandroid.legba.mapping.ChannelDeserializer;
 
+import org.greenrobot.greendao.annotation.Convert;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.JoinEntity;
+import org.greenrobot.greendao.annotation.Keep;
+import org.greenrobot.greendao.annotation.Property;
+import org.greenrobot.greendao.annotation.ToMany;
+import org.greenrobot.greendao.converter.PropertyConverter;
+
 import java.io.Serializable;
 import java.util.List;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.DaoException;
 
+@Entity(nameInDb = "CHANNEL")
 @JsonAdapter(ChannelDeserializer.class)
 public class Channel implements Serializable {
 
-    public enum ChannelType {PRIMARY, PRIORITY, RADIO}
+    private static final long serialVersionUID = 923291192016354450L;
 
-    public String id;
-    public String name;
-    public ChannelType type;
-    public String image;
-    public boolean isActive;
-    public boolean isSpeakerOn;
-    public boolean isOnRx; //TODO: Perhaps should the toString be updated?
+    @Id
+    private String id;
+
+    @Property(nameInDb = "mission_id")
+    private String missionId;
+
+    private String name;
+
+    private String image;
+
+    @Property(nameInDb = "is_active")
+    private boolean isActive;
+
+    @Property(nameInDb = "is_speaker_on")
+    private boolean isSpeakerOn;
+
+    public boolean isOnRx;
     public String rxAlias;
-    public List<ChannelElement> channelElements;
 
-    public Channel(String id, String name, ChannelType type, String image,
-                   boolean isActive, List<ChannelElement> channelElements) {
+    @Convert(converter = ChannelTypeConverter.class, columnType = String.class)
+    private ChannelType type;
+
+    @ToMany
+    @JoinEntity(
+            entity = ChannelsWithChannelElements.class,
+            sourceProperty = "channelId",
+            targetProperty = "channelElementId"
+    )
+    private List<ChannelElement> channelElements;
+
+    /** Used to resolve relations */
+    @Generated(hash = 2040040024)
+    private transient DaoSession daoSession;
+
+    /** Used for active entity operations. */
+    @Generated(hash = 783605529)
+    private transient ChannelDao myDao;
+
+    public Channel() {
+    }
+
+    public Channel(String id) {
         this.id = id;
+    }
+
+    @Generated(hash = 1023099897)
+    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, boolean isOnRx, String rxAlias, ChannelType type) {
+        this.id = id;
+        this.missionId = missionId;
         this.name = name;
-        this.type = type;
         this.image = image;
         this.isActive = isActive;
+        this.isSpeakerOn = isSpeakerOn;
+        this.isOnRx = isOnRx;
+        this.rxAlias = rxAlias;
+        this.type = type;
+    }
+
+    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, ChannelType type, List<ChannelElement> channelElements) {
+        this.id = id;
+        this.missionId = missionId;
+        this.name = name;
+        this.image = image;
+        this.isActive = isActive;
+        this.isSpeakerOn = isSpeakerOn;
+        this.type = type;
+        this.channelElements = channelElements;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getMissionId() {
+        return missionId;
+    }
+
+    public void setMissionId(String missionId) {
+        this.missionId = missionId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean isSpeakerOn() {
+        return isSpeakerOn;
+    }
+
+    public void setSpeakerOn(boolean speakerOn) {
+        isSpeakerOn = speakerOn;
+    }
+
+    public ChannelType getType() {
+        return type;
+    }
+
+    public void setType(ChannelType type) {
+        this.type = type;
+    }
+
+    /**
+     * To-many relationship, resolved on first access (and after reset).
+     * Changes to to-many relations are not persisted, make changes to the target entity.
+     */
+    @Generated(hash = 1452385247)
+    public List<ChannelElement> getChannelElements() {
+        if (channelElements == null) {
+            final DaoSession daoSession = this.daoSession;
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            ChannelElementDao targetDao = daoSession.getChannelElementDao();
+            List<ChannelElement> channelElementsNew = targetDao._queryChannel_ChannelElements(id);
+            synchronized (this) {
+                if (channelElements == null) {
+                    channelElements = channelElementsNew;
+                }
+            }
+        }
+        return channelElements;
+    }
+
+    public void setChannelElements(List<ChannelElement> channelElements) {
         this.channelElements = channelElements;
         this.isSpeakerOn = true;
     }
@@ -36,13 +179,111 @@ public class Channel implements Serializable {
     public String toString() {
         return "Channel{" +
                 "id='" + id + '\'' +
+                ", missionId='" + missionId + '\'' +
                 ", name='" + name + '\'' +
-                ", type=" + type +
                 ", image='" + image + '\'' +
                 ", isActive=" + isActive +
                 ", isSpeakerOn=" + isSpeakerOn +
                 ", isOnRx=" + isOnRx +
                 ", channelElements=" + channelElements +
+                ", type=" + type +
                 '}';
+    }
+
+    public boolean getIsActive() {
+        return this.isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public boolean getIsSpeakerOn() {
+        return this.isSpeakerOn;
+    }
+
+    public void setIsSpeakerOn(boolean isSpeakerOn) {
+        this.isSpeakerOn = isSpeakerOn;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    @Generated(hash = 886780443)
+    public synchronized void resetChannelElements() {
+        channelElements = null;
+    }
+
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 128553479)
+    public void delete() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.delete(this);
+    }
+
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 1942392019)
+    public void refresh() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.refresh(this);
+    }
+
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 713229351)
+    public void update() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.update(this);
+    }
+
+    public boolean getIsOnRx() {
+        return this.isOnRx;
+    }
+
+    public void setIsOnRx(boolean isOnRx) {
+        this.isOnRx = isOnRx;
+    }
+
+    public String getRxAlias() {
+        return this.rxAlias;
+    }
+
+    public void setRxAlias(String rxAlias) {
+        this.rxAlias = rxAlias;
+    }
+
+    /** called by internal mechanisms, do not call yourself. */
+    @Generated(hash = 2049488309)
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getChannelDao() : null;
+    }
+
+    //ChannelElementType
+    public enum ChannelType {PRIMARY, PRIORITY, RADIO}
+
+    public static class ChannelTypeConverter implements PropertyConverter<ChannelType, String> {
+
+        @Override
+        public ChannelType convertToEntityProperty(String databaseValue) {
+            return ChannelType.valueOf(databaseValue);
+        }
+
+        @Override
+        public String convertToDatabaseValue(ChannelType entityProperty) {
+            return entityProperty.name();
+        }
     }
 }

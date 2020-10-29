@@ -52,14 +52,14 @@ public class ChannelFragment extends Fragment {
         binding.channelElementsRecycler.setHasFixedSize(true);
         binding.channelElementsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.channelElementsRecycler.setAdapter(adapter);
-        adapter.setChannelElements(channel.channelElements);
+        adapter.setChannelElements(channel.getChannelElements());
 
         return binding.getRoot();
     }
 
     private void updateToolbar() {
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
-        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(channel.name);
+        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(channel.getName());
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 

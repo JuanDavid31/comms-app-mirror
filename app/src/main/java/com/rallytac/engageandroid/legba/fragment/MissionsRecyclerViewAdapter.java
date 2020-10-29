@@ -65,12 +65,12 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
             DataManager.getInstance(context).switchToMissionOnEngageEngine(currentMission);
         });
 
-        holder.missionName.setText(currentMission.name);
-        holder.channelsNumber.setText(String.format("%s Channels", currentMission.channels.size()));
+        holder.missionName.setText(currentMission.getName());
+        holder.channelsNumber.setText(String.format("%s Channels", currentMission.getChannels().size()));
         holder.channels.removeAllViews();
 
-        addChannelsToView(currentMission.channels, holder.channels);
-        addRemainingChannelsText(currentMission.channels, holder.channels);
+        addChannelsToView(currentMission.getChannels(), holder.channels);
+        addRemainingChannelsText(currentMission.getChannels(), holder.channels);
     }
 
     private void addChannelsToView(List<Channel> channels, LinearLayout channelsView) {
@@ -84,7 +84,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPx(fragment, 26.4), ViewGroup.LayoutParams.MATCH_PARENT);
             layoutParams.setMarginEnd(convertDpToPx(fragment, 5.3));
             newAvatar.setLayoutParams(layoutParams);
-            newAvatar.setImageResource(getImageResource(channels.get(i).image));
+            newAvatar.setImageResource(getImageResource(channels.get(i).getImage()));
 
             if (tomato) {
                 tomato = false;
@@ -153,7 +153,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
 
         @Override
         public boolean areItemsTheSame(@NonNull Mission oldItem, @NonNull Mission newItem) {
-            return oldItem.id == newItem.id;
+            return oldItem.getId() == newItem.getId();
         }
 
         @Override

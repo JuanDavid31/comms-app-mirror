@@ -43,12 +43,12 @@ public class MembersRecyclerViewAdapter extends ListAdapter<Member, MembersRecyc
     public void onBindViewHolder(@NonNull MembersRecyclerViewAdapter.MemberViewHolder holder, int position) {
         Member currentMember = members.get(position);
 
-        String name = getFirstLetterCapsFrom(currentMember.name);
+        String name = getFirstLetterCapsFrom(currentMember.getName());
 
         holder.membersCaps.setText(name);
-        holder.name.setText(currentMember.name);
-        holder.memberNickName.setText(currentMember.nickName);
-        holder.memberNumber.setText(currentMember.number);
+        holder.name.setText(currentMember.getName());
+        holder.memberNickName.setText(currentMember.getNickName());
+        holder.memberNumber.setText(currentMember.getNumber());
     }
 
     private String getFirstLetterCapsFrom(String name) {
@@ -86,7 +86,7 @@ public class MembersRecyclerViewAdapter extends ListAdapter<Member, MembersRecyc
 
         @Override
         public boolean areItemsTheSame(@NonNull Member oldItem, @NonNull Member newItem) {
-            return oldItem.id == newItem.id;
+            return oldItem.getMemberId() == newItem.getMemberId();
         }
 
         @Override

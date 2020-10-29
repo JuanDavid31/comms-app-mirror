@@ -47,14 +47,14 @@ public class SubchannelFragment extends Fragment {
         binding.memberElementsRecycler.setHasFixedSize(true);
         binding.memberElementsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.memberElementsRecycler.setAdapter(adapter);
-        adapter.setMembers(subchannel.members);
+        adapter.setMembers(subchannel.getMembers());
 
         return binding.getRoot();
     }
 
     private void updateToolbar() {
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
-        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(subchannel.name);
+        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(subchannel.getName());
 
         requireActivity().findViewById(R.id.fragment_description).setVisibility(View.VISIBLE);
         ((TextView)requireActivity().findViewById(R.id.fragment_description)).setText("Subchannel");

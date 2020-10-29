@@ -48,8 +48,8 @@ public class RadioChannelsRecyclerViewAdapter extends ListAdapter<Channel, Radio
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Channel currentChannel = radioChannels.get(position);
 
-        holder.radioChannelImage.setImageResource(getImageResource(currentChannel.image));
-        holder.radioChannelName.setText(currentChannel.name);
+        holder.radioChannelImage.setImageResource(getImageResource(currentChannel.getImage()));
+        holder.radioChannelName.setText(currentChannel.getName());
     }
 
     @Override
@@ -75,7 +75,7 @@ public class RadioChannelsRecyclerViewAdapter extends ListAdapter<Channel, Radio
 
         @Override
         public boolean areItemsTheSame(@NonNull Channel oldItem, @NonNull Channel newItem) {
-            return oldItem.id == newItem.id;
+            return oldItem.getId() == newItem.getId();
         }
 
         @Override
