@@ -1,6 +1,7 @@
 package com.rallytac.engageandroid.legba.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.fragment.MissionFragment;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
@@ -58,13 +60,10 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         holder.type = currentChannel.getType();
         holder.channelId = currentChannel.getId();
 
-        if (currentChannel.getId().equals("{G2}")) {
-            holder.channelImage.setBorderColor(getWaterBlueColor());
-            holder.channelTypeText.setTextColor(getWaterBlueColor());
-        } else if (currentChannel.getId().equals("{G3}")) {
-            holder.channelImage.setBorderColor(getOrangeColor());
-            holder.channelTypeText.setTextColor(getOrangeColor());
-        }
+        int color = getColor(position);
+        holder.channelImage.setBorderColor(color);
+        holder.channelTypeText.setTextColor(color);
+        holder.setBackground(getBackground(color));
 
         setupSpeakerIcon(currentChannel.isSpeakerOn(), holder.channelSpeaker);
         holder.channelSpeaker.setOnClickListener(view -> {
@@ -76,12 +75,39 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         setViewState(currentChannel, holder);
     }
 
-    private int getWaterBlueColor() {
-        return fragment.getResources().getColor(R.color.waterBlue);
+    private Drawable getBackground(int position) {
+        //ContextCompat.getDrawable(this.context, R.drawable.primary_channel_item_fade_shape)
+        boolean match0 = IntStream.iterate(0, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean match1 = IntStream.iterate(1, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean match2 = IntStream.iterate(2, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean match3 = IntStream.iterate(3, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean match4 = IntStream.iterate(4, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean match5 = IntStream.iterate(5, i -> i + 6).limit(10).anyMatch(i -> i == position);
+
+        if(match0){ return ContextCompat.getDrawable(this.context, R.drawable.primary_channel_item_fade_shape); }
+        if(match1){ return ContextCompat.getDrawable(this.context, R.drawable.prioritary1_channel_item_fade_shape); }
+        if(match2){ return ContextCompat.getDrawable(this.context, R.drawable.prioritary2_channel_item_fade_shape); }
+        if(match3){ return ContextCompat.getDrawable(this.context, R.drawable.prioritary3_channel_item_fade_shape); }
+        if(match4){ return ContextCompat.getDrawable(this.context, R.drawable.prioritary4_channel_item_fade_shape); }
+        if(match5){ return ContextCompat.getDrawable(this.context, R.drawable.prioritary5_channel_item_fade_shape); }
+        return null;
     }
 
-    private int getOrangeColor() {
-        return fragment.getResources().getColor(R.color.orange);
+    private int getColor(int position){ //Limiting to 10 iterations, max number will be 60.
+        boolean match0 = IntStream.iterate(0, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean match1 = IntStream.iterate(1, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean match2 = IntStream.iterate(2, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean match3 = IntStream.iterate(3, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean match4 = IntStream.iterate(4, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean match5 = IntStream.iterate(5, i -> i + 6).limit(10).anyMatch(i -> i == position);
+
+        if(match0){ return fragment.getResources().getColor(R.color.paleRed, null); }
+        if(match1){ return fragment.getResources().getColor(R.color.waterBlue, null); }
+        if(match2){ return fragment.getResources().getColor(R.color.orange, null); }
+        if(match3){ return fragment.getResources().getColor(R.color.sicklyYellow, null); }
+        if(match4){ return fragment.getResources().getColor(R.color.vividGreen, null); }
+        if(match5){ return fragment.getResources().getColor(R.color.violet, null); }
+        return 0;
     }
 
     private String getTypeString(Channel.ChannelType type) {
@@ -155,7 +181,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         public void setReceivingState(String alias) {
             channelTypeText.setText(alias);
             rxImage.setVisibility(View.VISIBLE);
-            root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.primary_channel_item_fade_shape));
+            root.setBackground(receivingStateBackground);
 
             //This prevents the following bug:
             //If there are multiple RX, the first channel will update correctly but from the second and so on,
@@ -185,6 +211,12 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
             rxImage.setVisibility(View.GONE);
             root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
             fadeIn();
+        }
+
+        private Drawable receivingStateBackground;
+
+        public void setBackground(Drawable background) {
+            this.receivingStateBackground = background;
         }
     }
 }

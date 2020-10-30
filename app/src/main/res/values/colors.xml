@@ -33,4 +33,7 @@
     <color name="orange93">#eeec6716</color>
     <color name="white05">#80ffffff</color>
     <color name="semiTransparentPaleRed">#1Adb3737</color>
+    <color name="sicklyYellow">#dbd937</color>
+    <color name="vividGreen">#17de1c</color>
+    <color name="violet">#9f17de</color>
 </resources>
