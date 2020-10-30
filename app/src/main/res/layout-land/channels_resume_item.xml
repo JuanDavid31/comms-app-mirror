@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            tools:visibility="gone">
+            tools:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/priority_channel_1_layout"
@@ -276,7 +276,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/primary_channel_layout"
-        android:layout_width="match_parent"
+        android:layout_width="212dp"
         android:layout_height="match_parent"
         android:layout_marginStart="6dp"
         android:background="@drawable/channel_resume_item_box_shape"
