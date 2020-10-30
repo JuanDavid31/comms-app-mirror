@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.ChannelGroupViewHolder>{
 
     private List<Channel> channels;
-    private Context context;
+    private MissionFragment fragment;
 
     public ChannelListAdapter(List<Channel> channels, MissionFragment fragment) {
         this.channels = channels;
-        this.context = fragment.getContext();
+        this.fragment = fragment;
     }
 
     public List<Channel> getChannels() {
@@ -67,17 +67,22 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                 channel.setActive(!channel.isActive());
                 channels.set(position, channel);
                 setupCheckChannel(holder, channel);
+                if(getCheckedChannels().size() == 0) {
+
+                } else {
+
+                }
             }
         });
     }
 
     private void setupCheckChannel(ChannelGroupViewHolder holder, Channel channel) {
         if(channel.isActive()) {
-            holder.principalLayoutItem.setBackground(ContextCompat.getDrawable(context,
+            holder.principalLayoutItem.setBackground(ContextCompat.getDrawable(fragment.getContext(),
                     R.drawable.channel_group_check_item_shape));
             holder.channelCheckImg.setImageResource(R.mipmap.group_158);
         } else {
-            holder.principalLayoutItem.setBackground(ContextCompat.getDrawable(context,
+            holder.principalLayoutItem.setBackground(ContextCompat.getDrawable(fragment.getContext(),
                     R.drawable.channel_group_item_shape));
             holder.channelCheckImg.setImageResource(R.mipmap.ellipse_1084_copy_4);
         }
