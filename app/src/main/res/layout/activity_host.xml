@@ -72,10 +72,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:layout_marginBottom="11dp"
+                                android:layout_marginBottom="9dp"
                                 android:fontFamily="@font/open_sans_bold"
                                 android:letterSpacing="0.02"
-                                android:text="Connor"
+                                android:text="Tactical Ground"
                                 android:textColor="@color/paleRed"
                                 android:textSize="12sp"
                                 android:visibility="invisible"
@@ -87,18 +87,18 @@
 
                         <ImageButton
                                 android:id="@+id/edit_current_channel_group_button"
-                                android:layout_width="13dp"
-                                android:layout_height="13dp"
-                                android:layout_marginLeft="6.3dp"
-                                android:layout_marginBottom="12.3dp"
+                                android:layout_width="23dp"
+                                android:layout_height="23dp"
+                                android:background="@android:color/transparent"
                                 android:src="@mipmap/edit_4_copy"
                                 android:visibility="invisible"
-                                app:layout_constraintBottom_toBottomOf="parent"
+                                android:scaleType="center"
+                                app:layout_constraintBottom_toBottomOf="@+id/fragment_description"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintHorizontal_bias="0.0"
                                 app:layout_constraintStart_toEndOf="@+id/fragment_description"
-                                app:layout_constraintTop_toBottomOf="@+id/toolbar_title_text"
-                                app:layout_constraintVertical_bias="1.0"
+                                app:layout_constraintTop_toTopOf="@+id/fragment_description"
+                                app:layout_constraintVertical_bias="0.19"
                                 app:srcCompat="@mipmap/edit_4_copy"
                                 tools:visibility="visible" />
 
@@ -108,6 +108,27 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 app:layout_constraintGuide_end="14.3dp" />
+
+                        <androidx.constraintlayout.widget.Guideline
+                                android:id="@+id/guideline24"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                app:layout_constraintGuide_end="12.3dp" />
+
+                        <androidx.constraintlayout.widget.Guideline
+                                android:id="@+id/guideline25"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                app:layout_constraintGuide_end="25.3dp" />
+
+                        <androidx.constraintlayout.widget.Guideline
+                                android:id="@+id/guideline26"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                app:layout_constraintGuide_begin="168.3dp" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -143,7 +164,7 @@
                     android:visibility="gone"
                     tools:alpha=".95"
                     tools:background="@color/secondaryBlack"
-                    tools:visibility="visible">
+                    tools:visibility="gone">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/create_edit_channels_group_layout"
@@ -191,7 +212,6 @@
                             android:layout_marginRight="59.8dp"
                             android:layout_marginBottom="464.3dp"
                             android:background="@drawable/edit_channel_group_btn_shape"
-
                             android:clickable="true"
                             android:text="Create"
                             android:textAllCaps="false"
