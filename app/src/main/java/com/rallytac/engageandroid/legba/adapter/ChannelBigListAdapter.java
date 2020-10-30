@@ -56,6 +56,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         holder.channelName.setText(currentChannel.getName());
         holder.channelTypeText.setText(getTypeString(currentChannel.getType()));
         holder.type = currentChannel.getType();
+        holder.channelId = currentChannel.getId();
 
         if (currentChannel.getId().equals("{G2}")) {
             holder.channelImage.setBorderColor(getWaterBlueColor());
@@ -64,8 +65,6 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
             holder.channelImage.setBorderColor(getOrangeColor());
             holder.channelTypeText.setTextColor(getOrangeColor());
         }
-
-        holder.channelId = currentChannel.getId();
 
         setupSpeakerIcon(currentChannel.isSpeakerOn(), holder.channelSpeaker);
         holder.channelSpeaker.setOnClickListener(view -> {
@@ -108,11 +107,13 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
 
     private void setViewState(Channel currentChannel, ChannelViewHolder holder){
         if(currentChannel.isOnRx()){
-            holder.showIncomingMessage(currentChannel.getRxAlias());
+            holder.setReceivingState(currentChannel.getRxAlias());
         }else{
             boolean brotherViewIsOnRx = this.channels.stream().anyMatch(channel -> channel.isOnRx());
             if(brotherViewIsOnRx){
-                holder.fadeOut();
+                holder.setBrotherIsReceivingState();
+            }else{
+                holder.setNeutralState();
             }
         }
     }
@@ -151,7 +152,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
             rxImage = itemView.findViewById(R.id.rx_image_primary_channel);
         }
 
-        public void showIncomingMessage(String alias) {
+        public void setReceivingState(String alias) {
             channelTypeText.setText(alias);
             rxImage.setVisibility(View.VISIBLE);
             root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.primary_channel_item_fade_shape));
@@ -162,22 +163,28 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
             fadeIn();
         }
 
-        public void fadeIn() {
+        private void fadeIn() {
             channelImage.setAlpha(FULL_OPACITY);
             channelName.setAlpha(FULL_OPACITY);
             channelTypeText.setAlpha(FULL_OPACITY);
         }
 
-        public void fadeOut(){
+        public void setBrotherIsReceivingState(){
+            root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
+            fadeOut();
+        }
+
+        private void fadeOut(){
             channelImage.setAlpha(LOW_OPACITY);
             channelName.setAlpha(LOW_OPACITY);
             channelTypeText.setAlpha(LOW_OPACITY);
         }
 
-        public void hideIncomingMessage(){
+        public void setNeutralState(){
             channelTypeText.setText(getTypeString(type));
             rxImage.setVisibility(View.GONE);
             root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
+            fadeIn();
         }
     }
 }
