@@ -113,6 +113,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                       notifyDataSetChanged();
             });
 
+            setFirstChannelViewState(firstChannel, channelResumeHolder, currentChannelGroup.getChannels());
+
             if (currentChannelGroupSize < 2) {
                 lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
                 lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -122,7 +124,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
 
-                setFirstChannelViewState(firstChannel, channelResumeHolder, currentChannelGroup.getChannels());
+
                 return;
             } else {
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //Note: Do not use DimUtils.converDpToPx or will bug the current page
@@ -395,10 +397,6 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 primaryChannelDescription.setText(alias);
                 primaryChannelRxImage.setVisibility(View.VISIBLE);
                 primaryChannel.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.primary_channel_item_fade_shape));
-
-                /*primaryChannelImage.setAlpha(FULL_OPACITY);
-                primaryChannelName.setAlpha(FULL_OPACITY);
-                primaryChannelDescription.setAlpha(FULL_OPACITY);*/
             }
 
             Channel secondChannel = channels.get(1);
@@ -409,11 +407,9 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 priorityChannel1RxImage.setVisibility(View.VISIBLE);
                 priorityChannel1.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.prioritary1_channel_item_fade_shape));
 
-                //This 3 lines prevent the following bug:
+                //This prevents the following bug:
                 //If there are multiple RX, the first channel will update correctly but the second and third will mix a fadeIn and fadeout state
-                priorityChannel1Image.setAlpha(FULL_OPACITY);
-                priorityChannel1Name.setAlpha(FULL_OPACITY);
-                priorityChannel1Description.setAlpha(FULL_OPACITY);
+                fadeInSecondchannel();
             }
 
             if (channels.size() == 3 && channels.get(2).getId().equals(channelId)) {
@@ -422,12 +418,22 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 priorityChannel2RxImage.setVisibility(View.VISIBLE);
                 priorityChannel2.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.prioritary2_channel_item_fade_shape));
 
-                //This 3 lines prevent the following bug:
+                //This prevents the following bug:
                 //If there are multiple RX, the first channel will update correctly but the second and third will mix a fadeIn and fadeout state
-                priorityChannel2Image.setAlpha(FULL_OPACITY);
-                priorityChannel2Name.setAlpha(FULL_OPACITY);
-                priorityChannel2Description.setAlpha(FULL_OPACITY);
+                fadeInThirdChannel();
             }
+        }
+
+        private void fadeInSecondchannel() {
+            priorityChannel1Image.setAlpha(FULL_OPACITY);
+            priorityChannel1Name.setAlpha(FULL_OPACITY);
+            priorityChannel1Description.setAlpha(FULL_OPACITY);
+        }
+
+        private void fadeInThirdChannel() {
+            priorityChannel2Image.setAlpha(FULL_OPACITY);
+            priorityChannel2Name.setAlpha(FULL_OPACITY);
+            priorityChannel2Description.setAlpha(FULL_OPACITY);
         }
 
         private void fadeOutFreeChannels() {

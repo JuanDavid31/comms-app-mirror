@@ -48,7 +48,7 @@ public class Channel implements Serializable {
 
     private String rxDisplayName;
 
-
+ 
 
 
     @Convert(converter = ChannelTypeConverter.class, columnType = String.class)
