@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -382,6 +383,7 @@ public class MissionFragment extends Fragment implements RxListener {
         if (lastPage) {
             ChannelGroup newChannelGroup = new ChannelGroup(newName, vm.getMission().getId(), channels);
             vm.addChannelGroup(newChannelGroup);
+            vm.getChannelsGroup().add(newChannelGroup);
             lastPage = false;
         } else {
             ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
@@ -399,6 +401,7 @@ public class MissionFragment extends Fragment implements RxListener {
 
     public void toggleCreateEditChannelsGroupLayoutvisibility() {
         setupCreateEditChannelsGroupButton(true);
+        hideKeyboard(activity.binding.createEditChannelsGroupLayout);
         activity.binding.channelGroupNameText.setText(activity.binding.fragmentDescription.getText().toString());
         toggleLayoutVisiblity(binding.icMicCard);
         toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
@@ -428,6 +431,11 @@ public class MissionFragment extends Fragment implements RxListener {
         }
 
         channelListAdapter.setChannels(allChannels);
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public void setupCreateEditChannelsGroupButton(boolean thereAreActiveChannels) {

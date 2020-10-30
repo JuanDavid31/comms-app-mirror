@@ -60,7 +60,6 @@ public class MissionViewModel extends ViewModel {
     }
 
     public void addChannelGroup(ChannelGroup channelGroup) {
-        mission.getChannelsGroups().add(channelGroup);
         channelGroupDao.insertOrReplace(channelGroup);
         for(Channel channel: channelGroup.getChannels()) {
             channelsGroupsWithChannelsDao.insert(new ChannelsGroupsWithChannels(channelGroup.getName(), channel.getId()));
