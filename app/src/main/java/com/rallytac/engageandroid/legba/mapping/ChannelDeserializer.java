@@ -33,7 +33,7 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
         Type listType = new TypeToken<List<ChannelElement>>() {}.getType();
         List<ChannelElement> channelElements = new Gson().fromJson(subChannelsAndMembers, listType);
 
-        return new Channel(
+        return new Channel( //TODO: Create a proper constructor without innecesary boilerplate
                 idJsonElement != null ? idJsonElement.getAsString() : "",
                 missionIdJsonElement != null ? missionIdJsonElement.getAsString() : "",
                 nameJsonElement != null ? nameJsonElement.getAsString() : "",

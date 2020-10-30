@@ -7,7 +7,6 @@ import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.JoinEntity;
-import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.ToMany;
 import org.greenrobot.greendao.annotation.Transient;
@@ -43,12 +42,12 @@ public class Channel implements Serializable {
     @Transient
     private boolean isOnRx;
 
-    @Property(nameInDb = "rx_alias")
-    private String rxAlias;
+    @Property(nameInDb = "last_rx_alias")
+    private String lastRxAlias;
 
-    private String rxDisplayName;
+    private String lastRxDisplayName;
 
- 
+    private String lastRxTime;
 
 
     @Convert(converter = ChannelTypeConverter.class, columnType = String.class)
@@ -77,7 +76,7 @@ public class Channel implements Serializable {
         this.id = id;
     }
 
-    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, boolean isOnRx, String rxAlias, String rxDisplayName, ChannelType type, List<ChannelElement> channelElements) {
+    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, boolean isOnRx, String rxAlias, String lastRxDisplayName, ChannelType type, List<ChannelElement> channelElements) {
         this.id = id;
         this.missionId = missionId;
         this.name = name;
@@ -85,21 +84,22 @@ public class Channel implements Serializable {
         this.isActive = isActive;
         this.isSpeakerOn = isSpeakerOn;
         this.isOnRx = isOnRx;
-        this.rxAlias = rxAlias;
-        this.rxDisplayName = rxDisplayName;
+        this.lastRxAlias = rxAlias;
+        this.lastRxDisplayName = lastRxDisplayName;
         this.type = type;
         this.channelElements = channelElements;
     }
 
-    @Generated(hash = 561664152)
-    public Channel(String id, String missionId, String name, String image, boolean isSpeakerOn, String rxAlias, String rxDisplayName, ChannelType type) {
+    @Generated(hash = 1644940346)
+    public Channel(String id, String missionId, String name, String image, boolean isSpeakerOn, String lastRxAlias, String lastRxDisplayName, String lastRxTime, ChannelType type) {
         this.id = id;
         this.missionId = missionId;
         this.name = name;
         this.image = image;
         this.isSpeakerOn = isSpeakerOn;
-        this.rxAlias = rxAlias;
-        this.rxDisplayName = rxDisplayName;
+        this.lastRxAlias = lastRxAlias;
+        this.lastRxDisplayName = lastRxDisplayName;
+        this.lastRxTime = lastRxTime;
         this.type = type;
     }
 
@@ -160,11 +160,11 @@ public class Channel implements Serializable {
     }
 
     public String getRxAlias() {
-        return rxAlias;
+        return lastRxAlias;
     }
 
     public void setRxAlias(String rxAlias) {
-        this.rxAlias = rxAlias;
+        this.lastRxAlias = rxAlias;
     }
 
     public ChannelType getType() {
@@ -175,12 +175,20 @@ public class Channel implements Serializable {
         this.type = type;
     }
 
-    public String getRxDisplayName() {
-        return rxDisplayName;
+    public String getLastRxDisplayName() {
+        return lastRxDisplayName;
     }
 
-    public void setRxDisplayName(String rxDisplayName) {
-        this.rxDisplayName = rxDisplayName;
+    public void setLastRxDisplayName(String lastRxDisplayName) {
+        this.lastRxDisplayName = lastRxDisplayName;
+    }
+
+    public String getLastRxTime() {
+        return lastRxTime;
+    }
+
+    public void setLastRxTime(String lastRxTime) {
+        this.lastRxTime = lastRxTime;
     }
 
     /**
@@ -282,6 +290,14 @@ public class Channel implements Serializable {
 
     public void setIsSpeakerOn(boolean isSpeakerOn) {
         this.isSpeakerOn = isSpeakerOn;
+    }
+
+    public String getLastRxAlias() {
+        return this.lastRxAlias;
+    }
+
+    public void setLastRxAlias(String lastRxAlias) {
+        this.lastRxAlias = lastRxAlias;
     }
 
     /** called by internal mechanisms, do not call yourself. */

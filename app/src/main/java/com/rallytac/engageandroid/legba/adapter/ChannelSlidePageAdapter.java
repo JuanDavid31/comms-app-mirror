@@ -1,7 +1,8 @@
 package com.rallytac.engageandroid.legba.adapter;
 
-import android.content.Intent;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.rallytac.engageandroid.legba.fragment.MissionFragment;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
@@ -67,13 +69,13 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         if (viewType == RESUME_CHANNELS_ITEM) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.channels_resume_item, parent, false);
-            ChannelResumeViewHolder channelResumeViewHolder = new ChannelResumeViewHolder(itemView);
+            ChannelResumeViewHolder channelResumeViewHolder = new ChannelResumeViewHolder(itemView, this.fragment.getContext());
             Globals.rxListeners.add(channelResumeViewHolder);
             return channelResumeViewHolder;
         } else if (viewType == FULL_CHANNELS_ITEM) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.channels_general_full_item, parent, false);
-            ChannelBigListViewHolder channelBigListViewHolder = new ChannelBigListViewHolder(itemView);
+            ChannelBigListViewHolder channelBigListViewHolder = new ChannelBigListViewHolder(itemView, this.fragment.getContext());
             Globals.rxListeners.add(channelBigListViewHolder);
             return channelBigListViewHolder;
         } else {
@@ -194,6 +196,17 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 holder.fadeOutFirstChannel();
             }
         }
+
+        if(hasLastMessage(firstChannel)){
+            holder.updateLastMessage(firstChannel.getLastRxTime(), firstChannel.getLastRxAlias(), firstChannel.getLastRxDisplayName());
+        }
+    }
+
+    private boolean hasLastMessage(Channel channel){
+        boolean lastRxAliasAvailable = channel.getLastRxAlias() != null && !channel.getLastRxAlias().isEmpty();
+        boolean lastRxDsplayNameAvailable = channel.getLastRxDisplayName() != null && !channel.getLastRxDisplayName().isEmpty();
+        boolean lastRxTimeAvailable = channel.getLastRxTime() != null && !channel.getLastRxTime().isEmpty();
+        return  lastRxAliasAvailable && lastRxDsplayNameAvailable && lastRxTimeAvailable;
     }
 
     private void setSecondChannelViewState(Channel secondChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
@@ -292,10 +305,12 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private ImageView priorityChannel2RxImage;
 
         private List<Channel> channels;
+        private Context context;
 
-        public ChannelResumeViewHolder(@NonNull View itemView) {
+        public ChannelResumeViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
 
+            this.context = context;
             primaryChannel = itemView.findViewById(R.id.primary_channel_layout);
             primaryChannelImage = itemView.findViewById(R.id.primary_channel_image);
             primaryChannelName = itemView.findViewById(R.id.primary_channel_name_text);
@@ -334,6 +349,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         public void onRx(String id, String alias, String displayName) {
             String formattedAlias = alias == null ? "UNKNOWN" : alias;
             String formattedDisplayName = displayName == null ? "Unknown user" : displayName;
+            String time = DateTimeFormatter.ofPattern("hh:mm a").format(LocalDateTime.now());
 
             this.channels
                     .stream()
@@ -342,7 +358,10 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                     .ifPresent(channel -> {
                         if (this.channels.size() == 1) {
                             channel.setOnRx(true);
-                            showIncomingMessageLayout(formattedAlias, formattedDisplayName);
+                            channel.setLastRxAlias(formattedAlias);
+                            channel.setLastRxDisplayName(formattedDisplayName);
+                            channel.setLastRxTime(time);
+                            showIncomingMessageLayout(formattedAlias, formattedDisplayName, time);
                         } else {
                             showIncomingMessageImage(id, formattedAlias);
                             fadeOutFreeChannels();
@@ -350,14 +369,10 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                     });
         }
 
-        private void showIncomingMessageLayout(String alias, String displayName) {
+        private void showIncomingMessageLayout(String alias, String displayName, String time) {
             incomingMessageLayout.setVisibility(View.VISIBLE);
             fadeOutFirstChannel();
             updateBackground();
-
-            String time = DateTimeFormatter
-                    .ofPattern("hh:mm a")
-                    .format(LocalDateTime.now());
 
             ((TextView) incomingMessageLayout.findViewById(R.id.incoming_message_name)).setText(alias);
 
@@ -377,8 +392,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         }
 
         private void updateBackground() {
-            primaryChannel.setBackground(ContextCompat.getDrawable(fragment.getContext(),
-                    R.drawable.primary_channel_item_fade_shape));
+            Drawable drawable = ContextCompat.getDrawable(this.context, R.drawable.primary_channel_item_fade_shape);
+            primaryChannel.setBackground(drawable);
         }
 
         private void updateLastMessage(String timeText, String aliasText, String displayNameText) {
@@ -396,7 +411,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 firstChannel.setOnRx(true);
                 primaryChannelDescription.setText(alias);
                 primaryChannelRxImage.setVisibility(View.VISIBLE);
-                primaryChannel.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.primary_channel_item_fade_shape));
+                primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.primary_channel_item_fade_shape));
             }
 
             Channel secondChannel = channels.get(1);
@@ -405,7 +420,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 secondChannel.setOnRx(true);
                 priorityChannel1Description.setText(alias);
                 priorityChannel1RxImage.setVisibility(View.VISIBLE);
-                priorityChannel1.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.prioritary1_channel_item_fade_shape));
+                priorityChannel1.setBackground(ContextCompat.getDrawable(this.context, R.drawable.prioritary1_channel_item_fade_shape));
 
                 //This prevents the following bug:
                 //If there are multiple RX, the first channel will update correctly but the second and third will mix a fadeIn and fadeout state
@@ -416,7 +431,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 channels.get(2).setOnRx(true);
                 priorityChannel2Description.setText(alias);
                 priorityChannel2RxImage.setVisibility(View.VISIBLE);
-                priorityChannel2.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.prioritary2_channel_item_fade_shape));
+                priorityChannel2.setBackground(ContextCompat.getDrawable(this.context, R.drawable.prioritary2_channel_item_fade_shape));
 
                 //This prevents the following bug:
                 //If there are multiple RX, the first channel will update correctly but the second and third will mix a fadeIn and fadeout state
@@ -484,7 +499,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private void hideIncomingMessageLayout() {
             fadeInFirstchannel();
             incomingMessageLayout.setVisibility(View.GONE);
-            primaryChannel.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.channel_resume_item_box_shape));
+            primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_resume_item_box_shape));
         }
 
         private void fadeInFirstchannel() {
@@ -505,7 +520,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             if (firstChannel.getId().equals(channelId)) {
                 firstChannel.setOnRx(false);
                 primaryChannelDescription.setText(PRIMARY_CHANNEL);
-                primaryChannel.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.channel_item_shape));
+                primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
                 primaryChannelRxImage.setVisibility(View.GONE);
             }
 
@@ -515,12 +530,12 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 secondChannel.setOnRx(false);
                 priorityChannel1Description.setText(PRIORITY_CHANNEL_1);
                 priorityChannel1RxImage.setVisibility(View.GONE);
-                priorityChannel1.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.channel_item_shape));
+                priorityChannel1.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
             }
 
             if (channels.size() == 3 && channels.get(2).getId().equals(channelId)) {
                 channels.get(2).setOnRx(false);
-                priorityChannel2.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.channel_item_shape));
+                priorityChannel2.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
                 priorityChannel2Description.setText(PRIORITY_CHANNEL_2);
                 priorityChannel2RxImage.setVisibility(View.GONE);
             }
@@ -553,9 +568,9 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private RecyclerView channelsRecyclerView;
         private List<Channel> channels;
 
-        public ChannelBigListViewHolder(@NonNull View itemView) {
+        public ChannelBigListViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
-            channelBigListAdapter = new ChannelBigListAdapter(fragment);
+            channelBigListAdapter = new ChannelBigListAdapter(fragment, context);
             channelsRecyclerView = itemView.findViewById(R.id.rv_channels);
             channelsRecyclerView.setHasFixedSize(true);
             channelsRecyclerView.setAdapter(channelBigListAdapter);
@@ -576,7 +591,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                     .filter(channel -> channel.getId().equals(id))
                     .findFirst()
                     .ifPresent(channel -> {
-                        channel.setRxDisplayName(displayName);
+                        channel.setLastRxDisplayName(displayName);
                         channel.setOnRx(true);
                         channel.setRxAlias(formattedAlias);
                         showIncomingMessage(id, formattedAlias);

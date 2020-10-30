@@ -1,5 +1,6 @@
 package com.rallytac.engageandroid.legba.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +25,11 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
 
     private MissionFragment fragment;
     private List<Channel> channels;
+    private Context context;
 
-    public ChannelBigListAdapter(MissionFragment fragment) {
+    public ChannelBigListAdapter(MissionFragment fragment, Context context) {
         this.fragment = fragment;
+        this.context = context;
     }
 
     public List<Channel> getChannels() {
@@ -43,7 +46,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
     public ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.channels_full_item, parent, false);
-        return new ChannelViewHolder(itemView);
+        return new ChannelViewHolder(itemView, context);
     }
 
     @Override
@@ -133,11 +136,13 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
 
         private Channel.ChannelType type;
         public String channelId;
+        private Context context;
 
-        public ChannelViewHolder(@NonNull View itemView) {
+        public ChannelViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
 
             root = itemView;
+            this.context = context;
             channelImage = itemView.findViewById(R.id.channel_photo);
             channelName = itemView.findViewById(R.id.channel_name_text);
             channelTypeText = itemView.findViewById(R.id.channel_type_text);
@@ -149,7 +154,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         public void showIncomingMessage(String alias) {
             channelTypeText.setText(alias);
             rxImage.setVisibility(View.VISIBLE);
-            root.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.primary_channel_item_fade_shape));
+            root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.primary_channel_item_fade_shape));
 
             //This prevents the following bug:
             //If there are multiple RX, the first channel will update correctly but from the second and so on,
@@ -172,7 +177,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         public void hideIncomingMessage(){
             channelTypeText.setText(getTypeString(type));
             rxImage.setVisibility(View.GONE);
-            root.setBackground(ContextCompat.getDrawable(fragment.getContext(), R.drawable.channel_item_shape));
+            root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
         }
     }
 }
