@@ -27,7 +27,6 @@ import com.rallytac.engageandroid.legba.fragment.MissionFragment;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
 
@@ -110,9 +109,10 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             channelResumeHolder.primaryChannelDescription.setText(getTypeString(firstChannel.getType()));
             toggleSpeakerIcon(firstChannel.isSpeakerOn(), channelResumeHolder.primaryChannelSpeaker);
             channelResumeHolder.primaryChannelSpeaker.setOnClickListener(view -> {
-                firstChannel.setSpeakerOn(!firstChannel.isSpeakerOn()); ;
+                firstChannel.setSpeakerOn(!firstChannel.isSpeakerOn());
+                ;
                 DataManager.getInstance(fragment.getContext()).toggleMute(firstChannel.getId(), firstChannel.isSpeakerOn());
-                      notifyDataSetChanged();
+                notifyDataSetChanged();
             });
 
             setFirstChannelViewState(firstChannel, channelResumeHolder, currentChannelGroup.getChannels());
@@ -186,50 +186,51 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
     }
 
     private void setFirstChannelViewState(Channel firstChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
-        if(firstChannel.isOnRx()){
-            RxListener holder1 = holder;
-            holder1.onRx(firstChannel.getId(), firstChannel.getRxAlias(), "");
-            //holder.showIncomingMessage(currentChannel.rxAlias);
-        }else{
-            boolean brotherViewIsOnRx = channels.stream().anyMatch(channel -> channel.isOnRx());
-            if(brotherViewIsOnRx){
-                holder.fadeOutFirstChannel();
+        if (firstChannel.isOnRx()) {
+            ((RxListener) holder).onRx(firstChannel.getId(), firstChannel.getRxAlias(), firstChannel.getLastRxDisplayName());
+        } else {
+            boolean brotherViewIsOnRx = channels.stream().anyMatch(Channel::isOnRx);
+            if (brotherViewIsOnRx) {
+                holder.setBrotherIsReceivingStateFirstChannel();
+            } else {
+                holder.setNeutralStateFirstChannel();
             }
         }
 
-        if(hasLastMessage(firstChannel)){
+        if (hasLastMessage(firstChannel)) {
             holder.updateLastMessage(firstChannel.getLastRxTime(), firstChannel.getLastRxAlias(), firstChannel.getLastRxDisplayName());
         }
     }
 
-    private boolean hasLastMessage(Channel channel){
+    private boolean hasLastMessage(Channel channel) {
         boolean lastRxAliasAvailable = channel.getLastRxAlias() != null && !channel.getLastRxAlias().isEmpty();
         boolean lastRxDsplayNameAvailable = channel.getLastRxDisplayName() != null && !channel.getLastRxDisplayName().isEmpty();
         boolean lastRxTimeAvailable = channel.getLastRxTime() != null && !channel.getLastRxTime().isEmpty();
-        return  lastRxAliasAvailable && lastRxDsplayNameAvailable && lastRxTimeAvailable;
+        return lastRxAliasAvailable && lastRxDsplayNameAvailable && lastRxTimeAvailable;
     }
 
     private void setSecondChannelViewState(Channel secondChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
-        if(secondChannel.isOnRx()){
-            RxListener holder1 = holder;
-            holder1.onRx(secondChannel.getId(), secondChannel.getRxAlias(), "");
-            //holder.showIncomingMessage(currentChannel.rxAlias);
-        }else{
+        if (secondChannel.isOnRx()) {
+            ((RxListener) holder).onRx(secondChannel.getId(), secondChannel.getRxAlias(), secondChannel.getLastRxDisplayName());
+        } else {
             boolean brotherViewIsOnRx = channels.stream().anyMatch(Channel::isOnRx);
-            if(brotherViewIsOnRx){
-                holder.fadeOutSecondChannel();
+            if (brotherViewIsOnRx) {
+                holder.setBrotherIsReceivingStateSecondChannel();
+            } else {
+                holder.setNeutralStateSecondChannel();
             }
         }
     }
 
     private void setThirdChannelViewState(Channel currentChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
-        if(currentChannel.isOnRx()){
-            ((RxListener) holder).onRx(currentChannel.getId(), currentChannel.getRxAlias(), "");
-            //holder.showIncomingMessage(currentChannel.rxAlias);
-        }else{
+        if (currentChannel.isOnRx()) {
+            ((RxListener) holder).onRx(currentChannel.getId(), currentChannel.getRxAlias(), currentChannel.getLastRxDisplayName());
+        } else {
             boolean brotherViewIsOnRx = channels.stream().anyMatch(Channel::isOnRx);
-            if(brotherViewIsOnRx){
-                holder.fadeOutThirdChannel();
+            if (brotherViewIsOnRx) {
+                holder.setBrotherIsReceivingStateThirdChannel();
+            } else {
+                holder.setNeutralStateThirdChannel();
             }
         }
     }
@@ -363,14 +364,15 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                             channel.setLastRxTime(time);
                             showIncomingMessageLayout(formattedAlias, formattedDisplayName, time);
                         } else {
-                            showIncomingMessageImage(id, formattedAlias);
-                            fadeOutFreeChannels();
+                            setReceivingState(id, formattedAlias);
+                            setBrotherIsReceivingState();
                         }
                     });
         }
 
         private void showIncomingMessageLayout(String alias, String displayName, String time) {
             incomingMessageLayout.setVisibility(View.VISIBLE);
+            primaryChannelRxImage.setVisibility(View.GONE);
             fadeOutFirstChannel();
             updateBackground();
 
@@ -397,49 +399,72 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         }
 
         private void updateLastMessage(String timeText, String aliasText, String displayNameText) {
+            if(this.channels.size() != 1){
+                return;
+            }
+
+            lastMessageTime.setVisibility(View.VISIBLE);
             lastMessageTime.setText(timeText);
+
+            lastMessageAlias.setVisibility(View.VISIBLE);
             lastMessageAlias.setText(aliasText);
+
+            lastMessageDisplayName.setVisibility(View.VISIBLE);
             lastMessageDisplayName.setText(displayNameText);
+
             lastMessageText.setVisibility(View.VISIBLE);
         }
 
-        private void showIncomingMessageImage(String channelId, String alias) {
+        private void setReceivingState(String channelId, String alias) {
 
             Channel firstChannel = channels.get(0);
 
             if (firstChannel.getId().equals(channelId)) {
                 firstChannel.setOnRx(true);
-                primaryChannelDescription.setText(alias);
-                primaryChannelRxImage.setVisibility(View.VISIBLE);
-                primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.primary_channel_item_fade_shape));
+                setRecevingStateFirstChannel(alias);
             }
 
             Channel secondChannel = channels.get(1);
 
             if (secondChannel.getId().equals(channelId)) {
                 secondChannel.setOnRx(true);
-                priorityChannel1Description.setText(alias);
-                priorityChannel1RxImage.setVisibility(View.VISIBLE);
-                priorityChannel1.setBackground(ContextCompat.getDrawable(this.context, R.drawable.prioritary1_channel_item_fade_shape));
-
-                //This prevents the following bug:
-                //If there are multiple RX, the first channel will update correctly but the second and third will mix a fadeIn and fadeout state
-                fadeInSecondchannel();
+                setRecevingStateSecondChannel(alias);
             }
 
             if (channels.size() == 3 && channels.get(2).getId().equals(channelId)) {
                 channels.get(2).setOnRx(true);
-                priorityChannel2Description.setText(alias);
-                priorityChannel2RxImage.setVisibility(View.VISIBLE);
-                priorityChannel2.setBackground(ContextCompat.getDrawable(this.context, R.drawable.prioritary2_channel_item_fade_shape));
-
-                //This prevents the following bug:
-                //If there are multiple RX, the first channel will update correctly but the second and third will mix a fadeIn and fadeout state
-                fadeInThirdChannel();
+                setRecevingStateThirdChannel(alias);
             }
         }
 
-        private void fadeInSecondchannel() {
+        private void setRecevingStateFirstChannel(String alias) {
+            primaryChannelDescription.setText(alias);
+            primaryChannelRxImage.setVisibility(View.VISIBLE);
+            primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.primary_channel_item_fade_shape));
+            fadeInFirstChannel();
+        }
+
+        private void setRecevingStateSecondChannel(String alias) {
+            priorityChannel1Description.setText(alias);
+            priorityChannel1RxImage.setVisibility(View.VISIBLE);
+            priorityChannel1.setBackground(ContextCompat.getDrawable(this.context, R.drawable.prioritary1_channel_item_fade_shape));
+
+            //This prevents the following bug:
+            //If there are multiple RX, the first channel will update correctly but the second and third will mix a fadeIn and fadeout state
+            fadeInSecondChannel();
+        }
+
+        private void setRecevingStateThirdChannel(String alias) {
+            priorityChannel2Description.setText(alias);
+            priorityChannel2RxImage.setVisibility(View.VISIBLE);
+            priorityChannel2.setBackground(ContextCompat.getDrawable(this.context, R.drawable.prioritary2_channel_item_fade_shape));
+
+            //This prevents the following bug:
+            //If there are multiple RX, the first channel will update correctly but the second and third will mix a fadeIn and fadeout state
+            fadeInThirdChannel();
+        }
+
+        private void fadeInSecondChannel() {
             priorityChannel1Image.setAlpha(FULL_OPACITY);
             priorityChannel1Name.setAlpha(FULL_OPACITY);
             priorityChannel1Description.setAlpha(FULL_OPACITY);
@@ -451,19 +476,38 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             priorityChannel2Description.setAlpha(FULL_OPACITY);
         }
 
-        private void fadeOutFreeChannels() {
+        private void setBrotherIsReceivingState() {
 
             if (!this.channels.get(0).isOnRx()) {
-                fadeOutFirstChannel();
+                setBrotherIsReceivingStateFirstChannel();
             }
 
             if (this.channels.size() > 1 && !this.channels.get(1).isOnRx()) {
-                fadeOutSecondChannel();
+                setBrotherIsReceivingStateSecondChannel();
             }
 
             if (this.channels.size() > 2 && !this.channels.get(2).isOnRx()) {
-                fadeOutThirdChannel();
+                setBrotherIsReceivingStateThirdChannel();
             }
+        }
+
+        private void setBrotherIsReceivingStateFirstChannel() {
+            incomingMessageLayout.setVisibility(View.GONE);
+            primaryChannelRxImage.setVisibility(View.GONE);
+            primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_resume_item_box_shape));
+            fadeOutFirstChannel();
+        }
+
+        private void setBrotherIsReceivingStateSecondChannel() {
+            priorityChannel1RxImage.setVisibility(View.GONE);
+            priorityChannel1.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_resume_item_box_shape));
+            fadeOutSecondChannel();
+        }
+
+        private void setBrotherIsReceivingStateThirdChannel() {
+            priorityChannel2RxImage.setVisibility(View.GONE);
+            priorityChannel2.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_resume_item_box_shape));
+            fadeOutThirdChannel();
         }
 
         private void fadeOutSecondChannel() {
@@ -497,12 +541,12 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         }
 
         private void hideIncomingMessageLayout() {
-            fadeInFirstchannel();
+            fadeInFirstChannel();
             incomingMessageLayout.setVisibility(View.GONE);
             primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_resume_item_box_shape));
         }
 
-        private void fadeInFirstchannel() {
+        private void fadeInFirstChannel() {
             //Channel info
             primaryChannelImage.setAlpha(FULL_OPACITY);
             primaryChannelName.setAlpha(FULL_OPACITY);
@@ -519,47 +563,57 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
             if (firstChannel.getId().equals(channelId)) {
                 firstChannel.setOnRx(false);
-                primaryChannelDescription.setText(PRIMARY_CHANNEL);
-                primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
-                primaryChannelRxImage.setVisibility(View.GONE);
+                setNeutralStateFirstChannel();
             }
 
             Channel secondChannel = channels.get(1);
 
             if (secondChannel.getId().equals(channelId)) {
                 secondChannel.setOnRx(false);
-                priorityChannel1Description.setText(PRIORITY_CHANNEL_1);
-                priorityChannel1RxImage.setVisibility(View.GONE);
-                priorityChannel1.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
+                setNeutralStateSecondChannel();
             }
 
             if (channels.size() == 3 && channels.get(2).getId().equals(channelId)) {
                 channels.get(2).setOnRx(false);
-                priorityChannel2.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
-                priorityChannel2Description.setText(PRIORITY_CHANNEL_2);
-                priorityChannel2RxImage.setVisibility(View.GONE);
+                setNeutralStateThirdChannel();
             }
+        }
+
+        private void setNeutralStateFirstChannel() {
+            primaryChannelDescription.setText(PRIMARY_CHANNEL);
+            primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
+            primaryChannelRxImage.setVisibility(View.GONE);
+            fadeInFirstChannel();
+        }
+
+        private void setNeutralStateSecondChannel() {
+            priorityChannel1Description.setText(PRIORITY_CHANNEL_1);
+            priorityChannel1RxImage.setVisibility(View.GONE);
+            priorityChannel1.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
+            fadeInSecondChannel();
+        }
+
+        private void setNeutralStateThirdChannel() {
+            priorityChannel2.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
+            priorityChannel2Description.setText(PRIORITY_CHANNEL_2);
+            priorityChannel2RxImage.setVisibility(View.GONE);
+            fadeInThirdChannel();
         }
 
         private void fadeInFreeChannels() {
             if (!this.channels.get(0).isOnRx()) {
-                primaryChannelImage.setAlpha(FULL_OPACITY);
-                primaryChannelName.setAlpha(FULL_OPACITY);
-                primaryChannelDescription.setAlpha(FULL_OPACITY);
+                fadeInFirstChannel();
             }
 
             if (this.channels.size() > 1 && !this.channels.get(1).isOnRx()) {
-                priorityChannel1Image.setAlpha(FULL_OPACITY);
-                priorityChannel1Name.setAlpha(FULL_OPACITY);
-                priorityChannel1Description.setAlpha(FULL_OPACITY);
+                fadeInSecondChannel();
             }
 
             if (this.channels.size() > 2 && !this.channels.get(2).isOnRx()) {
-                priorityChannel2Image.setAlpha(FULL_OPACITY);
-                priorityChannel2Name.setAlpha(FULL_OPACITY);
-                priorityChannel2Description.setAlpha(FULL_OPACITY);
+                fadeInThirdChannel();
             }
         }
+
     }
 
     public class ChannelBigListViewHolder extends GenericViewHolder implements RxListener {
@@ -596,6 +650,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                         channel.setRxAlias(formattedAlias);
                         showIncomingMessage(id, formattedAlias);
                         fadeOutFreeChannels();
+                        //TODO: notifyDataSetchaned() on viewpager2 adapter
+                        notifyDataSetChanged();
                         channelsRecyclerView.getAdapter().notifyDataSetChanged();
                     });
         }
@@ -604,8 +660,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             for (int i = 0; i < channels.size(); i++) {
                 ChannelBigListAdapter.ChannelViewHolder currentHolder =
                         (ChannelBigListAdapter.ChannelViewHolder) channelsRecyclerView.findViewHolderForAdapterPosition(i);
-                if(currentHolder != null && currentHolder.channelId.equals(id)){
-                    currentHolder.showIncomingMessage(alias);
+                if (currentHolder != null && currentHolder.channelId.equals(id)) {
+                    currentHolder.setReceivingState(alias);
                 }
             }
         }
@@ -614,8 +670,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             for (int i = 0; i < channels.size(); i++) {
                 ChannelBigListAdapter.ChannelViewHolder currentHolder =
                         (ChannelBigListAdapter.ChannelViewHolder) channelsRecyclerView.findViewHolderForAdapterPosition(i);
-                if(currentHolder != null && !this.channels.get(i).isOnRx()){
-                    currentHolder.fadeOut();
+                if (currentHolder != null && !this.channels.get(i).isOnRx()) {
+                    currentHolder.setBrotherIsReceivingState();
                 }
             }
         }
@@ -628,9 +684,10 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                     .findFirst()
                     .ifPresent(channel -> {
                         channel.setOnRx(false);
-                        channel.setRxAlias("");
                         hideIncomingMessage(id);
                         fadeInFreeChannels();
+                        //TODO: notifyDataSetchaned() on viewpager2 adapter
+                        notifyDataSetChanged();
                         channelsRecyclerView.getAdapter().notifyDataSetChanged();
                     });
         }
@@ -639,8 +696,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             for (int i = 0; i < channels.size(); i++) {
                 ChannelBigListAdapter.ChannelViewHolder currentHolder =
                         (ChannelBigListAdapter.ChannelViewHolder) channelsRecyclerView.findViewHolderForAdapterPosition(i);
-                if(currentHolder != null && currentHolder.channelId.equals(id)){
-                    currentHolder.hideIncomingMessage();
+                if (currentHolder != null && currentHolder.channelId.equals(id)) {
+                    currentHolder.setNeutralState();
                 }
             }
         }
@@ -649,8 +706,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             for (int i = 0; i < channels.size(); i++) {
                 ChannelBigListAdapter.ChannelViewHolder currentHolder =
                         (ChannelBigListAdapter.ChannelViewHolder) channelsRecyclerView.findViewHolderForAdapterPosition(i);
-                if(currentHolder != null && !this.channels.get(i).isOnRx()){
-                    currentHolder.fadeIn();
+                if (currentHolder != null && !this.channels.get(i).isOnRx()) {
+                    currentHolder.setNeutralState();
                 }
             }
         }
