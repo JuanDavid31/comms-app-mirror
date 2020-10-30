@@ -323,11 +323,6 @@ public class MissionFragment extends Fragment implements RxListener {
         activity.binding.closeCreateEditChannelsViewButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility()); //TODO: Replace for a proper fix
         activity.binding.createEditChannelsGroupButton.setOnClickListener(view -> updateCurrentChannelsGroup());
 
-        if (lastPage) {
-            activity.binding.createEditChannelsGroupButton.setClickable(false);
-            activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_fade_shape));
-        }
-
         activity.binding.channelGroupNameText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -390,8 +385,12 @@ public class MissionFragment extends Fragment implements RxListener {
             lastPage = false;
         } else {
             ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
+            String lastName = currentChannelGroup.getName();
+
             currentChannelGroup.setName(newName);
             currentChannelGroup.setChannels(channels);
+
+            vm.updateChannelGroup(currentChannelGroup, lastName);
         }
 
         activity.binding.fragmentDescription.setText(newName);
@@ -399,6 +398,7 @@ public class MissionFragment extends Fragment implements RxListener {
     }
 
     public void toggleCreateEditChannelsGroupLayoutvisibility() {
+        setupCreateEditChannelsGroupButton(true);
         activity.binding.channelGroupNameText.setText(activity.binding.fragmentDescription.getText().toString());
         toggleLayoutVisiblity(binding.icMicCard);
         toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
@@ -428,6 +428,30 @@ public class MissionFragment extends Fragment implements RxListener {
         }
 
         channelListAdapter.setChannels(allChannels);
+    }
+
+    public void setupCreateEditChannelsGroupButton(boolean thereAreActiveChannels) {
+        if (lastPage) {
+            String currentName = activity.binding.channelGroupNameText.getText().toString().trim();
+            if(thereAreActiveChannels && currentName.length() > 0) {
+                activity.binding.createEditChannelsGroupButton.setClickable(true);
+                activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_shape));
+            } else {
+                activity.binding.createEditChannelsGroupButton.setClickable(false);
+                activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_fade_shape));
+            }
+
+            activity.binding.createEditChannelsGroupButton.setText("Create");
+        } else {
+            if(thereAreActiveChannels) {
+                activity.binding.createEditChannelsGroupButton.setText("Edit");
+            } else {
+                activity.binding.createEditChannelsGroupButton.setText("Delete");
+            }
+
+            activity.binding.createEditChannelsGroupButton.setClickable(true);
+            activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_shape));
+        }
     }
 
     @Override

@@ -67,10 +67,11 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                 channel.setActive(!channel.isActive());
                 channels.set(position, channel);
                 setupCheckChannel(holder, channel);
+
                 if(getCheckedChannels().size() == 0) {
-
+                    fragment.setupCreateEditChannelsGroupButton(false);
                 } else {
-
+                    fragment.setupCreateEditChannelsGroupButton(true);
                 }
             }
         });

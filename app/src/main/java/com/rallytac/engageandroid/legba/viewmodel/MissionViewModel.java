@@ -16,7 +16,6 @@ import com.rallytac.engageandroid.legba.data.dto.DaoSession;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.legba.data.dto.MissionDao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -62,22 +61,34 @@ public class MissionViewModel extends ViewModel {
 
     public void addChannelGroup(ChannelGroup channelGroup) {
         mission.getChannelsGroups().add(channelGroup);
-        channelGroupDao.insert(channelGroup);
+        channelGroupDao.insertOrReplace(channelGroup);
         for(Channel channel: channelGroup.getChannels()) {
             channelsGroupsWithChannelsDao.insert(new ChannelsGroupsWithChannels(channelGroup.getName(), channel.getId()));
         }
         mission.update();
     }
 
+    public void updateChannelGroup(ChannelGroup currentChannelGroup, String lastName) {
+        deleteChannelGroupsWithChannelsByChannelGroupId(lastName);
+        if(!lastName.equals(currentChannelGroup.getName())) {
+            channelGroupDao.deleteByKey(lastName);
+        }
+
+        addChannelGroup(currentChannelGroup);
+    }
+
     public void deleteChannelGroup(int currentPage) {
         ChannelGroup channelGroup = mission.getChannelsGroups().get(currentPage);
-        channelsGroupsWithChannelsDao.queryBuilder()
-                .where(ChannelsGroupsWithChannelsDao.Properties.ChannelGroupId.eq(channelGroup.getName()))
-                .buildDelete().executeDeleteWithoutDetachingEntities();
-        List<ChannelsGroupsWithChannels> asd = channelsGroupsWithChannelsDao.loadAll();
+        deleteChannelGroupsWithChannelsByChannelGroupId(channelGroup.getName());
         channelGroupDao.deleteByKey(channelGroup.getName());
         mission.getChannelsGroups().remove(currentPage);
         mission.update();
+    }
+
+    private void deleteChannelGroupsWithChannelsByChannelGroupId(String channelGroupName) {
+        channelsGroupsWithChannelsDao.queryBuilder()
+                .where(ChannelsGroupsWithChannelsDao.Properties.ChannelGroupId.eq(channelGroupName))
+                .buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
     public void setupMission(Mission mission) {
