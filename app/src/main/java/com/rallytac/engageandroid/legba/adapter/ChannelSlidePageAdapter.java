@@ -362,6 +362,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                             channel.setLastRxAlias(formattedAlias);
                             channel.setLastRxDisplayName(formattedDisplayName);
                             channel.setLastRxTime(time);
+                            channel.update();
                             showIncomingMessageLayout(formattedAlias, formattedDisplayName, time);
                         } else {
                             setReceivingState(id, formattedAlias);
@@ -648,6 +649,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                         channel.setLastRxDisplayName(displayName);
                         channel.setOnRx(true);
                         channel.setRxAlias(formattedAlias);
+                        channel.update();
                         showIncomingMessage(id, formattedAlias);
                         fadeOutFreeChannels();
                         //TODO: notifyDataSetchaned() on viewpager2 adapter
