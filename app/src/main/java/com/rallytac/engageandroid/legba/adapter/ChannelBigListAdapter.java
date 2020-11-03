@@ -60,54 +60,67 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         holder.type = currentChannel.getType();
         holder.channelId = currentChannel.getId();
 
-        int color = getColor(position);
-        holder.channelImage.setBorderColor(color);
-        holder.channelTypeText.setTextColor(color);
-        holder.setBackground(getBackground(color));
+        ColorInfo colorInfo = getColorInfo(position);
+        holder.channelImage.setBorderColor(colorInfo.getColor());
+        holder.channelTypeText.setTextColor(colorInfo.getColor());
+        holder.rxImage.setBackgroundResource(colorInfo.getRxImage());
+        holder.setColorInfo(colorInfo);
 
         setupSpeakerIcon(currentChannel.isSpeakerOn(), holder.channelSpeaker);
         holder.channelSpeaker.setOnClickListener(view -> {
             currentChannel.setSpeakerOn(!currentChannel.isSpeakerOn());
-               DataManager.getInstance(fragment.getContext()).toggleMute(currentChannel.getId(), currentChannel.isSpeakerOn());
+            DataManager.getInstance(fragment.getContext()).toggleMute(currentChannel.getId(), currentChannel.isSpeakerOn());
             this.fragment.binding.missionViewPager.getAdapter().notifyDataSetChanged();
         });
 
         setViewState(currentChannel, holder);
     }
 
-    private Drawable getBackground(int position) {
-        //ContextCompat.getDrawable(this.context, R.drawable.primary_channel_item_fade_shape)
-        boolean match0 = IntStream.iterate(0, i -> i + 6).limit(10).anyMatch(i -> i == position);
-        boolean match1 = IntStream.iterate(1, i -> i + 6).limit(10).anyMatch(i -> i == position);
-        boolean match2 = IntStream.iterate(2, i -> i + 6).limit(10).anyMatch(i -> i == position);
-        boolean match3 = IntStream.iterate(3, i -> i + 6).limit(10).anyMatch(i -> i == position);
-        boolean match4 = IntStream.iterate(4, i -> i + 6).limit(10).anyMatch(i -> i == position);
-        boolean match5 = IntStream.iterate(5, i -> i + 6).limit(10).anyMatch(i -> i == position);
+    /**
+     * Given an adapter position, no matter if it is 0 or 50 this method will return
+     * the right color according to a set of colors and position.
+     * @param position Given position of an list adapter
+     * @return An object that contains the background shape and color
+     */
+    private ColorInfo getColorInfo(int position) { //Limiting to 10 iterations, max number will be 60.
+        boolean matchesRed = IntStream.iterate(0, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean matchesWaterBlue = IntStream.iterate(1, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean matchesOrange = IntStream.iterate(2, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean matchesSicklyYellow = IntStream.iterate(3, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean matchesVividGreen = IntStream.iterate(4, i -> i + 6).limit(10).anyMatch(i -> i == position);
+        boolean matchesViolet = IntStream.iterate(5, i -> i + 6).limit(10).anyMatch(i -> i == position);
 
-        if(match0){ return ContextCompat.getDrawable(this.context, R.drawable.primary_channel_item_fade_shape); }
-        if(match1){ return ContextCompat.getDrawable(this.context, R.drawable.prioritary1_channel_item_fade_shape); }
-        if(match2){ return ContextCompat.getDrawable(this.context, R.drawable.prioritary2_channel_item_fade_shape); }
-        if(match3){ return ContextCompat.getDrawable(this.context, R.drawable.prioritary3_channel_item_fade_shape); }
-        if(match4){ return ContextCompat.getDrawable(this.context, R.drawable.prioritary4_channel_item_fade_shape); }
-        if(match5){ return ContextCompat.getDrawable(this.context, R.drawable.prioritary5_channel_item_fade_shape); }
-        return null;
-    }
+        Drawable backgroundShape = null;
+        int color = 0;
+        int rxImage = R.drawable.ic_red_tx;
 
-    private int getColor(int position){ //Limiting to 10 iterations, max number will be 60.
-        boolean match0 = IntStream.iterate(0, i -> i + 6).limit(10).anyMatch(i -> i == position);
-        boolean match1 = IntStream.iterate(1, i -> i + 6).limit(10).anyMatch(i -> i == position);
-        boolean match2 = IntStream.iterate(2, i -> i + 6).limit(10).anyMatch(i -> i == position);
-        boolean match3 = IntStream.iterate(3, i -> i + 6).limit(10).anyMatch(i -> i == position);
-        boolean match4 = IntStream.iterate(4, i -> i + 6).limit(10).anyMatch(i -> i == position);
-        boolean match5 = IntStream.iterate(5, i -> i + 6).limit(10).anyMatch(i -> i == position);
-
-        if(match0){ return fragment.getResources().getColor(R.color.paleRed, null); }
-        if(match1){ return fragment.getResources().getColor(R.color.waterBlue, null); }
-        if(match2){ return fragment.getResources().getColor(R.color.orange, null); }
-        if(match3){ return fragment.getResources().getColor(R.color.sicklyYellow, null); }
-        if(match4){ return fragment.getResources().getColor(R.color.vividGreen, null); }
-        if(match5){ return fragment.getResources().getColor(R.color.violet, null); }
-        return 0;
+        if (matchesRed) {
+            backgroundShape = ContextCompat.getDrawable(this.context, R.drawable.primary_channel_item_fade_shape);
+            color = fragment.getResources().getColor(R.color.paleRed, null);
+        }
+        if (matchesWaterBlue) {
+            backgroundShape = ContextCompat.getDrawable(this.context, R.drawable.prioritary1_channel_item_fade_shape);
+            color = fragment.getResources().getColor(R.color.waterBlue, null);
+            rxImage = R.drawable.ic_blue_tx;
+        }
+        if (matchesOrange) {
+            backgroundShape = ContextCompat.getDrawable(this.context, R.drawable.prioritary2_channel_item_fade_shape);
+            color = fragment.getResources().getColor(R.color.orange, null);
+            rxImage = R.drawable.ic_orange_tx;
+        }
+        if (matchesSicklyYellow) {
+            backgroundShape = ContextCompat.getDrawable(this.context, R.drawable.prioritary3_channel_item_fade_shape);
+            color = fragment.getResources().getColor(R.color.sicklyYellow, null);
+        }
+        if (matchesVividGreen) {
+            backgroundShape = ContextCompat.getDrawable(this.context, R.drawable.prioritary4_channel_item_fade_shape);
+            color = fragment.getResources().getColor(R.color.vividGreen, null);
+        }
+        if (matchesViolet) {
+            backgroundShape = ContextCompat.getDrawable(this.context, R.drawable.prioritary5_channel_item_fade_shape);
+            color = fragment.getResources().getColor(R.color.violet, null);
+        }
+        return new ColorInfo(backgroundShape, color, rxImage);
     }
 
     private String getTypeString(Channel.ChannelType type) {
@@ -131,14 +144,14 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         }
     }
 
-    private void setViewState(Channel currentChannel, ChannelViewHolder holder){
-        if(currentChannel.isOnRx()){
+    private void setViewState(Channel currentChannel, ChannelViewHolder holder) {
+        if (currentChannel.isOnRx()) {
             holder.setReceivingState(currentChannel.getRxAlias());
-        }else{
+        } else {
             boolean brotherViewIsOnRx = this.channels.stream().anyMatch(channel -> channel.isOnRx());
-            if(brotherViewIsOnRx){
+            if (brotherViewIsOnRx) {
                 holder.setBrotherIsReceivingState();
-            }else{
+            } else {
                 holder.setNeutralState();
             }
         }
@@ -149,7 +162,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         return channels.size();
     }
 
-    public class ChannelViewHolder extends RecyclerView.ViewHolder{
+    public class ChannelViewHolder extends RecyclerView.ViewHolder {
         private final static float LOW_OPACITY = 0.1f;
         private final static float FULL_OPACITY = 1f;
 
@@ -160,6 +173,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         //private ImageView channelMic;
         private ImageView channelSpeaker;
         private ImageView rxImage;
+        private ColorInfo colorInfo;
 
         private Channel.ChannelType type;
         public String channelId;
@@ -181,7 +195,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         public void setReceivingState(String alias) {
             channelTypeText.setText(alias);
             rxImage.setVisibility(View.VISIBLE);
-            root.setBackground(receivingStateBackground);
+            root.setBackground(colorInfo.getBackgroundShape());
 
             //This prevents the following bug:
             //If there are multiple RX, the first channel will update correctly but from the second and so on,
@@ -195,28 +209,50 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
             channelTypeText.setAlpha(FULL_OPACITY);
         }
 
-        public void setBrotherIsReceivingState(){
+        public void setBrotherIsReceivingState() {
             root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
             fadeOut();
         }
 
-        private void fadeOut(){
+        private void fadeOut() {
             channelImage.setAlpha(LOW_OPACITY);
             channelName.setAlpha(LOW_OPACITY);
             channelTypeText.setAlpha(LOW_OPACITY);
         }
 
-        public void setNeutralState(){
+        public void setNeutralState() {
             channelTypeText.setText(getTypeString(type));
             rxImage.setVisibility(View.GONE);
             root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
             fadeIn();
         }
 
-        private Drawable receivingStateBackground;
+        public void setColorInfo(ColorInfo colorInfo) {
+            this.colorInfo = colorInfo;
+        }
+    }
 
-        public void setBackground(Drawable background) {
-            this.receivingStateBackground = background;
+    class ColorInfo {
+        private Drawable backgroundShape;
+        private int color;
+        private int rxImage;
+
+        public ColorInfo(Drawable backgroundShape, int color, int rxImage) {
+            this.backgroundShape = backgroundShape;
+            this.color = color;
+            this.rxImage = rxImage;
+        }
+
+        public Drawable getBackgroundShape() {
+            return backgroundShape;
+        }
+
+        public int getColor() {
+            return color;
+        }
+
+        public int getRxImage() {
+            return rxImage;
         }
     }
 }

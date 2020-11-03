@@ -310,6 +310,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.338"
+                android:background="@drawable/ic_red_tx"
                 app:srcCompat="@drawable/ic_blue_tx"
                 tools:visibility="visible" />
 
