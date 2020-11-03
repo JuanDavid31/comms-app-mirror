@@ -115,10 +115,6 @@ public class MissionFragment extends Fragment implements RxListener {
         return binding.getRoot();
     }
 
-    /*public Mission getMission() {
-        return mission;
-    }*/
-
     public List<ChannelGroup> getChannelsGroup() {
         return vm.getChannelsGroup() == null ? new ArrayList<>() : vm.getChannelsGroup();
     }

@@ -88,7 +88,6 @@
             android:layout_height="45dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
-
             android:padding="13dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_speaker_off"
