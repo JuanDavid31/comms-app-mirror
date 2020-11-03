@@ -8,8 +8,12 @@ package com.rallytac.engageandroid;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.rallytac.engageandroid.legba.data.dto.Channel;
+import com.rallytac.engageandroid.legba.data.dto.DaoSession;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,9 +74,23 @@ public class Globals
         return _apm;
     }
 
-    public static void notifyListenersStart(final String id, final String alias, final String displayname) {
-        Timber.i("notifyListenersStart id -> %s alias -> %s displayName -> %s", id, alias, displayname);
-        rxListeners.forEach(rxListener -> rxListener.onRx(id, alias, displayname));
+    public static void notifyListenersStart(final String id, final String alias, final String displayName) {
+        Timber.i("notifyListenersStart id -> %s alias -> %s displayName -> %s", id, alias, displayName);
+        rxListeners.forEach(rxListener -> rxListener.onRx(id, alias, displayName));
+        updateChannelIncommingMessage(id, alias, displayName);
+    }
+
+    private static void updateChannelIncommingMessage(final String id, final String alias, final String displayName) {
+        String formattedAlias = alias == null ? "UNKNOWN" : alias;
+        String formattedDisplayName = displayName == null ? "Unknown user" : displayName;
+        String time = DateTimeFormatter.ofPattern("hh:mm a").format(LocalDateTime.now());
+
+        DaoSession daoSession = _app.getDaoSession();
+        Channel channel = daoSession.getChannelDao().load(id);
+        channel.setLastRxAlias(formattedAlias);
+        channel.setLastRxDisplayName(formattedDisplayName);
+        channel.setLastRxTime(time);
+        channel.update();
     }
 
     public static void notifyListenersStop(String id, String eventExtraJson) {

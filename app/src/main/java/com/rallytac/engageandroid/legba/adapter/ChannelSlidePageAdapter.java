@@ -110,7 +110,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             toggleSpeakerIcon(firstChannel.isSpeakerOn(), channelResumeHolder.primaryChannelSpeaker);
             channelResumeHolder.primaryChannelSpeaker.setOnClickListener(view -> {
                 firstChannel.setSpeakerOn(!firstChannel.isSpeakerOn());
-                ;
+
                 DataManager.getInstance(fragment.getContext()).toggleMute(firstChannel.getId(), firstChannel.isSpeakerOn());
                 notifyDataSetChanged();
             });
@@ -187,7 +187,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
     private void setFirstChannelViewState(Channel firstChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
         if (firstChannel.isOnRx()) {
-            ((RxListener) holder).onRx(firstChannel.getId(), firstChannel.getRxAlias(), firstChannel.getLastRxDisplayName());
+            ((RxListener) holder).onRx(firstChannel.getId(), firstChannel.getLastRxAlias(), firstChannel.getLastRxDisplayName());
         } else {
             boolean brotherViewIsOnRx = channels.stream().anyMatch(Channel::isOnRx);
             if (brotherViewIsOnRx) {
@@ -211,7 +211,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
     private void setSecondChannelViewState(Channel secondChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
         if (secondChannel.isOnRx()) {
-            ((RxListener) holder).onRx(secondChannel.getId(), secondChannel.getRxAlias(), secondChannel.getLastRxDisplayName());
+            ((RxListener) holder).onRx(secondChannel.getId(), secondChannel.getLastRxAlias(), secondChannel.getLastRxDisplayName());
         } else {
             boolean brotherViewIsOnRx = channels.stream().anyMatch(Channel::isOnRx);
             if (brotherViewIsOnRx) {
@@ -224,7 +224,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
     private void setThirdChannelViewState(Channel currentChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
         if (currentChannel.isOnRx()) {
-            ((RxListener) holder).onRx(currentChannel.getId(), currentChannel.getRxAlias(), currentChannel.getLastRxDisplayName());
+            ((RxListener) holder).onRx(currentChannel.getId(), currentChannel.getLastRxAlias(), currentChannel.getLastRxDisplayName());
         } else {
             boolean brotherViewIsOnRx = channels.stream().anyMatch(Channel::isOnRx);
             if (brotherViewIsOnRx) {
@@ -362,7 +362,6 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                             channel.setLastRxAlias(formattedAlias);
                             channel.setLastRxDisplayName(formattedDisplayName);
                             channel.setLastRxTime(time);
-                            channel.update();
                             showIncomingMessageLayout(formattedAlias, formattedDisplayName, time);
                         } else {
                             setReceivingState(id, formattedAlias);
@@ -648,8 +647,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                     .ifPresent(channel -> {
                         channel.setLastRxDisplayName(displayName);
                         channel.setOnRx(true);
-                        channel.setRxAlias(formattedAlias);
-                        channel.update();
+                        channel.setLastRxTime(formattedAlias);
                         showIncomingMessage(id, formattedAlias);
                         fadeOutFreeChannels();
                         //TODO: notifyDataSetchaned() on viewpager2 adapter

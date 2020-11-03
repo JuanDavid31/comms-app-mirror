@@ -101,7 +101,8 @@ public class MissionFragment extends Fragment implements RxListener {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
         binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
 
-        channelSlidePageAdapter = new ChannelSlidePageAdapter(this, getChannelsGroup());
+        List<ChannelGroup> channelsGroup = getChannelsGroup();
+        channelSlidePageAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
         binding.missionViewPager.setAdapter(channelSlidePageAdapter);
 
         setupPTTOnMic();
