@@ -384,12 +384,11 @@ public class MissionFragment extends Fragment implements RxListener {
             lastPage = false;
         } else {
             ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
-            String lastName = currentChannelGroup.getName();
 
             currentChannelGroup.setName(newName);
             currentChannelGroup.setChannels(channels);
 
-            vm.updateChannelGroup(currentChannelGroup, lastName);
+            vm.updateChannelGroup(currentChannelGroup);
         }
 
         activity.binding.fragmentDescription.setText(newName);

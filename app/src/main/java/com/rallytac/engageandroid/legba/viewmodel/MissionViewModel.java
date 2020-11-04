@@ -62,31 +62,27 @@ public class MissionViewModel extends ViewModel {
     public void addChannelGroup(ChannelGroup channelGroup) {
         channelGroupDao.insertOrReplace(channelGroup);
         for(Channel channel: channelGroup.getChannels()) {
-            channelsGroupsWithChannelsDao.insert(new ChannelsGroupsWithChannels(channelGroup.getName(), channel.getId()));
+            channelsGroupsWithChannelsDao.insert(new ChannelsGroupsWithChannels(channelGroup.getId(), channel.getId()));
         }
         mission.update();
     }
 
-    public void updateChannelGroup(ChannelGroup currentChannelGroup, String lastName) {
-        deleteChannelGroupsWithChannelsByChannelGroupId(lastName);
-        if(!lastName.equals(currentChannelGroup.getName())) {
-            channelGroupDao.deleteByKey(lastName);
-        }
-
+    public void updateChannelGroup(ChannelGroup currentChannelGroup) {
+        deleteChannelGroupsWithChannelsByChannelGroupId(currentChannelGroup.getId());
         addChannelGroup(currentChannelGroup);
     }
 
     public void deleteChannelGroup(int currentPage) {
         ChannelGroup channelGroup = mission.getChannelsGroups().get(currentPage);
-        deleteChannelGroupsWithChannelsByChannelGroupId(channelGroup.getName());
-        channelGroupDao.deleteByKey(channelGroup.getName());
+        deleteChannelGroupsWithChannelsByChannelGroupId(channelGroup.getId());
+        channelGroupDao.deleteByKey(channelGroup.getId());
         mission.getChannelsGroups().remove(currentPage);
         mission.update();
     }
 
-    private void deleteChannelGroupsWithChannelsByChannelGroupId(String channelGroupName) {
+    private void deleteChannelGroupsWithChannelsByChannelGroupId(Long channelGroupId) {
         channelsGroupsWithChannelsDao.queryBuilder()
-                .where(ChannelsGroupsWithChannelsDao.Properties.ChannelGroupId.eq(channelGroupName))
+                .where(ChannelsGroupsWithChannelsDao.Properties.ChannelGroupId.eq(channelGroupId))
                 .buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
