@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import okio.BufferedSource;
@@ -130,6 +131,13 @@ public class DataManager {
                 });
         updateDB();
 
+        String missionControlId = "{GCONTROL}";
+
+        String presenceTxData = new Gson().toJson(new PresenceTxData(missionControlId, "Control group"));
+        Timber.i("txData -> %s", presenceTxData);
+        String realPresenceTxData = Globals.getEngageApplication().buildFinalGroupJsonConfiguration(presenceTxData);
+        Globals.getEngageApplication().getEngine().engageCreateGroup(realPresenceTxData);
+
         mission.getChannels()
                 .forEach(channel -> {
                     String txData = new Gson().toJson(new TxData(channel.getId(), channel.getName()));
@@ -138,7 +146,10 @@ public class DataManager {
                     Globals.getEngageApplication().getEngine().engageCreateGroup(realTxData);
                 });
 
+        //"{GCONTROL}"
+        Globals.getEngageApplication().getEngine().engageJoinGroup(missionControlId);
         mission.getChannels().forEach(channel -> Globals.getEngageApplication().getEngine().engageJoinGroup(channel.getId()));
+
         Globals.getEngageApplication().updateActiveConfiguration();
     }
 
@@ -181,19 +192,71 @@ public class DataManager {
         }
     }
 
-    private void initEngine() {
-        Engine engine = Globals.getEngageApplication().getEngine();
-        //engine.engageOpenCertStore() // ?
-        //engine.engageInitialize() // ?
-        engine.engageStart();
+    class PresenceTxData{
+        String id;
+        String name;
+        int type = 2;
+        RxTx rx = new RxTx("");
+        RxTx tx = new RxTx("239.42.43.1");
+        TxAudio txAudio = new TxAudio();
+
+        public PresenceTxData(String id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        class RxTx {
+            String address = "";
+            int port = 49000;
+
+            public RxTx(String address) {
+                this.address = address;
+            }
+        }
+
+        class TxAudio {//{"encoder":25,"framingMs":60,"noHdrExt":false,"fdx":false,"maxTxSecs":120}
+            int encoder = 25;
+            int framingMs = 60;
+            boolean noHdrExt = false;
+            boolean fdx = false;
+            int maxTxSecs = 120;
+        }
+
+        /*"presence":{
+            "format":1,
+                    "intervalSecs":30,
+                    "forceOnAudioTransmit":false,
+                    "listenOnly":false
+        }*/
+
+        class Presence{
+            int format = 1;
+            int intervalSecs = 30;
+            boolean forceOnAudioTransmit = false;
+            boolean listenOnly = false;
+        }
     }
 
-    public void unmuteGroup(String groupId) {
-        Globals.getEngageApplication().getEngine().engageUnmuteGroupRx(groupId);
-    }
+    public static class PresenceDescriptor{
 
-    public void muteGroup(String groupId) {
-        Globals.getEngageApplication().getEngine().engageMuteGroupRx(groupId);
+        Identity identity;
+
+        public PresenceDescriptor(String nodeId, String userId, String displayName) {
+            identity = new Identity(nodeId, userId, displayName);
+        }
+
+        class Identity{ // {"nodeId":"{e24b92dc-0531-483a-b1a4-1ee3ec3da364}","userId":"mb","displayName":"Mb","avatar":""}
+            String nodeId;
+            String userId;
+            String displayName;
+            String avatar = "";
+
+            public Identity(String nodeId, String userId, String displayName) {
+                this.nodeId = nodeId;
+                this.userId = userId;
+                this.displayName = displayName;
+            }
+        }
     }
 
     public void startTx(String... groupIds) {
