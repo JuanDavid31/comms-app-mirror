@@ -8,6 +8,7 @@ package com.rallytac.engageandroid;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.rallytac.engageandroid.legba.engage.GroupDiscoveryListener;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class Globals
     private static SharedPreferences.Editor _spEd = null;
     private static AudioPlayerManager _apm = null;
     public static List<RxListener> rxListeners = new ArrayList();
+    public static GroupDiscoveryListener groupDiscoveryListener = null;
 
     public static void setContext(Context ctx)
     {

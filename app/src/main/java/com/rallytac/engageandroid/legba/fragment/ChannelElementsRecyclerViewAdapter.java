@@ -123,7 +123,15 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
 
     private String getFirstLetterCapsFrom(String name) {
         //Is there a better way to do this?
-        String[] names = name.split(" ");
+        String[] names = null;
+        if (name.contains(" ")){
+            names = name.split(" ");
+        }else{
+            char[] chars = name.toCharArray();
+            names = new String[chars.length];
+            for (int i = 0; i < chars.length; i++) { names[i] = String.valueOf(chars[i]); }
+        }
+
         String result = "";
         for (int i = 0; (i < names.length) && (i < 2); i++) {
             result += Character.toUpperCase(names[i].charAt(0));

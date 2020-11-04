@@ -15,10 +15,15 @@ import com.rallytac.engageandroid.legba.data.dto.ChannelsGroupsWithChannelsDao;
 import com.rallytac.engageandroid.legba.data.dto.DaoSession;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.legba.data.dto.MissionDao;
+import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo;
+import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo.Identity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class MissionViewModel extends ViewModel {
 
@@ -31,6 +36,7 @@ public class MissionViewModel extends ViewModel {
     private ChannelDao channelDao;
     private ChannelElementDao channelElementDao;
     private ChannelsGroupsWithChannelsDao channelsGroupsWithChannelsDao;
+    HashMap<String, Set<Identity>> channelUsers = new HashMap<>();
 
     public MissionViewModel(Activity activity) {
         DaoSession daoSession = ((EngageApplication) activity.getApplication()).getDaoSession();
@@ -53,15 +59,9 @@ public class MissionViewModel extends ViewModel {
         return mission.getChannelsGroups();
     }
 
-    public void addChannelsGroup(ChannelGroup... channelGroup) {
-        for (ChannelGroup current : channelGroup) {
-            addChannelGroup(current);
-        }
-    }
-
     public void addChannelGroup(ChannelGroup channelGroup) {
         channelGroupDao.insertOrReplace(channelGroup);
-        for(Channel channel: channelGroup.getChannels()) {
+        for (Channel channel : channelGroup.getChannels()) {
             channelsGroupsWithChannelsDao.insert(new ChannelsGroupsWithChannels(channelGroup.getName(), channel.getId()));
         }
         mission.update();
@@ -69,7 +69,7 @@ public class MissionViewModel extends ViewModel {
 
     public void updateChannelGroup(ChannelGroup currentChannelGroup, String lastName) {
         deleteChannelGroupsWithChannelsByChannelGroupId(lastName);
-        if(!lastName.equals(currentChannelGroup.getName())) {
+        if (!lastName.equals(currentChannelGroup.getName())) {
             channelGroupDao.deleteByKey(lastName);
         }
 
@@ -97,7 +97,7 @@ public class MissionViewModel extends ViewModel {
     }
 
     public Optional<Mission> getMissionById(String id) {
-        if(missionDao.loadAll().size() == 0) {
+        if (missionDao.loadAll().size() == 0) {
             channelElementDao.insertOrReplaceInTx(mission.getChannels().get(0).getChannelElements());
             channelDao.insertOrReplaceInTx(mission.getChannels());
             missionDao.insertOrReplace(mission);
@@ -113,27 +113,41 @@ public class MissionViewModel extends ViewModel {
         return mission;
     }
 
-    public List<Channel> getAllChannels(){
+    public List<Channel> getAllChannels() {
         return mission.getChannels();
     }
 
-    private List<ChannelGroup> getInitialChannelsGroup() {
-        if (getChannelsGroup().size() > 0) {
-            return getChannelsGroup();
-        }
-        List<Channel> page1List = mission.getChannels().stream().limit(1).collect(Collectors.toList());
-        List<Channel> page2List = mission.getChannels().stream().limit(2).collect(Collectors.toList());
-        List<Channel> page3List = mission.getChannels().stream().limit(3).collect(Collectors.toList());
-        List<Channel> page4List = mission.getChannels().stream().limit(4).collect(Collectors.toList());
-        List<Channel> page5List = mission.getChannels().stream().limit(5).collect(Collectors.toList());
+    public void addChannelUser(GroupDiscoveryInfo groupDiscoveryInfo) {
+        groupDiscoveryInfo
+                .groupAliases
+                .forEach(groupAlias -> {
+                    Set<Identity> identities = channelUsers.get(groupAlias.groupId);
+                    if (identities == null) {
+                        identities = new HashSet<>();
+                        identities.add(groupDiscoveryInfo.identity);
+                        channelUsers.put(groupAlias.groupId, identities);
+                    } else {
+                        identities.add(groupDiscoveryInfo.identity);
+                    }
+                });
+        updateChannels();
+    }
 
-        ChannelGroup channelGroup = new ChannelGroup("First", mission.getId(), page1List);
-        ChannelGroup channelGroup1 = new ChannelGroup("Delta", mission.getId(), page2List);
-        ChannelGroup channelGroup2 = new ChannelGroup("Third", mission.getId(), page3List);
-        ChannelGroup channelGroup3 = new ChannelGroup("Echo", mission.getId(), page4List);
-        ChannelGroup channelGroup4 = new ChannelGroup("charlie", mission.getId(), page5List);
+    private void updateChannels(){
+        getAllChannels().forEach(channel -> channel.users = getUsersByChannelId(channel.getId()));
+    }
 
-        addChannelsGroup(channelGroup, channelGroup1, channelGroup2, channelGroup3, channelGroup4);
-        return getChannelsGroup();
+    public void removeChannelUser(GroupDiscoveryInfo groupDiscoveryInfo) {
+        groupDiscoveryInfo
+                .groupAliases
+                .forEach(groupAlias -> {
+                    Set<Identity> identities = channelUsers.get(groupAlias.groupId);
+                    if(identities != null){ identities.remove(groupDiscoveryInfo.identity); }
+                });
+        updateChannels();
+    }
+
+    public List<Identity> getUsersByChannelId(String channelId){
+        return new ArrayList<>(channelUsers.get(channelId));
     }
 }

@@ -7,62 +7,48 @@
         android:layout_marginTop="6dp"
         android:background="@drawable/channel_item_shape">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/channel_photo"
-            android:layout_width="38dp"
-            android:layout_height="37.5dp"
-            android:layout_marginStart="17dp"
-            android:layout_marginTop="16.8dp"
-            android:layout_marginEnd="251.8dp"
-            android:layout_marginBottom="17.3dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:riv_border_color="@color/paleRed"
-            app:riv_border_width="0.8dp"
-            app:riv_corner_radius="5.3dp"
-            tools:src="@sample/channel" />
-
-    <TextView
-            android:id="@+id/channel_name_text"
-            style="@style/builtTitlingRgBoldFont"
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/channel_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="67.8dp"
-            android:layout_marginTop="22.8dp"
-            android:layout_marginRight="167.8dp"
-            android:layout_marginBottom="36.3dp"
-            android:textSize="16.1sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:paddingEnd="12dp"
+            android:paddingBottom="12dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            tools:text="ALPHA TEAM" />
+            app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-            android:id="@+id/channel_type_text"
-            style="@style/openSansRegularFont"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="67.8dp"
-            android:layout_marginTop="41.3dp"
-            android:layout_marginRight="164dp"
-            android:layout_marginBottom="20dp"
-            android:letterSpacing="0.02"
-            android:textColor="@color/paleRed"
-            android:textSize="10.1sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            tools:text="Primary Channel" />
+        <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/channel_photo"
+                android:layout_width="38dp"
+                android:layout_height="37.5dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/channel_name_text"
+                style="@style/builtTitlingRgBoldFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:textSize="16.1sp"
+                app:layout_constraintStart_toEndOf="@+id/channel_photo"
+                app:layout_constraintTop_toTopOf="@+id/channel_photo"
+                tools:text="ALPHA TEAM" />
+
+        <TextView
+                android:id="@+id/channel_type_text"
+                style="@style/openSansRegularFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.02"
+                android:textColor="@color/paleRed"
+                android:textSize="10.1sp"
+                app:layout_constraintBottom_toBottomOf="@+id/channel_photo"
+                app:layout_constraintStart_toStartOf="@+id/channel_name_text"
+                tools:text="Primary Channel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
             android:id="@+id/rx_image_primary_channel"

@@ -31,12 +31,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.gson.Gson;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.adapter.ChannelListAdapter;
 import com.rallytac.engageandroid.legba.adapter.ChannelSlidePageAdapter;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
+import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo;
+import com.rallytac.engageandroid.legba.engage.GroupDiscoveryListener;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.util.StringUtils;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
@@ -49,15 +52,18 @@ import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import timber.log.Timber;
 
 import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 
-public class MissionFragment extends Fragment implements RxListener {
+public class MissionFragment extends Fragment implements RxListener, GroupDiscoveryListener {
 
     private HostActivity activity;
     public FragmentMissionBinding binding;
@@ -78,7 +84,7 @@ public class MissionFragment extends Fragment implements RxListener {
         vm = new ViewModelProvider(this, vmFactory).get(MissionViewModel.class);
         context = getContext();
         Globals.rxListeners.add(this);
-
+        Globals.groupDiscoveryListener = this;
         setupMission();
     }
 
@@ -136,7 +142,6 @@ public class MissionFragment extends Fragment implements RxListener {
 
             @Override
             public void onSwipeStart() {
-                Timber.i("onSwipeStart");
                 sosAction.getActionView()
                         .animate()
                         .alpha(0f)
@@ -571,5 +576,20 @@ public class MissionFragment extends Fragment implements RxListener {
         } else {
             //TODO: Compound animation
         }
+    }
+
+    @Override
+    public void onGroupDiscover(String groupId, GroupDiscoveryInfo groupDiscoveryInfo) {
+        vm.addChannelUser(groupDiscoveryInfo);
+    }
+
+    @Override
+    public void onGroupRediscover(String groupId, GroupDiscoveryInfo groupDiscoveryInfo) {
+        vm.addChannelUser(groupDiscoveryInfo);
+    }
+
+    @Override
+    public void onGroupUndiscover(String groupId, GroupDiscoveryInfo groupDiscoveryInfo) {
+        vm.removeChannelUser(groupDiscoveryInfo);
     }
 }

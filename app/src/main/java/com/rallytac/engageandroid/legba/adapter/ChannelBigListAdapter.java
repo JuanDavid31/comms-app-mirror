@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -17,6 +18,7 @@ import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.fragment.MissionFragment;
+import com.rallytac.engageandroid.legba.fragment.MissionFragmentDirections;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -73,12 +75,18 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
             this.fragment.binding.missionViewPager.getAdapter().notifyDataSetChanged();
         });
 
+        holder.channelInfo.setOnClickListener(view -> {
+            NavHostFragment.findNavController(fragment)
+                    .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(currentChannel));
+        });
+
         setViewState(currentChannel, holder);
     }
 
     /**
      * Given an adapter position, no matter if it is 0 or 50 this method will return
      * the right color according to a set of colors and position.
+     *
      * @param position Given position of an list adapter
      * @return An object that contains the background shape and color
      */
@@ -167,6 +175,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         private final static float FULL_OPACITY = 1f;
 
         private View root;
+        public View channelInfo;
         private RoundedImageView channelImage;
         private TextView channelName;
         private TextView channelTypeText;
@@ -184,6 +193,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
 
             root = itemView;
             this.context = context;
+            channelInfo = itemView.findViewById(R.id.channel_info);
             channelImage = itemView.findViewById(R.id.channel_photo);
             channelName = itemView.findViewById(R.id.channel_name_text);
             channelTypeText = itemView.findViewById(R.id.channel_type_text);

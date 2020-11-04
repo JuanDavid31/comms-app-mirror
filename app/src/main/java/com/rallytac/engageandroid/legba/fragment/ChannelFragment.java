@@ -22,7 +22,10 @@ import com.rallytac.engageandroid.databinding.FragmentChannelBinding;
 import com.rallytac.engageandroid.legba.HostActivity;
 
 import com.rallytac.engageandroid.legba.data.dto.Channel;
+import com.rallytac.engageandroid.legba.data.dto.ChannelElement;
+import com.rallytac.engageandroid.legba.data.dto.Member;
 
+import java.util.List;
 import java.util.Objects;
 
 public class ChannelFragment extends Fragment {
@@ -52,6 +55,20 @@ public class ChannelFragment extends Fragment {
         binding.channelElementsRecycler.setHasFixedSize(true);
         binding.channelElementsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.channelElementsRecycler.setAdapter(adapter);
+
+        //
+        List<ChannelElement> channelElements = channel.getChannelElements();
+        channelElements.clear();
+        channel.users.forEach(userIdentity ->{
+            Member newMember = new Member();
+            newMember.setName(userIdentity.displayName);
+            newMember.setNickName(userIdentity.displayName);
+            newMember.setState(Member.RequestType.ADDED);
+            newMember.setNumber("544321591");
+            channelElements.add(newMember);
+        });
+        //
+
         adapter.setChannelElements(channel.getChannelElements());
 
         return binding.getRoot();

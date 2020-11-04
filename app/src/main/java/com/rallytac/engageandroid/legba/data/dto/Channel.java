@@ -1,6 +1,8 @@
 package com.rallytac.engageandroid.legba.data.dto;
 
 import com.google.gson.annotations.JsonAdapter;
+import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo;
+import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo.Identity;
 import com.rallytac.engageandroid.legba.mapping.ChannelDeserializer;
 
 import org.greenrobot.greendao.annotation.Convert;
@@ -60,6 +62,9 @@ public class Channel implements Serializable {
             targetProperty = "channelElementId"
     )
     private List<ChannelElement> channelElements;
+
+    @Transient
+    public List<Identity> users;
 
     /** Used to resolve relations */
     @Generated(hash = 2040040024)

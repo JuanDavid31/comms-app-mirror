@@ -50,6 +50,7 @@ import com.rallytac.engageandroid.Biometrics.RandomHumanBiometricGenerator;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.DaoMaster;
 import com.rallytac.engageandroid.legba.data.dto.DaoSession;
+import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo;
 
 import org.greenrobot.greendao.database.Database;
 import org.json.JSONArray;
@@ -3286,6 +3287,21 @@ public class EngageApplication
 
             Timber.i("onGroupNodeDiscovered %s nodeJson %s eventExtraJson %s", id, nodeJson, eventExtraJson);
 
+            //{"announceOnReceive":false,"comment":"","connectivity":null,"custom":"","disposition":0,
+            // "groupAliases":
+            // [
+            // {"alias":"MB","groupId":"{G1}"},
+            // {"alias":"MB","groupId":"{G2}"},
+            // {"alias":"MB","groupId":"{G3}"},
+            // {"alias":"MB","groupId":"{G4}"},
+            // {"alias":"MB","groupId":"{G5}"}
+            // ],
+            // "identity":{"avatar":"","displayName":"Mb","nodeId":"{e24b92dc-0531-483a-b1a4-1ee3ec3da364}","userId":"mb"},
+            // "location":{"latitude":-999.999,"longitude":-999.999},"nextUpdate":1604502374,"power":{"level":0,"source":0,"state":0},"ts":1604502308}
+
+            GroupDiscoveryInfo groupDiscoveryInfo = new Gson().fromJson(nodeJson, GroupDiscoveryInfo.class);
+            Globals.groupDiscoveryListener.onGroupDiscover(id, groupDiscoveryInfo);
+
             //logEvent(Analytics.GROUP_NODE_DISCOVERED);
 
 /*            GroupDescriptor gd = getGroup(id);
@@ -3320,11 +3336,30 @@ public class EngageApplication
     }
 
     @Override
-    public void onGroupNodeRediscovered(final String id, final String nodeJson,
-                                        final String eventExtraJson) {
+    public void onGroupNodeRediscovered(final String id, final String nodeJson, final String eventExtraJson) {
         runOnUiThread(() -> {
 
             Timber.i("onGroupNodeREDISCOVERED %s nodeJson %s eventExtraJson %s", id, nodeJson, eventExtraJson);
+
+
+            //{"announceOnReceive":false,"comment":"","connectivity":null,"custom":"","disposition":0,
+            // "groupAliases":
+            // [
+            // {"alias":"MB","groupId":"{G1}"},
+            // {"alias":"MB","groupId":"{G2}"},
+            // {"alias":"MB","groupId":"{G3}"},
+            // {"alias":"MB","groupId":"{G4}"},
+            // {"alias":"MB","groupId":"{G5}"}
+            // ],
+            // "identity":{"avatar":"","displayName":"Mb","nodeId":"{e24b92dc-0531-483a-b1a4-1ee3ec3da364}","userId":"mb"},
+            // "location":{"latitude":-999.999,"longitude":-999.999},"nextUpdate":1604502374,"power":{"level":0,"source":0,"state":0},"ts":1604502308}
+
+            GroupDiscoveryInfo groupDiscoveryInfo = new Gson().fromJson(nodeJson, GroupDiscoveryInfo.class);
+            Globals.groupDiscoveryListener.onGroupRediscover(id, groupDiscoveryInfo);
+
+
+
+
 
             //logEvent(Analytics.GROUP_NODE_REDISCOVERED);
 
@@ -3355,6 +3390,27 @@ public class EngageApplication
         runOnUiThread(() -> {
 
             Timber.i("onGroupNodeUndiscovered %s nodeJson %s eventExtraJson %s", id, nodeJson, eventExtraJson);
+
+
+
+            //{"announceOnReceive":false,"comment":"","connectivity":null,"custom":"","disposition":0,
+            // "groupAliases":
+            // [
+            // {"alias":"MB","groupId":"{G1}"},
+            // {"alias":"MB","groupId":"{G2}"},
+            // {"alias":"MB","groupId":"{G3}"},
+            // {"alias":"MB","groupId":"{G4}"},
+            // {"alias":"MB","groupId":"{G5}"}
+            // ],
+            // "identity":{"avatar":"","displayName":"Mb","nodeId":"{e24b92dc-0531-483a-b1a4-1ee3ec3da364}","userId":"mb"},
+            // "location":{"latitude":-999.999,"longitude":-999.999},"nextUpdate":1604502374,"power":{"level":0,"source":0,"state":0},"ts":1604502308}
+
+            GroupDiscoveryInfo groupDiscoveryInfo = new Gson().fromJson(nodeJson, GroupDiscoveryInfo.class);
+            Globals.groupDiscoveryListener.onGroupUndiscover(id, groupDiscoveryInfo);
+
+
+
+
 
             /*//logEvent(Analytics.GROUP_NODE_UNDISCOVERED);
 

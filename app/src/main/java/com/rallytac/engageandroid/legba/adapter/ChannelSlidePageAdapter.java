@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -23,6 +24,7 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 import com.rallytac.engageandroid.legba.fragment.MissionFragment;
+import com.rallytac.engageandroid.legba.fragment.MissionFragmentDirections;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -110,9 +112,13 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             toggleSpeakerIcon(firstChannel.isSpeakerOn(), channelResumeHolder.primaryChannelSpeaker);
             channelResumeHolder.primaryChannelSpeaker.setOnClickListener(view -> {
                 firstChannel.setSpeakerOn(!firstChannel.isSpeakerOn());
-                ;
                 DataManager.getInstance(fragment.getContext()).toggleMute(firstChannel.getId(), firstChannel.isSpeakerOn());
                 notifyDataSetChanged();
+            });
+
+            channelResumeHolder.primaryChannelInfo.setOnClickListener(view -> {
+                NavHostFragment.findNavController(fragment)
+                        .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(firstChannel));
             });
 
             setFirstChannelViewState(firstChannel, channelResumeHolder, currentChannelGroup.getChannels());
@@ -125,8 +131,6 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 channelResumeHolder.primaryChannel.setLayoutParams(lp);
                 channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
-
-
                 return;
             } else {
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //Note: Do not use DimUtils.converDpToPx or will bug the current page
@@ -155,6 +159,11 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
             channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
 
+            channelResumeHolder.priorityChannel1Info.setOnClickListener(view -> {
+                NavHostFragment.findNavController(fragment)
+                        .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(secondChannel));
+            });
+
             setSecondChannelViewState(secondChannel, channelResumeHolder, currentChannelGroup.getChannels());
 
             if (currentChannelGroupSize < 3) {
@@ -174,6 +183,11 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 thirdChannel.setSpeakerOn(!thirdChannel.isSpeakerOn());
                 DataManager.getInstance(fragment.getContext()).toggleMute(thirdChannel.getId(), thirdChannel.isSpeakerOn());
                 notifyDataSetChanged();
+            });
+
+            channelResumeHolder.priorityChannel2Info.setOnClickListener(view -> {
+                NavHostFragment.findNavController(fragment)
+                        .navigate(MissionFragmentDirections.actionMissionFragmentToChannelFragment(thirdChannel));
             });
 
             setThirdChannelViewState(thirdChannel, channelResumeHolder, currentChannelGroup.getChannels());
@@ -277,6 +291,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private final static String PRIORITY_CHANNEL_2 = "Priority Channel";
 
         private View primaryChannel;
+        private View primaryChannelInfo;
         private RoundedImageView primaryChannelImage;
         private TextView primaryChannelName;
         private TextView primaryChannelDescription;
@@ -292,6 +307,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private TextView lastMessageDisplayName;
 
         private View priorityChannel1;
+        private View priorityChannel1Info;
         private RoundedImageView priorityChannel1Image;
         private TextView priorityChannel1Name;
         private TextView priorityChannel1Description;
@@ -299,6 +315,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private ImageView priorityChannel1RxImage;
 
         private View priorityChannel2;
+        private View priorityChannel2Info;
         private RoundedImageView priorityChannel2Image;
         private TextView priorityChannel2Name;
         private TextView priorityChannel2Description;
@@ -313,6 +330,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
             this.context = context;
             primaryChannel = itemView.findViewById(R.id.primary_channel_layout);
+            primaryChannelInfo = itemView.findViewById(R.id.primary_channel_info);
             primaryChannelImage = itemView.findViewById(R.id.primary_channel_image);
             primaryChannelName = itemView.findViewById(R.id.primary_channel_name_text);
             primaryChannelDescription = itemView.findViewById(R.id.primary_channel_description);
@@ -328,6 +346,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             lastMessageDisplayName = itemView.findViewById(R.id.last_message_displayName);
 
             priorityChannel1 = itemView.findViewById(R.id.priority_channel_1_layout);
+            priorityChannel1Info = itemView.findViewById(R.id.priority_channel_1_info);
             priorityChannel1Name = itemView.findViewById(R.id.priority_channel_1_name_text);
             priorityChannel1Description = itemView.findViewById(R.id.priority_channel_1_description);
             priorityChannel1Image = itemView.findViewById(R.id.priority_channel_1_image);
@@ -335,6 +354,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             priorityChannel1RxImage = itemView.findViewById(R.id.rx_image_priority_channel_1);
 
             priorityChannel2 = itemView.findViewById(R.id.priority_channel_2_layout);
+            priorityChannel2Info = itemView.findViewById(R.id.priority_channel_2_info);
             priorityChannel2Name = itemView.findViewById(R.id.priority_channel_2_name_text);
             priorityChannel2Description = itemView.findViewById(R.id.priority_channel_2_description);
             priorityChannel2Image = itemView.findViewById(R.id.priority_channel_2_image);
