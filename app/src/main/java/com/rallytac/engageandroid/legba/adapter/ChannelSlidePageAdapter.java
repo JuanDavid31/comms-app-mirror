@@ -98,6 +98,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 channelResumeHolder.primaryChannel.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
+                channelResumeHolder.hideLastMessage();
                 return;
             }
 
@@ -126,7 +127,11 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 channelResumeHolder.priorityChannel1.setVisibility(View.GONE);
                 channelResumeHolder.priorityChannel2.setVisibility(View.GONE);
 
-
+                if (hasLastMessage(firstChannel)) {
+                    channelResumeHolder.showLastMessage();
+                } else {
+                    channelResumeHolder.hideLastMessage();
+                }
                 return;
             } else {
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //Note: Do not use DimUtils.converDpToPx or will bug the current page
@@ -136,6 +141,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                     lp.bottomMargin = (int) fragment.getResources().getDimension(R.dimen.primary_channel_margin_bottom_portrait);
                 }
                 channelResumeHolder.primaryChannel.setLayoutParams(lp);
+                channelResumeHolder.hideLastMessage();
             }
 
 
@@ -400,6 +406,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
         private void updateLastMessage(String timeText, String aliasText, String displayNameText) {
             if(this.channels.size() != 1){
+                hideLastMessage();
                 return;
             }
 
@@ -412,6 +419,20 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             lastMessageDisplayName.setVisibility(View.VISIBLE);
             lastMessageDisplayName.setText(displayNameText);
 
+            lastMessageText.setVisibility(View.VISIBLE);
+        }
+
+        private void hideLastMessage() {
+            lastMessageTime.setVisibility(View.GONE);
+            lastMessageAlias.setVisibility(View.GONE);
+            lastMessageDisplayName.setVisibility(View.GONE);
+            lastMessageText.setVisibility(View.GONE);
+        }
+
+        private void showLastMessage() {
+            lastMessageTime.setVisibility(View.VISIBLE);
+            lastMessageAlias.setVisibility(View.VISIBLE);
+            lastMessageDisplayName.setVisibility(View.VISIBLE);
             lastMessageText.setVisibility(View.VISIBLE);
         }
 
@@ -613,7 +634,6 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                 fadeInThirdChannel();
             }
         }
-
     }
 
     public class ChannelBigListViewHolder extends GenericViewHolder implements RxListener {
