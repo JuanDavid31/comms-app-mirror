@@ -107,7 +107,8 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
         binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
 
-        channelSlidePageAdapter = new ChannelSlidePageAdapter(this, getChannelsGroup());
+        List<ChannelGroup> channelsGroup = getChannelsGroup();
+        channelSlidePageAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
         binding.missionViewPager.setAdapter(channelSlidePageAdapter);
 
         setupPTTOnMic();
@@ -388,12 +389,11 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
             lastPage = false;
         } else {
             ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
-            String lastName = currentChannelGroup.getName();
 
             currentChannelGroup.setName(newName);
             currentChannelGroup.setChannels(channels);
 
-            vm.updateChannelGroup(currentChannelGroup, lastName);
+            vm.updateChannelGroup(currentChannelGroup);
         }
 
         activity.binding.fragmentDescription.setText(newName);

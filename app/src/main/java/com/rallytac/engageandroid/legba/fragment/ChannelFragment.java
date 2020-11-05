@@ -25,6 +25,7 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.ChannelElement;
 import com.rallytac.engageandroid.legba.data.dto.Member;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,8 +58,7 @@ public class ChannelFragment extends Fragment {
         binding.channelElementsRecycler.setAdapter(adapter);
 
         //
-        List<ChannelElement> channelElements = channel.getChannelElements();
-        channelElements.clear();
+        List<ChannelElement> channelElements = new ArrayList<>();
         channel.users.forEach(userIdentity ->{
             Member newMember = new Member();
             newMember.setName(userIdentity.displayName);
@@ -68,6 +68,7 @@ public class ChannelFragment extends Fragment {
             channelElements.add(newMember);
         });
         //
+        channel.setChannelElements(channelElements);
 
         adapter.setChannelElements(channel.getChannelElements());
 

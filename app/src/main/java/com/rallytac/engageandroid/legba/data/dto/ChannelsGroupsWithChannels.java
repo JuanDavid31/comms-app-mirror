@@ -10,7 +10,7 @@ public class ChannelsGroupsWithChannels {
     @Id(autoincrement = true)
     private Long id;
 
-    private String channelGroupId;
+    private Long channelGroupId;
 
     private String channelId;
 
@@ -18,13 +18,13 @@ public class ChannelsGroupsWithChannels {
 
     }
 
-    public ChannelsGroupsWithChannels(String channelGroupId, String channelId) {
+    public ChannelsGroupsWithChannels(Long channelGroupId, String channelId) {
         this.channelGroupId = channelGroupId;
         this.channelId = channelId;
     }
 
-    @Generated(hash = 1812320717)
-    public ChannelsGroupsWithChannels(Long id, String channelGroupId, String channelId) {
+    @Generated(hash = 1586546642)
+    public ChannelsGroupsWithChannels(Long id, Long channelGroupId, String channelId) {
         this.id = id;
         this.channelGroupId = channelGroupId;
         this.channelId = channelId;
@@ -38,11 +38,11 @@ public class ChannelsGroupsWithChannels {
         this.id = id;
     }
 
-    public String getChannelGroupId() {
+    public Long getChannelGroupId() {
         return channelGroupId;
     }
 
-    public void setChannelGroupId(String channelGroupId) {
+    public void setChannelGroupId(Long channelGroupId) {
         this.channelGroupId = channelGroupId;
     }
 

@@ -164,14 +164,6 @@ public class Channel implements Serializable {
         isOnRx = onRx;
     }
 
-    public String getRxAlias() {
-        return lastRxAlias;
-    }
-
-    public void setRxAlias(String rxAlias) {
-        this.lastRxAlias = rxAlias;
-    }
-
     public ChannelType getType() {
         return type;
     }

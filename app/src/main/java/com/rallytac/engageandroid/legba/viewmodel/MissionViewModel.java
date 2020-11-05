@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MissionViewModel extends ViewModel {
 
@@ -61,32 +62,28 @@ public class MissionViewModel extends ViewModel {
 
     public void addChannelGroup(ChannelGroup channelGroup) {
         channelGroupDao.insertOrReplace(channelGroup);
-        for (Channel channel : channelGroup.getChannels()) {
-            channelsGroupsWithChannelsDao.insert(new ChannelsGroupsWithChannels(channelGroup.getName(), channel.getId()));
+        for(Channel channel: channelGroup.getChannels()) {
+            channelsGroupsWithChannelsDao.insert(new ChannelsGroupsWithChannels(channelGroup.getId(), channel.getId()));
         }
         mission.update();
     }
 
-    public void updateChannelGroup(ChannelGroup currentChannelGroup, String lastName) {
-        deleteChannelGroupsWithChannelsByChannelGroupId(lastName);
-        if (!lastName.equals(currentChannelGroup.getName())) {
-            channelGroupDao.deleteByKey(lastName);
-        }
-
+    public void updateChannelGroup(ChannelGroup currentChannelGroup) {
+        deleteChannelGroupsWithChannelsByChannelGroupId(currentChannelGroup.getId());
         addChannelGroup(currentChannelGroup);
     }
 
     public void deleteChannelGroup(int currentPage) {
         ChannelGroup channelGroup = mission.getChannelsGroups().get(currentPage);
-        deleteChannelGroupsWithChannelsByChannelGroupId(channelGroup.getName());
-        channelGroupDao.deleteByKey(channelGroup.getName());
+        deleteChannelGroupsWithChannelsByChannelGroupId(channelGroup.getId());
+        channelGroupDao.deleteByKey(channelGroup.getId());
         mission.getChannelsGroups().remove(currentPage);
         mission.update();
     }
 
-    private void deleteChannelGroupsWithChannelsByChannelGroupId(String channelGroupName) {
+    private void deleteChannelGroupsWithChannelsByChannelGroupId(Long channelGroupId) {
         channelsGroupsWithChannelsDao.queryBuilder()
-                .where(ChannelsGroupsWithChannelsDao.Properties.ChannelGroupId.eq(channelGroupName))
+                .where(ChannelsGroupsWithChannelsDao.Properties.ChannelGroupId.eq(channelGroupId))
                 .buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
@@ -97,7 +94,7 @@ public class MissionViewModel extends ViewModel {
     }
 
     public Optional<Mission> getMissionById(String id) {
-        if (missionDao.loadAll().size() == 0) {
+        if(missionDao.loadAll().size() == 0) {
             channelElementDao.insertOrReplaceInTx(mission.getChannels().get(0).getChannelElements());
             channelDao.insertOrReplaceInTx(mission.getChannels());
             missionDao.insertOrReplace(mission);

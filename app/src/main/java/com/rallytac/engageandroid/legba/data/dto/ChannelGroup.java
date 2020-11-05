@@ -13,7 +13,9 @@ import org.greenrobot.greendao.DaoException;
 @Entity(nameInDb = "CHANNELS_GROUPS")
 public class ChannelGroup {
 
-    @Id
+    @Id(autoincrement = true)
+    private Long id;
+
     private String name;
 
     @Property(nameInDb = "mission_id")
@@ -48,10 +50,19 @@ public class ChannelGroup {
         this.channels = channels;
     }
 
-    @Generated(hash = 1980462558)
-    public ChannelGroup(String name, String missionId) {
+    @Generated(hash = 2052058136)
+    public ChannelGroup(Long id, String name, String missionId) {
+        this.id = id;
         this.name = name;
         this.missionId = missionId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -74,7 +85,7 @@ public class ChannelGroup {
      * To-many relationship, resolved on first access (and after reset).
      * Changes to to-many relations are not persisted, make changes to the target entity.
      */
-    @Generated(hash = 842227476)
+    @Generated(hash = 1125410815)
     public List<Channel> getChannels() {
         if (channels == null) {
             final DaoSession daoSession = this.daoSession;
@@ -82,7 +93,7 @@ public class ChannelGroup {
                 throw new DaoException("Entity is detached from DAO context");
             }
             ChannelDao targetDao = daoSession.getChannelDao();
-            List<Channel> channelsNew = targetDao._queryChannelGroup_Channels(name);
+            List<Channel> channelsNew = targetDao._queryChannelGroup_Channels(id);
             synchronized (this) {
                 if (channels == null) {
                     channels = channelsNew;
