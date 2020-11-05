@@ -118,8 +118,8 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         channelSlidePageAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
         binding.missionViewPager.setAdapter(channelSlidePageAdapter);
 
-        setupPTTOnMic();
         setupViewPagerOnPageChangeListener();
+        setupPTTOnMic();
         setupViewPagerDotIndicator(getChannelsGroup());
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();

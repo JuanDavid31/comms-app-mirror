@@ -39,23 +39,19 @@ public class VoiceRecognition implements TextToSpeech.OnInitListener {
 
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
-            if (textToSpeech.isLanguageAvailable(Locale.US) == TextToSpeech.LANG_AVAILABLE) {
-                textToSpeech.setLanguage(Locale.US);
-            }
-        }
-
-        if (status == TextToSpeech.SUCCESS) {
             int result = textToSpeech.setLanguage(Locale.US);
+            textToSpeech.setPitch(1f);
+            textToSpeech.setSpeechRate(1f);
+
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TTS", "Language not supported");
+                Log.e("TTS", "Language is not supported");
             } else {
-                Log.e("TTS", "Error occured");
+                while(!queue.isEmpty()) {
+                    speak(queue.poll());
+                }
             }
-
-        }
-
-        while(!queue.isEmpty()) {
-            speak(queue.poll());
+        } else {
+            Log.e("TTS", "Initilization Failed");
         }
     }
 
