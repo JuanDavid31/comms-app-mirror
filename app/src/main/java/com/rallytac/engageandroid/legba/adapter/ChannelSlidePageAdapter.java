@@ -537,19 +537,19 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private void setBrotherIsReceivingStateFirstChannel() {
             incomingMessageLayout.setVisibility(View.GONE);
             primaryChannelRxImage.setVisibility(View.GONE);
-            primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_resume_item_box_shape));
+            primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.black_shape));
             fadeOutFirstChannel();
         }
 
         private void setBrotherIsReceivingStateSecondChannel() {
             priorityChannel1RxImage.setVisibility(View.GONE);
-            priorityChannel1.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_resume_item_box_shape));
+            priorityChannel1.setBackground(ContextCompat.getDrawable(this.context, R.drawable.black_shape));
             fadeOutSecondChannel();
         }
 
         private void setBrotherIsReceivingStateThirdChannel() {
             priorityChannel2RxImage.setVisibility(View.GONE);
-            priorityChannel2.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_resume_item_box_shape));
+            priorityChannel2.setBackground(ContextCompat.getDrawable(this.context, R.drawable.black_shape));
             fadeOutThirdChannel();
         }
 
@@ -586,7 +586,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private void hideIncomingMessageLayout() {
             fadeInFirstChannel();
             incomingMessageLayout.setVisibility(View.GONE);
-            primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_resume_item_box_shape));
+            primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.black_shape));
         }
 
         private void fadeInFirstChannel() {
@@ -624,7 +624,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
         private void setNeutralStateFirstChannel() {
             primaryChannelDescription.setText(PRIMARY_CHANNEL);
-            primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
+            primaryChannel.setBackground(ContextCompat.getDrawable(this.context, R.drawable.black_shape));
             primaryChannelRxImage.setVisibility(View.GONE);
             fadeInFirstChannel();
         }
@@ -632,12 +632,12 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         private void setNeutralStateSecondChannel() {
             priorityChannel1Description.setText(PRIORITY_CHANNEL_1);
             priorityChannel1RxImage.setVisibility(View.GONE);
-            priorityChannel1.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
+            priorityChannel1.setBackground(ContextCompat.getDrawable(this.context, R.drawable.black_shape));
             fadeInSecondChannel();
         }
 
         private void setNeutralStateThirdChannel() {
-            priorityChannel2.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
+            priorityChannel2.setBackground(ContextCompat.getDrawable(this.context, R.drawable.black_shape));
             priorityChannel2Description.setText(PRIORITY_CHANNEL_2);
             priorityChannel2RxImage.setVisibility(View.GONE);
             fadeInThirdChannel();

@@ -36,4 +36,6 @@
     <color name="sicklyYellow">#dbd937</color>
     <color name="vividGreen">#17de1c</color>
     <color name="violet">#9f17de</color>
+    <color name="white_two">#fefefe</color>
+    <color name="black_two">#0f0f0f</color>
 </resources>

@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="122.5dp"
         android:layout_marginTop="6dp"
-        android:background="@drawable/channel_item_shape">
+        android:background="@drawable/black_shape">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/channel_info"
