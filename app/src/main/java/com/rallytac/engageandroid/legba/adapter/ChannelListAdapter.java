@@ -84,7 +84,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
             holder.channelCheckImg.setImageResource(R.mipmap.group_158);
         } else {
             holder.principalLayoutItem.setBackground(ContextCompat.getDrawable(fragment.getContext(),
-                    R.drawable.channel_group_item_shape));
+                    R.drawable.black_shape));
             holder.channelCheckImg.setImageResource(R.mipmap.ellipse_1084_copy_4);
         }
     }

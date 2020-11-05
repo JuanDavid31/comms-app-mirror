@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -332,74 +333,73 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         activity.binding.channelsRecycler.setAdapter(channelListAdapter);
 
         activity.binding.editCurrentChannelGroupButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility());
-        activity.binding.closeCreateEditChannelsViewLayout.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility());
-        activity.binding.closeCreateEditChannelsViewButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility()); //TODO: Replace for a proper fix
+        activity.binding.closeCreateEditChannelsViewButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility());
         activity.binding.createEditChannelsGroupButton.setOnClickListener(view -> updateCurrentChannelsGroup());
+        activity.binding.deleteChannelViewButton.setOnClickListener(view -> toggleLayoutVisiblity(activity.binding.removeChannelGroupLayout));
+        activity.binding.removeChannelGroupNoOptionButton.setOnClickListener(view -> toggleLayoutVisiblity(activity.binding.removeChannelGroupLayout));
+        activity.binding.removeChannelGroupYesOptionButton.setOnClickListener(view -> {
+            removeChannelGroup();
+            toggleLayoutVisiblity(activity.binding.removeChannelGroupLayout);
+            hideCreateEditChannelsGroupLayoutAndUpdateUi();
+        });
 
         activity.binding.channelGroupNameText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
                 String channelGroupNameSearch = editable.toString().toLowerCase().trim();
                 String currentChannelGroupName = activity.binding.fragmentDescription.getText().toString().toLowerCase().trim();
-                Long coincidences = vm.getChannelsGroup().stream()
+                Long channelsGroupWithSameName = vm.getChannelsGroup()
+                        .stream()
                         .filter(channelGroup -> channelGroup.getName().equalsIgnoreCase(channelGroupNameSearch))
                         .count();
 
-                if ((coincidences < 1L || channelGroupNameSearch.equals(currentChannelGroupName)) && channelGroupNameSearch.length() > 0) {
-                    activity.binding.createEditChannelsGroupButton.setClickable(true);
-                    activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_shape));
+                boolean isNewNameValid = (channelsGroupWithSameName < 1L || channelGroupNameSearch.equals(currentChannelGroupName))
+                        && channelGroupNameSearch.length() > 0;
+
+                if (isNewNameValid && !channelListAdapter.getCheckedChannels().isEmpty()) {
+                    activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.pale_red_shape));
                 } else {
-                    activity.binding.createEditChannelsGroupButton.setClickable(false);
-                    activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_fade_shape));
+                    activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.black_shape));
                 }
             }
         });
     }
 
-    private void updateCurrentChannelsGroup() {
-        List<Channel> channels = channelListAdapter.getCheckedChannels();
-        if (channels.size() > 0) {
-            updateNameAndActiveChannelsOnCurrentChannelsGroup(channels);
-        } else if (!lastPage) {
-            vm.deleteChannelGroup(currentPage);
-            boolean channelGroupSize = currentPage >= vm.getChannelsGroup().size();
 
-            if (channelGroupSize) {
-                lastPage = true;
-                activity.binding.fragmentDescription.setText("");
-                activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
-            } else {
-                String name = vm.getChannelsGroup().get(currentPage).getName();
-                activity.binding.fragmentDescription.setText(name);
-                voiceRecognition.speak(name);
-            }
+    private void updateCurrentChannelsGroup() { //Rename
+        String newName = activity.binding.channelGroupNameText.getText().toString();
+        List<Channel> checkedChannels = channelListAdapter.getCheckedChannels();
+        if (newName.isEmpty() && checkedChannels.isEmpty()) {
+            Toast.makeText(context, "Please select at least one channel and write a name for this view", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (newName.isEmpty()) {
+            Toast.makeText(context, "Please write a name for this view", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (checkedChannels.isEmpty()) {
+            Toast.makeText(context, "Please select at least one channel", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        toggleCreateEditChannelsGroupLayoutvisibility();
-        channelSlidePageAdapter.setChannelsGroup(vm.getChannelsGroup());
-        setupViewPagerDotIndicator(vm.getChannelsGroup());
-        updateDots(currentPage);
+        updateNameAndActiveChannelsOnCurrentChannelsGroup(newName, checkedChannels);
+        hideCreateEditChannelsGroupLayoutAndUpdateUi();
     }
 
-    private void updateNameAndActiveChannelsOnCurrentChannelsGroup(List<Channel> channels) {
-        String newName = activity.binding.channelGroupNameText.getText().toString();
+    private void updateNameAndActiveChannelsOnCurrentChannelsGroup(String newName, List<Channel> channels) {
 
-        if (lastPage) {
+        if (lastPage) {//Creates a new channelGroup
             ChannelGroup newChannelGroup = new ChannelGroup(newName, vm.getMission().getId(), channels);
             vm.addChannelGroup(newChannelGroup);
             vm.getChannelsGroup().add(newChannelGroup);
             lastPage = false;
-        } else {
+        } else {//Edits current channelGroup
             ChannelGroup currentChannelGroup = vm.getChannelsGroup().get(currentPage);
 
             currentChannelGroup.setName(newName);
@@ -411,6 +411,13 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         activity.binding.fragmentDescription.setText(newName);
         voiceRecognition.speak(newName);
         activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
+    }
+
+    private void hideCreateEditChannelsGroupLayoutAndUpdateUi() {
+        toggleCreateEditChannelsGroupLayoutvisibility();
+        channelSlidePageAdapter.setChannelsGroup(vm.getChannelsGroup());
+        setupViewPagerDotIndicator(vm.getChannelsGroup());
+        updateDots(currentPage);
     }
 
     public void toggleCreateEditChannelsGroupLayoutvisibility() {
@@ -447,32 +454,37 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         channelListAdapter.setChannels(allChannels);
     }
 
+    public void setupCreateEditChannelsGroupButton(boolean areThereActiveChannels) {
+
+        String currentName = activity.binding.channelGroupNameText.getText().toString().trim();
+        if (areThereActiveChannels && currentName.length() > 0) {
+            activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.pale_red_shape));
+        } else {
+            activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.black_shape));
+        }
+
+        if (lastPage) {
+            activity.binding.createEditChannelsGroupButton.setText("Create");
+        } else {
+            activity.binding.createEditChannelsGroupButton.setText("Save");
+        }
+    }
+
     private void hideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public void setupCreateEditChannelsGroupButton(boolean thereAreActiveChannels) {
-        if (lastPage) {
-            String currentName = activity.binding.channelGroupNameText.getText().toString().trim();
-            if(thereAreActiveChannels && currentName.length() > 0) {
-                activity.binding.createEditChannelsGroupButton.setClickable(true);
-                activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_shape));
-            } else {
-                activity.binding.createEditChannelsGroupButton.setClickable(false);
-                activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_fade_shape));
-            }
+    private void removeChannelGroup() {
+        vm.deleteChannelGroup(currentPage);
+        boolean channelGroupSize = currentPage >= vm.getChannelsGroup().size();
 
-            activity.binding.createEditChannelsGroupButton.setText("Create");
+        if (channelGroupSize) {
+            lastPage = true;
+            activity.binding.fragmentDescription.setText("");
+            activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
         } else {
-            if(thereAreActiveChannels) {
-                activity.binding.createEditChannelsGroupButton.setText("Edit");
-            } else {
-                activity.binding.createEditChannelsGroupButton.setText("Delete");
-            }
-
-            activity.binding.createEditChannelsGroupButton.setClickable(true);
-            activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.edit_channel_group_btn_shape));
+            activity.binding.fragmentDescription.setText(vm.getChannelsGroup().get(currentPage).getName());
         }
     }
 
@@ -482,39 +494,37 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         inflater.inflate(R.menu.mission_fragment_menu, menu);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         sosAction = menu.findItem(R.id.sos_action);
         View root = sosAction.getActionView();
 
-        root.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        toggleLayoutVisiblity(activity.binding.sosOverlapLayout);
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        activity.binding.sosSwipeButton.dispatchTouchEvent(MotionEvent.obtain(event.getDownTime(),
-                                event.getEventTime(),
-                                MotionEvent.ACTION_UP,
-                                event.getX(),
-                                event.getY(),
-                                event.getMetaState()));
+        root.setOnTouchListener((view, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    toggleLayoutVisiblity(activity.binding.sosOverlapLayout);
+                    return true;
+                case MotionEvent.ACTION_UP:
+                    activity.binding.sosSwipeButton.dispatchTouchEvent(MotionEvent.obtain(event.getDownTime(),
+                            event.getEventTime(),
+                            MotionEvent.ACTION_UP,
+                            event.getX(),
+                            event.getY(),
+                            event.getMetaState()));
 
-                        return true;
-                    case MotionEvent.ACTION_MOVE:
-                        activity.binding.sosSwipeButton.dispatchTouchEvent(MotionEvent.obtain(event.getDownTime(),
-                                event.getEventTime(),
-                                MotionEvent.ACTION_MOVE,
-                                event.getX(),
-                                event.getY(),
-                                event.getMetaState()));
+                    return true;
+                case MotionEvent.ACTION_MOVE:
+                    activity.binding.sosSwipeButton.dispatchTouchEvent(MotionEvent.obtain(event.getDownTime(),
+                            event.getEventTime(),
+                            MotionEvent.ACTION_MOVE,
+                            event.getX(),
+                            event.getY(),
+                            event.getMetaState()));
 
-                        return false;
-                    default:
-                        return false;
-                }
+                    return false;
+                default:
+                    return false;
             }
         });
 

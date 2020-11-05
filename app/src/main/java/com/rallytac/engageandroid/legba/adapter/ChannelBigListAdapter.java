@@ -220,7 +220,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         }
 
         public void setBrotherIsReceivingState() {
-            root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
+            root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.black_shape));
             fadeOut();
         }
 
@@ -233,7 +233,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         public void setNeutralState() {
             channelTypeText.setText(getTypeString(type));
             rxImage.setVisibility(View.GONE);
-            root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.channel_item_shape));
+            root.setBackground(ContextCompat.getDrawable(this.context, R.drawable.black_shape));
             fadeIn();
         }
 
