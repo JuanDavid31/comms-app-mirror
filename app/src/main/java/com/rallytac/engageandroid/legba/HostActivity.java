@@ -10,6 +10,7 @@ import android.widget.SeekBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.customview.widget.Openable;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -102,6 +103,7 @@ public class HostActivity extends AppCompatActivity {
 
         AppBarConfiguration appBarConfiguration =
                 new AppBarConfiguration.Builder(navController.getGraph())
+                        .setOpenableLayout((Openable) findViewById(R.id.drawer))
                         .build();
 
         setupDrawerConfiguration(navController);
