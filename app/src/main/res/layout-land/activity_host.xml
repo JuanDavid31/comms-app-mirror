@@ -357,13 +357,21 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
-                    <EditText
+                    <LinearLayout
+                        android:id="@+id/channel_group_layout_top"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10.5dp">
+
+                        <EditText
                             android:id="@+id/channel_group_name_text"
                             style="@style/openSansRegularFont"
                             android:layout_width="454dp"
                             android:layout_height="36.3dp"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginStart="10dp"
                             android:layout_marginTop="12dp"
+                            android:layout_weight="3"
                             android:background="@drawable/black_shape"
                             android:ems="100"
                             android:hint="New View Name"
@@ -374,67 +382,76 @@
                             android:paddingBottom="9.5dp"
                             android:textColor="#fffefe"
                             android:textSize="12sp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
                             tools:text="New View Name" />
 
-                    <Button
-                            android:id="@+id/create_edit_channels_group_button"
+                        <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="60dp"
                             android:layout_height="36.3dp"
-                            android:layout_marginStart="6.8dp"
-                            android:background="@drawable/black_shape"
-                            android:clickable="true"
-                            android:text="Create"
-                            android:textAllCaps="false"
-                            android:textColor="#fefefe"
-                            android:textSize="10.1sp"
-                            android:textStyle="normal"
-                            app:layout_constraintStart_toEndOf="@+id/channel_group_name_text"
-                            app:layout_constraintTop_toTopOf="@+id/channel_group_name_text" />
+                            android:layout_marginStart="9.5dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_weight="2">
 
-                    <ImageButton
+                            <Button
+                                android:id="@+id/create_edit_channels_group_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/black_shape"
+                                android:clickable="true"
+                                android:text="Create"
+                                android:textAllCaps="false"
+                                android:textColor="#fefefe"
+                                android:textSize="10.1sp"
+                                android:textStyle="normal"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <ImageButton
                             android:id="@+id/delete_channel_view_button"
                             android:layout_width="40dp"
                             android:layout_height="36dp"
+                            android:layout_marginStart="9.5dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_weight="1"
                             android:background="@drawable/black_shape"
                             android:contentDescription="Delete view"
                             android:elevation="5.3dp"
-                            android:src="@drawable/ic_trash"
-                            app:layout_constraintEnd_toStartOf="@+id/close_create_edit_channels_view_button"
-                            app:layout_constraintStart_toEndOf="@+id/create_edit_channels_group_button"
-                            app:layout_constraintTop_toTopOf="@+id/create_edit_channels_group_button" />
+                            android:src="@drawable/ic_trash" />
 
-                    <ImageButton
+                        <ImageButton
                             android:id="@+id/close_create_edit_channels_view_button"
                             android:layout_width="40dp"
                             android:layout_height="36dp"
+                            android:layout_marginStart="9.5dp"
+                            android:layout_marginTop="12dp"
                             android:layout_marginEnd="10.5dp"
+                            android:layout_weight="1"
                             android:background="@drawable/black_shape"
-                            android:src="@mipmap/ic_close"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/delete_channel_view_button" />
+                            android:src="@mipmap/ic_close" />
+                    </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/channels_recycler"
-                            android:layout_width="619.8dp"
-                            android:layout_height="225dp"
-                            android:layout_marginTop="3dp"
-                            android:orientation="vertical"
-                            android:paddingHorizontal="10.5dp"
-                            android:paddingBottom="10.5dp"
+                        android:id="@+id/channels_recycler"
+                        android:layout_width="619.8dp"
+                        android:layout_height="225dp"
+                        android:layout_marginTop="48dp"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="10.5dp"
+                        android:paddingBottom="10.5dp"
 
-                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.476"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/channel_group_name_text"
-                            app:layout_constraintVertical_bias="0.0"
-                            app:spanCount="2"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.476"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/channel_group_layout_top"
+                        app:layout_constraintVertical_bias="0.0"
 
-                            tools:itemCount="7"
-                            tools:listitem="@layout/channel_group_item" />
+                        app:spanCount="2"
+                        tools:itemCount="7"
+                        tools:listitem="@layout/channel_group_item" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -440,6 +440,8 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                 .collect(Collectors.toList());
 
         if (!lastPage) {
+            activity.binding.deleteChannelViewButton.setVisibility(View.VISIBLE);
+
             List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).getChannels();
             allChannels = allChannels
                     .stream()
@@ -454,6 +456,8 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                         return channel;
                     })
                     .collect(Collectors.toList());
+        } else {
+            activity.binding.deleteChannelViewButton.setVisibility(View.GONE);
         }
 
         channelListAdapter.setChannels(allChannels);
