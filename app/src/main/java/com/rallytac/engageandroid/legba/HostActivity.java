@@ -100,14 +100,15 @@ public class HostActivity extends AppCompatActivity {
 
     public void setupConf(){
         NavController navController = Navigation.findNavController(this, R.id.host_fragment);
-
         AppBarConfiguration appBarConfiguration =
-                new AppBarConfiguration.Builder(navController.getGraph())
-                        .setOpenableLayout((Openable) findViewById(R.id.drawer))
-                        .build();
+            new AppBarConfiguration.Builder(navController.getGraph())
+                .setOpenableLayout((Openable) findViewById(R.id.drawer))
+                .build();
 
         setupDrawerConfiguration(navController);
         setupToolbarConfiguration(navController, appBarConfiguration);
+
+        NavigationUI.setupWithNavController(binding.navView, navController);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             Timber.i("onDestinationChangedListener");
             binding.logoImage.setVisibility(View.GONE);
