@@ -238,7 +238,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
 
                 if (position < channelsGroupsSize) {
                     activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
-                    String name = StringUtils.capitalize(vm.getChannelsGroup().get(position).getName());
+                    String name = vm.getChannelsGroup().get(position).getName();
                     activity.binding.fragmentDescription.setText(name);
                 } else {
                     activity.binding.fragmentDescription.setText("");
