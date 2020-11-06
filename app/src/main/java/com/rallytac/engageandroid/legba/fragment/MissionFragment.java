@@ -208,31 +208,6 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         });
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void setupPTTOnMic() {
-        binding.icMicCard.setOnTouchListener((view, event) -> {
-
-            String[] activeGroupIds = vm.getChannelsGroup()
-                    .get(currentPage)
-                    .getChannels()
-                    .stream()
-                    .map(Channel::getId)
-                    .toArray(String[]::new);
-
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                binding.txImage.setVisibility(View.VISIBLE);
-                Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
-                Timber.i("Tx to %s", activeGroupIds);
-                DataManager.getInstance(context).startTx(activeGroupIds);
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                binding.txImage.setVisibility(View.INVISIBLE);
-                Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
-                DataManager.getInstance(context).endTx(activeGroupIds);
-            }
-            return true;
-        });
-    }
-
     private void setupViewPagerOnPageChangeListener() {
         binding.missionViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -255,6 +230,36 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                     activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
                 }
             }
+        });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupPTTOnMic() {
+        binding.icMicCard.setOnTouchListener((view, event) -> {
+            if(!lastPage) {
+                String[] activeGroupIds = vm.getChannelsGroup()
+                        .get(currentPage)
+                        .getChannels()
+                        .stream()
+                        .map(Channel::getId)
+                        .toArray(String[]::new);
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    binding.txImage.setVisibility(View.VISIBLE);
+                    Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
+                    Timber.i("Tx to %s", activeGroupIds);
+                    DataManager.getInstance(context).startTx(activeGroupIds);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    binding.txImage.setVisibility(View.INVISIBLE);
+                    Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
+                    DataManager.getInstance(context).endTx(activeGroupIds);
+                }
+                return true;
+            } else {
+                binding.icMicCard.setClickable(false);
+                return false;
+            }
+
         });
     }
 
