@@ -32,11 +32,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.gson.Gson;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.adapter.ChannelListAdapter;
 import com.rallytac.engageandroid.legba.adapter.ChannelSlidePageAdapter;
+import com.rallytac.engageandroid.legba.app.VoiceRecognition;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo;
@@ -53,11 +53,8 @@ import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.databinding.FragmentMissionBinding;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import timber.log.Timber;
@@ -75,18 +72,27 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
     private TransitionDrawable transition;
     private Context context;
     private MissionViewModel vm;
+    private VoiceRecognition voiceRecognition;
     private int currentPage;
     private boolean lastPage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getContext();
         ViewModelFactory vmFactory = new ViewModelFactory(getActivity());
         vm = new ViewModelProvider(this, vmFactory).get(MissionViewModel.class);
-        context = getContext();
+        voiceRecognition = VoiceRecognition.getInstance(getActivity());
         Globals.rxListeners.add(this);
         Globals.groupDiscoveryListener = this;
+        currentPage = -1;
         setupMission();
+    }
+
+    @Override
+    public void onDestroy() {
+        voiceRecognition.stopVoiceRecognition();
+        super.onDestroy();
     }
 
     private void setupMission() {
@@ -112,8 +118,8 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         channelSlidePageAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
         binding.missionViewPager.setAdapter(channelSlidePageAdapter);
 
-        setupPTTOnMic();
         setupViewPagerOnPageChangeListener();
+        setupPTTOnMic();
         setupViewPagerDotIndicator(getChannelsGroup());
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();
@@ -231,6 +237,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         binding.missionViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                boolean speak = currentPage != position;
                 currentPage = position;
                 int channelsGroupsSize = vm.getChannelsGroup().size();
                 lastPage = currentPage == channelsGroupsSize;
@@ -240,6 +247,9 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                     activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
                     String name = vm.getChannelsGroup().get(position).getName();
                     activity.binding.fragmentDescription.setText(name);
+                    if(speak) {
+                        voiceRecognition.speak(name);
+                    }
                 } else {
                     activity.binding.fragmentDescription.setText("");
                     activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
@@ -363,6 +373,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         });
     }
 
+
     private void updateCurrentChannelsGroup() { //Rename
         String newName = activity.binding.channelGroupNameText.getText().toString();
         List<Channel> checkedChannels = channelListAdapter.getCheckedChannels();
@@ -398,6 +409,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         }
 
         activity.binding.fragmentDescription.setText(newName);
+        voiceRecognition.speak(newName);
         activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
     }
 
