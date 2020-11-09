@@ -429,7 +429,6 @@
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
                         <ImageButton
                                 android:id="@+id/delete_channel_view_button"
                                 android:layout_width="40dp"

@@ -76,6 +76,8 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
     private int currentPage;
     private boolean lastPage;
 
+    private boolean isNewNameValid;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -258,6 +260,8 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                     activity.binding.fragmentDescription.setText(getString(R.string.add_title));
                     activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
                 }
+
+                updateChannelListAdapter();
             }
         });
     }
@@ -331,12 +335,44 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         }
     }
 
+    private void updateChannelListAdapter(){
+        List<Channel> allChannels = vm
+                .getAllChannels()
+                .stream()
+                .peek(channel -> channel.setActive(false))
+                .collect(Collectors.toList());
+
+        if (!lastPage) {
+            activity.binding.deleteChannelViewButton.setVisibility(View.VISIBLE);
+
+            List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).getChannels();
+            allChannels = allChannels
+                    .stream()
+                    .map(channel -> {
+                        activeChannels
+                                .stream()
+                                .filter(activeChannel -> activeChannel.getId().equals(channel.getId()))
+                                .findFirst()
+                                .ifPresent(activeChannel -> {
+                                    channel.setActive(true);
+                                });
+                        return channel;
+                    })
+                    .collect(Collectors.toList());
+        } else {
+            activity.binding.deleteChannelViewButton.setVisibility(View.GONE);
+        }
+
+        channelListAdapter.setChannels(allChannels);
+    }
+
     private void setupEditCurrentChannelGroupLayout() {
-        List<Channel> allChannels = vm.getAllChannels();
-        if (allChannels.isEmpty()){
+        List<Channel> allChannels = //new ArrayList<>();
+                vm.getAllChannels();
+        if (allChannels.isEmpty()) {
             activity.binding.channelsRecycler.setVisibility(View.GONE);
             activity.binding.defineAChannelText.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             activity.binding.channelsRecycler.setVisibility(View.VISIBLE);
             activity.binding.defineAChannelText.setVisibility(View.GONE);
         }
@@ -372,14 +408,16 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                 boolean isNameRepeated = vm.getChannelsGroup()
                         .stream()
                         .map(ChannelGroup::getName)
-                        .filter(channelGroupName -> !channelGroupName.equals(currentChannelGroupName))//Ignores current name, even if it is 'add title'
+                        .peek(channelGroupName -> Timber.i("Before filter %s", channelGroupName))
+                        .filter(channelGroupName -> !channelGroupName.equalsIgnoreCase(currentChannelGroupName))//Ignores current name, even if it is 'add title'
+                        .peek(channelGroupName -> Timber.i("After filter %s", channelGroupName))
                         .anyMatch(channelGroupName -> channelGroupName.equalsIgnoreCase(channelGroupNameSearch));
 
                 if (isNameRepeated) {
                     Toast.makeText(context, "Titles have to be unique, this title exists.", Toast.LENGTH_SHORT).show();
                 }
 
-                boolean isNewNameValid = !isNameRepeated && !channelGroupNameSearch.isEmpty();
+                isNewNameValid = !isNameRepeated && !channelGroupNameSearch.isEmpty();
 
                 if (isNewNameValid && !channelListAdapter.getCheckedChannels().isEmpty()) {
                     activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.pale_red_shape));
@@ -394,11 +432,11 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
     private void updateCurrentChannelsGroup() { //Rename
         String newName = activity.binding.channelGroupNameText.getText().toString();
         List<Channel> checkedChannels = channelListAdapter.getCheckedChannels();
-        if (newName.isEmpty() && checkedChannels.isEmpty()) {
-            Toast.makeText(context, "Please select at least one channel and write a name for this view", Toast.LENGTH_SHORT).show();
+        if (!isNewNameValid && checkedChannels.isEmpty()) {
+            Toast.makeText(context, "Please select at least one channel and write a proper name for this view", Toast.LENGTH_SHORT).show();
             return;
-        } else if (newName.isEmpty()) {
-            Toast.makeText(context, "Please write a name for this view", Toast.LENGTH_SHORT).show();
+        } else if (!isNewNameValid) {
+            Toast.makeText(context, "Please write a proper name for this view", Toast.LENGTH_SHORT).show();
             return;
         } else if (checkedChannels.isEmpty()) {
             Toast.makeText(context, "Please select at least one channel", Toast.LENGTH_SHORT).show();
@@ -445,35 +483,6 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         toggleLayoutVisiblity(binding.icMicCard);
         toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
         toggleLayoutVisiblity(activity.binding.channelGroupLayout);
-
-        List<Channel> allChannels = vm
-                .getAllChannels()
-                .stream()
-                .peek(channel -> channel.setActive(false))
-                .collect(Collectors.toList());
-
-        if (!lastPage) {
-            activity.binding.deleteChannelViewButton.setVisibility(View.VISIBLE);
-
-            List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).getChannels();
-            allChannels = allChannels
-                    .stream()
-                    .map(channel -> {
-                        activeChannels
-                                .stream()
-                                .filter(activeChannel -> activeChannel.getId().equals(channel.getId()))
-                                .findFirst()
-                                .ifPresent(activeChannel -> {
-                                    channel.setActive(true);
-                                });
-                        return channel;
-                    })
-                    .collect(Collectors.toList());
-        } else {
-            activity.binding.deleteChannelViewButton.setVisibility(View.GONE);
-        }
-
-        channelListAdapter.setChannels(allChannels);
     }
 
     public void setupCreateEditChannelsGroupButton(boolean areThereActiveChannels) {
