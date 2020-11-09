@@ -378,116 +378,118 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
-                        android:id="@+id/channel_group_layout_top"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                            android:id="@+id/channel_group_layout_top"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
                         <EditText
-                            android:id="@+id/channel_group_name_text"
-                            style="@style/openSansRegularFont"
-                            android:layout_width="142dp"
-                            android:layout_height="36.3dp"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginTop="12dp"
-                            android:layout_weight="4"
-                            android:background="@drawable/black_shape"
-                            android:ems="100"
-                            android:hint="New View Name"
-                            android:imeOptions="actionDone"
-                            android:inputType="textPersonName"
-                            android:paddingStart="17.5dp"
-                            android:paddingTop="13.3dp"
-                            android:paddingBottom="9.5dp"
-                            android:textColor="#fffefe"
-                            android:textSize="12sp"
-                            tools:text="New View Name" />
+                                android:id="@+id/channel_group_name_text"
+                                style="@style/openSansRegularFont"
+                                android:layout_width="142dp"
+                                android:layout_height="36.3dp"
+                                android:layout_marginStart="12dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_weight="4"
+                                android:background="@drawable/black_shape"
+                                android:ems="100"
+                                android:hint="New View Name"
+                                android:imeOptions="actionDone"
+                                android:inputType="textPersonName"
+                                android:paddingStart="17.5dp"
+                                android:paddingTop="13.3dp"
+                                android:paddingBottom="9.5dp"
+                                android:textColor="#fffefe"
+                                android:textSize="12sp"
+                                tools:text="New View Name" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="60dp"
-                            android:layout_height="36.3dp"
-                            android:layout_marginStart="6.8dp"
-                            android:layout_marginTop="12dp"
-                            android:layout_weight="2">
+                                android:layout_width="60dp"
+                                android:layout_height="36.3dp"
+                                android:layout_marginStart="6.8dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_weight="2">
 
                             <Button
-                                android:id="@+id/create_edit_channels_group_button"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/black_shape"
-                                android:clickable="true"
-                                android:text="Create"
-                                android:textAllCaps="false"
-                                android:textColor="#fefefe"
-                                android:textSize="10.1sp"
-                                android:textStyle="normal"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.0"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                    android:id="@+id/create_edit_channels_group_button"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/black_shape"
+                                    android:clickable="true"
+                                    android:text="Create"
+                                    android:textAllCaps="false"
+                                    android:textColor="#fefefe"
+                                    android:textSize="10.1sp"
+                                    android:textStyle="normal"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.0"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
+                        <ImageButton
+                                android:id="@+id/delete_channel_view_button"
+                                android:layout_width="40dp"
+                                android:layout_height="36dp"
+                                android:layout_marginStart="8.3dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/black_shape"
+                                android:contentDescription="Delete view"
+                                android:elevation="5.3dp"
+                                android:src="@drawable/ic_trash"
+                                android:visibility="gone"
+                                tools:visibility="visible" />
 
                         <ImageButton
-                            android:id="@+id/delete_channel_view_button"
-                            android:layout_width="40dp"
-                            android:layout_height="36dp"
-                            android:layout_marginStart="8.3dp"
-                            android:layout_marginTop="12dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/black_shape"
-                            android:contentDescription="Delete view"
-                            android:elevation="5.3dp"
-                            android:src="@drawable/ic_trash"
-                            android:visibility="gone"
-                            tools:visibility="visible" />
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/close_create_edit_channels_view_layout"
-                            android:layout_width="40dp"
-                            android:layout_height="36.3dp"
-                            android:layout_marginStart="8.3dp"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginEnd="10.5dp"
-                            android:background="@color/black"
-                            android:clickable="true">
-
-                            <ImageButton
                                 android:id="@+id/close_create_edit_channels_view_button"
-                                android:layout_width="8.5dp"
-                                android:layout_height="8.5dp"
-                                android:background="@mipmap/ic_close"
+                                android:layout_width="40dp"
+                                android:layout_height="36.3dp"
+                                android:layout_marginStart="8.3dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginEnd="10.5dp"
+                                android:background="@drawable/black_shape"
                                 android:clickable="true"
                                 android:paddingLeft="16dp"
                                 android:paddingTop="14.3dp"
                                 android:paddingRight="15.8dp"
                                 android:paddingBottom="13.8dp"
+                                android:src="@mipmap/ic_close"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
                     </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/channels_recycler"
-                        android:layout_width="306.8dp"
-                        android:layout_height="461dp"
-                        android:layout_marginTop="51dp"
-                        android:orientation="vertical"
+                            android:id="@+id/channels_recycler"
+                            android:layout_width="306.8dp"
+                            android:layout_height="461dp"
+                            android:orientation="vertical"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.476"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/channel_group_layout_top"
+                            app:layout_constraintVertical_bias="0.0"
+                            tools:itemCount="7"
+                            tools:listitem="@layout/channel_group_item"
+                            tools:visibility="gone" />
 
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.476"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/channel_group_layout_top"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:itemCount="7"
-                        tools:listitem="@layout/channel_group_item" />
+                    <TextView
+                            android:id="@+id/define_a_channel_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Define a channel for the mission"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/channel_group_layout_top"
+                            tools:visibility="visible" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -520,14 +522,14 @@
                         android:id="@+id/remove_channel_group_yes_option_button"
                         android:layout_width="124.5dp"
                         android:layout_height="36.3dp"
-                        android:text="Yes"
-                        android:fontFamily="@font/open_sans_regular"
-                        android:textStyle="normal"
-                        android:textSize="10.1sp"
-                        android:textColor="@color/white_two"
-                        android:background="@drawable/black_shape"
-                        android:layout_marginEnd="5dp"
                         android:layout_marginTop="23dp"
+                        android:layout_marginEnd="5dp"
+                        android:background="@drawable/black_shape"
+                        android:fontFamily="@font/open_sans_regular"
+                        android:text="Yes"
+                        android:textColor="@color/white_two"
+                        android:textSize="10.1sp"
+                        android:textStyle="normal"
                         app:layout_constraintEnd_toStartOf="@+id/remove_channel_group_no_option_button"
                         app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintStart_toStartOf="parent"
@@ -537,12 +539,12 @@
                         android:id="@+id/remove_channel_group_no_option_button"
                         android:layout_width="124.5dp"
                         android:layout_height="36.3dp"
-                        android:text="No"
                         android:background="@drawable/pale_red_shape"
                         android:fontFamily="@font/open_sans_regular"
-                        android:textStyle="normal"
-                        android:textSize="10.1sp"
+                        android:text="No"
                         android:textColor="@color/white_two"
+                        android:textSize="10.1sp"
+                        android:textStyle="normal"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/remove_channel_group_yes_option_button"
                         app:layout_constraintTop_toTopOf="@+id/remove_channel_group_yes_option_button" />
@@ -555,7 +557,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:fitsSystemWindows="true" >
+                android:fitsSystemWindows="true">
 
             <LinearLayout
                     android:layout_width="match_parent"

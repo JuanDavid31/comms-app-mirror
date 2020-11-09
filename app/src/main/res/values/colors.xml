@@ -39,4 +39,6 @@
     <color name="white_two">#fefefe</color>
     <color name="black_two">#0f0f0f</color>
     <color name="white_03">#4cffffff</color>
+    <color name="black_three">#121212</color>
+    <color name="black_four">#151515</color>
 </resources>

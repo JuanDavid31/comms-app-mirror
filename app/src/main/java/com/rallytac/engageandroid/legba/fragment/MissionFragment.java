@@ -76,6 +76,8 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
     private int currentPage;
     private boolean lastPage;
 
+    private boolean isNewNameValid;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -208,6 +210,35 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         });
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupPTTOnMic() {
+        binding.icMicCard.setOnTouchListener((view, event) -> {
+
+            if (lastPage) {
+                return false;
+            }
+
+            String[] activeGroupIds = vm.getChannelsGroup()
+                    .get(currentPage)
+                    .getChannels()
+                    .stream()
+                    .map(Channel::getId)
+                    .toArray(String[]::new);
+
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                binding.txImage.setVisibility(View.VISIBLE);
+                Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
+                Timber.i("Tx to %s", activeGroupIds);
+                DataManager.getInstance(context).startTx(activeGroupIds);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                binding.txImage.setVisibility(View.INVISIBLE);
+                Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
+                DataManager.getInstance(context).endTx(activeGroupIds);
+            }
+            return true;
+        });
+    }
+
     private void setupViewPagerOnPageChangeListener() {
         binding.missionViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -222,44 +253,16 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                     activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
                     String name = vm.getChannelsGroup().get(position).getName();
                     activity.binding.fragmentDescription.setText(name);
-                    if(speak) {
+                    if (speak) {
                         voiceRecognition.speak(name);
                     }
                 } else {
-                    activity.binding.fragmentDescription.setText("");
+                    activity.binding.fragmentDescription.setText(getString(R.string.add_title));
                     activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
                 }
+
+                updateChannelListAdapter();
             }
-        });
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void setupPTTOnMic() {
-        binding.icMicCard.setOnTouchListener((view, event) -> {
-            if(!lastPage) {
-                String[] activeGroupIds = vm.getChannelsGroup()
-                        .get(currentPage)
-                        .getChannels()
-                        .stream()
-                        .map(Channel::getId)
-                        .toArray(String[]::new);
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    binding.txImage.setVisibility(View.VISIBLE);
-                    Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
-                    Timber.i("Tx to %s", activeGroupIds);
-                    DataManager.getInstance(context).startTx(activeGroupIds);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    binding.txImage.setVisibility(View.INVISIBLE);
-                    Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
-                    DataManager.getInstance(context).endTx(activeGroupIds);
-                }
-                return true;
-            } else {
-                binding.icMicCard.setClickable(false);
-                return false;
-            }
-
         });
     }
 
@@ -332,8 +335,48 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         }
     }
 
+    private void updateChannelListAdapter(){
+        List<Channel> allChannels = vm
+                .getAllChannels()
+                .stream()
+                .peek(channel -> channel.setActive(false))
+                .collect(Collectors.toList());
+
+        if (!lastPage) {
+            activity.binding.deleteChannelViewButton.setVisibility(View.VISIBLE);
+
+            List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).getChannels();
+            allChannels = allChannels
+                    .stream()
+                    .map(channel -> {
+                        activeChannels
+                                .stream()
+                                .filter(activeChannel -> activeChannel.getId().equals(channel.getId()))
+                                .findFirst()
+                                .ifPresent(activeChannel -> {
+                                    channel.setActive(true);
+                                });
+                        return channel;
+                    })
+                    .collect(Collectors.toList());
+        } else {
+            activity.binding.deleteChannelViewButton.setVisibility(View.GONE);
+        }
+
+        channelListAdapter.setChannels(allChannels);
+    }
+
     private void setupEditCurrentChannelGroupLayout() {
-        channelListAdapter = new ChannelListAdapter(vm.getAllChannels(), this);
+        List<Channel> allChannels = //new ArrayList<>();
+                vm.getAllChannels();
+        if (allChannels.isEmpty()) {
+            activity.binding.channelsRecycler.setVisibility(View.GONE);
+            activity.binding.defineAChannelText.setVisibility(View.VISIBLE);
+        } else {
+            activity.binding.channelsRecycler.setVisibility(View.VISIBLE);
+            activity.binding.defineAChannelText.setVisibility(View.GONE);
+        }
+        channelListAdapter = new ChannelListAdapter(allChannels, this);
         activity.binding.channelsRecycler.setHasFixedSize(true);
         activity.binding.channelsRecycler.setAdapter(channelListAdapter);
 
@@ -361,13 +404,20 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
             public void afterTextChanged(Editable editable) {
                 String channelGroupNameSearch = editable.toString().toLowerCase().trim();
                 String currentChannelGroupName = activity.binding.fragmentDescription.getText().toString().toLowerCase().trim();
-                Long channelsGroupWithSameName = vm.getChannelsGroup()
-                        .stream()
-                        .filter(channelGroup -> channelGroup.getName().equalsIgnoreCase(channelGroupNameSearch))
-                        .count();
 
-                boolean isNewNameValid = (channelsGroupWithSameName < 1L || channelGroupNameSearch.equals(currentChannelGroupName))
-                        && channelGroupNameSearch.length() > 0;
+                boolean isNameRepeated = vm.getChannelsGroup()
+                        .stream()
+                        .map(ChannelGroup::getName)
+                        .peek(channelGroupName -> Timber.i("Before filter %s", channelGroupName))
+                        .filter(channelGroupName -> !channelGroupName.equalsIgnoreCase(currentChannelGroupName))//Ignores current name, even if it is 'add title'
+                        .peek(channelGroupName -> Timber.i("After filter %s", channelGroupName))
+                        .anyMatch(channelGroupName -> channelGroupName.equalsIgnoreCase(channelGroupNameSearch));
+
+                if (isNameRepeated) {
+                    Toast.makeText(context, "Titles have to be unique, this title exists.", Toast.LENGTH_SHORT).show();
+                }
+
+                isNewNameValid = !isNameRepeated && !channelGroupNameSearch.isEmpty();
 
                 if (isNewNameValid && !channelListAdapter.getCheckedChannels().isEmpty()) {
                     activity.binding.createEditChannelsGroupButton.setBackground(ContextCompat.getDrawable(context, R.drawable.pale_red_shape));
@@ -382,11 +432,11 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
     private void updateCurrentChannelsGroup() { //Rename
         String newName = activity.binding.channelGroupNameText.getText().toString();
         List<Channel> checkedChannels = channelListAdapter.getCheckedChannels();
-        if (newName.isEmpty() && checkedChannels.isEmpty()) {
-            Toast.makeText(context, "Please select at least one channel and write a name for this view", Toast.LENGTH_SHORT).show();
+        if (!isNewNameValid && checkedChannels.isEmpty()) {
+            Toast.makeText(context, "Please select at least one channel and write a proper name for this view", Toast.LENGTH_SHORT).show();
             return;
-        } else if (newName.isEmpty()) {
-            Toast.makeText(context, "Please write a name for this view", Toast.LENGTH_SHORT).show();
+        } else if (!isNewNameValid) {
+            Toast.makeText(context, "Please write a proper name for this view", Toast.LENGTH_SHORT).show();
             return;
         } else if (checkedChannels.isEmpty()) {
             Toast.makeText(context, "Please select at least one channel", Toast.LENGTH_SHORT).show();
@@ -428,39 +478,11 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
     public void toggleCreateEditChannelsGroupLayoutvisibility() {
         setupCreateEditChannelsGroupButton(true);
         hideKeyboard(activity.binding.createEditChannelsGroupLayout);
-        activity.binding.channelGroupNameText.setText(activity.binding.fragmentDescription.getText().toString());
+        String fragmentDescription = activity.binding.fragmentDescription.getText().toString();
+        activity.binding.channelGroupNameText.setText(mapFragmentDescriptionName(fragmentDescription));
         toggleLayoutVisiblity(binding.icMicCard);
         toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
         toggleLayoutVisiblity(activity.binding.channelGroupLayout);
-
-        List<Channel> allChannels = vm
-                .getAllChannels()
-                .stream()
-                .peek(channel -> channel.setActive(false))
-                .collect(Collectors.toList());
-
-        if (!lastPage) {
-            activity.binding.deleteChannelViewButton.setVisibility(View.VISIBLE);
-
-            List<Channel> activeChannels = vm.getChannelsGroup().get(currentPage).getChannels();
-            allChannels = allChannels
-                    .stream()
-                    .map(channel -> {
-                        activeChannels
-                                .stream()
-                                .filter(activeChannel -> activeChannel.getId().equals(channel.getId()))
-                                .findFirst()
-                                .ifPresent(activeChannel -> {
-                                    channel.setActive(true);
-                                });
-                        return channel;
-                    })
-                    .collect(Collectors.toList());
-        } else {
-            activity.binding.deleteChannelViewButton.setVisibility(View.GONE);
-        }
-
-        channelListAdapter.setChannels(allChannels);
     }
 
     public void setupCreateEditChannelsGroupButton(boolean areThereActiveChannels) {
@@ -482,6 +504,19 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
     private void hideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private String mapFragmentDescriptionName(String fragmentDescriptionName) {
+        if (fragmentDescriptionName.equalsIgnoreCase(getString(R.string.add_title))) {
+            long numberOfViews = vm.getChannelsGroup()
+                    .stream()
+                    .map(channelGroup -> channelGroup.getName().toLowerCase())
+                    .filter(name -> name.contains("view "))
+                    .count();
+            return String.format("View %s", (numberOfViews + 1));
+        } else {
+            return fragmentDescriptionName;
+        }
     }
 
     private void removeChannelGroup() {
