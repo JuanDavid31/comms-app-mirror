@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -53,6 +55,7 @@ public class MissionsListFragment extends Fragment {
 
         binding.missionsListRecyclerView.setAdapter(adapter);
         adapter.setMissions(missions, getContext());
+        setupNFCActionsView();
         return binding.getRoot();
     }
 
@@ -66,5 +69,14 @@ public class MissionsListFragment extends Fragment {
 
         Objects.requireNonNull(actionBar)
                 .setHomeAsUpIndicator(R.drawable.ic_hamburguer_icon);
+    }
+
+    private void setupNFCActionsView() {
+        HostActivity hostActivity = (HostActivity) requireActivity();
+        hostActivity.binding.logout.setOnClickListener(view -> {
+            hostActivity.binding.drawer.closeDrawers();
+            NavDirections action = MissionsListFragmentDirections.actionMissionsFragmentToLargeCardFragment();
+            NavHostFragment.findNavController(this).navigate(action);
+        });
     }
 }

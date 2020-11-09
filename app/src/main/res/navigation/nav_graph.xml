@@ -16,6 +16,13 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_missionsFragment_to_largeCardFragment"
+            app:destination="@id/nfcActionsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
             android:id="@+id/missionFragment"
@@ -55,4 +62,7 @@
                 android:name="subchannel"
                 app:argType="com.rallytac.engageandroid.legba.data.dto.Subchannel" />
     </fragment>
+    <fragment
+        android:id="@+id/nfcActionsFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.NFCActionsFragment" />
 </navigation>
