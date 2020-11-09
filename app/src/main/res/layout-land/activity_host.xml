@@ -451,7 +451,21 @@
 
                         app:spanCount="2"
                         tools:itemCount="7"
-                        tools:listitem="@layout/channel_group_item" />
+                        tools:listitem="@layout/channel_group_item"
+                        tools:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/define_a_channel_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Define a channel for the mission"
+                        android:visibility="gone"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/channel_group_layout_top"
+                        tools:visibility="visible" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
