@@ -18,7 +18,7 @@
                 app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_missionsFragment_to_largeCardFragment"
-            app:destination="@id/nfcActionsFragment"
+            app:destination="@id/nfcActionsFragment" />
     </fragment>
     <fragment
         android:id="@+id/missionFragment"
