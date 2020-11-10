@@ -9,6 +9,7 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
 
+    <color name="navigationViewBlack">#0e0e0e</color>
     <color name="primaryBlack">#1a1a1a</color>
     <color name="secondaryBlack">#1d1d1d</color>
     <color name="tertiaryBlack">#252525</color>
@@ -38,4 +39,6 @@
     <color name="violet">#9f17de</color>
     <color name="white_two">#fefefe</color>
     <color name="black_two">#0f0f0f</color>
+
+    <color name="shutdown_color">#c33333</color>
 </resources>

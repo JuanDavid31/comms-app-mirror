@@ -17,20 +17,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@id/drawer_action_my_mission"
-        android:title="My Missions" />
-<!--    <item-->
-<!--        android:id="@id/drawer_action_my_channels"-->
-<!--        android:title="My Channels" />-->
-<!--    <item-->
-<!--        android:id="@id/drawer_action_history"-->
-<!--        android:title="History" />-->
-<!--    <item-->
-<!--        android:id="@id/drawer_action_settings"-->
-<!--        android:title="Settings" />-->
-<!--    <item-->
-<!--        android:id="@id/drawer_action_about"-->
-<!--        android:title="About" />-->
-<!--    <item-->
-<!--        android:id="@id/drawer_action_shutdown"-->
-<!--        android:title="Shutdown" />-->
+        android:title="@string/nav_drawer_my_missions" />
+    <item
+        android:id="@id/drawer_action_my_channels"
+        android:title="@string/nav_drawer_my_channels" />
+    <item
+        android:id="@id/drawer_action_history"
+        android:title="@string/nav_drawer_history" />
+    <item
+        android:id="@id/drawer_action_settings"
+        android:title="@string/nav_drawer_settings" />
+    <item
+        android:id="@id/drawer_action_about"
+        android:title="@string/nav_drawer_about" />
+    <item
+        android:id="@id/drawer_action_shutdown"
+        android:title="@string/nav_drawer_shutdown" />
 </menu>

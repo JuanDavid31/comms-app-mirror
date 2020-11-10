@@ -9,15 +9,15 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.rallytac.engageandroid.R;
-import com.rallytac.engageandroid.databinding.FragmentMyMissionsBinding;
+import com.rallytac.engageandroid.databinding.FragmentMyChannelsBinding;
 
-public class MyMissionsFragment extends Fragment {
-    private FragmentMyMissionsBinding binding;
+public class MyChannelsFragment extends Fragment {
+    private FragmentMyChannelsBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_missions, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_channels, container, false);
         return binding.getRoot();
     }
 }

@@ -1,15 +1,24 @@
 package com.rallytac.engageandroid.legba;
 
+import android.graphics.drawable.Drawable;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.customview.widget.Openable;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
@@ -21,9 +30,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.material.navigation.NavigationView;
 import com.rallytac.engageandroid.ActiveConfiguration;
+import com.rallytac.engageandroid.BuildConfig;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.GroupSelectorAdapter;
 import com.rallytac.engageandroid.MapTracker;
+import com.rallytac.engageandroid.PreferenceKeys;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.SimpleUiMainActivity;
 import com.rallytac.engageandroid.VolumeLevels;
@@ -109,6 +120,7 @@ public class HostActivity extends AppCompatActivity {
         setupToolbarConfiguration(navController, appBarConfiguration);
 
         NavigationUI.setupWithNavController(binding.navView, navController);
+        setNavigationDrawer();
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             Timber.i("onDestinationChangedListener");
             binding.logoImage.setVisibility(View.GONE);
@@ -116,11 +128,69 @@ public class HostActivity extends AppCompatActivity {
             binding.fragmentDescription.setVisibility(View.GONE);
             binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
         });
+        setHeaderLayoutNavigationView();
+    }
+
+    private void setNavigationDrawer() {
+        // Version bottom text.
+        TextView navHeaderVersion = findViewById(R.id.nav_header_version);
+        int shutdownColor = ContextCompat.getColor(this, R.color.shutdown_color);
+
+        String[] a = getString(R.string.nav_drawer_version).split("\n");
+        String[] b = a[0].split(" ");
+        String version = BuildConfig.VERSION_NAME;
+        String versionText = "  " + b[0] + " " + version + "\n" + "  " + a[1];
+
+        Spannable spannable = new SpannableString(versionText);
+        spannable.setSpan(
+            new ForegroundColorSpan(shutdownColor),
+            10, (10 + version.length() + 1), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        navHeaderVersion.setText(spannable);
+
+        // Background.
+        Drawable blackDrawable = ContextCompat.getDrawable(this, R.color.navigationViewBlack);
+        binding.navView.setBackground(blackDrawable);
+
+        // Shutdown item.
+        MenuItem shutdownItem = binding.navView.getMenu().getItem(5);
+        String shutdownText = shutdownItem.getTitle().toString();
+        setFont("font/open_sans_semi_bold.ttf", "  " + shutdownText, shutdownItem);
+        shutdownItem.setActionView(R.layout.menu_shutdown_image);
+
+        SpannableString spanString = new SpannableString(getString(R.string.nav_drawer_shutdown_padding));
+        spanString.setSpan(new ForegroundColorSpan(shutdownColor), 0, spanString.length(), 0);
+        shutdownItem.setTitle(spanString);
+
+        // Other items.
+        for (int i = 0; i < 5; i++) {
+            MenuItem currentItem = binding.navView.getMenu().getItem(i);
+            currentItem.setActionView(R.layout.menu_drawer_image);
+            String currentText = currentItem.getTitle().toString();
+            setFont("font/open_sans_semi_bold.ttf", "  " + currentText, currentItem);
+        }
+    }
+
+    private void setHeaderLayoutNavigationView() {
+        String displayName = Globals.getSharedPreferences().getString(PreferenceKeys.USER_DISPLAY_NAME, null);
+        String alias = Globals.getSharedPreferences().getString(PreferenceKeys.USER_ALIAS_ID, null);
+
+        View headerLayout = binding.navView.inflateHeaderView(R.layout.nav_header);
+        ((TextView)headerLayout.findViewById(R.id.nav_header_alias)).setText(alias);
+        ((TextView)headerLayout.findViewById(R.id.nav_header_display_name)).setText(displayName.toUpperCase());
+        ((TextView)headerLayout.findViewById(R.id.nav_header_display_team)).setText(getString(R.string.nav_drawer_team));
     }
 
     private void setupDrawerConfiguration(NavController navController) {
         NavigationView navView = binding.navView;
         NavigationUI.setupWithNavController(navView, navController);
+    }
+
+    private void setFont(String fontType, String text, MenuItem menuItem) {
+        TypefaceSpan face = new TypefaceSpan(fontType);
+        SpannableStringBuilder title = new SpannableStringBuilder(text);
+        title.setSpan(face, 0, title.length(), 0);
+        menuItem.setTitle(title);
     }
 
     private void setupToolbarConfiguration(NavController navController, AppBarConfiguration appBarConfiguration) {
@@ -145,5 +215,4 @@ public class HostActivity extends AppCompatActivity {
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(uiOptions);
     }
-
 }

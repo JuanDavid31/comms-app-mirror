@@ -56,11 +56,35 @@
             app:argType="com.rallytac.engageandroid.legba.data.dto.Subchannel" />
     </fragment>
 
-    <!-- My Mission -->
+    <!-- Navigation Drawer -->
 
     <fragment
         android:id="@+id/drawer_action_my_mission"
-        android:name="com.rallytac.engageandroid.legba.fragment.MyMissionsFragment">
-        
+        android:name="com.rallytac.engageandroid.legba.fragment.MissionsListFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/drawer_action_my_channels"
+        android:name="com.rallytac.engageandroid.legba.fragment.MyChannelsFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/drawer_action_history"
+        android:name="com.rallytac.engageandroid.legba.fragment.HistoryFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/drawer_action_settings"
+        android:name="com.rallytac.engageandroid.legba.fragment.SettingsFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/drawer_action_about"
+        android:name="com.rallytac.engageandroid.legba.fragment.SettingsFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/drawer_action_shutdown"
+        android:name="com.rallytac.engageandroid.legba.fragment.SettingsFragment">
     </fragment>
 </navigation>
