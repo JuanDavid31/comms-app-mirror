@@ -6,7 +6,10 @@ import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.ToMany;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Transient;
@@ -34,11 +37,15 @@ public class Mission implements Serializable {
     //@OrderBy("date ASC")
     private List<Channel> channels;
 
-    /** Used to resolve relations */
+    /**
+     * Used to resolve relations
+     */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated(hash = 1935729854)
     private transient MissionDao myDao;
 
@@ -139,13 +146,17 @@ public class Mission implements Serializable {
                 '}';
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated(hash = 1974632286)
     public synchronized void resetChannelsGroups() {
         channelsGroups = null;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated(hash = 1313248352)
     public synchronized void resetChannels() {
         channels = null;
@@ -201,6 +212,42 @@ public class Mission implements Serializable {
 
     public void setRpPort(int rpPort) {
         this.rpPort = rpPort;
+    }
+
+    @Transient
+    private Channel missionControlChannel;
+
+    public void removeMissionControlChannelFromList() {
+        for(Channel channel : getChannels()){
+            if (channel.getEngageType() == Channel.EngageType.PRESENCE){
+                missionControlChannel = channel;
+                break;
+            }
+        }
+        /*getChannels()
+                .stream()
+                .filter(channel -> channel.getEngageType() == Channel.EngageType.PRESENCE)
+                .findFirst()
+                .ifPresent(channel -> missionControlChannel = channel);*/
+
+        List<Channel> audioChannels = new ArrayList<>();
+        for(Channel channel : getChannels()){
+            if (channel.getEngageType() == Channel.EngageType.AUDIO){
+                audioChannels.add(channel);
+            }
+        }
+        /*List<Channel> audioChannels = getChannels()
+                .stream()
+                .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
+                .collect(Collectors.toList());*/
+
+        setChannels(audioChannels);
+    }
+
+    public void addMissionControlChannelToList() {
+        List<Channel> newChannels = new ArrayList<>(getChannels());
+        newChannels.add(missionControlChannel);
+        setChannels(newChannels);
     }
 
     /** called by internal mechanisms, do not call yourself. */

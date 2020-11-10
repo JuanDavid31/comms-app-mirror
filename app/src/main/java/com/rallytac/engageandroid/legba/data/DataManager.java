@@ -14,7 +14,6 @@ import com.rallytac.engageandroid.MissionDatabase;
 import com.rallytac.engageandroid.Utils;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
-import com.rallytac.engageandroid.legba.data.engagedto.EngageClasses;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +27,6 @@ import okio.Okio;
 import timber.log.Timber;
 
 import static com.rallytac.engageandroid.legba.data.engagedto.EngageClasses.*;
-import static com.rallytac.engageandroid.legba.data.engagedto.EngageClasses.TxData.PRESENCE_TYPE;
 
 public class DataManager {
 
@@ -59,17 +57,8 @@ public class DataManager {
             List<Mission> missions = new GsonBuilder()
                     .create()
                     .fromJson(jsonMissions, listType);
-
             loadMissionsOnEgageEngine(missions);
-
-            missions.forEach(mission -> {
-                List<Channel> audioChannels = mission.getChannels()
-                        .stream()
-                        .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
-                        .collect(Collectors.toList());
-                mission.setChannels(audioChannels);
-            });
-
+            missions.forEach(Mission::removeMissionControlChannelFromList);
             return missions;
 
         } catch (IOException e) {
@@ -143,6 +132,8 @@ public class DataManager {
                 });
         updateDB();
 
+        mission.addMissionControlChannelToList();
+
         mission.getChannels()
                 .forEach(channel -> {
                     AddressAndPort rx = new AddressAndPort(channel.getRxAddress(), channel.getRxPort());
@@ -163,6 +154,8 @@ public class DataManager {
                 });
 
         Globals.getEngageApplication().updateActiveConfiguration();
+
+        mission.removeMissionControlChannelFromList();
     }
 
     public void toggleMute(String groupId, boolean isSpeakerOn) {

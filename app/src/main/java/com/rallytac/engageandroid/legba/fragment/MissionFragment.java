@@ -649,16 +649,19 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
 
     @Override
     public void onGroupDiscover(String groupId, GroupDiscoveryInfo groupDiscoveryInfo) {
+        Timber.i("onGroupDiscover");
         vm.addChannelUser(groupDiscoveryInfo);
     }
 
     @Override
     public void onGroupRediscover(String groupId, GroupDiscoveryInfo groupDiscoveryInfo) {
+        Timber.i("onGroupRediscover");
         vm.addChannelUser(groupDiscoveryInfo);
     }
 
     @Override
     public void onGroupUndiscover(String groupId, GroupDiscoveryInfo groupDiscoveryInfo) {
+        Timber.i("onGroupUndiscover");
         vm.removeChannelUser(groupDiscoveryInfo);
     }
 }
