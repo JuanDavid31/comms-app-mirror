@@ -6,27 +6,29 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.rallytac.engage.engine.Engine;
 import com.rallytac.engageandroid.Constants;
 import com.rallytac.engageandroid.DatabaseGroup;
 import com.rallytac.engageandroid.DatabaseMission;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.MissionDatabase;
-import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.Utils;
+import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
+import com.rallytac.engageandroid.legba.data.engagedto.EngageClasses;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import okio.BufferedSource;
 import okio.Okio;
 import timber.log.Timber;
+
+import static com.rallytac.engageandroid.legba.data.engagedto.EngageClasses.*;
+import static com.rallytac.engageandroid.legba.data.engagedto.EngageClasses.TxData.PRESENCE_TYPE;
 
 public class DataManager {
 
@@ -54,10 +56,20 @@ public class DataManager {
             String jsonMissions = source.readUtf8();
             Type listType = new TypeToken<List<Mission>>() {
             }.getType();
-            List missions = new GsonBuilder()
+            List<Mission> missions = new GsonBuilder()
                     .create()
                     .fromJson(jsonMissions, listType);
+
             loadMissionsOnEgageEngine(missions);
+
+            missions.forEach(mission -> {
+                List<Channel> audioChannels = mission.getChannels()
+                        .stream()
+                        .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
+                        .collect(Collectors.toList());
+                mission.setChannels(audioChannels);
+            });
+
             return missions;
 
         } catch (IOException e) {
@@ -80,8 +92,8 @@ public class DataManager {
             DatabaseMission newMission = new DatabaseMission();
             newMission._id = mission.getId();
             newMission._name = mission.getName();
-            newMission._rpAddress = context.getString(R.string.default_rallypoint);
-            newMission._rpPort = Utils.intOpt(context.getString(R.string.default_rallypoint_port), Constants.DEF_RP_PORT);
+            newMission._rpAddress = mission.getRpAddress(); //context.getString(R.string.default_rallypoint);
+            newMission._rpPort = mission.getRpPort(); //Utils.intOpt(context.getString(R.string.default_rallypoint_port), Constants.DEF_RP_PORT);
             newMission._mcId = Utils.generateGroupId();
             newMission._mcCryptoPassword = Utils.generateCryptoPassword();
             newMission._groups = getGroupsByMission(mission);
@@ -102,13 +114,13 @@ public class DataManager {
                 .map(channel -> {
                     DatabaseGroup group = new DatabaseGroup(channel.getName());
                     group._id = channel.getId();
-                    group._txFramingMs = Constants.DEFAULT_TX_FRAMING_MS;
-                    group._txCodecId = Constants.DEFAULT_ENCODER;
-                    group._maxTxSecs = Constants.DEFAULT_TX_SECS;
-                    group._txAddress = "239.42.43.1";
-                    group._txPort = 49000;
-                    group._txAddress = "239.42.43.1";
-                    group._rxPort = 49000;
+                    group._txFramingMs = channel.getTxFramingMs(); //Constants.DEFAULT_TX_FRAMING_MS;
+                    group._txCodecId = channel.getTxCodecId(); //Constants.DEFAULT_ENCODER;
+                    group._maxTxSecs = channel.getMaxTxSecs(); // Constants.DEFAULT_TX_SECS;
+                    group._txAddress = channel.getTxAddress(); // "239.42.43.1";
+                    group._txPort = channel.getTxPort(); //49000;
+                    group._rxAddress = channel.getRxAddress(); // "239.42.43.1";
+                    group._rxPort = channel.getRxPort(); //49000;
 
                     return group;
                 }).collect(Collectors.toCollection(ArrayList::new));
@@ -131,131 +143,33 @@ public class DataManager {
                 });
         updateDB();
 
-        String missionControlId = "{GCONTROL}";
-
-        String presenceTxData = new Gson().toJson(new PresenceTxData(missionControlId, "Control group"));
-        Timber.i("txData -> %s", presenceTxData);
-        String realPresenceTxData = Globals.getEngageApplication().buildFinalGroupJsonConfiguration(presenceTxData);
-        Globals.getEngageApplication().getEngine().engageCreateGroup(realPresenceTxData);
-
         mission.getChannels()
                 .forEach(channel -> {
-                    String txData = new Gson().toJson(new TxData(channel.getId(), channel.getName()));
-                    Timber.i("txData -> %s", txData);
-                    String realTxData = Globals.getEngageApplication().buildFinalGroupJsonConfiguration(txData);
-                    Globals.getEngageApplication().getEngine().engageCreateGroup(realTxData);
-                });
+                    AddressAndPort rx = new AddressAndPort(channel.getRxAddress(), channel.getRxPort());
+                    AddressAndPort tx = new AddressAndPort(channel.getTxAddress(), channel.getTxPort());
+                    TxAudio txAudio = new TxAudio(channel.getTxCodecId(), channel.getTxFramingMs(), channel.getMaxTxSecs());
+                    TxData txData = new TxData(channel.getId(),
+                            channel.getName(),
+                            channel.getEngageType() == Channel.EngageType.AUDIO ? 1 : 2,
+                            rx,
+                            tx,
+                            txAudio);
+                    String initialJsonTxData = new Gson().toJson(txData);
 
-        //"{GCONTROL}"
-        Globals.getEngageApplication().getEngine().engageJoinGroup(missionControlId);
-        mission.getChannels().forEach(channel -> Globals.getEngageApplication().getEngine().engageJoinGroup(channel.getId()));
+                    Timber.i("txData -> %s", initialJsonTxData);
+
+                    String finalTxData = Globals.getEngageApplication().buildFinalGroupJsonConfiguration(initialJsonTxData);
+                    Globals.getEngageApplication().getEngine().engageCreateGroup(finalTxData);
+                });
 
         Globals.getEngageApplication().updateActiveConfiguration();
     }
 
     public void toggleMute(String groupId, boolean isSpeakerOn) {
-        if(isSpeakerOn){
+        if (isSpeakerOn) {
             Globals.getEngageApplication().getEngine().engageUnmuteGroupRx(groupId);
-        }else{
+        } else {
             Globals.getEngageApplication().getEngine().engageMuteGroupRx(groupId);
-        }
-    }
-
-    class TxData{
-        String id;
-        String name;
-        int type = 1;
-        RxTx rx = new RxTx("");
-        RxTx tx = new RxTx("239.42.43.1");
-        TxAudio txAudio = new TxAudio();
-
-        public TxData(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        class RxTx {
-            String address = "";
-            int port = 49000;
-
-            public RxTx(String address) {
-                this.address = address;
-            }
-        }
-
-        class TxAudio {//{"encoder":25,"framingMs":60,"noHdrExt":false,"fdx":false,"maxTxSecs":120}
-            int encoder = 25;
-            int framingMs = 60;
-            boolean noHdrExt = false;
-            boolean fdx = false;
-            int maxTxSecs = 120;
-        }
-    }
-
-    class PresenceTxData{
-        String id;
-        String name;
-        int type = 2;
-        RxTx rx = new RxTx("");
-        RxTx tx = new RxTx("239.42.43.1");
-        TxAudio txAudio = new TxAudio();
-
-        public PresenceTxData(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        class RxTx {
-            String address = "";
-            int port = 49000;
-
-            public RxTx(String address) {
-                this.address = address;
-            }
-        }
-
-        class TxAudio {//{"encoder":25,"framingMs":60,"noHdrExt":false,"fdx":false,"maxTxSecs":120}
-            int encoder = 25;
-            int framingMs = 60;
-            boolean noHdrExt = false;
-            boolean fdx = false;
-            int maxTxSecs = 120;
-        }
-
-        /*"presence":{
-            "format":1,
-                    "intervalSecs":30,
-                    "forceOnAudioTransmit":false,
-                    "listenOnly":false
-        }*/
-
-        class Presence{
-            int format = 1;
-            int intervalSecs = 30;
-            boolean forceOnAudioTransmit = false;
-            boolean listenOnly = false;
-        }
-    }
-
-    public static class PresenceDescriptor{
-
-        Identity identity;
-
-        public PresenceDescriptor(String nodeId, String userId, String displayName) {
-            identity = new Identity(nodeId, userId, displayName);
-        }
-
-        class Identity{ // {"nodeId":"{e24b92dc-0531-483a-b1a4-1ee3ec3da364}","userId":"mb","displayName":"Mb","avatar":""}
-            String nodeId;
-            String userId;
-            String displayName;
-            String avatar = "";
-
-            public Identity(String nodeId, String userId, String displayName) {
-                this.nodeId = nodeId;
-                this.userId = userId;
-                this.displayName = displayName;
-            }
         }
     }
 

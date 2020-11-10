@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
+import org.greenrobot.greendao.annotation.Transient;
 
 @Entity(nameInDb = "MISSIONS")
 public class Mission implements Serializable {
@@ -19,6 +20,12 @@ public class Mission implements Serializable {
     private String id;
 
     private String name;
+
+    @Transient
+    private String rpAddress;
+
+    @Transient
+    private int rpPort;
 
     @ToMany(referencedJoinProperty = "missionId")
     private List<ChannelGroup> channelsGroups;
@@ -178,6 +185,22 @@ public class Mission implements Serializable {
             throw new DaoException("Entity is detached from DAO context");
         }
         myDao.update(this);
+    }
+
+    public String getRpAddress() {
+        return rpAddress;
+    }
+
+    public void setRpAddress(String rpAddress) {
+        this.rpAddress = rpAddress;
+    }
+
+    public int getRpPort() {
+        return rpPort;
+    }
+
+    public void setRpPort(int rpPort) {
+        this.rpPort = rpPort;
     }
 
     /** called by internal mechanisms, do not call yourself. */

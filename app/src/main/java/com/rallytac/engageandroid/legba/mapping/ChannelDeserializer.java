@@ -15,6 +15,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.rallytac.engageandroid.legba.data.dto.Channel.*;
+import static com.rallytac.engageandroid.legba.data.dto.Channel.EngageType.AUDIO;
+import static com.rallytac.engageandroid.legba.data.dto.Channel.EngageType.PRESENCE;
+import static com.rallytac.engageandroid.legba.data.engagedto.EngageClasses.TxData.PRESENCE_TYPE;
 
 public class ChannelDeserializer implements JsonDeserializer<Channel> {
 
@@ -27,10 +30,18 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
         JsonElement nameJsonElement = jsonObject.get("name");
         JsonElement typeJsonElement = jsonObject.get("type");
         JsonElement imageJsonElement = jsonObject.get("image");
-        JsonElement statusJsonElement = jsonObject.get("status");
+        JsonElement engageTypeJsonElement = jsonObject.get("engageType");
+        JsonElement txFramingMsJsonElement = jsonObject.get("txFramingMs");
+        JsonElement txCodecIdJsonElement = jsonObject.get("txCodecId");
+        JsonElement maxTxSecsJsonElement = jsonObject.get("maxTxSecs");
+        JsonElement txAddressJsonElement = jsonObject.get("txAddress");
+        JsonElement txPortJsonElement = jsonObject.get("txPort");
+        JsonElement rxAddressJsonElement = jsonObject.get("rxAddress");
+        JsonElement rxPortJsonElement = jsonObject.get("rxPort");
 
         JsonElement subChannelsAndMembers = jsonObject.get("subChannelsAndMembers");
-        Type listType = new TypeToken<List<ChannelElement>>() {}.getType();
+        Type listType = new TypeToken<List<ChannelElement>>() {
+        }.getType();
         List<ChannelElement> channelElements = new Gson().fromJson(subChannelsAndMembers, listType);
 
         return new Channel( //TODO: Create a proper constructor without innecesary boilerplate
@@ -38,22 +49,25 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
                 missionIdJsonElement != null ? missionIdJsonElement.getAsString() : "",
                 nameJsonElement != null ? nameJsonElement.getAsString() : "",
                 imageJsonElement != null ? imageJsonElement.getAsString() : "",
-                statusJsonElement != null ? statusJsonElement.getAsBoolean() : false,
-                true,
-                false,
-                "Alias",
-                "Display",
                 getChannelType(typeJsonElement != null ? typeJsonElement.getAsString() : ""),
+                txFramingMsJsonElement != null ? txFramingMsJsonElement.getAsInt() : 30,
+                txCodecIdJsonElement != null ? txCodecIdJsonElement.getAsInt() : 25,
+                maxTxSecsJsonElement != null ? maxTxSecsJsonElement.getAsInt() : 120,
+                txAddressJsonElement != null ? txAddressJsonElement.getAsString() : "239.42.43.1",
+                txPortJsonElement != null ? txPortJsonElement.getAsInt() : 49000,
+                rxAddressJsonElement != null ? rxAddressJsonElement.getAsString() : "239.42.43.1",
+                rxPortJsonElement != null ? rxPortJsonElement.getAsInt() : 49000,
+                getEngageType(engageTypeJsonElement != null ? engageTypeJsonElement.getAsInt() : 1),
                 channelElements != null ? channelElements : Collections.emptyList()
         );
     }
 
-    private ChannelType getChannelType(String stringType){
+    private ChannelType getChannelType(String stringType) {
         final String PRIMARY_TYPE = "primary";
         final String PRIORITARY_TYPE = "priority";
         final String RADIO_TYPE = "radio";
 
-        switch (stringType){
+        switch (stringType) {
             case PRIMARY_TYPE:
                 return ChannelType.PRIMARY;
             case PRIORITARY_TYPE:
@@ -65,5 +79,11 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
         }
     }
 
-
+    private EngageType getEngageType(int engageType) {
+        if (engageType == 1) {
+            return AUDIO;
+        } else {
+            return PRESENCE;
+        }
+    }
 }
