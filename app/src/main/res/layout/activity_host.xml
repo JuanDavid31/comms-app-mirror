@@ -86,7 +86,7 @@
                                 tools:visibility="visible" />
 
                         <ImageButton
-                                android:id="@+id/edit_current_channel_group_button"
+                                android:id="@+id/show_create_edit_channels_group_button"
                                 android:layout_width="23dp"
                                 android:layout_height="23dp"
                                 android:background="@android:color/transparent"
@@ -380,8 +380,14 @@
                     <LinearLayout
                             android:id="@+id/channel_group_layout_top"
                             android:layout_width="match_parent"
+<<<<<<< Updated upstream
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
+=======
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintTop_toTopOf="parent">
+>>>>>>> Stashed changes
 
                         <EditText
                                 android:id="@+id/channel_group_name_text"
@@ -444,7 +450,7 @@
                                 tools:visibility="visible" />
 
                         <ImageButton
-                                android:id="@+id/close_create_edit_channels_view_button"
+                                android:id="@+id/close_create_edit_channels_group_view_button"
                                 android:layout_width="40dp"
                                 android:layout_height="36.3dp"
                                 android:layout_marginStart="8.3dp"

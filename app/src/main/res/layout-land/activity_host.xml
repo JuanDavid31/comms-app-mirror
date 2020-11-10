@@ -87,7 +87,7 @@
                                 tools:visibility="visible" />
 
                         <ImageView
-                                android:id="@+id/edit_current_channel_group_button"
+                                android:id="@+id/show_create_edit_channels_group_button"
                                 android:layout_width="23dp"
                                 android:layout_height="23dp"
                                 android:background="@android:color/transparent"
@@ -421,7 +421,7 @@
                             android:src="@drawable/ic_trash" />
 
                         <ImageButton
-                            android:id="@+id/close_create_edit_channels_view_button"
+                            android:id="@+id/close_create_edit_channels_group_view_button"
                             android:layout_width="40dp"
                             android:layout_height="36dp"
                             android:layout_marginStart="9.5dp"

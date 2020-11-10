@@ -140,7 +140,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         activity.binding.toolbarTitleText.setVisibility(View.VISIBLE);
         activity.binding.toolbarTitleText.setText(vm.getMission().getName());
         activity.binding.fragmentDescription.setVisibility(View.VISIBLE);
-        activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
+        activity.binding.showCreateEditChannelsGroupButton.setVisibility(View.VISIBLE);
         activity.binding.fragmentDescription.setTextColor(this.getResources().getColor(R.color.paleRed));
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
@@ -250,7 +250,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                 updateDots(position);
 
                 if (position < channelsGroupsSize) {
-                    activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
+                    activity.binding.showCreateEditChannelsGroupButton.setVisibility(View.VISIBLE);
                     String name = vm.getChannelsGroup().get(position).getName();
                     activity.binding.fragmentDescription.setText(name);
                     if (speak) {
@@ -258,7 +258,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                     }
                 } else {
                     activity.binding.fragmentDescription.setText(getString(R.string.add_title));
-                    activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
+                    activity.binding.showCreateEditChannelsGroupButton.setVisibility(View.GONE);
                 }
 
                 updateChannelListAdapter();
@@ -380,8 +380,8 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         activity.binding.channelsRecycler.setHasFixedSize(true);
         activity.binding.channelsRecycler.setAdapter(channelListAdapter);
 
-        activity.binding.editCurrentChannelGroupButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility());
-        activity.binding.closeCreateEditChannelsViewButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility());
+        activity.binding.showCreateEditChannelsGroupButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility());
+        activity.binding.closeCreateEditChannelsGroupViewButton.setOnClickListener(view -> toggleCreateEditChannelsGroupLayoutvisibility());
         activity.binding.createEditChannelsGroupButton.setOnClickListener(view -> updateCurrentChannelsGroup());
         activity.binding.deleteChannelViewButton.setOnClickListener(view -> toggleLayoutVisiblity(activity.binding.removeChannelGroupLayout));
         activity.binding.removeChannelGroupNoOptionButton.setOnClickListener(view -> toggleLayoutVisiblity(activity.binding.removeChannelGroupLayout));
@@ -465,7 +465,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
 
         activity.binding.fragmentDescription.setText(newName);
         voiceRecognition.speak(newName);
-        activity.binding.editCurrentChannelGroupButton.setVisibility(View.VISIBLE);
+        activity.binding.showCreateEditChannelsGroupButton.setVisibility(View.VISIBLE);
     }
 
     private void hideCreateEditChannelsGroupLayoutAndUpdateUi() {
@@ -526,7 +526,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         if (channelGroupSize) {
             lastPage = true;
             activity.binding.fragmentDescription.setText("");
-            activity.binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
+            activity.binding.showCreateEditChannelsGroupButton.setVisibility(View.GONE);
         } else {
             activity.binding.fragmentDescription.setText(vm.getChannelsGroup().get(currentPage).getName());
         }
