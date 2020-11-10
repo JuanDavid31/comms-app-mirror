@@ -261,7 +261,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                     activity.binding.showCreateEditChannelsGroupButton.setVisibility(View.GONE);
                 }
 
-                updateChannelListAdapter();
+                //updateChannelListAdapter(); // Prevent a visual bug bug creates another problem when the storage is clean and the user tries to create a new channel group.
             }
         });
     }
@@ -483,6 +483,8 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         toggleLayoutVisiblity(binding.icMicCard);
         toggleLayoutVisiblity(binding.radioChannelsSlidingupLayout);
         toggleLayoutVisiblity(activity.binding.channelGroupLayout);
+
+        updateChannelListAdapter();
     }
 
     public void setupCreateEditChannelsGroupButton(boolean areThereActiveChannels) {

@@ -380,14 +380,9 @@
                     <LinearLayout
                             android:id="@+id/channel_group_layout_top"
                             android:layout_width="match_parent"
-<<<<<<< Updated upstream
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
-=======
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             app:layout_constraintTop_toTopOf="parent">
->>>>>>> Stashed changes
 
                         <EditText
                                 android:id="@+id/channel_group_name_text"
