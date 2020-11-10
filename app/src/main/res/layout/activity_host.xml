@@ -380,7 +380,7 @@
                     <LinearLayout
                             android:id="@+id/channel_group_layout_top"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:orientation="horizontal">
 
                         <EditText
@@ -464,32 +464,33 @@
                     </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/channels_recycler"
-                            android:layout_width="306.8dp"
-                            android:layout_height="461dp"
-                            android:orientation="vertical"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.476"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/channel_group_layout_top"
-                            app:layout_constraintVertical_bias="0.0"
-                            tools:itemCount="7"
-                            tools:listitem="@layout/channel_group_item"
-                            tools:visibility="gone" />
+                        android:id="@+id/channels_recycler"
+                        android:layout_width="306.8dp"
+                        android:layout_height="461dp"
+                        android:layout_marginTop="57.8dp"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.476"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/channel_group_layout_top"
+                        app:layout_constraintVertical_bias="0.0"
+                        tools:itemCount="7"
+                        tools:listitem="@layout/channel_group_item"
+                        tools:visibility="gone" />
 
                     <TextView
-                            android:id="@+id/define_a_channel_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Define a channel for the mission"
-                            android:visibility="gone"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/channel_group_layout_top"
-                            tools:visibility="visible" />
+                        android:id="@+id/define_a_channel_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Define a channel for the mission"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/channel_group_layout_top"
+                        tools:visibility="visible" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
