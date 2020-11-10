@@ -16,12 +16,15 @@ import org.greenrobot.greendao.converter.PropertyConverter;
 
 import java.io.Serializable;
 import java.util.List;
+
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
 
 @Entity(nameInDb = "CHANNEL")
 @JsonAdapter(ChannelDeserializer.class)
 public class Channel implements Serializable {
+
+    public enum EngageType {AUDIO, PRESENCE}
 
     private static final long serialVersionUID = 923291192016354450L;
 
@@ -51,6 +54,29 @@ public class Channel implements Serializable {
 
     private String lastRxTime;
 
+    @Transient
+    private int txFramingMs;
+
+    @Transient
+    private int txCodecId;
+
+    @Transient
+    private int maxTxSecs;
+
+    @Transient
+    private String txAddress;
+
+    @Transient
+    private int txPort;
+
+    @Transient
+    private String rxAddress;
+
+    @Transient
+    private int rxPort;
+
+    @Transient
+    private EngageType engageType;
 
     @Convert(converter = ChannelTypeConverter.class, columnType = String.class)
     private ChannelType type;
@@ -66,11 +92,15 @@ public class Channel implements Serializable {
     @Transient
     public List<Identity> users;
 
-    /** Used to resolve relations */
+    /**
+     * Used to resolve relations
+     */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated(hash = 783605529)
     private transient ChannelDao myDao;
 
@@ -81,18 +111,40 @@ public class Channel implements Serializable {
         this.id = id;
     }
 
-    public Channel(String id, String missionId, String name, String image, boolean isActive, boolean isSpeakerOn, boolean isOnRx, String rxAlias, String lastRxDisplayName, ChannelType type, List<ChannelElement> channelElements) {
+    public Channel(String id,
+                   String missionId,
+                   String name,
+                   String image,
+                   ChannelType type,
+                   int txFramingMs,
+                   int txCodecId,
+                   int maxTxSecs,
+                   String txAddress,
+                   int txPort,
+                   String rxAddress,
+                   int rxPort,
+                   EngageType engageType,
+                   List<ChannelElement> channelElements) {
         this.id = id;
         this.missionId = missionId;
         this.name = name;
         this.image = image;
-        this.isActive = isActive;
-        this.isSpeakerOn = isSpeakerOn;
-        this.isOnRx = isOnRx;
-        this.lastRxAlias = rxAlias;
-        this.lastRxDisplayName = lastRxDisplayName;
         this.type = type;
+        this.txFramingMs = txFramingMs;
+        this.txCodecId = txCodecId;
+        this.maxTxSecs = maxTxSecs;
+        this.txAddress = txAddress;
+        this.txPort = txPort;
+        this.rxAddress = rxAddress;
+        this.rxPort = rxPort;
+        this.engageType = engageType;
         this.channelElements = channelElements;
+
+        this.isActive = false;
+        this.isSpeakerOn = true;
+        this.isOnRx = false;
+        this.lastRxAlias = "";
+        this.lastRxDisplayName = "";
     }
 
     @Generated(hash = 1644940346)
@@ -230,7 +282,9 @@ public class Channel implements Serializable {
                 '}';
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated(hash = 886780443)
     public synchronized void resetChannelElements() {
         channelElements = null;
@@ -297,13 +351,6 @@ public class Channel implements Serializable {
         this.lastRxAlias = lastRxAlias;
     }
 
-    /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 2049488309)
-    public void __setDaoSession(DaoSession daoSession) {
-        this.daoSession = daoSession;
-        myDao = daoSession != null ? daoSession.getChannelDao() : null;
-    }
-
     //ChannelElementType
     public enum ChannelType {PRIMARY, PRIORITY, RADIO}
 
@@ -318,5 +365,76 @@ public class Channel implements Serializable {
         public String convertToDatabaseValue(ChannelType entityProperty) {
             return entityProperty.name();
         }
+    }
+
+    public int getTxFramingMs() {
+        return txFramingMs;
+    }
+
+    public void setTxFramingMs(int txFramingMs) {
+        this.txFramingMs = txFramingMs;
+    }
+
+    public int getTxCodecId() {
+        return txCodecId;
+    }
+
+    public void setTxCodecId(int txCodecId) {
+        this.txCodecId = txCodecId;
+    }
+
+    public int getMaxTxSecs() {
+        return maxTxSecs;
+    }
+
+    public void setMaxTxSecs(int maxTxSecs) {
+        this.maxTxSecs = maxTxSecs;
+    }
+
+    public String getTxAddress() {
+        return txAddress;
+    }
+
+    public void setTxAddress(String txAddress) {
+        this.txAddress = txAddress;
+    }
+
+    public int getTxPort() {
+        return txPort;
+    }
+
+    public void setTxPort(int txPort) {
+        this.txPort = txPort;
+    }
+
+    public String getRxAddress() {
+        return rxAddress;
+    }
+
+    public void setRxAddress(String rxAddress) {
+        this.rxAddress = rxAddress;
+    }
+
+    public int getRxPort() {
+        return rxPort;
+    }
+
+    public void setRxPort(int rxPort) {
+        this.rxPort = rxPort;
+    }
+
+    public EngageType getEngageType() {
+        return engageType;
+    }
+
+    public void setEngageType(EngageType engageType) {
+        this.engageType = engageType;
+    }
+
+    /** called by internal mechanisms, do not call yourself. */
+    @Generated(hash = 2049488309)
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getChannelDao() : null;
     }
 }

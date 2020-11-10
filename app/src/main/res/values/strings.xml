@@ -670,6 +670,7 @@
     <string name="no_json_to_view">No JSON to view</string>
     <string name="json_is_invalid">JSON is invalid</string>
     <string name="legba_version">Legba V1.0.0</string>
+    <string name="add_title">Add title</string>
 
     <!-- Navigation Drawer -->
 

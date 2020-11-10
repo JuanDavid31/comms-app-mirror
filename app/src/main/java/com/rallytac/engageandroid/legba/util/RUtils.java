@@ -22,4 +22,20 @@ public class RUtils {
                 return android.R.color.transparent;
         }
     }
+
+    public static int getImageNFCActionResource(String imageName) {
+        if(imageName == null)return android.R.color.transparent;
+        switch (imageName){
+            case "btn1":
+                return R.mipmap.nfc_action_copy_5;
+            case "btn2":
+                return R.mipmap.nfc_action_copy_6;
+            case "btn3":
+                return R.mipmap.nfc_action_copy_7;
+            case "btn4":
+                return R.mipmap.nfc_action_copy_8;
+            default:
+                return android.R.color.transparent;
+        }
+    }
 }

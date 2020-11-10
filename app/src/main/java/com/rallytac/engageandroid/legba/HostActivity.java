@@ -126,7 +126,7 @@ public class HostActivity extends AppCompatActivity {
             binding.logoImage.setVisibility(View.GONE);
             binding.toolbarTitleText.setVisibility(View.GONE);
             binding.fragmentDescription.setVisibility(View.GONE);
-            binding.editCurrentChannelGroupButton.setVisibility(View.GONE);
+            binding.showCreateEditChannelsGroupButton.setVisibility(View.GONE);
         });
         setHeaderLayoutNavigationView();
     }

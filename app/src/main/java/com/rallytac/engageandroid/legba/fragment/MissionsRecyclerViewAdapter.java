@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
@@ -24,8 +23,6 @@ import com.rallytac.engageandroid.legba.data.dto.Mission;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import timber.log.Timber;
 
 import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
@@ -59,11 +56,13 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Mission currentMission = missions.get(position);
 
-        holder.root.setOnClickListener(view -> {
+        holder.missionLayout.setOnClickListener(view -> {
             NavHostFragment.findNavController(fragment)
                 .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionFragment(currentMission));
             DataManager.getInstance(context).switchToMissionOnEngageEngine(currentMission);
         });
+
+
 
         holder.missionName.setText(currentMission.getName());
         holder.channelsNumber.setText(String.format("%s Channels", currentMission.getChannels().size()));
@@ -135,14 +134,14 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        private View root;
+        private View missionLayout;
         private TextView missionName;
         private TextView channelsNumber;
         private LinearLayout channels;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.root = itemView;
+            missionLayout = itemView.findViewById(R.id.mission_layout);
             missionName = itemView.findViewById(R.id.mission_name_text);
             channelsNumber = itemView.findViewById(R.id.mission_channels_number);
             channels = itemView.findViewById(R.id.channels_list_view);

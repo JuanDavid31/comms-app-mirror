@@ -50,6 +50,7 @@ import com.rallytac.engageandroid.Biometrics.RandomHumanBiometricGenerator;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.DaoMaster;
 import com.rallytac.engageandroid.legba.data.dto.DaoSession;
+import com.rallytac.engageandroid.legba.data.engagedto.EngageClasses;
 import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo;
 
 import org.greenrobot.greendao.database.Database;
@@ -2475,79 +2476,23 @@ public class EngageApplication
 
     @Override
     public void onGroupCreated(final String id, final String eventExtraJson) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                logEvent(Analytics.GROUP_CREATED);
-
-                GroupDescriptor gd = getGroup(id);
-                if (gd == null) {
-                    Log.e(TAG, "onGroupCreated: cannot find group id='" + id + "'");
-                    return;
-                }
-
-                Log.d(TAG, "onGroupCreated: id='" + id + "', n='" + gd.name + "'");
-
-                gd.resetState();
-                gd.created = true;
-                gd.createError = false;
-                gd.joined = false;
-                gd.joinError = false;
-                setGroupConnectionState(id, false, false, false);
-
-                notifyGroupUiListeners(gd);
-            }
+        runOnUiThread(() -> {
+            Timber.i("onGroupCreated %s", id);
+            Globals.getEngageApplication().getEngine().engageJoinGroup(id);
         });
     }
 
     @Override
     public void onGroupCreateFailed(final String id, final String eventExtraJson) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                logEvent(Analytics.GROUP_CREATE_FAILED);
-
-                GroupDescriptor gd = getGroup(id);
-                if (gd == null) {
-                    Log.e(TAG, "onGroupCreateFailed: cannot find group id='" + id + "'");
-                    return;
-                }
-
-                Log.d(TAG, "onGroupCreateFailed: id='" + id + "', n='" + gd.name + "'");
-
-                gd.resetState();
-                gd.created = false;
-                gd.createError = true;
-
-                notifyGroupUiListeners(gd);
-            }
+        runOnUiThread(() -> {
+            Timber.i("onGroupCreatedFailed %s", id);
         });
     }
 
     @Override
     public void onGroupDeleted(final String id, final String eventExtraJson) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                logEvent(Analytics.GROUP_DELETED);
-
-                GroupDescriptor gd = getGroup(id);
-                if (gd == null) {
-                    Log.e(TAG, "onGroupDeleted: cannot find group id='" + id + "'");
-                    return;
-                }
-
-                Log.d(TAG, "onGroupDeleted: id='" + id + "', n='" + gd.name + "'");
-
-                gd.resetState();
-                gd.created = false;
-                gd.createError = false;
-                gd.joined = false;
-                gd.joinError = false;
-                eraseGroupConnectionState(id);
-
-                notifyGroupUiListeners(gd);
-            }
+        runOnUiThread(() -> {
+            Timber.i(TAG, "onGroupDeleted %s", id);
         });
     }
 
@@ -2557,14 +2502,14 @@ public class EngageApplication
 
             String missionControlId = "{GCONTROL}";
 
-            Timber.i("onGroupConnected con id %s ", id);
+            Timber.i("onGroupConnected id -> %s ", id);
 
-            if (!id.equals(missionControlId)){
+            if (!id.equals(missionControlId)) {
                 return;
             }
 
-            DataManager.PresenceDescriptor presenceDescriptor =
-                    new DataManager.PresenceDescriptor(String.format("{USER-%s}", new Random().nextInt(10 + 1)), //random number from 0 to 10
+            EngageClasses.PresenceDescriptor presenceDescriptor =
+                    new EngageClasses.PresenceDescriptor(String.format("{USER-%s}", new Random().nextInt(10 + 1)), //random number from 0 to 10
                             Globals.getEngageApplication().getActiveConfiguration().getUserId(),
                             Globals.getEngageApplication().getActiveConfiguration().getUserDisplayName());
 
@@ -2572,15 +2517,20 @@ public class EngageApplication
 
             Timber.i("Updating presence descriptor %s", id);
             Globals.getEngageApplication().getEngine().engageUpdatePresenceDescriptor(missionControlId, json, 1);
-            /*
 
+        });
+    }
+
+    @Override
+    public void onGroupConnectFailed(final String id, final String eventExtraJson) {
+        runOnUiThread(() -> {
             GroupDescriptor gd = getGroup(id);
             if (gd == null) {
-                Log.e(TAG, "onGroupConnected: cannot find group id='" + id + "'");
+                Log.e(TAG, "onGroupConnectFailed: cannot find group id='" + id + "'");
                 return;
             }
 
-            Log.d(TAG, "onGroupConnected: id='" + id + "', n='" + gd.name + "', x=" + eventExtraJson);
+            Log.d(TAG, "onGroupConnectFailed: id='" + id + "', n='" + gd.name + "', x=" + eventExtraJson);
 
             try {
                 if (!Utils.isEmptyString(eventExtraJson)) {
@@ -2592,175 +2542,106 @@ public class EngageApplication
                         Engine.ConnectionType ct = Engine.ConnectionType.fromInt(gcd.optInt(Engine.JsonFields.GroupConnectionDetail.connectionType));
                         if (ct == Engine.ConnectionType.ipMulticast) {
                             if (gcd.optBoolean(Engine.JsonFields.GroupConnectionDetail.asFailover, false)) {
-                                logEvent(Analytics.GROUP_CONNECTED_MC_FAILOVER);
+                                logEvent(Analytics.GROUP_CONNECT_FAILED_MC_FAILOVER);
                             } else {
-                                logEvent(Analytics.GROUP_CONNECTED_MC);
+                                logEvent(Analytics.GROUP_CONNECT_FAILED_MC);
                             }
 
-                            gts.hasMulticastConnection = true;
+                            gts.hasMulticastConnection = false;
                         } else if (ct == Engine.ConnectionType.rallypoint) {
-                            logEvent(Analytics.GROUP_CONNECTED_RP);
-                            gts.hasRpConnection = true;
+                            logEvent(Analytics.GROUP_CONNECT_FAILED_RP);
+                            gts.hasRpConnection = false;
                         }
 
-                        gts.operatingInMulticastFailover = gcd.optBoolean(Engine.JsonFields.GroupConnectionDetail.asFailover, false);
+                        gts.operatingInMulticastFailover = false;
 
                         setGroupConnectionState(id, gts);
                     } else {
-                        logEvent(Analytics.GROUP_CONNECTED_OTHER);
-                    }
-                } else {
-                    logEvent(Analytics.GROUP_CONNECTED_OTHER);
-                }
-            } catch (Exception e) {
-                logEvent(Analytics.GROUP_CONNECTED_OTHER);
-
-                // If we have no specializer, assume the following (the Engine should always tell us though)
-                setGroupConnectionState(id, true, false, true);
-            }
-
-            // If we get connected to a presence group ...
-            if (gd.type == GroupDescriptor.Type.gtPresence) {
-                // TODO: If we have multiple presence groups, this will generate extra traffic
-
-                // Build whatever PD we currently have and send it
-                sendUpdatedPd(buildPd());
-            }
-
-            notifyGroupUiListeners(gd);*/
-        });
-    }
-
-    @Override
-    public void onGroupConnectFailed(final String id, final String eventExtraJson) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                GroupDescriptor gd = getGroup(id);
-                if (gd == null) {
-                    Log.e(TAG, "onGroupConnectFailed: cannot find group id='" + id + "'");
-                    return;
-                }
-
-                Log.d(TAG, "onGroupConnectFailed: id='" + id + "', n='" + gd.name + "', x=" + eventExtraJson);
-
-                try {
-                    if (!Utils.isEmptyString(eventExtraJson)) {
-                        JSONObject eej = new JSONObject(eventExtraJson);
-                        JSONObject gcd = eej.optJSONObject(Engine.JsonFields.GroupConnectionDetail.objectName);
-                        if (gcd != null) {
-                            GroupConnectionTrackerInfo gts = getGroupConnectionState(id);
-
-                            Engine.ConnectionType ct = Engine.ConnectionType.fromInt(gcd.optInt(Engine.JsonFields.GroupConnectionDetail.connectionType));
-                            if (ct == Engine.ConnectionType.ipMulticast) {
-                                if (gcd.optBoolean(Engine.JsonFields.GroupConnectionDetail.asFailover, false)) {
-                                    logEvent(Analytics.GROUP_CONNECT_FAILED_MC_FAILOVER);
-                                } else {
-                                    logEvent(Analytics.GROUP_CONNECT_FAILED_MC);
-                                }
-
-                                gts.hasMulticastConnection = false;
-                            } else if (ct == Engine.ConnectionType.rallypoint) {
-                                logEvent(Analytics.GROUP_CONNECT_FAILED_RP);
-                                gts.hasRpConnection = false;
-                            }
-
-                            gts.operatingInMulticastFailover = false;
-
-                            setGroupConnectionState(id, gts);
-                        } else {
-                            logEvent(Analytics.GROUP_CONNECT_FAILED_OTHER);
-                        }
-                    } else {
                         logEvent(Analytics.GROUP_CONNECT_FAILED_OTHER);
                     }
-                } catch (Exception e) {
+                } else {
                     logEvent(Analytics.GROUP_CONNECT_FAILED_OTHER);
-
-                    // If we have no specializer, assume the following (the Engine should always tell us though)
-                    eraseGroupConnectionState(id);
                 }
+            } catch (Exception e) {
+                logEvent(Analytics.GROUP_CONNECT_FAILED_OTHER);
 
-                notifyGroupUiListeners(gd);
+                // If we have no specializer, assume the following (the Engine should always tell us though)
+                eraseGroupConnectionState(id);
             }
+
+            notifyGroupUiListeners(gd);
         });
     }
 
     @Override
     public void onGroupDisconnected(final String id, final String eventExtraJson) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                GroupDescriptor gd = getGroup(id);
-                if (gd == null) {
-                    Log.e(TAG, "onGroupDisconnected: cannot find group id='" + id + "'");
-                    return;
-                }
+        runOnUiThread(() -> {
+            GroupDescriptor gd = getGroup(id);
+            if (gd == null) {
+                Log.e(TAG, "onGroupDisconnected: cannot find group id='" + id + "'");
+                return;
+            }
 
-                Log.d(TAG, "onGroupDisconnected: id='" + id + "', n='" + gd.name + "', x=" + eventExtraJson);
+            Log.d(TAG, "onGroupDisconnected: id='" + id + "', n='" + gd.name + "', x=" + eventExtraJson);
 
-                try {
-                    if (!Utils.isEmptyString(eventExtraJson)) {
-                        JSONObject eej = new JSONObject(eventExtraJson);
-                        JSONObject gcd = eej.optJSONObject(Engine.JsonFields.GroupConnectionDetail.objectName);
-                        if (gcd != null) {
-                            GroupConnectionTrackerInfo gts = getGroupConnectionState(id);
+            try {
+                if (!Utils.isEmptyString(eventExtraJson)) {
+                    JSONObject eej = new JSONObject(eventExtraJson);
+                    JSONObject gcd = eej.optJSONObject(Engine.JsonFields.GroupConnectionDetail.objectName);
+                    if (gcd != null) {
+                        GroupConnectionTrackerInfo gts = getGroupConnectionState(id);
 
-                            Engine.ConnectionType ct = Engine.ConnectionType.fromInt(gcd.optInt(Engine.JsonFields.GroupConnectionDetail.connectionType));
-                            if (ct == Engine.ConnectionType.ipMulticast) {
-                                if (gcd.optBoolean(Engine.JsonFields.GroupConnectionDetail.asFailover, false)) {
-                                    logEvent(Analytics.GROUP_DISCONNECTED_MC_FAILOVER);
-                                } else {
-                                    logEvent(Analytics.GROUP_DISCONNECTED_MC);
-                                }
-
-                                gts.hasMulticastConnection = false;
-                            } else if (ct == Engine.ConnectionType.rallypoint) {
-                                logEvent(Analytics.GROUP_DISCONNECTED_RP);
-                                gts.hasRpConnection = false;
+                        Engine.ConnectionType ct = Engine.ConnectionType.fromInt(gcd.optInt(Engine.JsonFields.GroupConnectionDetail.connectionType));
+                        if (ct == Engine.ConnectionType.ipMulticast) {
+                            if (gcd.optBoolean(Engine.JsonFields.GroupConnectionDetail.asFailover, false)) {
+                                logEvent(Analytics.GROUP_DISCONNECTED_MC_FAILOVER);
+                            } else {
+                                logEvent(Analytics.GROUP_DISCONNECTED_MC);
                             }
 
-                            gts.operatingInMulticastFailover = false;
-
-                            setGroupConnectionState(id, gts);
-                        } else {
-                            logEvent(Analytics.GROUP_DISCONNECTED_OTHER);
+                            gts.hasMulticastConnection = false;
+                        } else if (ct == Engine.ConnectionType.rallypoint) {
+                            logEvent(Analytics.GROUP_DISCONNECTED_RP);
+                            gts.hasRpConnection = false;
                         }
+
+                        gts.operatingInMulticastFailover = false;
+
+                        setGroupConnectionState(id, gts);
                     } else {
                         logEvent(Analytics.GROUP_DISCONNECTED_OTHER);
                     }
-                } catch (Exception e) {
+                } else {
                     logEvent(Analytics.GROUP_DISCONNECTED_OTHER);
-
-                    // If we have no specializer, assume the following (the Engine should always tell us though)
-                    setGroupConnectionState(id, false, false, false);
                 }
+            } catch (Exception e) {
+                logEvent(Analytics.GROUP_DISCONNECTED_OTHER);
 
-                notifyGroupUiListeners(gd);
+                // If we have no specializer, assume the following (the Engine should always tell us though)
+                setGroupConnectionState(id, false, false, false);
             }
+
+            notifyGroupUiListeners(gd);
         });
     }
 
     @Override
     public void onGroupJoined(final String id, final String eventExtraJson) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                logEvent(Analytics.GROUP_JOINED);
+        runOnUiThread(() -> {
+            logEvent(Analytics.GROUP_JOINED);
 
-                GroupDescriptor gd = getGroup(id);
-                if (gd == null) {
-                    Log.e(TAG, "onGroupJoined: cannot find group id='" + id + "'");
-                    return;
-                }
-
-                Log.d(TAG, "onGroupJoined: id='" + id + "', n='" + gd.name + "'");
-
-                gd.joined = true;
-                gd.joinError = false;
-
-                notifyGroupUiListeners(gd);
+            GroupDescriptor gd = getGroup(id);
+            if (gd == null) {
+                Log.e(TAG, "onGroupJoined: cannot find group id='" + id + "'");
+                return;
             }
+
+            Log.d(TAG, "onGroupJoined: id='" + id + "', n='" + gd.name + "'");
+
+            gd.joined = true;
+            gd.joinError = false;
+
+            notifyGroupUiListeners(gd);
         });
     }
 
@@ -3358,9 +3239,6 @@ public class EngageApplication
             Globals.groupDiscoveryListener.onGroupRediscover(id, groupDiscoveryInfo);
 
 
-
-
-
             //logEvent(Analytics.GROUP_NODE_REDISCOVERED);
 
             /*GroupDescriptor gd = getGroup(id);
@@ -3390,7 +3268,6 @@ public class EngageApplication
         runOnUiThread(() -> {
 
             Timber.i("onGroupNodeUndiscovered %s nodeJson %s eventExtraJson %s", id, nodeJson, eventExtraJson);
-
 
 
             //{"announceOnReceive":false,"comment":"","connectivity":null,"custom":"","disposition":0,
