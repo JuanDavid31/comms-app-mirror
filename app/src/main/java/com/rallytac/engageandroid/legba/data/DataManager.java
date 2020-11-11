@@ -14,12 +14,14 @@ import com.rallytac.engageandroid.MissionDatabase;
 import com.rallytac.engageandroid.Utils;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
+import com.rallytac.engageandroid.legba.data.engagedto.EngageClasses;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import okio.BufferedSource;
@@ -31,18 +33,16 @@ import static com.rallytac.engageandroid.legba.data.engagedto.EngageClasses.*;
 public class DataManager {
 
     private final static String MISSIONS_PATH = "mock-data/missions.json";
-    private Context context;
-    private MissionDatabase db;
+    private final MissionDatabase db;
     private static DataManager instance;
 
-    private DataManager(Context context) {
-        this.context = context;
+    private DataManager() {
         db = MissionDatabase.load(Globals.getSharedPreferences(), Constants.MISSION_DATABASE_NAME);
     }
 
-    public static DataManager getInstance(Context context) {
+    public static DataManager getInstance() {
         if (instance == null) {
-            instance = new DataManager(context);
+            instance = new DataManager();
         }
         return instance;
     }
@@ -172,5 +172,17 @@ public class DataManager {
 
     public void endTx(String... groupIds) {
         Globals.getEngageApplication().endTxLega(groupIds);
+    }
+
+    public void updatePresenceDescriptor(){
+        EngageClasses.PresenceDescriptor presenceDescriptor =
+                new EngageClasses.PresenceDescriptor("{USER-A}",
+                        Globals.getSharedPreferences().getString("user_id", ""),
+                        Globals.getSharedPreferences().getString("user_displayName", ""));
+
+        String json = new Gson().toJson(presenceDescriptor);
+
+        Timber.i("Updating presence descriptor %s", Globals.MISSION_CONTROL_ID);
+        Globals.getEngageApplication().getEngine().engageUpdatePresenceDescriptor(Globals.MISSION_CONTROL_ID, json, 1);
     }
 }

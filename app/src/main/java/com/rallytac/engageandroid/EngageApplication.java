@@ -66,6 +66,7 @@ import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.Timer;
@@ -2500,24 +2501,13 @@ public class EngageApplication
     public void onGroupConnected(final String id, final String eventExtraJson) {
         runOnUiThread(() -> {
 
-            String missionControlId = "{GCONTROL}";
-
             Timber.i("onGroupConnected id -> %s ", id);
 
-            if (!id.equals(missionControlId)) {
+            if (!id.equals(Globals.MISSION_CONTROL_ID)) {
                 return;
             }
 
-            EngageClasses.PresenceDescriptor presenceDescriptor =
-                    new EngageClasses.PresenceDescriptor(String.format("{USER-%s}", new Random().nextInt(10 + 1)), //random number from 0 to 10
-                            Globals.getEngageApplication().getActiveConfiguration().getUserId(),
-                            Globals.getEngageApplication().getActiveConfiguration().getUserDisplayName());
-
-            String json = new Gson().toJson(presenceDescriptor);
-
-            Timber.i("Updating presence descriptor %s", id);
-            Globals.getEngageApplication().getEngine().engageUpdatePresenceDescriptor(missionControlId, json, 1);
-
+            DataManager.getInstance().updatePresenceDescriptor();
         });
     }
 
@@ -3237,28 +3227,6 @@ public class EngageApplication
 
             GroupDiscoveryInfo groupDiscoveryInfo = new Gson().fromJson(nodeJson, GroupDiscoveryInfo.class);
             Globals.groupDiscoveryListener.onGroupRediscover(id, groupDiscoveryInfo);
-
-
-            //logEvent(Analytics.GROUP_NODE_REDISCOVERED);
-
-            /*GroupDescriptor gd = getGroup(id);
-            if (gd == null) {
-                Log.e(TAG, "onGroupNodeRediscovered: cannot find group id='" + id + "'");
-                return;
-            }
-
-            Log.d(TAG, "onGroupNodeRediscovered: id='" + id + "', n='" + gd.name + "'");
-
-            PresenceDescriptor pd = getActiveConfiguration().processNodeDiscovered(nodeJson);
-            if (pd != null) {
-                synchronized (_presenceChangeListeners) {
-                    for (IPresenceChangeListener listener : _presenceChangeListeners) {
-                        listener.onPresenceChange(pd);
-                    }
-                }
-
-                notifyGroupUiListeners(gd);
-            }*/
         });
     }
 

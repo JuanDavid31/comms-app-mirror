@@ -42,7 +42,6 @@ import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo;
 import com.rallytac.engageandroid.legba.engage.GroupDiscoveryListener;
 import com.rallytac.engageandroid.legba.engage.RxListener;
-import com.rallytac.engageandroid.legba.util.StringUtils;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
 import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
 import com.rallytac.engageandroid.legba.viewmodel.ViewModelFactory;
@@ -229,11 +228,11 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                 binding.txImage.setVisibility(View.VISIBLE);
                 Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
                 Timber.i("Tx to %s", activeGroupIds);
-                DataManager.getInstance(context).startTx(activeGroupIds);
+                DataManager.getInstance().startTx(activeGroupIds);
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 binding.txImage.setVisibility(View.INVISIBLE);
                 Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
-                DataManager.getInstance(context).endTx(activeGroupIds);
+                DataManager.getInstance().endTx(activeGroupIds);
             }
             return true;
         });

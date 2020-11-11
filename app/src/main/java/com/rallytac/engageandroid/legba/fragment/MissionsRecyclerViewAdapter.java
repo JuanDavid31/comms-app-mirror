@@ -59,7 +59,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
         holder.missionLayout.setOnClickListener(view -> {
             NavHostFragment.findNavController(fragment)
                 .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionFragment(currentMission));
-            DataManager.getInstance(context).switchToMissionOnEngageEngine(currentMission);
+            DataManager.getInstance().switchToMissionOnEngageEngine(currentMission);
         });
 
 
