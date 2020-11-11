@@ -12,6 +12,14 @@
     <item
             android:id="@+id/history_action"
             android:icon="@drawable/ic_baseline_history_24"
+            android:iconTint="@color/pinkish_grey"
             app:showAsAction="always"
             android:title="history" />
+
+    <item
+            android:id="@+id/settings_action"
+            android:iconTint="@color/pinkish_grey"
+            android:icon="@drawable/ic_settings"
+            app:showAsAction="always"
+            android:title="Settings" />
 </menu>

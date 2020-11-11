@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.rallytac.engageandroid.R;
@@ -105,6 +106,10 @@ public class ChannelFragment extends Fragment {
             return true;
         }else if (item.getItemId() == R.id.history_action) {
             Toast.makeText(getContext(), "History pressed", Toast.LENGTH_SHORT).show();
+            return true;
+        }else if (item.getItemId() == R.id.history_action){
+            NavHostFragment.findNavController(this)
+                    .navigate(ChannelFragmentDirections.actionChannelFragmentToChannelHistoryFragment(channel));
             return true;
         }
         return super.onOptionsItemSelected(item);

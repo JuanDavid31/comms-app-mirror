@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="119dp"
+        android:layout_height="114dp"
         android:layout_marginTop="8.5dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/primary_element_box_shape"
@@ -14,7 +14,7 @@
             android:layout_width="38dp"
             android:layout_height="37.5dp"
             android:layout_marginStart="20.3dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="19dp"
             android:background="@drawable/member_caps_box_shape"
             android:elevation="5.3dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,6 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="11.5dp"
+            android:layout_marginTop="3dp"
             android:text="JOHN WAREN"
             android:textSize="15sp"
             app:layout_constraintStart_toEndOf="@+id/left_history_member_caps_layout"
@@ -51,7 +52,7 @@
             style="@style/secondaryTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="3dp"
             android:paddingEnd="4dp"
             android:text="Johnister"
             android:textColor="@color/greyish_93"
@@ -69,63 +70,74 @@
             app:layout_constraintStart_toEndOf="@+id/left_history_member_nickname_text"
             app:layout_constraintTop_toTopOf="@+id/left_history_member_nickname_text" />
 
-    <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20.3dp"
-            android:layout_marginEnd="19.3dp"
-            android:background="?selectableItemBackgroundBorderless"
-
-            android:src="@drawable/ic_round_link_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-            android:id="@+id/member_state_image"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="?selectableItemBackgroundBorderless"
-
-            android:src="@drawable/ic_mic_pending_request"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/imageButton" />
-
     <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="35dp" />
+            app:layout_constraintGuide_begin="24.5dp" />
 
     <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="42dp" />
+            app:layout_constraintGuide_begin="42.8dp" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans_light"
+            android:textColor="@color/paleRed"
+            android:layout_marginTop="25.3dp"
+            android:layout_marginEnd="19.3dp"
+            android:textSize="10.1sp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="5:05 AM" />
+
+    <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="20.3dp"
+            android:layout_marginBottom="22.5dp"
+            android:background="@drawable/ic_round_play_arrow_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    <SeekBar
+            android:layout_width="0dp"
+            android:layout_height="13.3dp"
+            android:layout_marginBottom="21.5dp"
+            android:progress="50"
+            android:thumbTint="@color/paleRed"
+            android:progressBackgroundTint="@color/white_three"
+            android:progressTint="@color/paleRed"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/textView4"
+            app:layout_constraintStart_toEndOf="@+id/imageView2" />
+
+    <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="19.3dp"
+            android:layout_marginBottom="21.5dp"
+            android:fontFamily="@font/open_sans_light"
+            android:textColor="@color/greyish_93"
+            android:textSize="10.1sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="0:30" />\
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline9"
+            android:id="@+id/guideline7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_end="17dp" />
-
-    <TextView
-            android:id="@+id/request_pending_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="23dp"
-            android:layout_marginBottom="18dp"
-            android:textSize="10.1sp"
-            android:textColor="@color/greyish_93"
-            android:visibility="invisible"
-            tools:visibility="visible"
-            android:text="request_pending"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintGuide_end="22.5dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

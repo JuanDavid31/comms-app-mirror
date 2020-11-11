@@ -53,6 +53,9 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_channelFragment_to_channelHistoryFragment"
+                app:destination="@id/channelHistoryFragment" />
     </fragment>
     <fragment
             android:id="@+id/subchannelFragment"
@@ -65,4 +68,13 @@
     <fragment
         android:id="@+id/nfcActionsFragment"
         android:name="com.rallytac.engageandroid.legba.fragment.NFCActionsFragment" />
+    <fragment
+            android:id="@+id/channelHistoryFragment"
+            android:name="com.rallytac.engageandroid.legba.fragment.ChannelHistoryFragment"
+            android:label="fragment_channel_history"
+            tools:layout="@layout/fragment_channel_history" >
+        <argument
+                android:name="channel"
+                app:argType="com.rallytac.engageandroid.legba.data.dto.Channel" />
+    </fragment>
 </navigation>

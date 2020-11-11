@@ -107,7 +107,7 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
                 layoutParams.setMarginEnd(DimUtils.convertDpToPx(fragment, 5.3));
                 newMember.setLayoutParams(layoutParams);
                 String memberCaps = getFirstLetterCapsFrom(subChannel.getMembers().get(i).getName());
-                ((TextView)newMember.findViewById(R.id.member_caps_text)).setText(memberCaps);
+                ((TextView)newMember.findViewById(R.id.left_history_member_caps_text)).setText(memberCaps);
                 subchannelViewHolder.membersLayout.addView(newMember);
             }
 
@@ -177,10 +177,10 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
 
         public MemberViewHolder(@NonNull View itemView) {
             super(itemView);
-            membersCaps = itemView.findViewById(R.id.member_caps_text);
-            name = itemView.findViewById(R.id.member_name_text);
-            memberNickName = itemView.findViewById(R.id.member_nickname_text);
-            memberNumber = itemView.findViewById(R.id.member_number_text);
+            membersCaps = itemView.findViewById(R.id.left_history_member_caps_text);
+            name = itemView.findViewById(R.id.left_history_member_name_text);
+            memberNickName = itemView.findViewById(R.id.left_history_member_nickname_text);
+            memberNumber = itemView.findViewById(R.id.left_history_member_number_text);
             requestPendingText = itemView.findViewById(R.id.request_pending_text);
             micImage = itemView.findViewById(R.id.member_state_image);
         }

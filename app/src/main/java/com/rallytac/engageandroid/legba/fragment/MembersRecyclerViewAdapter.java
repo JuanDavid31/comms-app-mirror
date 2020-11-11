@@ -75,10 +75,10 @@ public class MembersRecyclerViewAdapter extends ListAdapter<Member, MembersRecyc
 
         public MemberViewHolder(@NonNull View itemView) {
             super(itemView);
-            membersCaps = itemView.findViewById(R.id.member_caps_text);
-            name = itemView.findViewById(R.id.member_name_text);
-            memberNickName = itemView.findViewById(R.id.member_nickname_text);
-            memberNumber = itemView.findViewById(R.id.member_number_text);
+            membersCaps = itemView.findViewById(R.id.left_history_member_caps_text);
+            name = itemView.findViewById(R.id.left_history_member_name_text);
+            memberNickName = itemView.findViewById(R.id.left_history_member_nickname_text);
+            memberNumber = itemView.findViewById(R.id.left_history_member_number_text);
         }
     }
 
