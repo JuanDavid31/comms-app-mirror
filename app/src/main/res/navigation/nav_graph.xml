@@ -83,12 +83,12 @@
 
     <fragment
         android:id="@+id/drawer_action_about"
-        android:name="com.rallytac.engageandroid.legba.fragment.SettingsFragment">
+        android:name="com.rallytac.engageandroid.legba.fragment.AboutFragment">
     </fragment>
 
     <fragment
         android:id="@+id/drawer_action_shutdown"
-        android:name="com.rallytac.engageandroid.legba.fragment.SettingsFragment">
+        android:name="com.rallytac.engageandroid.legba.fragment.ShutdownFragment">
     </fragment>
     <fragment
         android:id="@+id/nfcActionsFragment"
