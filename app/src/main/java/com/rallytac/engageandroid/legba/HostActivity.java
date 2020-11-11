@@ -158,6 +158,12 @@ public class HostActivity extends AppCompatActivity {
         String shutdownText = shutdownItem.getTitle().toString();
         setFont("font/open_sans_semi_bold.ttf", "  " + shutdownText, shutdownItem);
         shutdownItem.setActionView(R.layout.menu_shutdown_image);
+        binding.navView.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.drawer_action_shutdown) {
+                finish();
+            }
+            return true;
+        });
 
         SpannableString spanString = new SpannableString(getString(R.string.nav_drawer_shutdown_padding));
         spanString.setSpan(new ForegroundColorSpan(shutdownColor), 0, spanString.length(), 0);
