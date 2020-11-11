@@ -21,6 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.customview.widget.Openable;
 import androidx.databinding.DataBindingUtil;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -179,6 +180,11 @@ public class HostActivity extends AppCompatActivity {
         ((TextView)headerLayout.findViewById(R.id.nav_header_alias)).setText(alias);
         ((TextView)headerLayout.findViewById(R.id.nav_header_display_name)).setText(displayName.toUpperCase());
         ((TextView)headerLayout.findViewById(R.id.nav_header_display_team)).setText(getString(R.string.nav_drawer_team));
+
+        headerLayout.findViewById(R.id.nav_header_close_image).setOnClickListener(v -> {
+            DrawerLayout drawerLayout = findViewById(R.id.drawer);
+            drawerLayout.closeDrawers();
+        });
     }
 
     private void setupDrawerConfiguration(NavController navController) {
