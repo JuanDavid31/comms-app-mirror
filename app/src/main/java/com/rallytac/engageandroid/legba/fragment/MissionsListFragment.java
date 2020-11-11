@@ -1,9 +1,11 @@
 package com.rallytac.engageandroid.legba.fragment;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -11,12 +13,16 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.SettingsActivity;
 import  com.rallytac.engageandroid.legba.HostActivity;
 
 import  com.rallytac.engageandroid.legba.data.DataManager;
