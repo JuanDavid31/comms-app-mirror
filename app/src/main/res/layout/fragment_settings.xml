@@ -12,28 +12,12 @@
 
         <!--=============== First CardView ===============-->
 
-        <androidx.cardview.widget.CardView xmlns:card_view="https://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            card_view:cardBackgroundColor="@color/black_card_view"
-            card_view:cardCornerRadius="10dp"
-            card_view:cardElevation="5dp"
-            card_view:cardUseCompatPadding="true">
+        <androidx.cardview.widget.CardView style="@style/Settings_CardViewStyle">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+            <LinearLayout style="@style/Settings_LinearLayoutStyle">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginRight="10dp"
+                    style="@style/Settings_ImageViewStyle"
                     android:src="@drawable/ic_legba" />
 
                 <LinearLayout
@@ -43,36 +27,23 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="LEGBA SETTINGS"
-                        android:textAllCaps="true" />
+                        style="@style/Settings_TitleTextViewStyle"
+                        android:text="LEGBA SETTINGS" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/Settings_SubTitleTextViewStyle"
                         android:text="Edit Application Settings" />
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    style="@style/Settings_ImageViewStyle"
                     android:src="@drawable/ic_round_keyboard_arrow_right_gray_24" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <!--=============== Second CardView ===============-->
 
-        <androidx.cardview.widget.CardView xmlns:card_view="https://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            card_view:cardBackgroundColor="@color/black_card_view"
-            card_view:cardCornerRadius="10dp"
-            card_view:cardElevation="5dp"
-            card_view:cardUseCompatPadding="true">
+        <androidx.cardview.widget.CardView style="@style/Settings_CardViewStyle">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,17 +52,10 @@
 
                 <!-- First Line -->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
+                <LinearLayout style="@style/Settings_LinearLayoutStyle">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginRight="10dp"
+                        style="@style/Settings_ImageViewStyle"
                         android:src="@drawable/ic_nfc" />
 
                     <LinearLayout
@@ -101,36 +65,25 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="NFC Devices"
-                            android:textAllCaps="true" />
+                            style="@style/Settings_TitleTextViewStyle"
+                            android:text="NFC Devices" />
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            style="@style/Settings_SubTitleTextViewStyle"
                             android:text="Connect to an NFC Device" />
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        style="@style/Settings_ImageViewStyle"
                         android:src="@drawable/ic_round_keyboard_arrow_right_gray_24" />
                 </LinearLayout>
 
                 <!-- Second Line -->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
+                <LinearLayout style="@style/Settings_LinearLayoutStyle">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginRight="10dp"
+                        style="@style/Settings_ImageViewStyle"
                         android:src="@drawable/ic_dimple" />
 
                     <LinearLayout
@@ -146,14 +99,12 @@
                             android:textColor="@color/shutdown_color" />
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            style="@style/Settings_SubTitleTextViewStyle"
                             android:text="Setup the NFC actions" />
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        style="@style/Settings_ImageViewStyle"
                         android:src="@drawable/ic_round_keyboard_arrow_right_gray_24" />
                 </LinearLayout>
             </LinearLayout>
@@ -161,16 +112,7 @@
 
         <!--=============== Third CardView ===============-->
 
-        <androidx.cardview.widget.CardView xmlns:card_view="https://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            card_view:cardBackgroundColor="@color/black_card_view"
-            card_view:cardCornerRadius="10dp"
-            card_view:cardElevation="5dp"
-            card_view:cardUseCompatPadding="true">
+        <androidx.cardview.widget.CardView style="@style/Settings_CardViewStyle">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -179,17 +121,10 @@
 
                 <!-- First Line -->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
+                <LinearLayout style="@style/Settings_LinearLayoutStyle">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginRight="10dp"
+                        style="@style/Settings_ImageViewStyle"
                         android:src="@drawable/ic_bluetooth" />
 
                     <LinearLayout
@@ -199,36 +134,25 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Bluetooth"
-                            android:textAllCaps="true" />
+                            style="@style/Settings_TitleTextViewStyle"
+                            android:text="Bluetooth" />
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            style="@style/Settings_SubTitleTextViewStyle"
                             android:text="Connect to a bluetooth device" />
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        style="@style/Settings_ImageViewStyle"
                         android:src="@drawable/ic_round_keyboard_arrow_right_gray_24" />
                 </LinearLayout>
 
                 <!-- Second Line -->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
+                <LinearLayout style="@style/Settings_LinearLayoutStyle">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginRight="10dp"
+                        style="@style/Settings_ImageViewStyle"
                         android:src="@drawable/ic_headsets" />
 
                     <LinearLayout
@@ -244,14 +168,12 @@
                             android:textColor="@color/shutdown_color" />
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            style="@style/Settings_SubTitleTextViewStyle"
                             android:text="Setup the actions" />
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        style="@style/Settings_ImageViewStyle"
                         android:src="@drawable/ic_round_keyboard_arrow_right_gray_24" />
                 </LinearLayout>
             </LinearLayout>
