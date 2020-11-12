@@ -54,28 +54,21 @@ public class Channel implements Serializable {
 
     private String lastRxTime;
 
-    @Transient
     private int txFramingMs;
 
-    @Transient
     private int txCodecId;
 
-    @Transient
     private int maxTxSecs;
 
-    @Transient
     private String txAddress;
 
-    @Transient
     private int txPort;
 
-    @Transient
     private String rxAddress;
 
-    @Transient
     private int rxPort;
 
-    @Transient
+    @Convert(converter = EngageTypeConverter.class, columnType = Integer.class)
     private EngageType engageType;
 
     @Convert(converter = ChannelTypeConverter.class, columnType = String.class)
@@ -147,8 +140,9 @@ public class Channel implements Serializable {
         this.lastRxDisplayName = "";
     }
 
-    @Generated(hash = 1644940346)
-    public Channel(String id, String missionId, String name, String image, boolean isSpeakerOn, String lastRxAlias, String lastRxDisplayName, String lastRxTime, ChannelType type) {
+    @Generated(hash = 1301108969)
+    public Channel(String id, String missionId, String name, String image, boolean isSpeakerOn, String lastRxAlias, String lastRxDisplayName, String lastRxTime, int txFramingMs,
+            int txCodecId, int maxTxSecs, String txAddress, int txPort, String rxAddress, int rxPort, EngageType engageType, ChannelType type) {
         this.id = id;
         this.missionId = missionId;
         this.name = name;
@@ -157,6 +151,14 @@ public class Channel implements Serializable {
         this.lastRxAlias = lastRxAlias;
         this.lastRxDisplayName = lastRxDisplayName;
         this.lastRxTime = lastRxTime;
+        this.txFramingMs = txFramingMs;
+        this.txCodecId = txCodecId;
+        this.maxTxSecs = maxTxSecs;
+        this.txAddress = txAddress;
+        this.txPort = txPort;
+        this.rxAddress = rxAddress;
+        this.rxPort = rxPort;
+        this.engageType = engageType;
         this.type = type;
     }
 
@@ -215,6 +217,8 @@ public class Channel implements Serializable {
     public void setOnRx(boolean onRx) {
         isOnRx = onRx;
     }
+
+    public enum ChannelType {PRIMARY, PRIORITY, RADIO}
 
     public ChannelType getType() {
         return type;
@@ -352,7 +356,7 @@ public class Channel implements Serializable {
     }
 
     //ChannelElementType
-    public enum ChannelType {PRIMARY, PRIORITY, RADIO}
+
 
     public static class ChannelTypeConverter implements PropertyConverter<ChannelType, String> {
 
@@ -436,5 +440,26 @@ public class Channel implements Serializable {
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getChannelDao() : null;
+    }
+
+    public static class EngageTypeConverter implements PropertyConverter<EngageType, Integer> {
+
+        @Override
+        public EngageType convertToEntityProperty(Integer type) {
+            if (type == 1){
+                return EngageType.AUDIO;
+            }else{
+                return EngageType.PRESENCE;
+            }
+        }
+
+        @Override
+        public Integer convertToDatabaseValue(EngageType type) {
+            if (type == EngageType.AUDIO){
+                return 1;
+            }else{
+                return 2;
+            }
+        }
     }
 }

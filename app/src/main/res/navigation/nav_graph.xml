@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_missionsFragment_to_largeCardFragment"
             app:destination="@id/nfcActionsFragment" />
+        <action
+                android:id="@+id/action_missionsFragment_to_missionEditActivity"
+                app:destination="@id/missionEditActivity" />
     </fragment>
     <fragment
         android:id="@+id/missionFragment"
@@ -93,4 +96,9 @@
     <fragment
         android:id="@+id/nfcActionsFragment"
         android:name="com.rallytac.engageandroid.legba.fragment.NFCActionsFragment" />
+    <activity
+            android:id="@+id/missionEditActivity"
+            android:name="com.rallytac.engageandroid.MissionEditActivity"
+            android:label="activity_mission_edit"
+            tools:layout="@layout/activity_mission_edit" />
 </navigation>

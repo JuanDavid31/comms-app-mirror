@@ -113,7 +113,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             toggleSpeakerIcon(firstChannel.isSpeakerOn(), channelResumeHolder.primaryChannelSpeaker);
             channelResumeHolder.primaryChannelSpeaker.setOnClickListener(view -> {
                 firstChannel.setSpeakerOn(!firstChannel.isSpeakerOn());
-                DataManager.getInstance(fragment.getContext()).toggleMute(firstChannel.getId(), firstChannel.isSpeakerOn());
+                DataManager.getInstance().toggleMute(firstChannel.getId(), firstChannel.isSpeakerOn());
                 notifyDataSetChanged();
             });
 
@@ -160,7 +160,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
             toggleSpeakerIcon(secondChannel.isSpeakerOn(), channelResumeHolder.priorityChannel1Speaker);
             channelResumeHolder.priorityChannel1Speaker.setOnClickListener(view -> {
                 secondChannel.setSpeakerOn(!secondChannel.isSpeakerOn());
-                DataManager.getInstance(fragment.getContext()).toggleMute(secondChannel.getId(), secondChannel.isSpeakerOn());
+                DataManager.getInstance().toggleMute(secondChannel.getId(), secondChannel.isSpeakerOn());
 
                 notifyDataSetChanged();
             });
@@ -189,7 +189,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
             channelResumeHolder.priorityChannel2Speaker.setOnClickListener(view -> {
                 thirdChannel.setSpeakerOn(!thirdChannel.isSpeakerOn());
-                DataManager.getInstance(fragment.getContext()).toggleMute(thirdChannel.getId(), thirdChannel.isSpeakerOn());
+                DataManager.getInstance().toggleMute(thirdChannel.getId(), thirdChannel.isSpeakerOn());
                 notifyDataSetChanged();
             });
 

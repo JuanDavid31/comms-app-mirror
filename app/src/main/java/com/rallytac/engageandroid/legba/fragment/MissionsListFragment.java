@@ -21,13 +21,15 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.rallytac.engageandroid.EngageApplication;
+import com.rallytac.engageandroid.MissionListActivity;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.SettingsActivity;
-import  com.rallytac.engageandroid.legba.HostActivity;
+import com.rallytac.engageandroid.legba.HostActivity;
 
-import  com.rallytac.engageandroid.legba.data.DataManager;
-import  com.rallytac.engageandroid.legba.data.dto.Mission;
-import  com.rallytac.engageandroid.databinding.FragmentMissionsListBinding;
+import com.rallytac.engageandroid.legba.data.DataManager;
+import com.rallytac.engageandroid.legba.data.dto.Mission;
+import com.rallytac.engageandroid.databinding.FragmentMissionsListBinding;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -47,21 +49,18 @@ public class MissionsListFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_missions_list, container, false);
         setupToolbar();
-        List<Mission> missions = DataManager.getInstance(getContext()).getMissions();
-        MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), this);
+        setupNFCActionsView();
+        setupFabButton();
+
         binding.missionsListRecyclerView.setHasFixedSize(true);
 
         int orientation = getResources().getConfiguration().orientation;
-        if(orientation == Configuration.ORIENTATION_PORTRAIT){
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             binding.missionsListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        }else if(orientation == Configuration.ORIENTATION_LANDSCAPE){
+        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             binding.missionsListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         }
 
-
-        binding.missionsListRecyclerView.setAdapter(adapter);
-        adapter.setMissions(missions, getContext());
-        setupNFCActionsView();
         return binding.getRoot();
     }
 
@@ -69,7 +68,7 @@ public class MissionsListFragment extends Fragment {
         Timber.i("updateToolbar");
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
 
-        ((TextView)requireActivity().findViewById(R.id.toolbar_title_text)).setText("My Missions");
+        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText("My Missions");
         HostActivity hostActivity = (HostActivity) requireActivity();
         ActionBar actionBar = hostActivity.getSupportActionBar();
 
@@ -84,5 +83,29 @@ public class MissionsListFragment extends Fragment {
             NavDirections action = MissionsListFragmentDirections.actionMissionsFragmentToLargeCardFragment();
             NavHostFragment.findNavController(this).navigate(action);
         });
+    }
+
+    private void setupFabButton() {
+        binding.addMissionFab
+                .setOnClickListener(view -> {
+                    NavHostFragment.findNavController(this)
+                            .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionEditActivity());
+                });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //List<Mission> missions = DataManager.getInstance().getMissions();
+        List<Mission> missions = ((EngageApplication) getActivity().getApplication())
+                .getDaoSession()
+                .getMissionDao()
+                .loadAll();
+
+        Timber.i("Number of missions %s", missions.size());
+
+        MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), this);
+        binding.missionsListRecyclerView.setAdapter(adapter);
+        adapter.setMissions(missions, getContext());
     }
 }

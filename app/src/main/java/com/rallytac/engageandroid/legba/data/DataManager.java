@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -121,7 +122,7 @@ public class DataManager {
     }
 
     public void switchToMissionOnEngageEngine(Mission mission) {
-        db._missions
+        /*db._missions
                 .stream()
                 .filter(m -> m._id.equals(mission.getId()))
                 .findAny()
@@ -130,7 +131,7 @@ public class DataManager {
                     Globals.getEngageApplication().getActiveConfiguration().set_missionId(mission.getId());
                     Timber.i("MissionId updated to %s ", mission);
                 });
-        updateDB();
+        updateDB();*/
 
         mission.addMissionControlChannelToList();
 
@@ -174,7 +175,7 @@ public class DataManager {
         Globals.getEngageApplication().endTxLega(groupIds);
     }
 
-    public void updatePresenceDescriptor(){
+    public void updatePresenceDescriptor() {
         EngageClasses.PresenceDescriptor presenceDescriptor =
                 new EngageClasses.PresenceDescriptor("{USER-A}",
                         Globals.getSharedPreferences().getString("user_id", ""),
@@ -184,5 +185,15 @@ public class DataManager {
 
         Timber.i("Updating presence descriptor %s", Globals.MISSION_CONTROL_ID);
         Globals.getEngageApplication().getEngine().engageUpdatePresenceDescriptor(Globals.MISSION_CONTROL_ID, json, 1);
+    }
+
+    public Channel generateMissionControlChannel(String missionId) {
+        return new Channel("{GCONTROL}", missionId,
+                "MISSION CONTROL", "",
+                Channel.ChannelType.PRIMARY, 30,
+                25, 120,
+                "239.42.43.1", 49000,
+                "239.42.43.1", 49000,
+                Channel.EngageType.PRESENCE, Collections.emptyList());
     }
 }
