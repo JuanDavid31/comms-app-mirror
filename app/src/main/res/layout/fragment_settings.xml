@@ -18,7 +18,9 @@
 
                 <ImageView
                     style="@style/Settings_ImageViewStyle"
-                    android:src="@drawable/ic_legba" />
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_legba_01" />
 
                 <LinearLayout
                     android:layout_width="0dp"
