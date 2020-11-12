@@ -14,7 +14,9 @@
 
         <androidx.cardview.widget.CardView style="@style/Settings_CardViewStyle">
 
-            <LinearLayout style="@style/Settings_LinearLayoutStyle">
+            <LinearLayout
+                    android:id="@+id/legba_settings_layout"
+                    style="@style/Settings_LinearLayoutStyle">
 
                 <ImageView
                     style="@style/Settings_ImageViewStyle"

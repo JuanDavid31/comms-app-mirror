@@ -14,7 +14,9 @@
   ~ limitations under the License.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:showIn="nav_view">
     <item
         android:id="@id/myMissionsFragment"
         android:title="@string/nav_drawer_my_missions" />
@@ -25,7 +27,7 @@
         android:id="@id/historyFragment"
         android:title="@string/nav_drawer_history" />
     <item
-        android:id="@+id/drawer_settings_action"
+        android:id="@id/settingsFragment"
         android:title="@string/nav_drawer_settings" />
     <item
         android:id="@+id/drawer_about_action"

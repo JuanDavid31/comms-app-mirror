@@ -17,11 +17,11 @@
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
         <action
-            android:id="@+id/action_missionsFragment_to_largeCardFragment"
-            app:destination="@id/nfcActionsFragment" />
-        <action
                 android:id="@+id/action_missionsFragment_to_missionEditActivity"
                 app:destination="@id/missionEditActivity" />
+        <action
+                android:id="@+id/action_missionsFragment_to_aboutActivity"
+                app:destination="@id/aboutActivity" />
     </fragment>
     <fragment
         android:id="@+id/missionFragment"
@@ -82,6 +82,12 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.rallytac.engageandroid.legba.fragment.SettingsFragment">
+        <action
+                android:id="@+id/action_settingsFragment_to_settingsActivity"
+                app:destination="@id/settingsActivity" />
+        <action
+                android:id="@+id/action_settingsFragment_to_nfcActionsFragment"
+                app:destination="@id/nfcActionsFragment" />
     </fragment>
 
     <fragment
@@ -101,4 +107,13 @@
             android:name="com.rallytac.engageandroid.MissionEditActivity"
             android:label="activity_mission_edit"
             tools:layout="@layout/activity_mission_edit" />
+    <activity
+            android:id="@+id/settingsActivity"
+            android:name="com.rallytac.engageandroid.SettingsActivity"
+            android:label="SettingsActivity" />
+    <activity
+            android:id="@+id/aboutActivity"
+            android:name="com.rallytac.engageandroid.AboutActivity"
+            android:label="activity_about"
+            tools:layout="@layout/activity_about" />
 </navigation>

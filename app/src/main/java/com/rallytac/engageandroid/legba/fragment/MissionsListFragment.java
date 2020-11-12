@@ -5,16 +5,20 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
+import androidx.navigation.NavHostController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -51,7 +55,6 @@ public class MissionsListFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_missions_list, container, false);
         setupToolbar();
-        setupNFCActionsView();
         setupFabButton();
 
         binding.missionsListRecyclerView.setHasFixedSize(true);
@@ -68,6 +71,7 @@ public class MissionsListFragment extends Fragment {
 
     private void setupToolbar() {
         Timber.i("updateToolbar");
+        setHasOptionsMenu(true);
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
 
         ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText("My Missions");
@@ -78,14 +82,14 @@ public class MissionsListFragment extends Fragment {
                 .setHomeAsUpIndicator(R.drawable.ic_hamburguer_icon);
     }
 
-    private void setupNFCActionsView() {
+/*    private void setupNFCActionsView() {
         HostActivity hostActivity = (HostActivity) requireActivity();
         hostActivity.binding.logout.setOnClickListener(view -> {
             hostActivity.binding.drawer.closeDrawers();
             NavDirections action = MissionsListFragmentDirections.actionMissionsFragmentToLargeCardFragment();
             NavHostFragment.findNavController(this).navigate(action);
         });
-    }
+    }*/
 
     private void setupFabButton() {
         binding.addMissionFab
@@ -119,5 +123,25 @@ public class MissionsListFragment extends Fragment {
         MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), this);
         binding.missionsListRecyclerView.setAdapter(adapter);
         adapter.setMissions(missions, getContext());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.missions_list_fragment_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.create_manually_action) {
+            NavHostFragment.findNavController(this)
+                    .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionEditActivity());
+            return true;
+        } else if (itemId == R.id.load_from_json_action) {
+            //TODO: Redirect to the proper screen
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -27,6 +27,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.Navigator;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -46,6 +47,7 @@ import com.rallytac.engageandroid.SettingsActivity;
 import com.rallytac.engageandroid.SimpleUiMainActivity;
 import com.rallytac.engageandroid.VolumeLevels;
 import com.rallytac.engageandroid.databinding.ActivityHostBinding;
+import com.rallytac.engageandroid.legba.fragment.SettingsFragmentDirections;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -199,15 +201,11 @@ public class HostActivity extends AppCompatActivity {
 
         Menu menu = binding.navView.getMenu();
 
-        menu.findItem(R.id.drawer_settings_action)
-                .setOnMenuItemClickListener(menuItem -> {
-                    Intent intent = new Intent(this, SettingsActivity.class);
-                    startActivity(intent);
-                    return true;
-                });
-
         menu.findItem(R.id.drawer_about_action)
                 .setOnMenuItemClickListener(menuItem -> {
+                    /*Navigation.findNavController(this, R.id.main_content)
+                            .navigate(SettingsFragmentDirections.actionSettingsFragmentToSettingsActivity());*/
+
                     Intent intent = new Intent(this, AboutActivity.class);
                     startActivity(intent);
                     return true;
