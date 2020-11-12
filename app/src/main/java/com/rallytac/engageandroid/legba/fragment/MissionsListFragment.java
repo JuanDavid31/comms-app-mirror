@@ -96,11 +96,13 @@ public class MissionsListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        //List<Mission> missions = DataManager.getInstance().getMissions();
+        List<Mission> jsonMissions = DataManager.getInstance().getMissions();
         List<Mission> missions = ((EngageApplication) getActivity().getApplication())
                 .getDaoSession()
                 .getMissionDao()
                 .loadAll();
+
+        missions.add(0, jsonMissions.get(0));
 
         Timber.i("Number of missions %s", missions.size());
 
