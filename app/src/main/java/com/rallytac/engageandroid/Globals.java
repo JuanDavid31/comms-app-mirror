@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.DaoSession;
-import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo;
 import com.rallytac.engageandroid.legba.engage.GroupDiscoveryListener;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 
@@ -80,10 +79,10 @@ public class Globals
     public static void notifyListenersStart(final String id, final String alias, final String displayName) {
         Timber.i("notifyListenersStart id -> %s alias -> %s displayName -> %s", id, alias, displayName);
         rxListeners.forEach(rxListener -> rxListener.onRx(id, alias, displayName));
-        updateChannelIncommingMessage(id, alias, displayName);
+        updateChannelIncomingMessage(id, alias, displayName);
     }
 
-    private static void updateChannelIncommingMessage(final String id, final String alias, final String displayName) {
+    private static void updateChannelIncomingMessage(final String id, final String alias, final String displayName) {
         String formattedAlias = alias == null ? "UNKNOWN" : alias;
         String formattedDisplayName = displayName == null ? "Unknown user" : displayName;
         String time = DateTimeFormatter.ofPattern("hh:mm a").format(LocalDateTime.now());

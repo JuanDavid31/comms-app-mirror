@@ -226,9 +226,9 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
     private boolean hasLastMessage(Channel channel) {
         boolean lastRxAliasAvailable = channel.getLastRxAlias() != null && !channel.getLastRxAlias().isEmpty();
-        boolean lastRxDsplayNameAvailable = channel.getLastRxDisplayName() != null && !channel.getLastRxDisplayName().isEmpty();
+        boolean lastRxDisplayNameAvailable = channel.getLastRxDisplayName() != null && !channel.getLastRxDisplayName().isEmpty();
         boolean lastRxTimeAvailable = channel.getLastRxTime() != null && !channel.getLastRxTime().isEmpty();
-        return lastRxAliasAvailable && lastRxDsplayNameAvailable && lastRxTimeAvailable;
+        return lastRxAliasAvailable && lastRxDisplayNameAvailable && lastRxTimeAvailable;
     }
 
     private void setSecondChannelViewState(Channel secondChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
@@ -692,7 +692,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
                         channel.setLastRxTime(formattedAlias);
                         showIncomingMessage(id, formattedAlias);
                         fadeOutFreeChannels();
-                        //TODO: notifyDataSetchaned() on viewpager2 adapter
+                        //TODO: notifyDataSetChanged() on viewpager2 adapter
                         notifyDataSetChanged();
                         channelsRecyclerView.getAdapter().notifyDataSetChanged();
                     });
