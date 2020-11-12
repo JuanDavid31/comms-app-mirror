@@ -55,7 +55,6 @@ public class MissionsListFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_missions_list, container, false);
         setupToolbar();
-        setupFabButton();
 
         binding.missionsListRecyclerView.setHasFixedSize(true);
 
@@ -90,14 +89,6 @@ public class MissionsListFragment extends Fragment {
             NavHostFragment.findNavController(this).navigate(action);
         });
     }*/
-
-    private void setupFabButton() {
-        binding.addMissionFab
-                .setOnClickListener(view -> {
-                    NavHostFragment.findNavController(this)
-                            .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionEditActivity());
-                });
-    }
 
     @Override
     public void onStart() {
@@ -139,9 +130,25 @@ public class MissionsListFragment extends Fragment {
                     .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionEditActivity());
             return true;
         } else if (itemId == R.id.load_from_json_action) {
-            //TODO: Redirect to the proper screen
+            startLoadMissionFromLocalFile();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startLoadMissionFromLocalFile()
+    {
+        try
+        {
+            int PICK_MISSION_FILE_REQUEST_CODE = 44;
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_a_file)), PICK_MISSION_FILE_REQUEST_CODE);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }
