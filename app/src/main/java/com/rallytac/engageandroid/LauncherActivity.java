@@ -425,7 +425,7 @@ public class LauncherActivity extends AppCompatActivity
     {
         String[] required = new String[] {
                 Manifest.permission.RECORD_AUDIO,
-                //Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
                 //Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_NETWORK_STATE,
                 Manifest.permission.ACCESS_WIFI_STATE,
