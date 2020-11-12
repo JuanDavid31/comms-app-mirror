@@ -30,11 +30,13 @@ import com.rallytac.engageandroid.legba.HostActivity;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.databinding.FragmentMissionsListBinding;
+import com.rallytac.engageandroid.legba.data.dto.MissionDao;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import timber.log.Timber;
 
@@ -96,13 +98,21 @@ public class MissionsListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        List<Mission> jsonMissions = DataManager.getInstance().getMissions();
-        List<Mission> missions = ((EngageApplication) getActivity().getApplication())
-                .getDaoSession()
-                .getMissionDao()
-                .loadAll();
 
-        missions.add(0, jsonMissions.get(0));
+        MissionDao missionDao = ((EngageApplication) getActivity().getApplication())
+                .getDaoSession()
+                .getMissionDao();
+
+        List<Mission> jsonMissions = DataManager.getInstance().getMissions();
+        Mission jsonMission = jsonMissions.get(0);
+        missionDao.insertOrReplace(jsonMission);
+
+        List<Mission> missions = missionDao.loadAll()
+                .stream()
+                .filter(mission -> !mission.getName().equalsIgnoreCase(jsonMission.getName()))
+                .collect(Collectors.toList());
+
+        missions.add(0, jsonMission);
 
         Timber.i("Number of missions %s", missions.size());
 

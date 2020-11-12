@@ -2515,12 +2515,14 @@ public class EngageApplication
     public void onGroupConnectFailed(final String id, final String eventExtraJson) {
         runOnUiThread(() -> {
             GroupDescriptor gd = getGroup(id);
+
             if (gd == null) {
                 Log.e(TAG, "onGroupConnectFailed: cannot find group id='" + id + "'");
                 return;
             }
 
             Log.d(TAG, "onGroupConnectFailed: id='" + id + "', n='" + gd.name + "', x=" + eventExtraJson);
+
 
             try {
                 if (!Utils.isEmptyString(eventExtraJson)) {
@@ -2789,13 +2791,7 @@ public class EngageApplication
             public void run() {
                 //logEvent(Analytics.GROUP_RX_SPEAKER_COUNT_CHANGED);
 
-                GroupDescriptor gd = getGroup(id);
-                if (gd == null) {
-                    Log.e(TAG, "onGroupRxSpeakersChanged: cannot find group id='" + id + "'");
-                    return;
-                }
-
-                Log.d(TAG, "onGroupRxSpeakersChanged: id='" + id + "', n='" + gd.name + "'");
+                Timber.d("onGroupRxSpeakersChanged: id='%s'", id);
 
                 ArrayList<TalkerDescriptor> talkers = null;
 
@@ -2833,10 +2829,10 @@ public class EngageApplication
                     }
                 }
 
-                gd.updateTalkers(talkers);
+                //gd.updateTalkers(talkers);
                 _lastAudioActivity = Utils.nowMs();
 
-                notifyGroupUiListeners(gd);
+                //notifyGroupUiListeners(gd);
             }
         });
     }

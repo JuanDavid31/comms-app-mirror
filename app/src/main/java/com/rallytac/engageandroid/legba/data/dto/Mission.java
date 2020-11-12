@@ -240,6 +240,7 @@ public class Mission implements Serializable {
     }
 
     public void addMissionControlChannelToList() {
+        if (missionControlChannel == null)return;
         List<Channel> newChannels = new ArrayList<>(getChannels());
         newChannels.add(missionControlChannel);
         setChannels(newChannels);
