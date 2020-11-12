@@ -42,5 +42,6 @@ public class SettingsFragment extends Fragment {
         HostActivity hostActivity = (HostActivity)requireActivity();
         ActionBar actionBar = hostActivity.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_close_toolbar);
     }
 }
