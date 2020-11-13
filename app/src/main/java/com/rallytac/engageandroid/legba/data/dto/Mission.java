@@ -145,8 +145,7 @@ public class Mission implements Serializable {
                 ", rpAddress='" + rpAddress + '\'' +
                 ", rpPort=" + rpPort +
                 ", channelsGroups=" + channelsGroups +
-                ", channels=" + channels.size() +
-                ", missionControlChannel=" + missionControlChannel +
+                ", channels=" + (channels != null ? channels.size() : null) +
                 '}';
     }
 
@@ -216,34 +215,6 @@ public class Mission implements Serializable {
 
     public void setRpPort(int rpPort) {
         this.rpPort = rpPort;
-    }
-
-    @Transient
-    private Channel missionControlChannel;
-
-    public void removeMissionControlChannelFromList() {
-        for(Channel channel : getChannels()){
-            if (channel.getEngageType() == Channel.EngageType.PRESENCE){
-                missionControlChannel = channel;
-                break;
-            }
-        }
-
-        List<Channel> audioChannels = new ArrayList<>();
-        for(Channel channel : getChannels()){
-            if (channel.getEngageType() == Channel.EngageType.AUDIO){
-                audioChannels.add(channel);
-            }
-        }
-
-        setChannels(audioChannels);
-    }
-
-    public void addMissionControlChannelToList() {
-        if (missionControlChannel == null)return;
-        List<Channel> newChannels = new ArrayList<>(getChannels());
-        newChannels.add(missionControlChannel);
-        setChannels(newChannels);
     }
 
     /** called by internal mechanisms, do not call yourself. */

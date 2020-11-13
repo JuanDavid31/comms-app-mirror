@@ -26,6 +26,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import timber.log.Timber;
+
 public class MissionViewModel extends ViewModel {
 
     private Mission mission;
@@ -110,8 +112,11 @@ public class MissionViewModel extends ViewModel {
         return mission;
     }
 
-    public List<Channel> getAllChannels() {
-        return mission.getChannels();
+    public List<Channel> getAudioChannels() {
+        return mission.getChannels()
+                .stream()
+                .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
+                .collect(Collectors.toList());
     }
 
     public void addChannelUser(GroupDiscoveryInfo groupDiscoveryInfo) {
@@ -126,12 +131,13 @@ public class MissionViewModel extends ViewModel {
                     } else {
                         identities.add(groupDiscoveryInfo.identity);
                     }
+                    Timber.i("New identity added %s", groupDiscoveryInfo.identity);
                 });
         updateChannels();
     }
 
     private void updateChannels(){
-        getAllChannels().forEach(channel -> channel.users = getUsersByChannelId(channel.getId()));
+        getAudioChannels().forEach(channel -> channel.users = getUsersByChannelId(channel.getId()));
     }
 
     public void removeChannelUser(GroupDiscoveryInfo groupDiscoveryInfo) {
@@ -145,6 +151,12 @@ public class MissionViewModel extends ViewModel {
     }
 
     public List<Identity> getUsersByChannelId(String channelId){
-        return new ArrayList<>(channelUsers.get(channelId));
+        Set<Identity> identities = channelUsers.get(channelId);
+        if (identities != null){
+            return new ArrayList<>(identities);
+        }else {
+            return new ArrayList<>();
+        }
+
     }
 }

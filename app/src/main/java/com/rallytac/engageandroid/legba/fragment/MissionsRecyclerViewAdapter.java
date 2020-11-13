@@ -77,6 +77,11 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
             notifyDataSetChanged();
         });
 
+        holder.settingsLayout.setOnClickListener(view -> {
+            NavHostFragment.findNavController(fragment)
+                    .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionEditActivity(currentMission));
+        });
+
 
         holder.missionName.setText(currentMission.getName());
         holder.channelsNumber.setText(String.format("%s Channels", audioChannels.size()));

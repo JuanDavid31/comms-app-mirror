@@ -59,7 +59,6 @@ public class DataManager {
                     .create()
                     .fromJson(jsonMissions, listType);
             loadMissionsOnEgageEngine(missions);
-            missions.forEach(Mission::removeMissionControlChannelFromList);
             return missions;
 
         } catch (IOException e) {
@@ -133,8 +132,6 @@ public class DataManager {
                 });
         updateDB();*/
 
-        mission.addMissionControlChannelToList();
-
         mission.getChannels()
                 .forEach(channel -> {
                     AddressAndPort rx = new AddressAndPort(channel.getRxAddress(), channel.getRxPort());
@@ -153,10 +150,6 @@ public class DataManager {
                     String finalTxData = Globals.getEngageApplication().buildFinalGroupJsonConfiguration(initialJsonTxData);
                     Globals.getEngageApplication().getEngine().engageCreateGroup(finalTxData);
                 });
-
-        Globals.getEngageApplication().updateActiveConfiguration();
-
-        mission.removeMissionControlChannelFromList();
     }
 
     public void toggleMute(String groupId, boolean isSpeakerOn) {
@@ -188,7 +181,7 @@ public class DataManager {
     }
 
     public Channel generateMissionControlChannel(String missionId) {
-        return new Channel("{GCONTROL}", missionId,
+        return new Channel(Globals.MISSION_CONTROL_ID, missionId,
                 "MISSION CONTROL", "",
                 Channel.ChannelType.PRIMARY, 30,
                 25, 120,

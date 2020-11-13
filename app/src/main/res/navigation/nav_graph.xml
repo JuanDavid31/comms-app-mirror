@@ -106,7 +106,12 @@
             android:id="@+id/missionEditActivity"
             android:name="com.rallytac.engageandroid.MissionEditActivity"
             android:label="activity_mission_edit"
-            tools:layout="@layout/activity_mission_edit" />
+            tools:layout="@layout/activity_mission_edit" >
+        <argument
+                android:name="mission"
+                app:argType="com.rallytac.engageandroid.legba.data.dto.Mission"
+                app:nullable="true" />
+    </activity>
     <activity
             android:id="@+id/settingsActivity"
             android:name="com.rallytac.engageandroid.SettingsActivity"

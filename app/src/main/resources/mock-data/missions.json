@@ -9,7 +9,7 @@
                 "id": "{GCONTROL}",
                 "missionId": "{M1}",
                 "image": "primary",
-                "name": "ALPHA",
+                "name": "ALPHA CONTROL",
                 "txFramingMs": 30,
                 "txCodecId": 25,
                 "maxTxSecs": 120,

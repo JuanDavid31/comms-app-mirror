@@ -38,8 +38,10 @@ import com.rallytac.engageandroid.legba.data.dto.MissionDao;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import timber.log.Timber;
@@ -51,8 +53,6 @@ public class MissionsListFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_missions_list, container, false);
         setupToolbar();
 
@@ -94,22 +94,34 @@ public class MissionsListFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        String defaultMissionName = "OVERLORD";
+
         MissionDao missionDao = ((EngageApplication) getActivity().getApplication())
                 .getDaoSession()
                 .getMissionDao();
 
-        List<Mission> jsonMissions = DataManager.getInstance().getMissions();
-        Mission jsonMission = jsonMissions.get(0);
-        missionDao.insertOrReplace(jsonMission);
+        Mission jsonMission = DataManager
+                .getInstance()
+                .getMissions()
+                .get(0);
 
-        List<Mission> missions = missionDao.loadAll()
-                .stream()
-                .filter(mission -> !mission.getName().equalsIgnoreCase(jsonMission.getName()))
-                .collect(Collectors.toList());
+        List<Mission> missions = missionDao.loadAll();
 
-        missions.add(0, jsonMission);
+        Optional<Mission> overlord = missions.stream()
+                .filter(mission -> mission.getName().equalsIgnoreCase(defaultMissionName))
+                .findFirst();
+
+        if (overlord.isPresent()) {
+            int i = missions.indexOf(overlord.get());
+            if (i != 0) {
+                Collections.swap(missions, i, 0);
+            }
+        } else {
+            missions.add(0, jsonMission);
+        }
 
         Timber.i("Number of missions %s", missions.size());
+        missions.forEach(mission -> Timber.i(mission.toString()));
 
         MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), this);
         binding.missionsListRecyclerView.setAdapter(adapter);
@@ -127,7 +139,7 @@ public class MissionsListFragment extends Fragment {
         int itemId = item.getItemId();
         if (itemId == R.id.create_manually_action) {
             NavHostFragment.findNavController(this)
-                    .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionEditActivity());
+                    .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionEditActivity(null));
             return true;
         } else if (itemId == R.id.load_from_json_action) {
             startLoadMissionFromLocalFile();
@@ -136,18 +148,14 @@ public class MissionsListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void startLoadMissionFromLocalFile()
-    {
-        try
-        {
+    private void startLoadMissionFromLocalFile() {
+        try {
             int PICK_MISSION_FILE_REQUEST_CODE = 44;
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_a_file)), PICK_MISSION_FILE_REQUEST_CODE);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
