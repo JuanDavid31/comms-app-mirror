@@ -10,12 +10,12 @@
         android:name="com.rallytac.engageandroid.legba.fragment.MissionsListFragment"
         tools:layout="@layout/fragment_missions_list">
         <action
-                android:id="@+id/action_Missions_fragment_to_missionFragment"
-                app:destination="@id/missionFragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+            android:id="@+id/action_Missions_fragment_to_missionFragment"
+            app:destination="@id/missionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
                 android:id="@+id/action_missionsFragment_to_missionEditActivity"
                 app:destination="@id/missionEditActivity" />
@@ -97,8 +97,7 @@
 
     <fragment
         android:id="@+id/drawer_action_shutdown"
-        android:name="com.rallytac.engageandroid.legba.fragment.ShutdownFragment">
-    </fragment>
+        android:name="com.rallytac.engageandroid.legba.fragment.ShutdownFragment"/>
     <fragment
         android:id="@+id/nfcActionsFragment"
         android:name="com.rallytac.engageandroid.legba.fragment.NFCActionsFragment" />

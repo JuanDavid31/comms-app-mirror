@@ -7,7 +7,7 @@
     <string name="licensing_manufacturerId"></string>
     <string name="licensing_entitlement">{c10eefc9-e395-4813-beff-53b112e8794b}</string>
 
-    <string name="generated_user_id_email_domain">\@demo.rallytac.com</string>
+    <string name="generated_user_id_email_domain">\@example.com</string>
 
     <string name="support_email_address">support@demo.rallytac.com</string>
     <string name="sales_email_address">sales@demo.rallytac.com</string>

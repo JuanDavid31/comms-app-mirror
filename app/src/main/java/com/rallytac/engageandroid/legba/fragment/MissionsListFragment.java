@@ -3,7 +3,6 @@ package com.rallytac.engageandroid.legba.fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +27,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.rallytac.engageandroid.EngageApplication;
 import com.rallytac.engageandroid.MissionListActivity;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.databinding.FragmentMissionsListBinding;
+import com.rallytac.engageandroid.legba.HostActivity;
+import com.rallytac.engageandroid.legba.data.DataManager;
+import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.SettingsActivity;
 import com.rallytac.engageandroid.legba.HostActivity;
 
@@ -47,12 +50,10 @@ import java.util.stream.Collectors;
 import timber.log.Timber;
 
 public class MissionsListFragment extends Fragment {
-
     FragmentMissionsListBinding binding;
 
     @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_missions_list, container, false);
         setupToolbar();
 
@@ -61,7 +62,7 @@ public class MissionsListFragment extends Fragment {
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             binding.missionsListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        } else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
             binding.missionsListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         }
 
@@ -73,12 +74,11 @@ public class MissionsListFragment extends Fragment {
         setHasOptionsMenu(true);
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
 
-        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText("My Missions");
+        ((TextView)requireActivity().findViewById(R.id.toolbar_title_text)).setText(getString(R.string.nav_drawer_my_missions));
         HostActivity hostActivity = (HostActivity) requireActivity();
         ActionBar actionBar = hostActivity.getSupportActionBar();
 
-        Objects.requireNonNull(actionBar)
-                .setHomeAsUpIndicator(R.drawable.ic_hamburguer_icon);
+        Objects.requireNonNull(actionBar).setHomeAsUpIndicator(R.drawable.ic_hamburguer_icon);
     }
 
 /*    private void setupNFCActionsView() {

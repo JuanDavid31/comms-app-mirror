@@ -601,11 +601,7 @@ public class ActiveConfiguration
 
     public boolean getUseRp()
     {
-        //return _useRP && getCanUseRp();
-
-        // FIXME: hardcoding to always use the rallypoint for now. We can remove this one rallypoints are configurable.
-
-        return getCanUseRp();
+        return _useRP && getCanUseRp();
     }
 
     public boolean getCanUseRp()
