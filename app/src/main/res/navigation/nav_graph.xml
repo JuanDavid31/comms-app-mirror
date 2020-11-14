@@ -64,10 +64,10 @@
 
     <!-- Navigation Drawer -->
 
-    <fragment
+    <!--<fragment
         android:id="@+id/myMissionsFragment"
         android:name="com.rallytac.engageandroid.legba.fragment.MissionsListFragment">
-    </fragment>
+    </fragment>-->
 
     <fragment
         android:id="@+id/myChannelsFragment"

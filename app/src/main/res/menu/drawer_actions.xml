@@ -18,7 +18,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         tools:showIn="nav_view">
     <item
-        android:id="@id/myMissionsFragment"
+        android:id="@id/missionsFragment"
         android:title="@string/nav_drawer_my_missions" />
     <item
         android:id="@id/myChannelsFragment"
