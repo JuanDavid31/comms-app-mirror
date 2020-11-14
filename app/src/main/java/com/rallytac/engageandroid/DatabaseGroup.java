@@ -24,6 +24,8 @@ public class DatabaseGroup
     public boolean _fdx;
     public int _maxTxSecs;
 
+    public String _image = "";
+
     public DatabaseGroup(){
 
     }

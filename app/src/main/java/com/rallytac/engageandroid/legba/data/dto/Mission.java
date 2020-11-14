@@ -24,10 +24,8 @@ public class Mission implements Serializable {
 
     private String name;
 
-    @Transient
     private String rpAddress;
 
-    @Transient
     private int rpPort;
 
     @ToMany(referencedJoinProperty = "missionId")
@@ -63,10 +61,12 @@ public class Mission implements Serializable {
         this.channels = channels;
     }
 
-    @Generated(hash = 716121425)
-    public Mission(String id, String name) {
+    @Generated(hash = 1014324158)
+    public Mission(String id, String name, String rpAddress, int rpPort) {
         this.id = id;
         this.name = name;
+        this.rpAddress = rpAddress;
+        this.rpPort = rpPort;
     }
 
     public String getId() {
@@ -140,9 +140,12 @@ public class Mission implements Serializable {
     @Override
     public String toString() {
         return "Mission{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", channels=" + channels +
+                ", rpAddress='" + rpAddress + '\'' +
+                ", rpPort=" + rpPort +
+                ", channelsGroups=" + channelsGroups +
+                ", channels=" + (channels != null ? channels.size() : null) +
                 '}';
     }
 
@@ -212,42 +215,6 @@ public class Mission implements Serializable {
 
     public void setRpPort(int rpPort) {
         this.rpPort = rpPort;
-    }
-
-    @Transient
-    private Channel missionControlChannel;
-
-    public void removeMissionControlChannelFromList() {
-        for(Channel channel : getChannels()){
-            if (channel.getEngageType() == Channel.EngageType.PRESENCE){
-                missionControlChannel = channel;
-                break;
-            }
-        }
-        /*getChannels()
-                .stream()
-                .filter(channel -> channel.getEngageType() == Channel.EngageType.PRESENCE)
-                .findFirst()
-                .ifPresent(channel -> missionControlChannel = channel);*/
-
-        List<Channel> audioChannels = new ArrayList<>();
-        for(Channel channel : getChannels()){
-            if (channel.getEngageType() == Channel.EngageType.AUDIO){
-                audioChannels.add(channel);
-            }
-        }
-        /*List<Channel> audioChannels = getChannels()
-                .stream()
-                .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
-                .collect(Collectors.toList());*/
-
-        setChannels(audioChannels);
-    }
-
-    public void addMissionControlChannelToList() {
-        List<Channel> newChannels = new ArrayList<>(getChannels());
-        newChannels.add(missionControlChannel);
-        setChannels(newChannels);
     }
 
     /** called by internal mechanisms, do not call yourself. */

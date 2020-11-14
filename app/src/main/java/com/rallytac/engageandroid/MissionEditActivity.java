@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -16,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -32,24 +34,34 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.rallytac.engageandroid.legba.data.DataManager;
+import com.rallytac.engageandroid.legba.data.dto.Channel;
+import com.rallytac.engageandroid.legba.data.dto.Mission;
+import com.rallytac.engageandroid.legba.data.dto.MissionDao;
 
-public class MissionEditActivity extends AppCompatActivity
-{
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import timber.log.Timber;
+
+import static java.util.stream.Collectors.toCollection;
+
+public class MissionEditActivity extends AppCompatActivity {
     private static String TAG = MissionEditActivity.class.getSimpleName();
 
     private DatabaseMission _mission = null;
     private GroupListAdapter _adapter;
     private Intent _resultIntent = new Intent();
     private boolean _allowEdit = true;
+    private Channel missionControlChannel;
 
-    private class GroupListAdapter extends ArrayAdapter<DatabaseGroup>
-    {
+    private class GroupListAdapter extends ArrayAdapter<DatabaseGroup> {
         private Context _ctx;
         private int _resId;
 
-        public GroupListAdapter(Context ctx, int resId, ArrayList<DatabaseGroup> list)
-        {
+        public GroupListAdapter(Context ctx, int resId, ArrayList<DatabaseGroup> list) {
             super(ctx, resId, list);
             _ctx = ctx;
             _resId = resId;
@@ -57,20 +69,16 @@ public class MissionEditActivity extends AppCompatActivity
 
         @NonNull
         @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
-        {
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater inflator = LayoutInflater.from(_ctx);
             convertView = inflator.inflate(_resId, parent, false);
 
             final DatabaseGroup item = getItem(position);
 
-            if(!Utils.isEmptyString(item._name))
-            {
-                ((TextView)convertView.findViewById(R.id.tvGroupName)).setText(item._name);
-            }
-            else
-            {
-                ((TextView)convertView.findViewById(R.id.tvGroupName)).setText(R.string.no_group_name);
+            if (!Utils.isEmptyString(item._name)) {
+                ((TextView) convertView.findViewById(R.id.tvGroupName)).setText(item._name);
+            } else {
+                ((TextView) convertView.findViewById(R.id.tvGroupName)).setText(R.string.no_group_name);
             }
 
             String summary = null;
@@ -83,10 +91,8 @@ public class MissionEditActivity extends AppCompatActivity
             boolean encrypted = (cryptoPassword != null && !cryptoPassword.isEmpty() && item._useCrypto);
 
             int index = 0;
-            for(String s : getResources().getStringArray(R.array.lp_tx_encoder_values))
-            {
-                if(s.compareTo(Integer.toString(item._txCodecId)) == 0)
-                {
+            for (String s : getResources().getStringArray(R.array.lp_tx_encoder_values)) {
+                if (s.compareTo(Integer.toString(item._txCodecId)) == 0) {
                     summary = getResources().getStringArray(R.array.lp_tx_encoder_short_names)[index];
                     break;
                 }
@@ -94,38 +100,29 @@ public class MissionEditActivity extends AppCompatActivity
                 index++;
             }
 
-            if(Utils.isEmptyString(summary))
-            {
+            if (Utils.isEmptyString(summary)) {
                 summary = getString(R.string.invalid_configuration);
             }
 
-            if(encrypted)
-            {
-                ((ImageView)convertView.findViewById(R.id.ivGroupEncrypted)).setImageDrawable(ContextCompat.getDrawable(MissionEditActivity.this, R.drawable.ic_protected));
-            }
-            else
-            {
-                ((ImageView)convertView.findViewById(R.id.ivGroupEncrypted)).setImageDrawable(ContextCompat.getDrawable(MissionEditActivity.this, R.drawable.ic_unprotected));
+            if (encrypted) {
+                ((ImageView) convertView.findViewById(R.id.ivGroupEncrypted)).setImageDrawable(ContextCompat.getDrawable(MissionEditActivity.this, R.drawable.ic_protected));
+            } else {
+                ((ImageView) convertView.findViewById(R.id.ivGroupEncrypted)).setImageDrawable(ContextCompat.getDrawable(MissionEditActivity.this, R.drawable.ic_unprotected));
             }
 
-            ((TextView)convertView.findViewById(R.id.tvGroupInfo)).setText(summary);
+            ((TextView) convertView.findViewById(R.id.tvGroupInfo)).setText(summary);
 
-            convertView.setOnClickListener(new View.OnClickListener()
-            {
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v)
-                {
+                public void onClick(View v) {
                     editGroup(item._id);
                 }
             });
 
-            if(_allowEdit)
-            {
-                convertView.findViewById(R.id.ivDeleteGroup).setOnClickListener(new View.OnClickListener()
-                {
+            if (_allowEdit) {
+                convertView.findViewById(R.id.ivDeleteGroup).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v)
-                    {
+                    public void onClick(View v) {
                         confirmDeleteGroup(item._id);
                     }
                 });
@@ -135,32 +132,24 @@ public class MissionEditActivity extends AppCompatActivity
         }
     }
 
-    private void addGroup()
-    {
-        if(_mission._groups.size() < 4)
-        {
+    private void addGroup() {
+        if (_mission._groups.size() < 4) {
             editGroup(null);
-        }
-        else
-        {
+        } else {
             Toast.makeText(this, R.string.max_num_groups_reached, Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void editGroup(final String theIdToEdit)
-    {
+    private void editGroup(final String theIdToEdit) {
         final DatabaseGroup group;
 
-        if(Utils.isEmptyString(theIdToEdit))
-        {
+        if (Utils.isEmptyString(theIdToEdit)) {
             group = new DatabaseGroup();
             group._id = Utils.generateGroupId();
             group._txFramingMs = Constants.DEFAULT_TX_FRAMING_MS;
             group._txCodecId = Constants.DEFAULT_ENCODER;
             group._maxTxSecs = Constants.DEFAULT_TX_SECS;
-        }
-        else
-        {
+        } else {
             group = _mission.getGroupById(theIdToEdit);
         }
 
@@ -185,22 +174,17 @@ public class MissionEditActivity extends AppCompatActivity
 
         dialogBuilder.setCancelable(true)
                 .setTitle(getString(R.string.title_group))
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener()
-                {
+                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
 
-        if(_allowEdit)
-        {
-            dialogBuilder.setPositiveButton(R.string.button_save, new DialogInterface.OnClickListener()
-            {
+        if (_allowEdit) {
+            dialogBuilder.setPositiveButton(R.string.button_save, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
+                public void onClick(DialogInterface dialog, int which) {
                     group._name = etGroupName.getText().toString();
                     group._rxAddress = etRxAddress.getText().toString();
                     group._rxPort = Utils.parseIntSafe(etRxPort.getText().toString());
@@ -212,18 +196,15 @@ public class MissionEditActivity extends AppCompatActivity
                     group._fdx = swFullDuplex.isChecked();
                     group._maxTxSecs = (swUnlimitedTx.isChecked() ? Constants.UNLIMITED_TX_SECS : Constants.DEFAULT_TX_SECS);
 
-                    if(Utils.isEmptyString(group._txAddress))
-                    {
+                    if (Utils.isEmptyString(group._txAddress)) {
                         group._txAddress = group._rxAddress;
                     }
 
-                    if(group._txPort == 0)
-                    {
+                    if (group._txPort == 0) {
                         group._txPort = group._rxPort;
                     }
 
-                    if(!_mission.updateGroupById(group._id, group))
-                    {
+                    if (!_mission.updateGroupById(group._id, group)) {
                         _mission._groups.add(group);
                     }
 
@@ -248,10 +229,8 @@ public class MissionEditActivity extends AppCompatActivity
         index = 0;
         spnCodec.setSelection(index);
         ra = getResources().getStringArray(R.array.lp_tx_encoder_values);
-        for(String s : ra)
-        {
-            if(s.compareTo(Integer.toString(group._txCodecId)) == 0)
-            {
+        for (String s : ra) {
+            if (s.compareTo(Integer.toString(group._txCodecId)) == 0) {
                 spnCodec.setSelection(index);
                 break;
             }
@@ -262,10 +241,8 @@ public class MissionEditActivity extends AppCompatActivity
         index = 0;
         spnFraming.setSelection(index);
         ra = getResources().getStringArray(R.array.lp_tx_encoder_framing_values);
-        for(String s : ra)
-        {
-            if(s.compareTo(Integer.toString(group._txFramingMs)) == 0)
-            {
+        for (String s : ra) {
+            if (s.compareTo(Integer.toString(group._txFramingMs)) == 0) {
                 spnFraming.setSelection(index);
                 break;
             }
@@ -274,15 +251,12 @@ public class MissionEditActivity extends AppCompatActivity
         }
 
         swEncrypted.setChecked(group._useCrypto);
-        swEncrypted.setOnClickListener(new View.OnClickListener()
-        {
+        swEncrypted.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 group._useCrypto = swEncrypted.isChecked();
 
-                if(group._useCrypto && Utils.isEmptyString(group._cryptoPassword))
-                {
+                if (group._useCrypto && Utils.isEmptyString(group._cryptoPassword)) {
                     group._cryptoPassword = Utils.generateCryptoPassword();
                     tvCryptoSignature.setText(Utils.md5HashOfString(group._cryptoPassword));
                 }
@@ -291,22 +265,17 @@ public class MissionEditActivity extends AppCompatActivity
             }
         });
 
-        btnRegen.setOnClickListener(new View.OnClickListener()
-        {
+        btnRegen.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 group._cryptoPassword = Utils.generateCryptoPassword();
                 tvCryptoSignature.setText(Utils.md5HashOfString(group._cryptoPassword));
             }
         });
 
-        if(!Utils.isEmptyString(group._cryptoPassword))
-        {
+        if (!Utils.isEmptyString(group._cryptoPassword)) {
             tvCryptoSignature.setText(Utils.md5HashOfString(group._cryptoPassword));
-        }
-        else
-        {
+        } else {
             tvCryptoSignature.setText(null);
         }
 
@@ -330,8 +299,7 @@ public class MissionEditActivity extends AppCompatActivity
         alertDialog.show();
     }
 
-    private void confirmDeleteGroup(final String id)
-    {
+    private void confirmDeleteGroup(final String id) {
         DatabaseGroup group = _mission.getGroupById(id);
         String s;
 
@@ -347,50 +315,45 @@ public class MissionEditActivity extends AppCompatActivity
         AlertDialog dlg = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.title_delete_group))
                 .setCancelable(false)
-                .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                        deleteGroup(id);
-                    }
-                }).setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                    }
+                .setPositiveButton(R.string.button_yes, (dialogInterface, i) -> deleteGroup(id))
+                .setNegativeButton(R.string.button_cancel, (dialogInterface, i) -> {
                 }).setView(message).create();
 
         dlg.show();
     }
 
-    private void deleteGroup(String id)
-    {
-        if(_mission.deleteGroupById(id))
-        {
+    private void deleteGroup(String id) {
+        if (_mission.deleteGroupById(id)) {
             _adapter.notifyDataSetChanged();
         }
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mission_edit);
 
-        Intent intent = getIntent();
-        if(intent != null)
-        {
-            String json = intent.getStringExtra(Constants.MISSION_EDIT_EXTRA_JSON);
-            if(json != null)
-            {
-                _mission = DatabaseMission.parse(json);
-            }
+        MissionEditActivityArgs missionEditActivityArgs = MissionEditActivityArgs.fromBundle(getIntent().getExtras());
+        Mission mission = missionEditActivityArgs.getMission();
+
+        if (mission != null) {
+            mission.getChannels()
+                    .stream()
+                    .filter(channel -> channel.getEngageType() == Channel.EngageType.PRESENCE)
+                    .findFirst()
+                    .ifPresent(presenceChannel -> missionControlChannel = presenceChannel);
+
+            List<Channel> audioChannels = mission.getChannels()
+                    .stream()
+                    .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
+                    .collect(Collectors.toList());
+
+            mission.setChannels(audioChannels);
         }
 
-        if(_mission == null)
-        {
+        _mission = mapMissionTo_Mission(mission);
+
+        if (_mission == null) {
             _mission = new DatabaseMission();
             _mission._id = Utils.generateMissionId();
             _mission._rpAddress = getString(R.string.default_rallypoint);
@@ -412,81 +375,70 @@ public class MissionEditActivity extends AppCompatActivity
         setupActionBar();
     }
 
-    private void setupActionBar()
-    {
+    private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-        {
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == android.R.id.home)
-        {
+        if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void populateUi()
-    {
-        if(_mission != null)
-        {
-            if(_allowEdit)
-            {
+    private void populateUi() {
+        if (_mission != null) {
+            if (_allowEdit) {
                 ((ImageView) findViewById(R.id.ivPinLock)).setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_unlocked));
-            }
-            else
-            {
+            } else {
                 ((ImageView) findViewById(R.id.ivPinLock)).setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_locked));
             }
 
-            ((TextView)findViewById(R.id.etMissionName)).setText(_mission._name);
+            ((TextView) findViewById(R.id.etMissionName)).setText(_mission._name);
             findViewById(R.id.etMissionName).setEnabled(_allowEdit);
 
-            ((TextView)findViewById(R.id.etMissionDescription)).setText(_mission._description);
+            ((TextView) findViewById(R.id.etMissionDescription)).setText(_mission._description);
             findViewById(R.id.etMissionDescription).setEnabled(_allowEdit);
 
             findViewById(R.id.swUseRallypoint).setEnabled(_allowEdit);
-            ((Switch)findViewById(R.id.swUseRallypoint)).setChecked(_mission._useRp);
+            ((Switch) findViewById(R.id.swUseRallypoint)).setChecked(_mission._useRp);
 
-            ((TextView)findViewById(R.id.etRpAddress)).setText(_mission._rpAddress);
+            ((TextView) findViewById(R.id.etRpAddress)).setText(_mission._rpAddress);
             findViewById(R.id.etRpAddress).setEnabled(_allowEdit);
 
-            ((TextView)findViewById(R.id.etRpPort)).setText(Integer.toString(_mission._rpPort));
+            ((TextView) findViewById(R.id.etRpPort)).setText(Integer.toString(_mission._rpPort));
             findViewById(R.id.etRpPort).setEnabled(_allowEdit);
 
-            ((TextView)findViewById(R.id.etMcAddress)).setText(_mission._mcAddress);
+            ((TextView) findViewById(R.id.etMcAddress)).setText(_mission._mcAddress);
             findViewById(R.id.etMcAddress).setEnabled(_allowEdit);
 
-            ((TextView)findViewById(R.id.etMcPort)).setText(Integer.toString(_mission._mcPort));
+            ((TextView) findViewById(R.id.etMcPort)).setText(Integer.toString(_mission._mcPort));
             findViewById(R.id.etMcPort).setEnabled(_allowEdit);
 
-            ((Spinner)findViewById(R.id.spnMcFailoverPolicy)).setSelection(_mission._multicastFailoverPolicy);
+            ((Spinner) findViewById(R.id.spnMcFailoverPolicy)).setSelection(_mission._multicastFailoverPolicy);
             findViewById(R.id.spnMcFailoverPolicy).setEnabled(_allowEdit);
 
             findViewById(R.id.ivAddGroup).setEnabled(_allowEdit);
         }
     }
 
-    private boolean grabUiElements()
-    {
+    private boolean grabUiElements() {
         boolean rc;
         DatabaseMission tmp = _mission;
 
-        try
-        {
+        try {
             tmp._name = Utils.trimString(((TextView) findViewById(R.id.etMissionName)).getText().toString());
             tmp._description = Utils.trimString(((TextView) findViewById(R.id.etMissionDescription)).getText().toString());
             tmp._useRp = ((Switch) findViewById(R.id.swUseRallypoint)).isChecked();
             tmp._rpAddress = Utils.trimString(((TextView) findViewById(R.id.etRpAddress)).getText().toString());
             tmp._rpPort = Utils.parseIntSafe(Utils.trimString(((TextView) findViewById(R.id.etRpPort)).getText().toString()));
-            tmp._multicastFailoverPolicy = ((Spinner)findViewById(R.id.spnMcFailoverPolicy)).getSelectedItemPosition();
+            tmp._multicastFailoverPolicy = ((Spinner) findViewById(R.id.spnMcFailoverPolicy)).getSelectedItemPosition();
 
             tmp._mcAddress = Utils.trimString(((TextView) findViewById(R.id.etMcAddress)).getText().toString());
             tmp._mcPort = Utils.parseIntSafe(Utils.trimString(((TextView) findViewById(R.id.etMcPort)).getText().toString()));
@@ -494,9 +446,7 @@ public class MissionEditActivity extends AppCompatActivity
             _mission = tmp;
 
             rc = true;
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             // TODO display info about invalid data
             rc = false;
         }
@@ -504,8 +454,7 @@ public class MissionEditActivity extends AppCompatActivity
         return rc;
     }
 
-    public void onClickPinLock(View view)
-    {
+    public void onClickPinLock(View view) {
         final boolean locking = (Utils.isEmptyString(_mission._modPin) || (!Utils.isEmptyString(_mission._modPin) && _allowEdit));
 
         LayoutInflater layoutInflater = LayoutInflater.from(this);
@@ -516,110 +465,81 @@ public class MissionEditActivity extends AppCompatActivity
         final EditText editText = promptView.findViewById(R.id.etPinCode);
 
         alertDialogBuilder.setNegativeButton(R.string.cancel,
-                new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 });
 
-        if(!Utils.isEmptyString(_mission._modPin))
-        {
-            alertDialogBuilder.setNeutralButton(getString(R.string.button_clear), new DialogInterface.OnClickListener()
-            {
+        if (!Utils.isEmptyString(_mission._modPin)) {
+            alertDialogBuilder.setNeutralButton(getString(R.string.button_clear), new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
+                public void onClick(DialogInterface dialog, int which) {
                     String pin = editText.getText().toString();
-                    if(!Utils.isEmptyString(pin))
-                    {
-                        if(pin.compareTo(_mission._modPin) == 0)
-                        {
+                    if (!Utils.isEmptyString(pin)) {
+                        if (pin.compareTo(_mission._modPin) == 0) {
                             _allowEdit = true;
                             _mission._modPin = "";
                             populateUi();
                             _adapter.notifyDataSetChanged();
                         }
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(MissionEditActivity.this, R.string.no_pin_entered, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         }
 
-        alertDialogBuilder.setPositiveButton(locking ? getString(R.string.button_lock) : getString(R.string.button_unlock), new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        String pin = editText.getText().toString();
+        alertDialogBuilder.setPositiveButton(locking ? getString(R.string.button_lock) : getString(R.string.button_unlock), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                String pin = editText.getText().toString();
 
-                        if(!Utils.isEmptyString(pin))
-                        {
-                            if(locking)
-                            {
-                                _mission._modPin = pin;
-                                _allowEdit = false;
-                            }
-                            else
-                            {
-                                if(pin.compareTo(_mission._modPin) == 0)
-                                {
-                                    _allowEdit = true;
-                                }
-                                else
-                                {
-                                    Toast.makeText(MissionEditActivity.this, R.string.invalid_pin, Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            populateUi();
-                            _adapter.notifyDataSetChanged();
+                if (!Utils.isEmptyString(pin)) {
+                    if (locking) {
+                        _mission._modPin = pin;
+                        _allowEdit = false;
+                    } else {
+                        if (pin.compareTo(_mission._modPin) == 0) {
+                            _allowEdit = true;
+                        } else {
+                            Toast.makeText(MissionEditActivity.this, R.string.invalid_pin, Toast.LENGTH_SHORT).show();
                         }
-                        else
-                        {
-                            Toast.makeText(MissionEditActivity.this, R.string.no_pin_entered, Toast.LENGTH_SHORT).show();
-                        }
-
                     }
-                });
 
+                    populateUi();
+                    _adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(MissionEditActivity.this, R.string.no_pin_entered, Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
 
 
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
     }
 
-    public void onClickToggleAdvanced(View view)
-    {
+    public void onClickToggleAdvanced(View view) {
         toggleAdvancedView();
     }
 
-    private void toggleAdvancedView()
-    {
+    private void toggleAdvancedView() {
         ConstraintLayout lay = findViewById(R.id.layAdvanced);
 
-        if(lay.getVisibility() == View.VISIBLE)
-        {
+        if (lay.getVisibility() == View.VISIBLE) {
             lay.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             lay.setVisibility(View.VISIBLE);
         }
     }
 
-    public void onClickAddGroup(View view)
-    {
+    public void onClickAddGroup(View view) {
         addGroup();
     }
 
-    private void updateActivityResult()
-    {
-        if(grabUiElements())
-        {
+    private void updateActivityResult() {
+        if (grabUiElements()) {
             String theJson = _mission.toString();
             _resultIntent.putExtra(Constants.MISSION_EDIT_EXTRA_JSON, theJson);
             setResult(RESULT_OK, _resultIntent);
@@ -627,9 +547,84 @@ public class MissionEditActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         updateActivityResult();
+        saveMission();
         super.onBackPressed();
+    }
+
+    private void saveMission() {
+        Mission newMission = map_missionToMission(_mission);
+        if (missionControlChannel == null) {
+            Timber.i("Adding generated missionControlChannel");
+            newMission.getChannels()
+                    .add(DataManager.getInstance().generateMissionControlChannel(_mission._id));
+        } else {
+            Timber.i("Adding previously saved missionControlChannel");
+            newMission.getChannels().add(missionControlChannel);
+        }
+
+        if (newMission.getName().isEmpty()) {
+            Toast.makeText(this, "Please add a name to save this mission", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        MissionDao missionDao = ((EngageApplication) getApplication()).getDaoSession().getMissionDao();
+        missionDao.insertOrReplace(newMission);
+    }
+
+    private Mission map_missionToMission(DatabaseMission _mission) {
+        Timber.i("Mission %s", _mission);
+
+        List<Channel> newGroups = _mission._groups.stream().map(_group -> {
+            return new Channel(_group._id, _mission._id,
+                    _group._name, _group._image,
+                    Channel.ChannelType.PRIMARY, _group._txFramingMs,
+                    _group._txCodecId, _group._maxTxSecs,
+                    _group._txAddress, _group._txPort,
+                    _group._rxAddress, _group._rxPort,
+                    Channel.EngageType.AUDIO, Collections.emptyList());
+        }).collect(Collectors.toList());
+
+        Mission newMission = new Mission(_mission._id, _mission._name, new ArrayList<>(), newGroups);
+        newMission.setRpAddress(_mission._rpAddress);
+        newMission.setRpPort(_mission._rpPort);
+
+        Timber.i("Mission %s", newMission);
+        return newMission;
+    }
+
+    private DatabaseMission mapMissionTo_Mission(Mission mission) {
+        if (mission == null) {
+            return null;
+        }
+
+        _mission = new DatabaseMission();
+
+        _mission._id = mission.getId();
+        _mission._name = mission.getName();
+        _mission._rpAddress = mission.getRpAddress();
+        _mission._rpPort = mission.getRpPort();
+
+        _mission._groups = mission.getChannels().stream()
+                .map(channel -> {
+                    DatabaseGroup newGroup = new DatabaseGroup();
+
+                    newGroup._id = channel.getId();
+                    newGroup._name = channel.getName();
+                    newGroup._type = channel.getEngageType() == Channel.EngageType.AUDIO ? 1 : 2;
+                    newGroup._txFramingMs = channel.getTxFramingMs();
+                    newGroup._txCodecId = channel.getTxCodecId();
+                    newGroup._maxTxSecs = channel.getMaxTxSecs();
+                    newGroup._txAddress = channel.getTxAddress();
+                    newGroup._txPort = channel.getTxPort();
+                    newGroup._rxAddress = channel.getRxAddress();
+                    newGroup._rxPort = channel.getRxPort();
+                    newGroup._image = channel.getImage();
+
+                    return newGroup;
+                }).collect(toCollection(ArrayList::new));
+
+        return _mission;
     }
 }

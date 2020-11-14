@@ -48,8 +48,7 @@
             android:value="@string/google_maps_key" />
 
 
-        <activity android:name=".legba.HostActivity" android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait">
+        <activity android:name=".legba.HostActivity" android:windowSoftInputMode="adjustPan">
 
         </activity>
 

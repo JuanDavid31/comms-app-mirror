@@ -66,6 +66,7 @@ import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.Timer;
@@ -2500,24 +2501,13 @@ public class EngageApplication
     public void onGroupConnected(final String id, final String eventExtraJson) {
         runOnUiThread(() -> {
 
-            String missionControlId = "{GCONTROL}";
-
             Timber.i("onGroupConnected id -> %s ", id);
 
-            if (!id.equals(missionControlId)) {
+            if (!id.equals(Globals.MISSION_CONTROL_ID)) {
                 return;
             }
 
-            EngageClasses.PresenceDescriptor presenceDescriptor =
-                    new EngageClasses.PresenceDescriptor(String.format("{USER-%s}", new Random().nextInt(10 + 1)), //random number from 0 to 10
-                            Globals.getEngageApplication().getActiveConfiguration().getUserId(),
-                            Globals.getEngageApplication().getActiveConfiguration().getUserDisplayName());
-
-            String json = new Gson().toJson(presenceDescriptor);
-
-            Timber.i("Updating presence descriptor %s", id);
-            Globals.getEngageApplication().getEngine().engageUpdatePresenceDescriptor(missionControlId, json, 1);
-
+            DataManager.getInstance().updatePresenceDescriptor();
         });
     }
 
@@ -2525,14 +2515,11 @@ public class EngageApplication
     public void onGroupConnectFailed(final String id, final String eventExtraJson) {
         runOnUiThread(() -> {
             GroupDescriptor gd = getGroup(id);
-            if (gd == null) {
-                Log.e(TAG, "onGroupConnectFailed: cannot find group id='" + id + "'");
-                return;
-            }
 
-            Log.d(TAG, "onGroupConnectFailed: id='" + id + "', n='" + gd.name + "', x=" + eventExtraJson);
+            Log.d(TAG, "onGroupConnectFailed: id='" + id + "', , x=" + eventExtraJson);
 
-            try {
+
+            /*try {
                 if (!Utils.isEmptyString(eventExtraJson)) {
                     JSONObject eej = new JSONObject(eventExtraJson);
                     JSONObject gcd = eej.optJSONObject(Engine.JsonFields.GroupConnectionDetail.objectName);
@@ -2569,7 +2556,7 @@ public class EngageApplication
                 eraseGroupConnectionState(id);
             }
 
-            notifyGroupUiListeners(gd);
+            notifyGroupUiListeners(gd);*/
         });
     }
 
@@ -2630,18 +2617,18 @@ public class EngageApplication
         runOnUiThread(() -> {
             logEvent(Analytics.GROUP_JOINED);
 
-            GroupDescriptor gd = getGroup(id);
+            /*GroupDescriptor gd = getGroup(id);
             if (gd == null) {
                 Log.e(TAG, "onGroupJoined: cannot find group id='" + id + "'");
                 return;
-            }
+            }*/
 
-            Log.d(TAG, "onGroupJoined: id='" + id + "', n='" + gd.name + "'");
+            Timber.d("onGroupJoined: id='%s'", id);
 
-            gd.joined = true;
+            /*gd.joined = true;
             gd.joinError = false;
 
-            notifyGroupUiListeners(gd);
+            notifyGroupUiListeners(gd);*/
         });
     }
 
@@ -2799,13 +2786,7 @@ public class EngageApplication
             public void run() {
                 //logEvent(Analytics.GROUP_RX_SPEAKER_COUNT_CHANGED);
 
-                GroupDescriptor gd = getGroup(id);
-                if (gd == null) {
-                    Log.e(TAG, "onGroupRxSpeakersChanged: cannot find group id='" + id + "'");
-                    return;
-                }
-
-                Log.d(TAG, "onGroupRxSpeakersChanged: id='" + id + "', n='" + gd.name + "'");
+                Timber.d("onGroupRxSpeakersChanged: id='%s'", id);
 
                 ArrayList<TalkerDescriptor> talkers = null;
 
@@ -2843,10 +2824,10 @@ public class EngageApplication
                     }
                 }
 
-                gd.updateTalkers(talkers);
+                //gd.updateTalkers(talkers);
                 _lastAudioActivity = Utils.nowMs();
 
-                notifyGroupUiListeners(gd);
+                //notifyGroupUiListeners(gd);
             }
         });
     }
@@ -3237,28 +3218,6 @@ public class EngageApplication
 
             GroupDiscoveryInfo groupDiscoveryInfo = new Gson().fromJson(nodeJson, GroupDiscoveryInfo.class);
             Globals.groupDiscoveryListener.onGroupRediscover(id, groupDiscoveryInfo);
-
-
-            //logEvent(Analytics.GROUP_NODE_REDISCOVERED);
-
-            /*GroupDescriptor gd = getGroup(id);
-            if (gd == null) {
-                Log.e(TAG, "onGroupNodeRediscovered: cannot find group id='" + id + "'");
-                return;
-            }
-
-            Log.d(TAG, "onGroupNodeRediscovered: id='" + id + "', n='" + gd.name + "'");
-
-            PresenceDescriptor pd = getActiveConfiguration().processNodeDiscovered(nodeJson);
-            if (pd != null) {
-                synchronized (_presenceChangeListeners) {
-                    for (IPresenceChangeListener listener : _presenceChangeListeners) {
-                        listener.onPresenceChange(pd);
-                    }
-                }
-
-                notifyGroupUiListeners(gd);
-            }*/
         });
     }
 

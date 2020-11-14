@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import com.rallytac.engageandroid.EngageApplication;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
@@ -23,6 +24,7 @@ import com.rallytac.engageandroid.legba.data.dto.Mission;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 import static com.rallytac.engageandroid.legba.util.RUtils.getImageResource;
@@ -54,19 +56,38 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Mission currentMission = missions.get(position);
+        List<Channel> audioChannels = currentMission.getChannels()
+                .stream()
+                .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
+                .collect(Collectors.toList());
 
         holder.missionLayout.setOnClickListener(view -> {
             NavHostFragment.findNavController(fragment)
                 .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionFragment(currentMission));
-            DataManager.getInstance(context).switchToMissionOnEngageEngine(currentMission);
+            DataManager.getInstance().switchToMissionOnEngageEngine(currentMission);
         });
 
+        holder.trashLayout.setOnClickListener(view -> {
+            missions.remove(position);
+            ((EngageApplication) fragment.getActivity().getApplication())
+                    .getDaoSession()
+                    .getMissionDao()
+                    .delete(currentMission);
+            notifyDataSetChanged();
+        });
+
+        holder.settingsLayout.setOnClickListener(view -> {
+            NavHostFragment.findNavController(fragment)
+                    .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionEditActivity(currentMission));
+        });
+
+
         holder.missionName.setText(currentMission.getName());
-        holder.channelsNumber.setText(String.format("%s Channels", currentMission.getChannels().size()));
+        holder.channelsNumber.setText(String.format("%s Channels", audioChannels.size()));
         holder.channels.removeAllViews();
 
-        addChannelsToView(currentMission.getChannels(), holder.channels);
-        addRemainingChannelsText(currentMission.getChannels(), holder.channels);
+        addChannelsToView(audioChannels, holder.channels);
+        addRemainingChannelsText(audioChannels, holder.channels);
     }
 
     private void addChannelsToView(List<Channel> channels, LinearLayout channelsView) {
@@ -135,6 +156,8 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
         private TextView missionName;
         private TextView channelsNumber;
         private LinearLayout channels;
+        private View trashLayout;
+        private View settingsLayout;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -142,6 +165,8 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
             missionName = itemView.findViewById(R.id.mission_name_text);
             channelsNumber = itemView.findViewById(R.id.mission_channels_number);
             channels = itemView.findViewById(R.id.channels_list_view);
+            trashLayout = itemView.findViewById(R.id.trash_layout);
+            settingsLayout = itemView.findViewById(R.id.settings_layout);
         }
     }
 

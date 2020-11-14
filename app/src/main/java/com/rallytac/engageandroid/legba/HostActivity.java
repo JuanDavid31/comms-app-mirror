@@ -1,5 +1,6 @@
 package com.rallytac.engageandroid.legba;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -8,6 +9,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -21,16 +23,23 @@ import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.Navigator;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.rallytac.engageandroid.AboutActivity;
 import com.rallytac.engageandroid.ActiveConfiguration;
 import com.rallytac.engageandroid.BuildConfig;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.PreferenceKeys;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.SettingsActivity;
+import com.rallytac.engageandroid.SimpleUiMainActivity;
+import com.rallytac.engageandroid.VolumeLevels;
 import com.rallytac.engageandroid.databinding.ActivityHostBinding;
+import com.rallytac.engageandroid.legba.fragment.SettingsFragmentDirections;
 
 import java.util.Objects;
 
@@ -54,16 +63,16 @@ public class HostActivity extends AppCompatActivity {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         _ac = Globals.getEngageApplication().getActiveConfiguration();
-        Log.w("LEGBA SAYS:",_ac.getSelectedGroups().size()+"");
-        Log.w("License time left",Globals.getEngageApplication().getLicenseSecondsLeft()+"");
+        Log.w("LEGBA SAYS:", _ac.getSelectedGroups().size() + "");
+        Log.w("License time left", Globals.getEngageApplication().getLicenseSecondsLeft() + "");
     }
 
-    public void setupConf(){
+    public void setupConf() {
         NavController navController = Navigation.findNavController(this, R.id.host_fragment);
         AppBarConfiguration appBarConfiguration =
-            new AppBarConfiguration.Builder(navController.getGraph())
-                .setOpenableLayout((Openable) findViewById(R.id.drawer))
-                .build();
+                new AppBarConfiguration.Builder(navController.getGraph())
+                        .setOpenableLayout((Openable) findViewById(R.id.drawer))
+                        .build();
 
         setupDrawerConfiguration(navController);
         setupToolbarConfiguration(navController, appBarConfiguration);
@@ -92,8 +101,8 @@ public class HostActivity extends AppCompatActivity {
 
         Spannable spannable = new SpannableString(versionText);
         spannable.setSpan(
-            new ForegroundColorSpan(shutdownColor),
-            10, (10 + version.length() + 1), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                new ForegroundColorSpan(shutdownColor),
+                10, (10 + version.length() + 1), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         );
         navHeaderVersion.setText(spannable);
 
@@ -125,9 +134,9 @@ public class HostActivity extends AppCompatActivity {
         String alias = Globals.getSharedPreferences().getString(PreferenceKeys.USER_ALIAS_ID, null);
 
         View headerLayout = binding.navView.inflateHeaderView(R.layout.nav_header);
-        ((TextView)headerLayout.findViewById(R.id.nav_header_alias)).setText(alias);
-        ((TextView)headerLayout.findViewById(R.id.nav_header_display_name)).setText(displayName.toUpperCase());
-        ((TextView)headerLayout.findViewById(R.id.nav_header_display_team)).setText(getString(R.string.nav_drawer_team));
+        ((TextView) headerLayout.findViewById(R.id.nav_header_alias)).setText(alias);
+        ((TextView) headerLayout.findViewById(R.id.nav_header_display_name)).setText(displayName.toUpperCase());
+        ((TextView) headerLayout.findViewById(R.id.nav_header_display_team)).setText(getString(R.string.nav_drawer_team));
 
         headerLayout.findViewById(R.id.nav_header_close_image).setOnClickListener(v -> {
             DrawerLayout drawerLayout = findViewById(R.id.drawer);
@@ -138,6 +147,18 @@ public class HostActivity extends AppCompatActivity {
     private void setupDrawerConfiguration(NavController navController) {
         NavigationView navView = binding.navView;
         NavigationUI.setupWithNavController(navView, navController);
+
+        Menu menu = binding.navView.getMenu();
+
+        menu.findItem(R.id.drawer_about_action)
+                .setOnMenuItemClickListener(menuItem -> {
+                    /*Navigation.findNavController(this, R.id.main_content)
+                            .navigate(SettingsFragmentDirections.actionSettingsFragmentToSettingsActivity());*/
+
+                    Intent intent = new Intent(this, AboutActivity.class);
+                    startActivity(intent);
+                    return true;
+                });
     }
 
     private void setFont(String fontType, String text, MenuItem menuItem) {

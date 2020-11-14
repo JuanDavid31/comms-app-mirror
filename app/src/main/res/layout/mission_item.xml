@@ -12,6 +12,7 @@
             android:weightSum="1">
 
         <FrameLayout
+                android:id="@+id/trash_layout"
                 android:layout_width="73dp"
                 android:layout_height="match_parent"
                 android:background="@color/black_three">
@@ -24,6 +25,7 @@
         </FrameLayout>
 
         <FrameLayout
+                android:id="@+id/settings_layout"
                 android:layout_width="73dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

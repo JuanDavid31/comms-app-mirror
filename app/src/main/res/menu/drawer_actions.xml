@@ -14,21 +14,23 @@
   ~ limitations under the License.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:showIn="nav_view">
     <item
-        android:id="@id/missionsFragment"
+        android:id="@id/myMissionsFragment"
         android:title="@string/nav_drawer_my_missions" />
     <item
-        android:id="@id/drawer_action_my_channels"
+        android:id="@id/myChannelsFragment"
         android:title="@string/nav_drawer_my_channels" />
     <item
-        android:id="@id/drawer_action_history"
+        android:id="@id/historyFragment"
         android:title="@string/nav_drawer_history" />
     <item
-        android:id="@id/drawer_action_settings"
+        android:id="@id/settingsFragment"
         android:title="@string/nav_drawer_settings" />
     <item
-        android:id="@id/drawer_action_about"
+        android:id="@+id/drawer_about_action"
         android:title="@string/nav_drawer_about" />
     <item
         android:id="@id/drawer_action_shutdown"

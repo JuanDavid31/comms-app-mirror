@@ -6,12 +6,15 @@ import org.greenrobot.greendao.annotation.JoinEntity;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.ToMany;
 
+import java.io.Serializable;
 import java.util.List;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
 
 @Entity(nameInDb = "CHANNELS_GROUPS")
-public class ChannelGroup {
+public class ChannelGroup implements Serializable {
+
+    private static final long serialVersionUID = -6517664934545170205L;
 
     @Id(autoincrement = true)
     private Long id;

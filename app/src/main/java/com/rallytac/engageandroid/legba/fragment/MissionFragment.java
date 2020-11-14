@@ -42,7 +42,6 @@ import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo;
 import com.rallytac.engageandroid.legba.engage.GroupDiscoveryListener;
 import com.rallytac.engageandroid.legba.engage.RxListener;
-import com.rallytac.engageandroid.legba.util.StringUtils;
 import com.rallytac.engageandroid.legba.view.SwipeButton;
 import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
 import com.rallytac.engageandroid.legba.viewmodel.ViewModelFactory;
@@ -80,6 +79,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Timber.i("onCreate");
         super.onCreate(savedInstanceState);
         context = getContext();
         ViewModelFactory vmFactory = new ViewModelFactory(getActivity());
@@ -92,20 +92,37 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.i("onDestroyView");
+    }
+
+
+
+    @Override
     public void onDestroy() {
+        Timber.i("onDestroy");
         voiceRecognition.stopVoiceRecognition();
         super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Timber.i("onDetach");
     }
 
     private void setupMission() {
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
         Mission mission = missionFragmentArgs.getMission(); //TODO: the id should be the only one to be passed as an argument instead of a Mission instance
+
         vm.setupMission(mission);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Timber.i("onCreateView");
         activity = (HostActivity) requireActivity();
 
         transition = (TransitionDrawable) activity.binding.sosOverlapLayout.getBackground();
@@ -229,11 +246,11 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                 binding.txImage.setVisibility(View.VISIBLE);
                 Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
                 Timber.i("Tx to %s", activeGroupIds);
-                DataManager.getInstance(context).startTx(activeGroupIds);
+                DataManager.getInstance().startTx(activeGroupIds);
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 binding.txImage.setVisibility(View.INVISIBLE);
                 Log.w("Stop sending", "#SB#: onTouch ACTION_UP - endTx");//NON-NLS
-                DataManager.getInstance(context).endTx(activeGroupIds);
+                DataManager.getInstance().endTx(activeGroupIds);
             }
             return true;
         });
@@ -312,7 +329,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         binding.radioChannelsRecycler.setHasFixedSize(true);
         binding.radioChannelsRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         binding.radioChannelsRecycler.setAdapter(adapter);
-        adapter.setRadioChannels(vm.getAllChannels());
+        adapter.setRadioChannels(vm.getAudioChannels());
     }
 
     private void updateDots(int position) {
@@ -337,7 +354,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
 
     private void updateChannelListAdapter(){
         List<Channel> allChannels = vm
-                .getAllChannels()
+                .getAudioChannels()
                 .stream()
                 .peek(channel -> channel.setActive(false))
                 .collect(Collectors.toList());
@@ -368,7 +385,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
 
     private void setupEditCurrentChannelGroupLayout() {
         List<Channel> allChannels = //new ArrayList<>();
-                vm.getAllChannels();
+                vm.getAudioChannels();
         if (allChannels.isEmpty()) {
             activity.binding.channelsRecycler.setVisibility(View.GONE);
             activity.binding.defineAChannelText.setVisibility(View.VISIBLE);
@@ -408,9 +425,9 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                 boolean isNameRepeated = vm.getChannelsGroup()
                         .stream()
                         .map(ChannelGroup::getName)
-                        .peek(channelGroupName -> Timber.i("Before filter %s", channelGroupName))
+                        .peek(channelGroupName -> Timber.i("Before filter %s", channelGroupName))//Debugging purposes
                         .filter(channelGroupName -> !channelGroupName.equalsIgnoreCase(currentChannelGroupName))//Ignores current name, even if it is 'add title'
-                        .peek(channelGroupName -> Timber.i("After filter %s", channelGroupName))
+                        .peek(channelGroupName -> Timber.i("After filter %s", channelGroupName)) //Debugging purposes
                         .anyMatch(channelGroupName -> channelGroupName.equalsIgnoreCase(channelGroupNameSearch));
 
                 if (isNameRepeated) {
@@ -610,7 +627,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
 
     @Override
     public void onRx(String id, String alias, String displayName) {
-        boolean isIdPresent = vm.getChannelsGroup()
+/*        boolean isIdPresent = vm.getChannelsGroup()
                 .get(currentPage)
                 .getChannels()
                 .stream()
@@ -629,12 +646,12 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         } else {
             //TODO: Compound animation
             //this.channelSlidePageAdapter.initCompoundAnimation();
-        }
+        }*/
     }
 
     @Override
     public void stopRx(String id, String eventExtraJson) {
-        int channelsSize = getChannelsGroup().get(currentPage).getChannels().size();
+/*        int channelsSize = getChannelsGroup().get(currentPage).getChannels().size();
 
         if (channelsSize == 0) {
             //TODO: Standalone animation
@@ -644,7 +661,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
 
         } else {
             //TODO: Compound animation
-        }
+        }*/
     }
 
     @Override

@@ -22,6 +22,7 @@ import timber.log.Timber;
 
 public class Globals
 {
+    public static final String MISSION_CONTROL_ID = "{GCONTROL}";
     private static Context _ctx = null;
     private static EngageApplication _app = null;
     private static SharedPreferences _sp = null;

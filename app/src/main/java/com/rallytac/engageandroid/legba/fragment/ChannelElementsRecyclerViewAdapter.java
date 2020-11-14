@@ -67,7 +67,6 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
     @Override
     public int getItemViewType(int position) {
         ChannelElement currentElement = channelElements.get(position);
-        Timber.i(currentElement.toString());
         if (currentElement instanceof Member) {
             return MEMBER_ID;
         } else {

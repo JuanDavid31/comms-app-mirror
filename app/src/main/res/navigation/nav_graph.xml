@@ -17,8 +17,11 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
         <action
-            android:id="@+id/action_missionsFragment_to_largeCardFragment"
-            app:destination="@id/nfcActionsFragment" />
+                android:id="@+id/action_missionsFragment_to_missionEditActivity"
+                app:destination="@id/missionEditActivity" />
+        <action
+                android:id="@+id/action_missionsFragment_to_aboutActivity"
+                app:destination="@id/aboutActivity" />
     </fragment>
     <fragment
         android:id="@+id/missionFragment"
@@ -61,25 +64,36 @@
 
     <!-- Navigation Drawer -->
 
-<!--    <fragment-->
-<!--        android:id="@+id/drawer_action_my_mission"-->
-<!--        android:name="com.rallytac.engageandroid.legba.fragment.MissionsListFragment"/>-->
+    <fragment
+        android:id="@+id/myMissionsFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.MissionsListFragment">
+    </fragment>
 
     <fragment
-        android:id="@+id/drawer_action_my_channels"
-        android:name="com.rallytac.engageandroid.legba.fragment.MyChannelsFragment"/>
+        android:id="@+id/myChannelsFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.MyChannelsFragment">
+    </fragment>
 
     <fragment
-        android:id="@+id/drawer_action_history"
-        android:name="com.rallytac.engageandroid.legba.fragment.HistoryFragment"/>
+        android:id="@+id/historyFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.HistoryFragment">
+    </fragment>
 
     <fragment
-        android:id="@+id/drawer_action_settings"
-        android:name="com.rallytac.engageandroid.legba.fragment.SettingsFragment"/>
+        android:id="@+id/settingsFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.SettingsFragment">
+        <action
+                android:id="@+id/action_settingsFragment_to_settingsActivity"
+                app:destination="@id/settingsActivity" />
+        <action
+                android:id="@+id/action_settingsFragment_to_nfcActionsFragment"
+                app:destination="@id/nfcActionsFragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/drawer_action_about"
-        android:name="com.rallytac.engageandroid.legba.fragment.AboutFragment"/>
+        android:id="@+id/aboutFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.AboutFragment">
+    </fragment>
 
     <fragment
         android:id="@+id/drawer_action_shutdown"
@@ -87,4 +101,23 @@
     <fragment
         android:id="@+id/nfcActionsFragment"
         android:name="com.rallytac.engageandroid.legba.fragment.NFCActionsFragment" />
+    <activity
+            android:id="@+id/missionEditActivity"
+            android:name="com.rallytac.engageandroid.MissionEditActivity"
+            android:label="activity_mission_edit"
+            tools:layout="@layout/activity_mission_edit" >
+        <argument
+                android:name="mission"
+                app:argType="com.rallytac.engageandroid.legba.data.dto.Mission"
+                app:nullable="true" />
+    </activity>
+    <activity
+            android:id="@+id/settingsActivity"
+            android:name="com.rallytac.engageandroid.SettingsActivity"
+            android:label="SettingsActivity" />
+    <activity
+            android:id="@+id/aboutActivity"
+            android:name="com.rallytac.engageandroid.AboutActivity"
+            android:label="activity_about"
+            tools:layout="@layout/activity_about" />
 </navigation>
