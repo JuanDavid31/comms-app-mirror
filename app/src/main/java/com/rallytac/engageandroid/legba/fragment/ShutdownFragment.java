@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.databinding.FragmentShutdownBinding;
 
@@ -25,6 +26,6 @@ public class ShutdownFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getActivity().finish();
+        Globals.getEngageApplication().terminateApplicationAndReturnToAndroid(getActivity());
     }
 }
