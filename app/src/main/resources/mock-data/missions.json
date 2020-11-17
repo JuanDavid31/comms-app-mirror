@@ -2,92 +2,133 @@
     {
         "id": "{M1}",
         "name": "OVERLORD",
-        "rpAddress": "demo.rallytac.com",
-        "rpPort": 7443,
-        "channels": [
+        "rallypoint": { "use": false, "address": "demo.rallytac.com", "port": 7443 },
+        "groups": [
             {
                 "id": "{GCONTROL}",
                 "missionId": "{M1}",
                 "image": "primary",
                 "name": "ALPHA CONTROL",
-                "txFramingMs": 30,
-                "txCodecId": 25,
-                "maxTxSecs": 120,
-                "txAddress": "239.42.43.99",
-                "txPort": 19999,
-                "rxAddress": "239.42.43.99",
-                "rxPort": 19999,
-                "engageType": 2
+                "txAudio": {
+                    "encoder": 25,
+                    "fdx": false,
+                    "framingMs": 60,
+                    "maxTxSecs": 30
+                },
+                "tx": {
+                    "address": "239.42.43.99",
+                    "port": 19999
+                },
+                "rx": {
+                    "address": "239.42.43.99",
+                    "port": 19999
+                },
+                "type": 2
             },
             {
                 "id": "{G1}",
                 "missionId": "{M1}",
                 "image": "primary",
                 "name": "ALPHA",
-                "txFramingMs": 30,
-                "txCodecId": 25,
-                "maxTxSecs": 120,
-                "txAddress": "239.42.43.1",
-                "txPort": 18000,
-                "rxAddress": "239.42.43.1",
-                "rxPort": 18000,
-                "engageType": 1
+                "txAudio": {
+                    "encoder": 25,
+                    "fdx": false,
+                    "framingMs": 60,
+                    "maxTxSecs": 30
+                },
+                "tx": {
+                    "address": "239.42.43.99",
+                    "port": 19999
+                },
+                "rx": {
+                    "address": "239.42.43.99",
+                    "port": 19999
+                },
+                "type": 1
             },
             {
                 "id": "{G2}",
                 "missionId": "{M1}",
                 "image": "secondary",
                 "name": "DELTA",
-                "txFramingMs": 30,
-                "txCodecId": 25,
-                "maxTxSecs": 120,
-                "txAddress": "239.42.43.2",
-                "txPort": 18002,
-                "rxAddress": "239.42.43.2",
-                "rxPort": 18002,
-                "engageType": 1
+                "txAudio": {
+                    "framingMs": 30,
+                    "fdx": false,
+                    "encoder": 25,
+                    "maxTxSecs": 120
+                },
+                "tx": {
+                    "address": "239.42.43.99",
+                    "port": 19999
+                },
+                "rx": {
+                    "address": "239.42.43.99",
+                    "port": 19999
+                },
+                "type": 1
             },
             {
                 "id": "{G3}",
                 "missionId": "{M1}",
                 "image": "tertiary",
                 "name": "ECHO",
-                "txFramingMs": 30,
-                "txCodecId": 25,
-                "maxTxSecs": 120,
-                "txAddress": "239.42.43.3",
-                "txPort": 18004,
-                "rxAddress": "239.42.43.3",
-                "rxPort": 18004,
-                "engageType": 1
+                "txAudio": {
+                    "framingMs": 30,
+                    "fdx": false,
+                    "encoder": 25,
+                    "maxTxSecs": 120
+                },
+                "tx": {
+                    "address": "239.42.43.99",
+                    "port": 19999
+                },
+                "rx": {
+                    "address": "239.42.43.99",
+                    "port": 19999
+                },
+                "type": 1
             },
             {
                 "id": "{G4}",
                 "missionId": "{M1}",
                 "image": "quaternary",
                 "name": "CHARLIE",
-                "txFramingMs": 30,
-                "txCodecId": 25,
-                "maxTxSecs": 120,
-                "txAddress": "239.42.43.4",
-                "txPort": 18006,
-                "rxAddress": "239.42.43.4",
-                "rxPort": 18006,
-                "engageType": 1
+                "txAudio": {
+                    "framingMs": 30,
+                    "fdx": false,
+                    "encoder": 25,
+                    "maxTxSecs": 120
+                },
+                "tx": {
+                    "address": "239.42.43.99",
+                    "port": 19999
+                },
+                "rx": {
+                    "address": "239.42.43.99",
+                    "port": 19999
+                },
+                "type": 1
             },
             {
                 "id": "{G5}",
                 "missionId": "{M1}",
                 "image": "quinary",
                 "name": "GROUND TEAM",
-                "txFramingMs": 30,
-                "txCodecId": 25,
-                "maxTxSecs": 120,
-                "txAddress": "239.42.43.5",
-                "txPort": 18008,
-                "rxAddress": "239.42.43.5",
-                "rxPort": 18008,
-                "engageType": 1
+                "txAudio": {
+                    "framingMs": 30,
+                    "fdx": false,
+                    "encoder": 25,
+                    "maxTxSecs": 120
+                },
+                "tx": {
+                    "address": "239.42.43.99",
+                    "port": 19999
+                },
+                "rx": {
+                    "address": "239.42.43.99",
+                    "port": 19999
+                },
+                "type": 1
             }
         ]
     }

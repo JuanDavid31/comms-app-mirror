@@ -1,6 +1,5 @@
 package com.rallytac.engageandroid.legba.data;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
@@ -22,7 +21,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import okio.BufferedSource;
@@ -53,11 +51,7 @@ public class DataManager {
         BufferedSource source = Okio.buffer(Okio.source(inputStream));
         try {
             String jsonMissions = source.readUtf8();
-            Type listType = new TypeToken<List<Mission>>() {
-            }.getType();
-            List<Mission> missions = new GsonBuilder()
-                    .create()
-                    .fromJson(jsonMissions, listType);
+            List<Mission> missions = missionsStringToMissionsList(jsonMissions);
             loadMissionsOnEgageEngine(missions);
             return missions;
 
@@ -65,6 +59,14 @@ public class DataManager {
             e.printStackTrace();
         }
         return new ArrayList<>();
+    }
+
+    public List<Mission> missionsStringToMissionsList(String jsonMissions) {
+        Type listType = new TypeToken<List<Mission>>() {
+        }.getType();
+        return new GsonBuilder()
+                .create()
+                .fromJson(jsonMissions, listType);
     }
 
     private void loadMissionsOnEgageEngine(List<Mission> missions) {
@@ -98,7 +100,7 @@ public class DataManager {
 
     private ArrayList<DatabaseGroup> getGroupsByMission(Mission mission) {
         return mission
-                .getChannels()
+                .getGroups()
                 .stream()
                 .map(channel -> {
                     DatabaseGroup group = new DatabaseGroup(channel.getName());
@@ -132,7 +134,7 @@ public class DataManager {
                 });
         updateDB();*/
 
-        mission.getChannels()
+        mission.getGroups()
                 .forEach(channel -> {
                     AddressAndPort rx = new AddressAndPort(channel.getRxAddress(), channel.getRxPort());
                     AddressAndPort tx = new AddressAndPort(channel.getTxAddress(), channel.getTxPort());

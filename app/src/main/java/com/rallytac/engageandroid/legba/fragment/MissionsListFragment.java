@@ -2,6 +2,7 @@ package com.rallytac.engageandroid.legba.fragment;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -24,9 +26,13 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.rallytac.engageandroid.EngageApplication;
 import com.rallytac.engageandroid.MissionListActivity;
 import com.rallytac.engageandroid.R;
+import com.rallytac.engageandroid.SimpleUiMainActivity;
+import com.rallytac.engageandroid.Utils;
 import com.rallytac.engageandroid.databinding.FragmentMissionsListBinding;
 import com.rallytac.engageandroid.legba.HostActivity;
 import com.rallytac.engageandroid.legba.data.DataManager;
@@ -41,12 +47,19 @@ import com.rallytac.engageandroid.legba.data.dto.MissionDao;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import okio.BufferedSource;
+import okio.Okio;
+import okio.Source;
 import timber.log.Timber;
 
 public class MissionsListFragment extends Fragment {
@@ -62,7 +75,7 @@ public class MissionsListFragment extends Fragment {
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             binding.missionsListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        } else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             binding.missionsListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         }
 
@@ -74,7 +87,7 @@ public class MissionsListFragment extends Fragment {
         setHasOptionsMenu(true);
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
 
-        ((TextView)requireActivity().findViewById(R.id.toolbar_title_text)).setText(getString(R.string.nav_drawer_my_missions));
+        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(getString(R.string.nav_drawer_my_missions));
         HostActivity hostActivity = (HostActivity) requireActivity();
         ActionBar actionBar = hostActivity.getSupportActionBar();
 
@@ -117,6 +130,7 @@ public class MissionsListFragment extends Fragment {
                 Collections.swap(missions, i, 0);
             }
         } else {
+            missionDao.insert(jsonMission);
             missions.add(0, jsonMission);
         }
 
@@ -148,15 +162,46 @@ public class MissionsListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+
+    int PICK_MISSION_FILE_REQUEST_CODE = 44;
+
     private void startLoadMissionFromLocalFile() {
         try {
-            int PICK_MISSION_FILE_REQUEST_CODE = 44;
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_a_file)), PICK_MISSION_FILE_REQUEST_CODE);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Timber.i("OnActivityResult");
+        if (data != null && requestCode == PICK_MISSION_FILE_REQUEST_CODE) {
+            Uri fileUri = data.getData();
+            Timber.i("Intent data %s", fileUri.getPath());
+
+            File file = new File(fileUri.getPath());//create path from uri
+            final String[] split = file.getPath().split(":");//split the path.
+
+
+            String jsonMission = Utils.readTextFile(getContext(), fileUri);
+
+            Timber.i("jsonMission -> %s", jsonMission);
+
+            Mission importedMission = new GsonBuilder().create().fromJson(jsonMission, Mission.class);
+
+            Timber.i("Imported mission %s", importedMission);
+
+
+            ((EngageApplication) getActivity().getApplication())
+                    .getDaoSession()
+                    .getMissionDao()
+                    .insertOrReplace(importedMission);
+
+            //Missions list will refresh automatically
         }
     }
 }

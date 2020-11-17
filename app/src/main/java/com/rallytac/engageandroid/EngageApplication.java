@@ -565,10 +565,10 @@ public class EngageApplication
 
     @Override
     public void onCreate() {
-        Timber.plant(new Timber.DebugTree());
-        Log.d(TAG, "onCreate");
-
         super.onCreate();
+        Log.d(TAG, "onCreate");
+        Timber.plant(new Timber.DebugTree());
+
 
         // regular SQLite database
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "legba-test");

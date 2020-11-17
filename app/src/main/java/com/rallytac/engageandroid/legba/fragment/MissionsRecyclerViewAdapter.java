@@ -56,7 +56,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Mission currentMission = missions.get(position);
-        List<Channel> audioChannels = currentMission.getChannels()
+        List<Channel> audioChannels = currentMission.getGroups()
                 .stream()
                 .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
                 .collect(Collectors.toList());

@@ -1,5 +1,9 @@
 package com.rallytac.engageandroid.legba.data.dto;
 
+import com.google.gson.annotations.JsonAdapter;
+import com.rallytac.engageandroid.legba.mapping.ChannelDeserializer;
+import com.rallytac.engageandroid.legba.mapping.MissionDeserializer;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Keep;
@@ -8,13 +12,12 @@ import org.greenrobot.greendao.annotation.ToMany;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
-import org.greenrobot.greendao.annotation.Transient;
 
 @Entity(nameInDb = "MISSIONS")
+@JsonAdapter(MissionDeserializer.class)
 public class Mission implements Serializable {
 
     private static final long serialVersionUID = -6105178297191589989L;
@@ -33,17 +36,13 @@ public class Mission implements Serializable {
 
     @ToMany(referencedJoinProperty = "missionId")
     //@OrderBy("date ASC")
-    private List<Channel> channels;
+    private List<Channel> groups;
 
-    /**
-     * Used to resolve relations
-     */
+    /** Used to resolve relations */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /**
-     * Used for active entity operations.
-     */
+    /** Used for active entity operations. */
     @Generated(hash = 1935729854)
     private transient MissionDao myDao;
 
@@ -54,11 +53,13 @@ public class Mission implements Serializable {
         this.id = id;
     }
 
-    public Mission(String id, String name, List<ChannelGroup> channelsGroups, List<Channel> channels) {
+    public Mission(String id, String name, List<Channel> groups, String rpAddress, int rpPort) {
         this.id = id;
         this.name = name;
-        this.channelsGroups = channelsGroups;
-        this.channels = channels;
+        this.groups = groups;
+        this.rpAddress = rpAddress;
+        this.rpPort = rpPort;
+        this.channelsGroups = new ArrayList<>();
     }
 
     @Generated(hash = 1014324158)
@@ -68,6 +69,7 @@ public class Mission implements Serializable {
         this.rpAddress = rpAddress;
         this.rpPort = rpPort;
     }
+
 
     public String getId() {
         return id;
@@ -83,6 +85,51 @@ public class Mission implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+
+    public void setChannelsGroups(List<ChannelGroup> channelsGroups) {
+        this.channelsGroups = channelsGroups;
+    }
+
+
+
+    public void setGroups(List<Channel> groups) {
+        this.groups = groups;
+    }
+
+    @Override
+    public String toString() {
+        return "Mission{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", rpAddress='" + rpAddress + '\'' +
+                ", rpPort=" + rpPort +
+                ", channelsGroups=" + channelsGroups +
+                ", channels=" + (groups != null ? groups.size() : null) +
+                '}';
+    }
+
+
+
+
+
+
+    public String getRpAddress() {
+        return rpAddress;
+    }
+
+    public void setRpAddress(String rpAddress) {
+        this.rpAddress = rpAddress;
+    }
+
+    public int getRpPort() {
+        return rpPort;
+    }
+
+    public void setRpPort(int rpPort) {
+        this.rpPort = rpPort;
     }
 
     /**
@@ -107,62 +154,38 @@ public class Mission implements Serializable {
         return channelsGroups;
     }
 
-    public void setChannelsGroups(List<ChannelGroup> channelsGroups) {
-        this.channelsGroups = channelsGroups;
-    }
-
-    /**
-     * To-many relationship, resolved on first access (and after reset).
-     * Changes to to-many relations are not persisted, make changes to the target entity.
-     */
-    @Generated(hash = 1354864954)
-    public List<Channel> getChannels() {
-        if (channels == null) {
-            final DaoSession daoSession = this.daoSession;
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            ChannelDao targetDao = daoSession.getChannelDao();
-            List<Channel> channelsNew = targetDao._queryMission_Channels(id);
-            synchronized (this) {
-                if (channels == null) {
-                    channels = channelsNew;
-                }
-            }
-        }
-        return channels;
-    }
-
-    public void setChannels(List<Channel> channels) {
-        this.channels = channels;
-    }
-
-    @Override
-    public String toString() {
-        return "Mission{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", rpAddress='" + rpAddress + '\'' +
-                ", rpPort=" + rpPort +
-                ", channelsGroups=" + channelsGroups +
-                ", channels=" + (channels != null ? channels.size() : null) +
-                '}';
-    }
-
-    /**
-     * Resets a to-many relationship, making the next get call to query for a fresh result.
-     */
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     @Generated(hash = 1974632286)
     public synchronized void resetChannelsGroups() {
         channelsGroups = null;
     }
 
     /**
-     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     * To-many relationship, resolved on first access (and after reset).
+     * Changes to to-many relations are not persisted, make changes to the target entity.
      */
-    @Generated(hash = 1313248352)
-    public synchronized void resetChannels() {
-        channels = null;
+    @Generated(hash = 439982547)
+    public List<Channel> getGroups() {
+        if (groups == null) {
+            final DaoSession daoSession = this.daoSession;
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            ChannelDao targetDao = daoSession.getChannelDao();
+            List<Channel> groupsNew = targetDao._queryMission_Groups(id);
+            synchronized (this) {
+                if (groups == null) {
+                    groups = groupsNew;
+                }
+            }
+        }
+        return groups;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    @Generated(hash = 464128061)
+    public synchronized void resetGroups() {
+        groups = null;
     }
 
     /**
@@ -199,22 +222,6 @@ public class Mission implements Serializable {
             throw new DaoException("Entity is detached from DAO context");
         }
         myDao.update(this);
-    }
-
-    public String getRpAddress() {
-        return rpAddress;
-    }
-
-    public void setRpAddress(String rpAddress) {
-        this.rpAddress = rpAddress;
-    }
-
-    public int getRpPort() {
-        return rpPort;
-    }
-
-    public void setRpPort(int rpPort) {
-        this.rpPort = rpPort;
     }
 
     /** called by internal mechanisms, do not call yourself. */

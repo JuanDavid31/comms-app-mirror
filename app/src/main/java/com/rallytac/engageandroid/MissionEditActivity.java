@@ -337,18 +337,18 @@ public class MissionEditActivity extends AppCompatActivity {
         Mission mission = missionEditActivityArgs.getMission();
 
         if (mission != null) {
-            mission.getChannels()
+            mission.getGroups()
                     .stream()
                     .filter(channel -> channel.getEngageType() == Channel.EngageType.PRESENCE)
                     .findFirst()
                     .ifPresent(presenceChannel -> missionControlChannel = presenceChannel);
 
-            List<Channel> audioChannels = mission.getChannels()
+            List<Channel> audioChannels = mission.getGroups()
                     .stream()
                     .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
                     .collect(Collectors.toList());
 
-            mission.setChannels(audioChannels);
+            mission.setGroups(audioChannels);
         }
 
         _mission = mapMissionTo_Mission(mission);
@@ -557,11 +557,11 @@ public class MissionEditActivity extends AppCompatActivity {
         Mission newMission = map_missionToMission(_mission);
         if (missionControlChannel == null) {
             Timber.i("Adding generated missionControlChannel");
-            newMission.getChannels()
+            newMission.getGroups()
                     .add(DataManager.getInstance().generateMissionControlChannel(_mission._id));
         } else {
             Timber.i("Adding previously saved missionControlChannel");
-            newMission.getChannels().add(missionControlChannel);
+            newMission.getGroups().add(missionControlChannel);
         }
 
         if (newMission.getName().isEmpty()) {
@@ -586,7 +586,7 @@ public class MissionEditActivity extends AppCompatActivity {
                     Channel.EngageType.AUDIO, Collections.emptyList());
         }).collect(Collectors.toList());
 
-        Mission newMission = new Mission(_mission._id, _mission._name, new ArrayList<>(), newGroups);
+        Mission newMission = new Mission(_mission._id, _mission._name, newGroups, _mission._rpAddress, _mission._rpPort);
         newMission.setRpAddress(_mission._rpAddress);
         newMission.setRpPort(_mission._rpPort);
 
@@ -606,7 +606,7 @@ public class MissionEditActivity extends AppCompatActivity {
         _mission._rpAddress = mission.getRpAddress();
         _mission._rpPort = mission.getRpPort();
 
-        _mission._groups = mission.getChannels().stream()
+        _mission._groups = mission.getGroups().stream()
                 .map(channel -> {
                     DatabaseGroup newGroup = new DatabaseGroup();
 

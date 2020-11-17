@@ -97,8 +97,8 @@ public class MissionViewModel extends ViewModel {
 
     public Optional<Mission> getMissionById(String id) {
         if(missionDao.loadAll().size() == 0) {
-            channelElementDao.insertOrReplaceInTx(mission.getChannels().get(0).getChannelElements());
-            channelDao.insertOrReplaceInTx(mission.getChannels());
+            channelElementDao.insertOrReplaceInTx(mission.getGroups().get(0).getChannelElements());
+            channelDao.insertOrReplaceInTx(mission.getGroups());
             missionDao.insertOrReplace(mission);
         }
 
@@ -113,7 +113,7 @@ public class MissionViewModel extends ViewModel {
     }
 
     public List<Channel> getAudioChannels() {
-        return mission.getChannels()
+        return mission.getGroups()
                 .stream()
                 .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
                 .collect(Collectors.toList());
