@@ -76,7 +76,7 @@
                                 android:layout_marginBottom="9dp"
                                 android:fontFamily="@font/open_sans_bold"
                                 android:letterSpacing="0.02"
-                                android:text="Black Ops"
+                                android:text=""
                                 android:textColor="@color/paleRed"
                                 android:textSize="12sp"
                                 android:visibility="invisible"

@@ -430,7 +430,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                         .peek(channelGroupName -> Timber.i("After filter %s", channelGroupName)) //Debugging purposes
                         .anyMatch(channelGroupName -> channelGroupName.equalsIgnoreCase(channelGroupNameSearch));
 
-                if (isNameRepeated) {
+                if (isNameRepeated && !(currentChannelGroupName.equals(""))) {
                     Toast.makeText(context, "Titles have to be unique, this title exists.", Toast.LENGTH_SHORT).show();
                 }
 
