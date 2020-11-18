@@ -7,4 +7,7 @@
     <item
             android:id="@+id/load_from_json_action"
             android:title="Load from json"/>
+    <item
+            android:id="@+id/export_to_json_action"
+            android:title="Export to json"/>
 </menu>

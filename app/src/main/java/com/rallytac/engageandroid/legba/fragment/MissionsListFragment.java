@@ -1,70 +1,47 @@
 package com.rallytac.engageandroid.legba.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.NavHostController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.rallytac.engage.engine.Engine;
-import com.rallytac.engageandroid.ActiveConfiguration;
-import com.rallytac.engageandroid.Analytics;
 import com.rallytac.engageandroid.DatabaseGroup;
 import com.rallytac.engageandroid.DatabaseMission;
 import com.rallytac.engageandroid.EngageApplication;
-import com.rallytac.engageandroid.Globals;
-import com.rallytac.engageandroid.GroupDescriptor;
-import com.rallytac.engageandroid.MissionDatabase;
-import com.rallytac.engageandroid.MissionListActivity;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.ShareHelper;
-import com.rallytac.engageandroid.ShareMissionActivity;
 import com.rallytac.engageandroid.ShareableData;
-import com.rallytac.engageandroid.SimpleUiMainActivity;
-import com.rallytac.engageandroid.UploadMissionTask;
 import com.rallytac.engageandroid.Utils;
 import com.rallytac.engageandroid.databinding.FragmentMissionsListBinding;
 import com.rallytac.engageandroid.legba.HostActivity;
-import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
-import com.rallytac.engageandroid.SettingsActivity;
-import com.rallytac.engageandroid.legba.HostActivity;
 
-import com.rallytac.engageandroid.legba.data.DataManager;
-import com.rallytac.engageandroid.legba.data.dto.Mission;
-import com.rallytac.engageandroid.databinding.FragmentMissionsListBinding;
-import com.rallytac.engageandroid.legba.data.dto.MissionDao;
-import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
+import com.rallytac.engageandroid.legba.util.MappingUtils;
 import com.rallytac.engageandroid.legba.viewmodel.MissionsListViewModel;
 import com.rallytac.engageandroid.legba.viewmodel.ViewModelFactory;
 
@@ -72,21 +49,11 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-import okio.BufferedSource;
-import okio.Okio;
-import okio.Source;
 import timber.log.Timber;
 
 public class MissionsListFragment extends Fragment {
@@ -145,16 +112,21 @@ public class MissionsListFragment extends Fragment {
         inflater.inflate(R.menu.missions_list_fragment_menu, menu);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.create_manually_action) {
-            NavHostFragment.findNavController(this)
-                    .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionEditActivity(null));
-            return true;
-        } else if (itemId == R.id.load_from_json_action) {
-            startLoadMissionFromLocalFile();
-            return true;
+        switch (itemId) {
+            case R.id.create_manually_action:
+                NavHostFragment.findNavController(this)
+                        .navigate(MissionsListFragmentDirections.actionMissionsFragmentToMissionEditActivity(null));
+                return true;
+            case R.id.load_from_json_action:
+                startLoadMissionFromLocalFile();
+                return true;
+            case R.id.export_to_json_action:
+                showExportToJsonDialogDialog();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -180,88 +152,154 @@ public class MissionsListFragment extends Fragment {
         }
     }
 
-    public void onClickShare(Mission mission) {
-/*        boolean sharingJson = true;
+    private String selectedMissionName = "";
+
+    private void showExportToJsonDialogDialog() {
+        String[] missionNames = vm.getMissions()
+                .stream()
+                .map(Mission::getName)
+                .toArray(String[]::new);
+
+        int checkedItem = 0;
+        selectedMissionName = missionNames[checkedItem];
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Choose a mission to export")
+                .setSingleChoiceItems(missionNames, checkedItem, (dialogInterface, i) -> {
+                    selectedMissionName = missionNames[i];
+                })
+                .setPositiveButton("Share", (dialog, id) -> {
+                    //I'm asuming that mission names are unique
+                    vm.getMissions()
+                            .stream()
+                            .filter(mission -> mission.getName().equals(selectedMissionName))
+                            .findFirst()
+                            .ifPresent(mission -> {
+                                shareMission(mission);
+                            });
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss())
+                .show();
+    }
+
+    public void shareMission(Mission mission) {
         try {
             String extraText;
             ShareableData data = new ShareableData();
 
             extraText = String.format(getString(R.string.fmt_load_this_json_file_to_join_the_mission), mission.getName());
 
-            String fileName = String.format("mission-%s", mission.getName().replace(" ", "-");
+            String newName = mission.getName().replace(" ", "-");
+            String fileName = String.format("mission-%s", newName);
             File fd = File.createTempFile(fileName, ".json", Environment.getExternalStorageDirectory());//NON-NLS
 
             FileOutputStream fos = new FileOutputStream(fd);
-
-            fos.write(_jsonConfiguration.toString().getBytes());
+            fos.write(makeTemplate(mission).getBytes());
             fos.close();
 
-            Uri u = FileProvider.getUriForFile(this, getString(R.string.file_content_provider), fd);
+            Uri u = FileProvider.getUriForFile(getContext(), getString(R.string.file_content_provider), fd);
 
             fd.deleteOnExit();
+
             data.addUri(u);
 
-            Globals.getEngageApplication().logEvent(Analytics.MISSION_SHARE_JSON);
-
-
-            data.setText(String.format(getString(R.string.share_mission_email_subject), getString(R.string.app_name), misison.getName()));
-
+            data.setText(String.format(getString(R.string.share_mission_email_subject), getString(R.string.app_name), mission.getName()));
             data.setHtml(extraText);
+            data.setSubject(getString(R.string.app_name) + " : " + mission.getName());
 
-            data.setSubject(getString(R.string.app_name) + " : " + misison.getName());
-            startActivity(ShareHelper.buildShareIntent(this, data, getString(R.string.share_mission_upload_header)));
+            Intent intent = ShareHelper.buildShareIntent(getActivity(), data, getString(R.string.share_mission_upload_header));
+
+            List<ResolveInfo> resInfoList = this.getActivity().getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+            for (ResolveInfo resolveInfo : resInfoList) {
+                String packageName = resolveInfo.activityInfo.packageName;
+                this.getActivity().grantUriPermission(packageName, u, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+
+            startActivity(intent);
         } catch (Exception e) {
-            Globals.getEngageApplication().logEvent(Analytics.MISSION_SHARE_EXCEPTION);
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }*/
+            e.printStackTrace();
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public String makeTemplate(DatabaseMission _mission) {
-        JSONObject rc = new JSONObject();
+    public String makeTemplate(Mission mission) {
+
+        DatabaseMission _mission = MappingUtils.mapMissionTo_Mission(mission);
+
+        JSONObject jsonMission = new JSONObject();
 
         try {
-            rc.put(Engine.JsonFields.Mission.id, _mission._id);
+            jsonMission.put(Engine.JsonFields.Mission.id, _mission._id);
 
             if (!Utils.isEmptyString(_mission._name)) {
-                rc.put(Engine.JsonFields.Mission.name, _mission._name);
+                jsonMission.put(Engine.JsonFields.Mission.name, _mission._name);
             }
 
             if (!Utils.isEmptyString(_mission._description)) {
-                rc.put(Engine.JsonFields.Mission.description, _mission._description);
+                jsonMission.put(Engine.JsonFields.Mission.description, _mission._description);
             }
 
             /*if (!Utils.isEmptyString(_missionModPin)) {
-                rc.put(Engine.JsonFields.Mission.modPin, _missionModPin);
+                jsonMission.put(Engine.JsonFields.Mission.modPin, _missionModPin);
             }*/
 
-            rc.put("multicastFailoverPolicy", 0);
+            jsonMission.put("multicastFailoverPolicy", 0);
 
             if (!Utils.isEmptyString(_mission._rpAddress) && _mission._rpPort > 0) {
                 JSONObject rallypoint = new JSONObject();
                 rallypoint.put("use", false);
                 rallypoint.put(Engine.JsonFields.Rallypoint.Host.address, _mission._rpAddress);
                 rallypoint.put(Engine.JsonFields.Rallypoint.Host.port, _mission._rpPort);
-                rc.put(Engine.JsonFields.Rallypoint.objectName, rallypoint);
+                jsonMission.put(Engine.JsonFields.Rallypoint.objectName, rallypoint);
             }
 
             if (_mission._groups != null && _mission._groups.size() > 0) {
                 JSONArray groups = new JSONArray();
 
-                for (DatabaseGroup gd : _mission._groups) {
-                    //TODO: Create
-                    /*if (!gd.isDynamic()) {
-                        JSONObject group = new JSONObject(gd.jsonConfiguration);
-                        groups.put(group);
-                    }*/
+                for (DatabaseGroup _group : _mission._groups) {
+                    JSONObject group = new JSONObject();
+                    group.put("id", _group._id);
+                    group.put("name", _group._name);
+                    group.put("blockAdvertising", true);
+                    group.put("cryptoPassword", _group._cryptoPassword);
+
+                    JSONObject rx = new JSONObject();
+                    rx.put("address", _group._rxAddress);
+                    rx.put("port", _group._rxPort);
+                    group.put("rx", rx);
+
+                    JSONObject tx = new JSONObject();
+                    tx.put("address", _group._txAddress);
+                    tx.put("port", _group._txPort);
+                    group.put("tx", tx);
+
+                    group.put("type", _group._type);
+                    if (_group._type == 1) { //Audio type
+                        JSONObject timeline = new JSONObject();
+                        timeline.put("enabled", true);
+                        timeline.put("maxAudioTimeMs", 30000);
+                        group.put("timeline", timeline);
+
+                        JSONObject txAudio = new JSONObject();
+                        txAudio.put("encoder", _group._txCodecId);
+                        txAudio.put("fdx", false);
+                        txAudio.put("framingMs", _group._txFramingMs);
+                        txAudio.put("maxTxSecs", _group._maxTxSecs);
+                        group.put("txAudio", txAudio);
+                    }
+
+                    groups.put(group);
                 }
 
-                rc.put(Engine.JsonFields.Group.arrayName, groups);
+                jsonMission.put(Engine.JsonFields.Group.arrayName, groups);
             }
         } catch (Exception e) {
-            rc = null;
+            jsonMission = null;
             e.printStackTrace();
         }
 
-        return rc.toString();
+        return jsonMission.toString();
     }
 }
