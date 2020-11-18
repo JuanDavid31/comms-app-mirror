@@ -8,6 +8,7 @@ package com.rallytac.engageandroid;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -572,5 +573,17 @@ public class MissionEditActivity extends AppCompatActivity {
 
         MissionDao missionDao = ((EngageApplication) getApplication()).getDaoSession().getMissionDao();
         missionDao.insertOrReplace(newMission);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 }
