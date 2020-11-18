@@ -41,8 +41,8 @@ public class MissionViewModel extends ViewModel {
     private ChannelsGroupsWithChannelsDao channelsGroupsWithChannelsDao;
     HashMap<String, Set<Identity>> channelUsers = new HashMap<>();
 
-    public MissionViewModel(Activity activity) {
-        DaoSession daoSession = ((EngageApplication) activity.getApplication()).getDaoSession();
+    public MissionViewModel(EngageApplication app) {
+        DaoSession daoSession = app.getDaoSession();
         missionDao = daoSession.getMissionDao();
         channelGroupDao = daoSession.getChannelGroupDao();
         channelDao = daoSession.getChannelDao();
@@ -97,8 +97,8 @@ public class MissionViewModel extends ViewModel {
 
     public Optional<Mission> getMissionById(String id) {
         if(missionDao.loadAll().size() == 0) {
-            channelElementDao.insertOrReplaceInTx(mission.getGroups().get(0).getChannelElements());
-            channelDao.insertOrReplaceInTx(mission.getGroups());
+            channelElementDao.insertOrReplaceInTx(mission.getChannels().get(0).getChannelElements());
+            channelDao.insertOrReplaceInTx(mission.getChannels());
             missionDao.insertOrReplace(mission);
         }
 
@@ -113,7 +113,7 @@ public class MissionViewModel extends ViewModel {
     }
 
     public List<Channel> getAudioChannels() {
-        return mission.getGroups()
+        return mission.getChannels()
                 .stream()
                 .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
                 .collect(Collectors.toList());

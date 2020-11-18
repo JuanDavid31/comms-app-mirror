@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.NavHostController;
@@ -44,6 +45,9 @@ import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.databinding.FragmentMissionsListBinding;
 import com.rallytac.engageandroid.legba.data.dto.MissionDao;
+import com.rallytac.engageandroid.legba.viewmodel.MissionViewModel;
+import com.rallytac.engageandroid.legba.viewmodel.MissionsListViewModel;
+import com.rallytac.engageandroid.legba.viewmodel.ViewModelFactory;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -63,7 +67,17 @@ import okio.Source;
 import timber.log.Timber;
 
 public class MissionsListFragment extends Fragment {
-    FragmentMissionsListBinding binding;
+
+    private FragmentMissionsListBinding binding;
+    private MissionsListViewModel vm;
+    private final int PICK_MISSION_FILE_REQUEST_CODE = 44;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ViewModelFactory vmFactory = new ViewModelFactory((EngageApplication) getActivity().getApplication());
+        vm = new ViewModelProvider(this, vmFactory).get(MissionsListViewModel.class);
+    }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,7 +97,6 @@ public class MissionsListFragment extends Fragment {
     }
 
     private void setupToolbar() {
-        Timber.i("updateToolbar");
         setHasOptionsMenu(true);
         requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
 
@@ -94,52 +107,13 @@ public class MissionsListFragment extends Fragment {
         Objects.requireNonNull(actionBar).setHomeAsUpIndicator(R.drawable.ic_hamburguer_icon);
     }
 
-/*    private void setupNFCActionsView() {
-        HostActivity hostActivity = (HostActivity) requireActivity();
-        hostActivity.binding.logout.setOnClickListener(view -> {
-            hostActivity.binding.drawer.closeDrawers();
-            NavDirections action = MissionsListFragmentDirections.actionMissionsFragmentToLargeCardFragment();
-            NavHostFragment.findNavController(this).navigate(action);
-        });
-    }*/
-
     @Override
     public void onStart() {
         super.onStart();
-
-        String defaultMissionName = "OVERLORD";
-
-        MissionDao missionDao = ((EngageApplication) getActivity().getApplication())
-                .getDaoSession()
-                .getMissionDao();
-
-        Mission jsonMission = DataManager
-                .getInstance()
-                .getMissions()
-                .get(0);
-
-        List<Mission> missions = missionDao.loadAll();
-
-        Optional<Mission> overlord = missions.stream()
-                .filter(mission -> mission.getName().equalsIgnoreCase(defaultMissionName))
-                .findFirst();
-
-        if (overlord.isPresent()) {
-            int i = missions.indexOf(overlord.get());
-            if (i != 0) {
-                Collections.swap(missions, i, 0);
-            }
-        } else {
-            missionDao.insert(jsonMission);
-            missions.add(0, jsonMission);
-        }
-
-        Timber.i("Number of missions %s", missions.size());
-        missions.forEach(mission -> Timber.i(mission.toString()));
-
-        MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), this);
+        List<Mission> missions = vm.getMissions();
+        MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), this, vm);
         binding.missionsListRecyclerView.setAdapter(adapter);
-        adapter.setMissions(missions, getContext());
+        adapter.setMissions(missions);
     }
 
     @Override
@@ -162,9 +136,6 @@ public class MissionsListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
-    int PICK_MISSION_FILE_REQUEST_CODE = 44;
-
     private void startLoadMissionFromLocalFile() {
         try {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -181,27 +152,8 @@ public class MissionsListFragment extends Fragment {
         Timber.i("OnActivityResult");
         if (data != null && requestCode == PICK_MISSION_FILE_REQUEST_CODE) {
             Uri fileUri = data.getData();
-            Timber.i("Intent data %s", fileUri.getPath());
-
-            File file = new File(fileUri.getPath());//create path from uri
-            final String[] split = file.getPath().split(":");//split the path.
-
-
-            String jsonMission = Utils.readTextFile(getContext(), fileUri);
-
-            Timber.i("jsonMission -> %s", jsonMission);
-
-            Mission importedMission = new GsonBuilder().create().fromJson(jsonMission, Mission.class);
-
-            Timber.i("Imported mission %s", importedMission);
-
-
-            ((EngageApplication) getActivity().getApplication())
-                    .getDaoSession()
-                    .getMissionDao()
-                    .insertOrReplace(importedMission);
-
-            //Missions list will refresh automatically
+            vm.saveNewMission(fileUri, getContext());
+            //Missions list will refresh automatically on the next lifecycle callback (onCreate)
         }
     }
 }

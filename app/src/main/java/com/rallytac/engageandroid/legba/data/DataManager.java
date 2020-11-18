@@ -100,7 +100,7 @@ public class DataManager {
 
     private ArrayList<DatabaseGroup> getGroupsByMission(Mission mission) {
         return mission
-                .getGroups()
+                .getChannels()
                 .stream()
                 .map(channel -> {
                     DatabaseGroup group = new DatabaseGroup(channel.getName());
@@ -134,7 +134,7 @@ public class DataManager {
                 });
         updateDB();*/
 
-        mission.getGroups()
+        mission.getChannels()
                 .forEach(channel -> {
                     AddressAndPort rx = new AddressAndPort(channel.getRxAddress(), channel.getRxPort());
                     AddressAndPort tx = new AddressAndPort(channel.getTxAddress(), channel.getTxPort());

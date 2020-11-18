@@ -1,7 +1,6 @@
 package com.rallytac.engageandroid.legba.data.dto;
 
 import com.google.gson.annotations.JsonAdapter;
-import com.rallytac.engageandroid.legba.mapping.ChannelDeserializer;
 import com.rallytac.engageandroid.legba.mapping.MissionDeserializer;
 
 import org.greenrobot.greendao.annotation.Entity;
@@ -36,7 +35,7 @@ public class Mission implements Serializable {
 
     @ToMany(referencedJoinProperty = "missionId")
     //@OrderBy("date ASC")
-    private List<Channel> groups;
+    private List<Channel> channels;
 
     /** Used to resolve relations */
     @Generated(hash = 2040040024)
@@ -53,10 +52,10 @@ public class Mission implements Serializable {
         this.id = id;
     }
 
-    public Mission(String id, String name, List<Channel> groups, String rpAddress, int rpPort) {
+    public Mission(String id, String name, List<Channel> channels, String rpAddress, int rpPort) {
         this.id = id;
         this.name = name;
-        this.groups = groups;
+        this.channels = channels;
         this.rpAddress = rpAddress;
         this.rpPort = rpPort;
         this.channelsGroups = new ArrayList<>();
@@ -69,7 +68,6 @@ public class Mission implements Serializable {
         this.rpAddress = rpAddress;
         this.rpPort = rpPort;
     }
-
 
     public String getId() {
         return id;
@@ -87,16 +85,12 @@ public class Mission implements Serializable {
         this.name = name;
     }
 
-
-
     public void setChannelsGroups(List<ChannelGroup> channelsGroups) {
         this.channelsGroups = channelsGroups;
     }
 
-
-
-    public void setGroups(List<Channel> groups) {
-        this.groups = groups;
+    public void setChannels(List<Channel> channels) {
+        this.channels = channels;
     }
 
     @Override
@@ -107,14 +101,9 @@ public class Mission implements Serializable {
                 ", rpAddress='" + rpAddress + '\'' +
                 ", rpPort=" + rpPort +
                 ", channelsGroups=" + channelsGroups +
-                ", channels=" + (groups != null ? groups.size() : null) +
+                ", channels=" + (channels != null ? channels.size() : null) +
                 '}';
     }
-
-
-
-
-
 
     public String getRpAddress() {
         return rpAddress;
@@ -164,38 +153,41 @@ public class Mission implements Serializable {
      * To-many relationship, resolved on first access (and after reset).
      * Changes to to-many relations are not persisted, make changes to the target entity.
      */
-    @Generated(hash = 439982547)
-    public List<Channel> getGroups() {
-        if (groups == null) {
+    @Generated(hash = 1354864954)
+    public List<Channel> getChannels() {
+        if (channels == null) {
             final DaoSession daoSession = this.daoSession;
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
             ChannelDao targetDao = daoSession.getChannelDao();
-            List<Channel> groupsNew = targetDao._queryMission_Groups(id);
+            List<Channel> channelsNew = targetDao._queryMission_Channels(id);
             synchronized (this) {
-                if (groups == null) {
-                    groups = groupsNew;
+                if (channels == null) {
+                    channels = channelsNew;
                 }
             }
         }
-        return groups;
+        return channels;
     }
 
     /** Resets a to-many relationship, making the next get call to query for a fresh result. */
-    @Generated(hash = 464128061)
-    public synchronized void resetGroups() {
-        groups = null;
+    @Generated(hash = 1313248352)
+    public synchronized void resetChannels() {
+        channels = null;
     }
 
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
      * Entity must attached to an entity context.
      */
-    @Generated(hash = 128553479)
+    @Keep
     public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
+        }
+        for (Channel channel : channels) {
+            daoSession.getChannelDao().delete(channel);
         }
         myDao.delete(this);
     }
@@ -222,6 +214,13 @@ public class Mission implements Serializable {
             throw new DaoException("Entity is detached from DAO context");
         }
         myDao.update(this);
+    }
+
+    public void insertOrReplace(){
+        myDao.insertOrReplace(this);
+        for (Channel channel : channels) {
+            daoSession.getChannelDao().insertOrReplaceInTx(channel);
+        }
     }
 
     /** called by internal mechanisms, do not call yourself. */

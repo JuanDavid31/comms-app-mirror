@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.rallytac.engageandroid.EngageApplication;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.adapter.ChannelListAdapter;
@@ -82,7 +83,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         Timber.i("onCreate");
         super.onCreate(savedInstanceState);
         context = getContext();
-        ViewModelFactory vmFactory = new ViewModelFactory(getActivity());
+        ViewModelFactory vmFactory = new ViewModelFactory((EngageApplication) getActivity().getApplication());
         vm = new ViewModelProvider(this, vmFactory).get(MissionViewModel.class);
         voiceRecognition = VoiceRecognition.getInstance(getActivity());
         Globals.rxListeners.add(this);

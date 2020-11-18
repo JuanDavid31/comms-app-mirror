@@ -1,6 +1,5 @@
 package com.rallytac.engageandroid.legba.fragment;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +14,11 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
-
-import com.rallytac.engageandroid.EngageApplication;
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
+import com.rallytac.engageandroid.legba.viewmodel.MissionsListViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,17 +31,17 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
 
     private List<Mission> missions = new ArrayList();
     private Fragment fragment;
-    private Context context;
+    private MissionsListViewModel vm;
 
-    public void setMissions(List<Mission> missions, Context context) {
+    public void setMissions(List<Mission> missions) {
         this.missions = missions;
-        this.context = context;
         notifyDataSetChanged();
     }
 
-    public MissionsRecyclerViewAdapter(@NonNull DiffUtil.ItemCallback<Mission> diffCallback, Fragment fragment) {
+    public MissionsRecyclerViewAdapter(@NonNull DiffUtil.ItemCallback<Mission> diffCallback, Fragment fragment, MissionsListViewModel vm) {
         super(diffCallback);
         this.fragment = fragment;
+        this.vm = vm;
     }
 
     @NonNull
@@ -56,7 +54,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Mission currentMission = missions.get(position);
-        List<Channel> audioChannels = currentMission.getGroups()
+        List<Channel> audioChannels = currentMission.getChannels()
                 .stream()
                 .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
                 .collect(Collectors.toList());
@@ -69,10 +67,7 @@ public class MissionsRecyclerViewAdapter extends ListAdapter<Mission, MissionsRe
 
         holder.trashLayout.setOnClickListener(view -> {
             missions.remove(position);
-            ((EngageApplication) fragment.getActivity().getApplication())
-                    .getDaoSession()
-                    .getMissionDao()
-                    .delete(currentMission);
+            vm.deleteMission(currentMission);
             notifyDataSetChanged();
         });
 
