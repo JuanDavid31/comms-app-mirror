@@ -6,12 +6,19 @@ import android.net.Uri;
 import androidx.lifecycle.ViewModel;
 
 import com.google.gson.GsonBuilder;
+import com.rallytac.engage.engine.Engine;
+import com.rallytac.engageandroid.DatabaseGroup;
+import com.rallytac.engageandroid.DatabaseMission;
 import com.rallytac.engageandroid.EngageApplication;
 import com.rallytac.engageandroid.Utils;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.DaoSession;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.legba.data.dto.MissionDao;
+import com.rallytac.engageandroid.legba.util.MappingUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Collections;
 import java.util.List;
