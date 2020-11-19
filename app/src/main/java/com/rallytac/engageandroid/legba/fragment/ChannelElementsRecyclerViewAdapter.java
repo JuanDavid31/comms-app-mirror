@@ -87,9 +87,7 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
             memberViewHolder.name.setText(member.getName());
             memberViewHolder.memberNickName.setText(member.getNickName());
             memberViewHolder.memberNumber.setText(member.getNumber());
-            memberViewHolder.micImage.setImageResource(getStateImage(member.getState()));
-            memberViewHolder.requestPendingText.setVisibility(member.getState() == Member.RequestType.PENDING ? View.VISIBLE : View.INVISIBLE);
-        } else if(element instanceof Subchannel){
+        } else if(element instanceof Subchannel){ //TODO: Delete if there is not going to be anything related with subchannels
             Subchannel subChannel = (Subchannel) element;
             SubchannelViewHolder subchannelViewHolder = (SubchannelViewHolder) holder;
 
@@ -138,20 +136,6 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
         return result;
     }
 
-    public int getStateImage(Member.RequestType state) {
-        if (state == null) return android.R.color.transparent;
-        switch (state) {
-            case ADDED:
-                return R.drawable.ic_mic;
-            case NOT_ADDED:
-                return R.mipmap.ic_mic_plus;
-            case PENDING:
-                return R.drawable.ic_mic_pending_request;
-            default:
-                return android.R.color.transparent;
-        }
-    }
-
     @Override
     public int getItemCount() {
         return channelElements.size();
@@ -171,8 +155,6 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
         private TextView membersCaps;
         private TextView memberNickName;
         private TextView memberNumber;
-        private TextView requestPendingText;
-        private ImageButton micImage;
 
         public MemberViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -180,8 +162,6 @@ public class ChannelElementsRecyclerViewAdapter extends ListAdapter<ChannelEleme
             name = itemView.findViewById(R.id.member_name_text);
             memberNickName = itemView.findViewById(R.id.member_nickname_text);
             memberNumber = itemView.findViewById(R.id.member_number_text);
-            requestPendingText = itemView.findViewById(R.id.request_pending_text);
-            micImage = itemView.findViewById(R.id.member_state_image);
         }
     }
 

@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="119dp"
+        android:layout_height="74.3dp"
         android:layout_marginTop="8.5dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/primary_element_box_shape"
@@ -40,6 +40,7 @@
             style="@style/builtTitlingRgBoldFont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:layout_marginStart="11.5dp"
             android:text="JOHN WAREN"
             android:textSize="15sp"
@@ -69,63 +70,18 @@
             app:layout_constraintStart_toEndOf="@+id/member_nickname_text"
             app:layout_constraintTop_toTopOf="@+id/member_nickname_text" />
 
-    <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20.3dp"
-            android:layout_marginEnd="19.3dp"
-            android:background="?selectableItemBackgroundBorderless"
-
-            android:src="@drawable/ic_round_link_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-            android:id="@+id/member_state_image"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="?selectableItemBackgroundBorderless"
-
-            android:src="@drawable/ic_mic_pending_request"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/imageButton" />
-
     <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="35dp" />
+            app:layout_constraintGuide_begin="24.5dp" />
 
     <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="42dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_end="17dp" />
-
-    <TextView
-            android:id="@+id/request_pending_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="23dp"
-            android:layout_marginBottom="18dp"
-            android:textSize="10.1sp"
-            android:textColor="@color/greyish_93"
-            android:visibility="invisible"
-            tools:visibility="visible"
-            android:text="request_pending"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintGuide_end="23dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
