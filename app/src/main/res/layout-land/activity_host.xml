@@ -31,6 +31,16 @@
                         android:minHeight="73dp"
                         android:theme="@style/AppTheme">
 
+                    <TextView
+                            android:id="@+id/left_title_text"
+                            style="@style/toolbar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:text="ALPHA TEAM"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
