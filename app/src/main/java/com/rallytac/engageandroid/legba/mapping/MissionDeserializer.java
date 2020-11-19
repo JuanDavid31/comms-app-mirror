@@ -22,12 +22,19 @@ public class MissionDeserializer implements JsonDeserializer<Mission> {
 
         String id = jsonObject.get("id").getAsString();
         String name = jsonObject.get("name").getAsString();
-        JsonObject rp = jsonObject.get("rallypoint").getAsJsonObject();
+
+        String rpAddress = "";
+        int rpPort = 0;
+        if(jsonObject.get("rallypoint") != null){
+            JsonObject rp = jsonObject.get("rallypoint").getAsJsonObject();
+            rpAddress = rp.get("address").getAsString();
+            rpPort = rp.get("port").getAsInt();
+        }
 
         JsonElement groups = jsonObject.get("groups");
         Type listType = new TypeToken<List<Channel>>() { }.getType();
         List<Channel> channels = new Gson().fromJson(groups, listType);
 
-        return new Mission(id, name, channels, rp.get("address").getAsString(), rp.get("port").getAsInt());
+        return new Mission(id, name, channels, rpAddress, rpPort);
     }
 }

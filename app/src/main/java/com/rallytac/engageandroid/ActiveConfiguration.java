@@ -601,7 +601,8 @@ public class ActiveConfiguration
 
     public boolean getUseRp()
     {
-        return getCanUseRp();//_useRP && getCanUseRp();
+        return getCanUseRp();
+        //return _useRP && getCanUseRp();
     }
 
     public boolean getCanUseRp()
