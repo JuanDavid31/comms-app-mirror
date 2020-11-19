@@ -81,7 +81,8 @@ public class HostActivity extends AppCompatActivity {
         setNavigationDrawer();
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             Timber.i("onDestinationChangedListener");
-            binding.leftTitleText.setVisibility(View.GONE);
+            binding.toolbarLeftTitleText.setVisibility(View.GONE);
+            binding.toolbarBackgroundImage.setVisibility(View.GONE);
             binding.logoImage.setVisibility(View.GONE);
             binding.toolbarTitleText.setVisibility(View.GONE);
             binding.fragmentDescription.setVisibility(View.GONE);
