@@ -47,7 +47,7 @@ public class ChannelFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        updateToolbar();
+        setupToolbar();
         setHasOptionsMenu(true);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_channel, container, false);
 
@@ -75,9 +75,9 @@ public class ChannelFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void updateToolbar() {
-        requireActivity().findViewById(R.id.toolbar_title_text).setVisibility(View.VISIBLE);
-        ((TextView) requireActivity().findViewById(R.id.toolbar_title_text)).setText(channel.getName());
+    private void setupToolbar() {
+        requireActivity().findViewById(R.id.left_title_text).setVisibility(View.VISIBLE);
+        ((TextView) requireActivity().findViewById(R.id.left_title_text)).setText(channel.getName());
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
