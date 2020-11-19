@@ -1265,6 +1265,67 @@ public class EngageApplication
         return rc;
     }
 
+    public String buildFinalGroupJsonConfigurationLegba(String groupJson) { //TODO: Fix
+        String rc;
+
+        try {
+            JSONObject group = new JSONObject(groupJson);
+
+            if (!Utils.isEmptyString(_activeConfiguration.getNetworkInterfaceName())) {
+                group.put("interfaceName", _activeConfiguration.getNetworkInterfaceName());
+            }
+
+            if (!Utils.isEmptyString(_activeConfiguration.getUserAlias())) {
+                group.put("alias", _activeConfiguration.getUserAlias());
+            }
+
+            if (group.optInt(Engine.JsonFields.Group.type, 0) == 1) {
+                JSONObject audio = new JSONObject();
+
+                //audio.put("inputId", 1);
+                //audio.put("outputId", 4);
+                audio.put("outputGain", (_activeConfiguration.getSpeakerOutputBoostFactor() * 100));
+
+                group.put("audio", audio);
+            }
+
+            if (_activeConfiguration.getUseRp()) {
+                JSONObject rallypoint = new JSONObject();
+
+                JSONObject host = new JSONObject();
+                host.put("address", _activeConfiguration.getRpAddress());
+                host.put("port", _activeConfiguration.getRpPort());
+
+                rallypoint.put("host", host);
+                rallypoint.put("certificate", "@certstore://" + Globals.getContext().getString(R.string.certstore_default_certificate_id));
+                rallypoint.put("certificateKey", "@certstore://" + Globals.getContext().getString(R.string.certstore_default_certificate_id));
+
+                JSONArray rallypoints = new JSONArray();
+                rallypoints.put(rallypoint);
+
+                group.put("rallypoints", rallypoints);
+
+                // Multicast failover only applies when rallypoints are present
+                group.put("enableMulticastFailover", _activeConfiguration.getMulticastFailoverConfiguration().enabled);
+                group.put("multicastFailoverSecs", _activeConfiguration.getMulticastFailoverConfiguration().thresholdSecs);
+            }
+
+            {
+                JSONObject timeline = new JSONObject();
+
+                timeline.put("enabled", true);
+                group.put("timeline", timeline);
+            }
+
+            rc = group.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            rc = null;
+        }
+
+        return rc;
+    }
+
     public void createAllGroupObjects() {
         Log.d(TAG, "createAllGroupObjects");
         try {

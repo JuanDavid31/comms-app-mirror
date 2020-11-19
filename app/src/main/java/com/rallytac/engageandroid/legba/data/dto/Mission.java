@@ -26,6 +26,8 @@ public class Mission implements Serializable {
 
     private String name;
 
+    private boolean useRp;
+
     private String rpAddress;
 
     private int rpPort;
@@ -52,19 +54,21 @@ public class Mission implements Serializable {
         this.id = id;
     }
 
-    public Mission(String id, String name, List<Channel> channels, String rpAddress, int rpPort) {
+    public Mission(String id, String name, List<Channel> channels, boolean useRp, String rpAddress, int rpPort) {
         this.id = id;
         this.name = name;
         this.channels = channels;
+        this.useRp = useRp;
         this.rpAddress = rpAddress;
         this.rpPort = rpPort;
         this.channelsGroups = new ArrayList<>();
     }
 
-    @Generated(hash = 1014324158)
-    public Mission(String id, String name, String rpAddress, int rpPort) {
+    @Generated(hash = 590626189)
+    public Mission(String id, String name, boolean useRp, String rpAddress, int rpPort) {
         this.id = id;
         this.name = name;
+        this.useRp = useRp;
         this.rpAddress = rpAddress;
         this.rpPort = rpPort;
     }
@@ -93,16 +97,12 @@ public class Mission implements Serializable {
         this.channels = channels;
     }
 
-    @Override
-    public String toString() {
-        return "Mission{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", rpAddress='" + rpAddress + '\'' +
-                ", rpPort=" + rpPort +
-                ", channelsGroups=" + channelsGroups +
-                ", channels=" + (channels != null ? channels.size() : null) +
-                '}';
+    public boolean useRp() {
+        return useRp;
+    }
+
+    public void setUseRp(boolean useRp) {
+        this.useRp = useRp;
     }
 
     public String getRpAddress() {
@@ -119,6 +119,18 @@ public class Mission implements Serializable {
 
     public void setRpPort(int rpPort) {
         this.rpPort = rpPort;
+    }
+
+    @Override
+    public String toString() {
+        return "Mission{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", rpAddress='" + rpAddress + '\'' +
+                ", rpPort=" + rpPort +
+                ", channelsGroups=" + channelsGroups +
+                ", channels=" + (channels != null ? channels.size() : null) +
+                '}';
     }
 
     /**
@@ -221,6 +233,10 @@ public class Mission implements Serializable {
         for (Channel channel : channels) {
             daoSession.getChannelDao().insertOrReplaceInTx(channel);
         }
+    }
+
+    public boolean getUseRp() {
+        return this.useRp;
     }
 
     /** called by internal mechanisms, do not call yourself. */

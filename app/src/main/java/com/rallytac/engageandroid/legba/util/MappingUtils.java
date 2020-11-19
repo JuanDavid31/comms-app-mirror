@@ -1,7 +1,5 @@
 package com.rallytac.engageandroid.legba.util;
 
-import android.provider.ContactsContract;
-
 import com.rallytac.engageandroid.DatabaseGroup;
 import com.rallytac.engageandroid.DatabaseMission;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
@@ -27,6 +25,7 @@ public class MappingUtils {
 
         _mission._id = mission.getId();
         _mission._name = mission.getName();
+        _mission._useRp = mission.useRp();
         _mission._rpAddress = mission.getRpAddress();
         _mission._rpPort = mission.getRpPort();
 
@@ -65,9 +64,9 @@ public class MappingUtils {
                     Channel.EngageType.AUDIO, Collections.emptyList());
         }).collect(Collectors.toList());
 
-        Mission newMission = new Mission(_mission._id, _mission._name, newGroups, _mission._rpAddress, _mission._rpPort);
-        newMission.setRpAddress(_mission._rpAddress);
-        newMission.setRpPort(_mission._rpPort);
+        Mission newMission = new Mission(_mission._id, _mission._name,
+                newGroups, _mission._useRp,
+                _mission._rpAddress, _mission._rpPort);
 
         Timber.i("Mission %s", newMission);
         return newMission;

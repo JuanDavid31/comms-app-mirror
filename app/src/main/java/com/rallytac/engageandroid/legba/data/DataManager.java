@@ -149,7 +149,7 @@ public class DataManager {
 
                     Timber.i("txData -> %s", initialJsonTxData);
 
-                    String finalTxData = Globals.getEngageApplication().buildFinalGroupJsonConfiguration(initialJsonTxData);
+                    String finalTxData = Globals.getEngageApplication().buildFinalGroupJsonConfigurationLegba(initialJsonTxData);
                     Globals.getEngageApplication().getEngine().engageCreateGroup(finalTxData);
                 });
     }

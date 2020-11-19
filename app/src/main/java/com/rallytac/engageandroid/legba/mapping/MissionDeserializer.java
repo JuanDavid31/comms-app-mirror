@@ -23,10 +23,12 @@ public class MissionDeserializer implements JsonDeserializer<Mission> {
         String id = jsonObject.get("id").getAsString();
         String name = jsonObject.get("name").getAsString();
 
+        boolean useRp = false;
         String rpAddress = "";
         int rpPort = 0;
         if(jsonObject.get("rallypoint") != null){
             JsonObject rp = jsonObject.get("rallypoint").getAsJsonObject();
+            useRp = rp.get("use").getAsBoolean();
             rpAddress = rp.get("address").getAsString();
             rpPort = rp.get("port").getAsInt();
         }
@@ -35,6 +37,6 @@ public class MissionDeserializer implements JsonDeserializer<Mission> {
         Type listType = new TypeToken<List<Channel>>() { }.getType();
         List<Channel> channels = new Gson().fromJson(groups, listType);
 
-        return new Mission(id, name, channels, rpAddress, rpPort);
+        return new Mission(id, name, channels, useRp, rpAddress, rpPort);
     }
 }
