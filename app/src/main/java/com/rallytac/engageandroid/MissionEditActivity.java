@@ -337,22 +337,25 @@ public class MissionEditActivity extends AppCompatActivity {
         MissionEditActivityArgs missionEditActivityArgs = MissionEditActivityArgs.fromBundle(getIntent().getExtras());
         Mission mission = missionEditActivityArgs.getMission();
 
+
+        _mission = MappingUtils.mapMissionTo_Mission(mission);
+
         if (mission != null) {
             mission.getChannels()
                     .stream()
                     .filter(channel -> channel.getEngageType() == Channel.EngageType.PRESENCE)
                     .findFirst()
                     .ifPresent(presenceChannel -> missionControlChannel = presenceChannel);
-
-            List<Channel> audioChannels = mission.getChannels()
-                    .stream()
-                    .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
-                    .collect(Collectors.toList());
-
-            mission.setChannels(audioChannels);
         }
 
-        _mission = MappingUtils.mapMissionTo_Mission(mission);
+        if(_mission != null && _mission._groups != null){
+            ArrayList<DatabaseGroup> audioGroups = _mission._groups
+                    .stream()
+                    .filter(group -> group._type == 1) // Audio type
+                    .collect(toCollection(ArrayList::new));
+
+            _mission._groups = audioGroups;
+        }
 
         if (_mission == null) {
             _mission = new DatabaseMission();
@@ -562,6 +565,8 @@ public class MissionEditActivity extends AppCompatActivity {
                     .add(DataManager.getInstance().generateMissionControlChannel(_mission._id));
         } else {
             Timber.i("Adding previously saved missionControlChannel");
+            missionControlChannel.setTxAddress(_mission._mcAddress);
+            missionControlChannel.setTxPort(_mission._mcPort);
             newMission.getChannels().add(missionControlChannel);
         }
 

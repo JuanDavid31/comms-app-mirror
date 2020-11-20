@@ -28,6 +28,16 @@ public class MappingUtils {
         _mission._useRp = mission.useRp();
         _mission._rpAddress = mission.getRpAddress();
         _mission._rpPort = mission.getRpPort();
+        _mission._multicastFailoverPolicy = new Mission.MulticastTypeConverter().convertToDatabaseValue(mission.getMulticastType());
+
+        mission.getChannels()
+                .stream()
+                .filter(channel -> channel.getEngageType() == Channel.EngageType.PRESENCE)
+                .findFirst()
+                .ifPresent(channel -> {
+                    _mission._mcAddress = channel.getTxAddress();
+                    _mission._mcPort = channel.getTxPort();
+                });
 
         _mission._groups = mission.getChannels().stream()
                 .map(channel -> {
@@ -64,9 +74,22 @@ public class MappingUtils {
                     Channel.EngageType.AUDIO, Collections.emptyList());
         }).collect(Collectors.toList());
 
+        Mission.MulticastType multicastType
+                = new Mission.MulticastTypeConverter().convertToEntityProperty(_mission._multicastFailoverPolicy);
+
         Mission newMission = new Mission(_mission._id, _mission._name,
                 newGroups, _mission._useRp,
-                _mission._rpAddress, _mission._rpPort);
+                _mission._rpAddress, _mission._rpPort,
+                multicastType);
+
+        newMission.getChannels()
+                .stream()
+                .filter(channel -> channel.getEngageType() == Channel.EngageType.PRESENCE)
+                .findFirst()
+                .ifPresent(channel -> {
+                    channel.setTxAddress(_mission._mcAddress);
+                    channel.setTxPort(_mission._mcPort);
+                });
 
         Timber.i("Mission %s", newMission);
         return newMission;

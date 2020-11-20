@@ -2,6 +2,7 @@
     {
         "id": "{M1}",
         "name": "OVERLORD",
+        "multicastFailoverPolicy": 0,
         "rallypoint": { "use": false, "address": "demo.rallytac.com", "port": 7443 },
         "groups": [
             {

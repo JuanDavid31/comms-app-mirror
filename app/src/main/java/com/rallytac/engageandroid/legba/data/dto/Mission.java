@@ -3,6 +3,7 @@ package com.rallytac.engageandroid.legba.data.dto;
 import com.google.gson.annotations.JsonAdapter;
 import com.rallytac.engageandroid.legba.mapping.MissionDeserializer;
 
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Keep;
@@ -14,12 +15,15 @@ import java.util.List;
 
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
+import org.greenrobot.greendao.converter.PropertyConverter;
 
 @Entity(nameInDb = "MISSIONS")
 @JsonAdapter(MissionDeserializer.class)
 public class Mission implements Serializable {
 
     private static final long serialVersionUID = -6105178297191589989L;
+
+    public enum MulticastType {OVERRIDE_AND_PREVENT, OVERRIDE_AND_ALLOW, FOLLOW_APP_SETTING}
 
     @Id
     private String id;
@@ -32,6 +36,9 @@ public class Mission implements Serializable {
 
     private int rpPort;
 
+    @Convert(converter = MulticastTypeConverter.class, columnType = Integer.class)
+    private MulticastType multicastType;
+
     @ToMany(referencedJoinProperty = "missionId")
     private List<ChannelGroup> channelsGroups;
 
@@ -39,11 +46,15 @@ public class Mission implements Serializable {
     //@OrderBy("date ASC")
     private List<Channel> channels;
 
-    /** Used to resolve relations */
+    /**
+     * Used to resolve relations
+     */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated(hash = 1935729854)
     private transient MissionDao myDao;
 
@@ -54,23 +65,25 @@ public class Mission implements Serializable {
         this.id = id;
     }
 
-    public Mission(String id, String name, List<Channel> channels, boolean useRp, String rpAddress, int rpPort) {
+    public Mission(String id, String name, List<Channel> channels, boolean useRp, String rpAddress, int rpPort, MulticastType multicastType) {
         this.id = id;
         this.name = name;
         this.channels = channels;
         this.useRp = useRp;
         this.rpAddress = rpAddress;
         this.rpPort = rpPort;
+        this.multicastType = multicastType;
         this.channelsGroups = new ArrayList<>();
     }
 
-    @Generated(hash = 590626189)
-    public Mission(String id, String name, boolean useRp, String rpAddress, int rpPort) {
+    @Generated(hash = 409910037)
+    public Mission(String id, String name, boolean useRp, String rpAddress, int rpPort, MulticastType multicastType) {
         this.id = id;
         this.name = name;
         this.useRp = useRp;
         this.rpAddress = rpAddress;
         this.rpPort = rpPort;
+        this.multicastType = multicastType;
     }
 
     public String getId() {
@@ -121,16 +134,57 @@ public class Mission implements Serializable {
         this.rpPort = rpPort;
     }
 
+    public MulticastType getMulticastType() {
+        return multicastType;
+    }
+
+    public void setMulticastType(MulticastType multicastType) {
+        this.multicastType = multicastType;
+    }
+
     @Override
     public String toString() {
         return "Mission{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
+                ", useRp=" + useRp +
                 ", rpAddress='" + rpAddress + '\'' +
                 ", rpPort=" + rpPort +
+                ", multicastType=" + multicastType +
                 ", channelsGroups=" + channelsGroups +
                 ", channels=" + (channels != null ? channels.size() : null) +
                 '}';
+    }
+
+    public static class MulticastTypeConverter implements PropertyConverter<MulticastType, Integer> {
+
+        @Override
+        public MulticastType convertToEntityProperty(Integer databaseValue) {
+            switch (databaseValue) {
+                case 0:
+                    return MulticastType.OVERRIDE_AND_PREVENT;
+                case 1:
+                    return MulticastType.OVERRIDE_AND_ALLOW;
+                case 2:
+                    return MulticastType.FOLLOW_APP_SETTING;
+                default:
+                    return MulticastType.OVERRIDE_AND_PREVENT;
+            }
+        }
+
+        @Override
+        public Integer convertToDatabaseValue(MulticastType entityProperty) {
+            switch (entityProperty) {
+                case OVERRIDE_AND_PREVENT:
+                    return 0;
+                case OVERRIDE_AND_ALLOW:
+                    return 1;
+                case FOLLOW_APP_SETTING:
+                    return 2;
+                default:
+                    return 0;
+            }
+        }
     }
 
     /**
@@ -155,7 +209,9 @@ public class Mission implements Serializable {
         return channelsGroups;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated(hash = 1974632286)
     public synchronized void resetChannelsGroups() {
         channelsGroups = null;
@@ -183,7 +239,9 @@ public class Mission implements Serializable {
         return channels;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated(hash = 1313248352)
     public synchronized void resetChannels() {
         channels = null;
@@ -228,7 +286,7 @@ public class Mission implements Serializable {
         myDao.update(this);
     }
 
-    public void insertOrReplace(){
+    public void insertOrReplace() {
         myDao.insertOrReplace(this);
         for (Channel channel : channels) {
             daoSession.getChannelDao().insertOrReplaceInTx(channel);

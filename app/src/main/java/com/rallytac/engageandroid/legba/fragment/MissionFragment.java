@@ -93,25 +93,12 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Timber.i("onDestroyView");
-    }
-
-
-
-    @Override
     public void onDestroy() {
         Timber.i("onDestroy");
         voiceRecognition.stopVoiceRecognition();
         super.onDestroy();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Timber.i("onDetach");
-    }
 
     private void setupMission() {
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());

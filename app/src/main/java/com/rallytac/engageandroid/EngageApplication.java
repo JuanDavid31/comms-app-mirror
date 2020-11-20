@@ -50,6 +50,7 @@ import com.rallytac.engageandroid.Biometrics.RandomHumanBiometricGenerator;
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.DaoMaster;
 import com.rallytac.engageandroid.legba.data.dto.DaoSession;
+import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.legba.data.engagedto.EngageClasses;
 import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo;
 
@@ -1265,7 +1266,7 @@ public class EngageApplication
         return rc;
     }
 
-    public String buildFinalGroupJsonConfigurationLegba(String groupJson) { //TODO: Fix
+    public String buildFinalGroupJsonConfigurationLegba(String groupJson, Mission mission) { //TODO: Fix
         String rc;
 
         try {
@@ -1289,14 +1290,14 @@ public class EngageApplication
                 group.put("audio", audio);
             }
 
-            if (_activeConfiguration.getUseRp()) {
+            if (mission.useRp()) {
                 JSONObject rallypoint = new JSONObject();
 
                 JSONObject host = new JSONObject();
-                host.put("address", _activeConfiguration.getRpAddress());
-                host.put("port", _activeConfiguration.getRpPort());
-
+                host.put("address", mission.getRpAddress());
+                host.put("port", mission.getRpPort());
                 rallypoint.put("host", host);
+
                 rallypoint.put("certificate", "@certstore://" + Globals.getContext().getString(R.string.certstore_default_certificate_id));
                 rallypoint.put("certificateKey", "@certstore://" + Globals.getContext().getString(R.string.certstore_default_certificate_id));
 
@@ -2624,7 +2625,9 @@ public class EngageApplication
     @Override
     public void onGroupDisconnected(final String id, final String eventExtraJson) {
         runOnUiThread(() -> {
-            GroupDescriptor gd = getGroup(id);
+            Timber.i("onGroupDisconnected %s", id);
+            Globals.getEngageApplication().getEngine().engageDeleteGroup(id);
+            /*GroupDescriptor gd = getGroup(id);
             if (gd == null) {
                 Log.e(TAG, "onGroupDisconnected: cannot find group id='" + id + "'");
                 return;
@@ -2669,7 +2672,7 @@ public class EngageApplication
                 setGroupConnectionState(id, false, false, false);
             }
 
-            notifyGroupUiListeners(gd);
+            notifyGroupUiListeners(gd);*/
         });
     }
 
@@ -2718,25 +2721,8 @@ public class EngageApplication
 
     @Override
     public void onGroupLeft(final String id, final String eventExtraJson) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                logEvent(Analytics.GROUP_LEFT);
-
-                GroupDescriptor gd = getGroup(id);
-                if (gd == null) {
-                    Log.e(TAG, "onGroupLeft: cannot find group id='" + id + "'");
-                    return;
-                }
-
-                Log.d(TAG, "onGroupLeft: id='" + id + "', n='" + gd.name + "'");
-
-                gd.resetState();
-                gd.joined = false;
-                gd.joinError = false;
-
-                notifyGroupUiListeners(gd);
-            }
+        runOnUiThread(() -> {
+            Timber.i("onGroupLeft %s", id);
         });
     }
 

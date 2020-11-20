@@ -33,10 +33,14 @@ public class MissionDeserializer implements JsonDeserializer<Mission> {
             rpPort = rp.get("port").getAsInt();
         }
 
+        int multicastFailoverPolicy = jsonObject.get("multicastFailoverPolicy").getAsInt();
+        Mission.MulticastType multicastType
+                = new Mission.MulticastTypeConverter().convertToEntityProperty(multicastFailoverPolicy);
+
         JsonElement groups = jsonObject.get("groups");
         Type listType = new TypeToken<List<Channel>>() { }.getType();
         List<Channel> channels = new Gson().fromJson(groups, listType);
 
-        return new Mission(id, name, channels, useRp, rpAddress, rpPort);
+        return new Mission(id, name, channels, useRp, rpAddress, rpPort, multicastType);
     }
 }

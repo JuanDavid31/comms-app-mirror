@@ -35,6 +35,8 @@ public class DataManager {
     private final MissionDatabase db;
     private static DataManager instance;
 
+    private Mission activeMission = null;
+
     private DataManager() {
         db = MissionDatabase.load(Globals.getSharedPreferences(), Constants.MISSION_DATABASE_NAME);
     }
@@ -123,17 +125,6 @@ public class DataManager {
     }
 
     public void switchToMissionOnEngageEngine(Mission mission) {
-        /*db._missions
-                .stream()
-                .filter(m -> m._id.equals(mission.getId()))
-                .findAny()
-                .ifPresent(m -> {
-                    Globals.getEngageApplication().switchToMission(mission.getId());
-                    Globals.getEngageApplication().getActiveConfiguration().set_missionId(mission.getId());
-                    Timber.i("MissionId updated to %s ", mission);
-                });
-        updateDB();*/
-
         mission.getChannels()
                 .forEach(channel -> {
                     AddressAndPort rx = new AddressAndPort(channel.getRxAddress(), channel.getRxPort());
@@ -149,9 +140,20 @@ public class DataManager {
 
                     Timber.i("txData -> %s", initialJsonTxData);
 
-                    String finalTxData = Globals.getEngageApplication().buildFinalGroupJsonConfigurationLegba(initialJsonTxData);
+                    String finalTxData = Globals.getEngageApplication().buildFinalGroupJsonConfigurationLegba(initialJsonTxData, mission);
                     Globals.getEngageApplication().getEngine().engageCreateGroup(finalTxData);
                 });
+        activeMission = mission;
+    }
+
+    public void leaveMissionActiveMission(){
+        if (activeMission != null){
+            activeMission.getChannels()
+                    .stream()
+                    .map(Channel::getId)
+                    .forEach(channelId -> Globals.getEngageApplication().getEngine().engageLeaveGroup(channelId));
+            activeMission = null;
+        }
     }
 
     public void toggleMute(String groupId, boolean isSpeakerOn) {

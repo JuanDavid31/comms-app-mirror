@@ -39,6 +39,7 @@ import com.rallytac.engageandroid.ShareableData;
 import com.rallytac.engageandroid.Utils;
 import com.rallytac.engageandroid.databinding.FragmentMissionsListBinding;
 import com.rallytac.engageandroid.legba.HostActivity;
+import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 
 import com.rallytac.engageandroid.legba.util.MappingUtils;
@@ -73,6 +74,7 @@ public class MissionsListFragment extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_missions_list, container, false);
         setupToolbar();
+        DataManager.getInstance().leaveMissionActiveMission();
 
         binding.missionsListRecyclerView.setHasFixedSize(true);
 
