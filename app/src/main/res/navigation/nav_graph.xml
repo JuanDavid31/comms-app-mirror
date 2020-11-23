@@ -45,21 +45,6 @@
         <argument
             android:name="channel"
             app:argType="com.rallytac.engageandroid.legba.data.dto.Channel" />
-        <action
-            android:id="@+id/action_channelFragment_to_subchannelFragment"
-            app:destination="@id/subchannelFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
-    <fragment
-        android:id="@+id/subchannelFragment"
-        android:name="com.rallytac.engageandroid.legba.fragment.SubchannelFragment"
-        tools:layout="@layout/fragment_subchannel">
-        <argument
-            android:name="subchannel"
-            app:argType="com.rallytac.engageandroid.legba.data.dto.Subchannel" />
     </fragment>
 
     <!-- Navigation Drawer -->

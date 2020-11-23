@@ -256,9 +256,12 @@ public class Mission implements Serializable {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
-        for (Channel channel : channels) {
-            daoSession.getChannelDao().delete(channel);
-        }
+        for (Channel channel : channels) { channel.delete(); }
+        daoSession.getChannelGroupDao()
+                .queryBuilder()
+                .where(ChannelGroupDao.Properties.MissionId.eq(getId()))
+                .buildDelete()
+                .executeDeleteWithoutDetachingEntities();
         myDao.delete(this);
     }
 

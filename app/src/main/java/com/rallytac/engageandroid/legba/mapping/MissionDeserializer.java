@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
-import com.rallytac.engageandroid.legba.data.dto.ChannelElement;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 
 import java.lang.reflect.Type;
@@ -33,7 +32,13 @@ public class MissionDeserializer implements JsonDeserializer<Mission> {
             rpPort = rp.get("port").getAsInt();
         }
 
-        int multicastFailoverPolicy = jsonObject.get("multicastFailoverPolicy").getAsInt();
+        int multicastFailoverPolicy = 0;
+
+        if(jsonObject.get("multicastFailoverPolicy") != null){
+            multicastFailoverPolicy = jsonObject.get("multicastFailoverPolicy").getAsInt();
+        }
+
+
         Mission.MulticastType multicastType
                 = new Mission.MulticastTypeConverter().convertToEntityProperty(multicastFailoverPolicy);
 

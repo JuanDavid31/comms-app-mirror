@@ -1,5 +1,7 @@
 package com.rallytac.engageandroid.legba.data.dto;
 
+import androidx.annotation.Nullable;
+
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
@@ -8,15 +10,13 @@ import org.greenrobot.greendao.converter.PropertyConverter;
 import java.io.Serializable;
 import org.greenrobot.greendao.annotation.Generated;
 
-@Entity(nameInDb = "MEMBERS")
-public class Member extends ChannelElement implements Serializable {
+public class Member implements Serializable {
 
     private static final long serialVersionUID = -6152844486729153797L;
 
-    @Id(autoincrement = true)
-    private Long memberId;
+    private Long id;
 
-    private Long subchannelId;
+    private String name;
 
     //Todo: nickName is unique? @Unique
     private String nickName;
@@ -29,41 +29,29 @@ public class Member extends ChannelElement implements Serializable {
     public Member() {
     }
 
-    public Member(Long memberId) {
-        super(memberId);
-    }
 
-    @Generated(hash = 1114883690)
-    public Member(Long memberId, Long subchannelId, String nickName, String number, RequestType state) {
-        this.memberId = memberId;
-        this.subchannelId = subchannelId;
+    public Member(Long id, String name, String nickName, String number, RequestType state) {
+        this.id = id;
+        this.name = name;
         this.nickName = nickName;
         this.number = number;
         this.state = state;
     }
 
-    public Member(Long memberId, String name, Long subchannelId, String nickName, String number, RequestType state) {
-        super(memberId, name, ChannelElementType.MEMBER);
-        this.subchannelId = subchannelId;
-        this.nickName = nickName;
-        this.number = number;
-        this.state = state;
+    public Long getId() {
+        return this.id;
     }
 
-    public Long getMemberId() {
-        return this.memberId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public String getName() {
+        return name;
     }
 
-    public Long getSubchannelId() {
-        return subchannelId;
-    }
-
-    public void setSubchannelId(Long subchannelId) {
-        this.subchannelId = subchannelId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getNickName() {
@@ -96,11 +84,16 @@ public class Member extends ChannelElement implements Serializable {
                 "nickName='" + nickName + '\'' +
                 ", state=" + state +
                 ", number='" + number + '\'' +
-                ", id=" + memberId +
+                ", id=" + id +
                 ", name='" + name + '\'' +
-                ", type=" + type +
                 '}';
     }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return toString().equalsIgnoreCase(obj.toString());
+    }
+
     public enum RequestType {PENDING, ADDED, NOT_ADDED;}
 
     public static class RequestTypeConverter implements PropertyConverter<RequestType, String> {

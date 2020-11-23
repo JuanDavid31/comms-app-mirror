@@ -191,6 +191,6 @@ public class DataManager {
                 25, 120,
                 "239.42.43.1", 49000,
                 "239.42.43.1", 49000,
-                Channel.EngageType.PRESENCE, Collections.emptyList());
+                Channel.EngageType.PRESENCE);
     }
 }

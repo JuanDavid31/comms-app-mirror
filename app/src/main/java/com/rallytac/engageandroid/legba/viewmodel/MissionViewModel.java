@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel;
 import com.rallytac.engageandroid.EngageApplication;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.ChannelDao;
-import com.rallytac.engageandroid.legba.data.dto.ChannelElementDao;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroupDao;
 import com.rallytac.engageandroid.legba.data.dto.ChannelsGroupsWithChannels;
@@ -36,8 +35,6 @@ public class MissionViewModel extends ViewModel {
 
     private MissionDao missionDao;
     private ChannelGroupDao channelGroupDao;
-    private ChannelDao channelDao;
-    private ChannelElementDao channelElementDao;
     private ChannelsGroupsWithChannelsDao channelsGroupsWithChannelsDao;
     HashMap<String, Set<Identity>> channelUsers = new HashMap<>();
 
@@ -45,8 +42,6 @@ public class MissionViewModel extends ViewModel {
         DaoSession daoSession = app.getDaoSession();
         missionDao = daoSession.getMissionDao();
         channelGroupDao = daoSession.getChannelGroupDao();
-        channelDao = daoSession.getChannelDao();
-        channelElementDao = daoSession.getChannelElementDao();
         channelsGroupsWithChannelsDao = daoSession.getChannelsGroupsWithChannelsDao();
     }
 
@@ -96,12 +91,6 @@ public class MissionViewModel extends ViewModel {
     }
 
     public Optional<Mission> getMissionById(String id) {
-        if(missionDao.loadAll().size() == 0) {
-            channelElementDao.insertOrReplaceInTx(mission.getChannels().get(0).getChannelElements());
-            channelDao.insertOrReplaceInTx(mission.getChannels());
-            missionDao.insertOrReplace(mission);
-        }
-
         return missionDao.loadAll()
                 .stream()
                 .filter(mission -> mission.getId().equals(id))

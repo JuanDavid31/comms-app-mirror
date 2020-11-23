@@ -71,7 +71,7 @@ public class MappingUtils {
                     _group._txCodecId, _group._maxTxSecs,
                     _group._txAddress, _group._txPort,
                     _group._rxAddress, _group._rxPort,
-                    Channel.EngageType.AUDIO, Collections.emptyList());
+                    Channel.EngageType.AUDIO);
         }).collect(Collectors.toList());
 
         Mission.MulticastType multicastType

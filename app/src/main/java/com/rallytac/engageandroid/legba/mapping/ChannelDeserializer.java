@@ -8,16 +8,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
-import com.rallytac.engageandroid.legba.data.dto.ChannelElement;
 
 import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.List;
 
 import static com.rallytac.engageandroid.legba.data.dto.Channel.*;
 import static com.rallytac.engageandroid.legba.data.dto.Channel.EngageType.AUDIO;
 import static com.rallytac.engageandroid.legba.data.dto.Channel.EngageType.PRESENCE;
-import static com.rallytac.engageandroid.legba.data.engagedto.EngageClasses.TxData.PRESENCE_TYPE;
 
 public class ChannelDeserializer implements JsonDeserializer<Channel> {
 
@@ -40,11 +37,6 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
         JsonObject rxJsonObject = jsonObject.get("rx").getAsJsonObject();
         JsonObject txJsonObject = jsonObject.get("tx").getAsJsonObject();
 
-        JsonElement subChannelsAndMembers = jsonObject.get("subChannelsAndMembers");
-        Type listType = new TypeToken<List<ChannelElement>>() {
-        }.getType();
-        List<ChannelElement> channelElements = new Gson().fromJson(subChannelsAndMembers, listType);
-
         return new Channel( //TODO: Create a proper constructor without innecesary boilerplate
                 idJsonElement != null ? idJsonElement.getAsString() : "",
                 missionIdJsonElement != null ? missionIdJsonElement.getAsString() : "",
@@ -58,8 +50,7 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
                 txJsonObject != null ? txJsonObject.get("port").getAsInt() : 49000,
                 rxJsonObject != null ? rxJsonObject.get("address").getAsString() : "239.42.43.1",
                 rxJsonObject != null ? rxJsonObject.get("port").getAsInt() : 49000,
-                getEngageType(engageTypeJsonElement != null ? engageTypeJsonElement.getAsInt() : 1),
-                channelElements != null ? channelElements : Collections.emptyList()
+                getEngageType(engageTypeJsonElement != null ? engageTypeJsonElement.getAsInt() : 1)
         );
     }
 

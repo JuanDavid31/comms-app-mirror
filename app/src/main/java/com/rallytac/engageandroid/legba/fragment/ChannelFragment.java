@@ -22,12 +22,11 @@ import com.rallytac.engageandroid.databinding.FragmentChannelBinding;
 import com.rallytac.engageandroid.legba.HostActivity;
 
 import com.rallytac.engageandroid.legba.data.dto.Channel;
-import com.rallytac.engageandroid.legba.data.dto.ChannelElement;
 import com.rallytac.engageandroid.legba.data.dto.Member;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ChannelFragment extends Fragment {
 
@@ -51,26 +50,25 @@ public class ChannelFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_channel, container, false);
 
-        ChannelElementsRecyclerViewAdapter adapter =
-                new ChannelElementsRecyclerViewAdapter(new ChannelElementsRecyclerViewAdapter.AdapterDiffCallback(), this);
+        UsersRecyclerViewAdapter adapter =
+                new UsersRecyclerViewAdapter(new UsersRecyclerViewAdapter.AdapterDiffCallback(), this);
         binding.channelElementsRecycler.setHasFixedSize(true);
         binding.channelElementsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.channelElementsRecycler.setAdapter(adapter);
 
         //
-        List<ChannelElement> channelElements = new ArrayList<>();
-        channel.users.forEach(userIdentity ->{
-            Member newMember = new Member();
-            newMember.setName(userIdentity.displayName);
-            newMember.setNickName(userIdentity.displayName);
-            newMember.setState(Member.RequestType.ADDED);
-            newMember.setNumber("544321591");
-            channelElements.add(newMember);
-        });
+        List<Member> members = channel.users
+                .stream()
+                .map(userIdentity -> {
+                    Member newMember = new Member();
+                    newMember.setName(userIdentity.displayName);
+                    newMember.setNickName(userIdentity.displayName);
+                    newMember.setState(Member.RequestType.ADDED);
+                    newMember.setNumber("544321591");
+                    return newMember;
+                }).collect(Collectors.toList());
         //
-        channel.setChannelElements(channelElements);
-
-        adapter.setChannelElements(channel.getChannelElements());
+        adapter.setMembers(members);
 
         return binding.getRoot();
     }
@@ -99,18 +97,18 @@ public class ChannelFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.notifications_action){
-            notificationsCount = (notificationsCount + 1)  % 6; //Cycle trhough 0 - 5
+        if (item.getItemId() == R.id.notifications_action) {
+            notificationsCount = (notificationsCount + 1) % 6; //Cycle trhough 0 - 5
             updateNotificationsIcon();
             return true;
-        }else if (item.getItemId() == R.id.history_action) {
+        } else if (item.getItemId() == R.id.history_action) {
             Toast.makeText(getContext(), "History pressed", Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateNotificationsIcon(){
+    private void updateNotificationsIcon() {
         // if notifications count extends into two digits, just show the red circle
         if (0 < notificationsCount && notificationsCount < 10) {
             notificationsText.setText(String.valueOf(notificationsCount));
