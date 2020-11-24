@@ -2,6 +2,7 @@ package com.rallytac.engageandroid.legba.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -109,6 +110,22 @@ public class MissionsListFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if(getActivity() != null){//Locks portrait mode
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(getActivity() != null){ //Unlocks rotation
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.missions_list_fragment_menu, menu);
@@ -176,9 +193,7 @@ public class MissionsListFragment extends Fragment {
                             .stream()
                             .filter(mission -> mission.getName().equals(selectedMissionName))
                             .findFirst()
-                            .ifPresent(mission -> {
-                                shareMission(mission);
-                            });
+                            .ifPresent(this::shareMission);
                     dialog.dismiss();
                 })
                 .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss())
@@ -197,7 +212,7 @@ public class MissionsListFragment extends Fragment {
             File fd = File.createTempFile(fileName, ".json", Environment.getExternalStorageDirectory());//NON-NLS
 
             FileOutputStream fos = new FileOutputStream(fd);
-            fos.write(makeTemplate(mission).getBytes());
+            fos.write(vm.makeTemplate(mission).getBytes());
             fos.close();
 
             Uri u = FileProvider.getUriForFile(getContext(), getString(R.string.file_content_provider), fd);
@@ -224,84 +239,5 @@ public class MissionsListFragment extends Fragment {
             e.printStackTrace();
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public String makeTemplate(Mission mission) {
-
-        DatabaseMission _mission = MappingUtils.mapMissionTo_Mission(mission);
-
-        JSONObject jsonMission = new JSONObject();
-
-        try {
-            jsonMission.put(Engine.JsonFields.Mission.id, _mission._id);
-
-            if (!Utils.isEmptyString(_mission._name)) {
-                jsonMission.put(Engine.JsonFields.Mission.name, _mission._name);
-            }
-
-            if (!Utils.isEmptyString(_mission._description)) {
-                jsonMission.put(Engine.JsonFields.Mission.description, _mission._description);
-            }
-
-            /*if (!Utils.isEmptyString(_missionModPin)) {
-                jsonMission.put(Engine.JsonFields.Mission.modPin, _missionModPin);
-            }*/
-
-            jsonMission.put("multicastFailoverPolicy", 0);
-
-            if (!Utils.isEmptyString(_mission._rpAddress) && _mission._rpPort > 0) {
-                JSONObject rallypoint = new JSONObject();
-                rallypoint.put("use", false);
-                rallypoint.put(Engine.JsonFields.Rallypoint.Host.address, _mission._rpAddress);
-                rallypoint.put(Engine.JsonFields.Rallypoint.Host.port, _mission._rpPort);
-                jsonMission.put(Engine.JsonFields.Rallypoint.objectName, rallypoint);
-            }
-
-            if (_mission._groups != null && _mission._groups.size() > 0) {
-                JSONArray groups = new JSONArray();
-
-                for (DatabaseGroup _group : _mission._groups) {
-                    JSONObject group = new JSONObject();
-                    group.put("id", _group._id);
-                    group.put("name", _group._name);
-                    group.put("blockAdvertising", true);
-                    group.put("cryptoPassword", _group._cryptoPassword);
-
-                    JSONObject rx = new JSONObject();
-                    rx.put("address", _group._rxAddress);
-                    rx.put("port", _group._rxPort);
-                    group.put("rx", rx);
-
-                    JSONObject tx = new JSONObject();
-                    tx.put("address", _group._txAddress);
-                    tx.put("port", _group._txPort);
-                    group.put("tx", tx);
-
-                    group.put("type", _group._type);
-                    if (_group._type == 1) { //Audio type
-                        JSONObject timeline = new JSONObject();
-                        timeline.put("enabled", true);
-                        timeline.put("maxAudioTimeMs", 30000);
-                        group.put("timeline", timeline);
-
-                        JSONObject txAudio = new JSONObject();
-                        txAudio.put("encoder", _group._txCodecId);
-                        txAudio.put("fdx", false);
-                        txAudio.put("framingMs", _group._txFramingMs);
-                        txAudio.put("maxTxSecs", _group._maxTxSecs);
-                        group.put("txAudio", txAudio);
-                    }
-
-                    groups.put(group);
-                }
-
-                jsonMission.put(Engine.JsonFields.Group.arrayName, groups);
-            }
-        } catch (Exception e) {
-            jsonMission = null;
-            e.printStackTrace();
-        }
-
-        return jsonMission.toString();
     }
 }

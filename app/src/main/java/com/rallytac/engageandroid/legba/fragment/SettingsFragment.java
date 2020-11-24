@@ -1,6 +1,7 @@
 package com.rallytac.engageandroid.legba.fragment;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +40,22 @@ public class SettingsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         setupToolbar();
         setupButtonsAction();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(getActivity() != null){//Locks portrait mode
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(getActivity() != null){ //Unlocks rotation
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        }
     }
 
     private void setupToolbar() {
