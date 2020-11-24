@@ -32,21 +32,21 @@
                             android:id="@+id/toolbar_background_image"
                             android:layout_width="match_parent"
                             android:layout_height="85dp"
-                            android:background="@color/primaryBlack"
                             android:layout_gravity="end"
                             android:alpha="0.05"
+                            android:background="@color/primaryBlack"
+                            android:contentDescription="Background toolbar image"
                             android:scaleType="centerCrop"
                             android:scrollY="70dp"
-                            tools:src="@sample/channel"
-                            android:contentDescription="Background toolbar image" />
+                            tools:src="@sample/channel" />
 
                     <TextView
                             android:id="@+id/toolbar_left_title_text"
                             style="@style/toolbar"
-                            android:layout_marginStart="50dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
+                            android:layout_marginStart="50dp"
                             android:text="ALPHA TEAM" />
 
                     <androidx.appcompat.widget.Toolbar
