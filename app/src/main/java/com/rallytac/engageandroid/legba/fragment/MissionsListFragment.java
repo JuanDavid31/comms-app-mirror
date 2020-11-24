@@ -212,7 +212,7 @@ public class MissionsListFragment extends Fragment {
             File fd = File.createTempFile(fileName, ".json", Environment.getExternalStorageDirectory());//NON-NLS
 
             FileOutputStream fos = new FileOutputStream(fd);
-            fos.write(vm.makeTemplate(mission).getBytes());
+            fos.write(MappingUtils.makeTemplate(mission).getBytes());
             fos.close();
 
             Uri u = FileProvider.getUriForFile(getContext(), getString(R.string.file_content_provider), fd);

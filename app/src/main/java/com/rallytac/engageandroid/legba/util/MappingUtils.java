@@ -1,9 +1,16 @@
 package com.rallytac.engageandroid.legba.util;
 
+import android.provider.ContactsContract;
+
+import com.rallytac.engage.engine.Engine;
 import com.rallytac.engageandroid.DatabaseGroup;
 import com.rallytac.engageandroid.DatabaseMission;
+import com.rallytac.engageandroid.Utils;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,5 +100,84 @@ public class MappingUtils {
 
         Timber.i("Mission %s", newMission);
         return newMission;
+    }
+
+    public static String makeTemplate(Mission mission) {
+
+        DatabaseMission _mission = MappingUtils.mapMissionTo_Mission(mission);
+
+        JSONObject jsonMission = new JSONObject();
+
+        try {
+            jsonMission.put(Engine.JsonFields.Mission.id, _mission._id);
+
+            if (!Utils.isEmptyString(_mission._name)) {
+                jsonMission.put(Engine.JsonFields.Mission.name, _mission._name);
+            }
+
+            if (!Utils.isEmptyString(_mission._description)) {
+                jsonMission.put(Engine.JsonFields.Mission.description, _mission._description);
+            }
+
+            /*if (!Utils.isEmptyString(_missionModPin)) {
+                jsonMission.put(Engine.JsonFields.Mission.modPin, _missionModPin);
+            }*/
+
+            jsonMission.put("multicastFailoverPolicy", 0);
+
+            if (!Utils.isEmptyString(_mission._rpAddress) && _mission._rpPort > 0) {
+                JSONObject rallypoint = new JSONObject();
+                rallypoint.put("use", false);
+                rallypoint.put(Engine.JsonFields.Rallypoint.Host.address, _mission._rpAddress);
+                rallypoint.put(Engine.JsonFields.Rallypoint.Host.port, _mission._rpPort);
+                jsonMission.put(Engine.JsonFields.Rallypoint.objectName, rallypoint);
+            }
+
+            if (_mission._groups != null && _mission._groups.size() > 0) {
+                JSONArray groups = new JSONArray();
+
+                for (DatabaseGroup _group : _mission._groups) {
+                    JSONObject group = new JSONObject();
+                    group.put("id", _group._id);
+                    group.put("name", _group._name);
+                    group.put("blockAdvertising", true);
+                    group.put("cryptoPassword", _group._cryptoPassword);
+
+                    JSONObject rx = new JSONObject();
+                    rx.put("address", _group._rxAddress);
+                    rx.put("port", _group._rxPort);
+                    group.put("rx", rx);
+
+                    JSONObject tx = new JSONObject();
+                    tx.put("address", _group._txAddress);
+                    tx.put("port", _group._txPort);
+                    group.put("tx", tx);
+
+                    group.put("type", _group._type);
+                    if (_group._type == 1) { //Audio type
+                        JSONObject timeline = new JSONObject();
+                        timeline.put("enabled", true);
+                        timeline.put("maxAudioTimeMs", 30000);
+                        group.put("timeline", timeline);
+
+                        JSONObject txAudio = new JSONObject();
+                        txAudio.put("encoder", _group._txCodecId);
+                        txAudio.put("fdx", false);
+                        txAudio.put("framingMs", _group._txFramingMs);
+                        txAudio.put("maxTxSecs", _group._maxTxSecs);
+                        group.put("txAudio", txAudio);
+                    }
+
+                    groups.put(group);
+                }
+
+                jsonMission.put(Engine.JsonFields.Group.arrayName, groups);
+            }
+        } catch (Exception e) {
+            jsonMission = null;
+            e.printStackTrace();
+        }
+
+        return jsonMission.toString();
     }
 }

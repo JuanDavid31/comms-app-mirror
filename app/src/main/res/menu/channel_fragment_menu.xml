@@ -5,13 +5,14 @@
     <item
             android:id="@+id/notifications_action"
             app:showAsAction="ifRoom"
-            app:actionLayout="@layout/notifications_button"
-            android:title="notifications"
+            app:actionLayout="@layout/notifications_button_pinkish_gray"
+            android:title="Notifications"
             />
 
     <item
-            android:id="@+id/history_action"
-            android:icon="@drawable/ic_baseline_history_24"
+            android:id="@+id/settings_action"
+            android:icon="@drawable/ic_settings"
             app:showAsAction="always"
-            android:title="history" />
+            android:iconTint="@color/pinkish_grey"
+            android:title="Settings" />
 </menu>
