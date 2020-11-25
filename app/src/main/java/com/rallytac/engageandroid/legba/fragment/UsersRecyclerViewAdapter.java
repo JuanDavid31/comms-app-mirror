@@ -24,7 +24,6 @@ import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 public class UsersRecyclerViewAdapter extends ListAdapter<Member, UsersRecyclerViewAdapter.ChannelElementViewHolder> {
 
     private List<Member> members = new ArrayList();
-    private Fragment fragment;
 
     public void setMembers(List<Member> members) {
         this.members = members;
@@ -33,7 +32,6 @@ public class UsersRecyclerViewAdapter extends ListAdapter<Member, UsersRecyclerV
 
     public UsersRecyclerViewAdapter(@NonNull DiffUtil.ItemCallback<Member> diffCallback, Fragment fragment) {
         super(diffCallback);
-        this.fragment = fragment;
     }
 
     @NonNull
@@ -55,21 +53,14 @@ public class UsersRecyclerViewAdapter extends ListAdapter<Member, UsersRecyclerV
         memberViewHolder.name.setText(member.getName());
         memberViewHolder.memberNickName.setText(member.getNickName());
         memberViewHolder.memberNumber.setText(member.getNumber());
-        memberViewHolder.micImage.setImageResource(getStateImage(member.getState()));
-        memberViewHolder.requestPendingText.setVisibility(member.getState() == Member.RequestType.PENDING ? View.VISIBLE : View.INVISIBLE);
     }
 
     private String getFirstLetterCapsFrom(String name) {
-        //Is there a better way to do this?
-        String[] names = null;
+        String[] names;
         if (name.contains(" ")) {
             names = name.split(" ");
         } else {
-            char[] chars = name.toCharArray();
-            names = new String[chars.length];
-            for (int i = 0; i < chars.length; i++) {
-                names[i] = String.valueOf(chars[i]);
-            }
+            return name.isEmpty() ? "" : String.valueOf(name.toUpperCase().charAt(0));
         }
 
         String result = "";
@@ -112,8 +103,6 @@ public class UsersRecyclerViewAdapter extends ListAdapter<Member, UsersRecyclerV
         private TextView membersCaps;
         private TextView memberNickName;
         private TextView memberNumber;
-        private TextView requestPendingText;
-        private ImageButton micImage;
 
         public MemberViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -121,8 +110,6 @@ public class UsersRecyclerViewAdapter extends ListAdapter<Member, UsersRecyclerV
             name = itemView.findViewById(R.id.member_name_text);
             memberNickName = itemView.findViewById(R.id.member_nickname_text);
             memberNumber = itemView.findViewById(R.id.member_number_text);
-            requestPendingText = itemView.findViewById(R.id.request_pending_text);
-            micImage = itemView.findViewById(R.id.member_state_image);
         }
     }
 
