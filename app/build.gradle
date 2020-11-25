@@ -81,7 +81,7 @@ greendao {
 dependencies {
 
     // Engage Engine - copied from engage
-    implementation 'com.rallytac.engage:engage-engine-release:1.176.9013@aar'
+    implementation 'com.rallytac.engage:engage-engine-release:1.189.9026@aar'
 
     implementation "com.airbnb.android:lottie:3.4.4"
 

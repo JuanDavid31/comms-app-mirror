@@ -53,8 +53,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity
         {
             String stringValue = value.toString();
 
-            Timber.i("OnPreferenceChange. key -> %s value -> %s", preference.getKey(), value.toString());
-
             String preferenceKey = preference.getKey();
 
             if (preferenceKey.equalsIgnoreCase("user_displayName")

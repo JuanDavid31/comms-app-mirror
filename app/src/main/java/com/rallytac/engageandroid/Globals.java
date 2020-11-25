@@ -77,9 +77,9 @@ public class Globals
         return _apm;
     }
 
-    public static void notifyListenersStart(final String id, final String alias, final String displayName) {
+    public static void notifyListenersStart(final String id, final String alias, final String displayName, boolean isSos) {
         Timber.i("notifyListenersStart id -> %s alias -> %s displayName -> %s", id, alias, displayName);
-        rxListeners.forEach(rxListener -> rxListener.onRx(id, alias, displayName));
+        rxListeners.forEach(rxListener -> rxListener.onRx(id, alias, displayName, isSos));
         updateChannelIncomingMessage(id, alias, displayName);
     }
 

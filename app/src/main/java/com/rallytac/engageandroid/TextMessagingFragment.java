@@ -185,7 +185,7 @@ public class TextMessagingFragment extends Fragment
                 byte[] msgBlobBytes = msg.getBytes();
 
                 JSONObject bi = new JSONObject();
-                bi.put(Engine.JsonFields.BlobHeader.payloadType, Engine.BlobType.appTextUtf8.toInt());
+                bi.put(Engine.JsonFields.BlobInfo.payloadType, Engine.BlobType.appTextUtf8.toInt());
                 String jsonParams = bi.toString();
                 Globals.getEngageApplication().getEngine().engageSendGroupBlob(_gd.id, msgBlobBytes, msgBlobBytes.length, jsonParams);
 

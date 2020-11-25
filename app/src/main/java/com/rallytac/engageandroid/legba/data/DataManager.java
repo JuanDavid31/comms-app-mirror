@@ -21,6 +21,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import okio.BufferedSource;
@@ -164,8 +165,9 @@ public class DataManager {
         }
     }
 
-    public void startTx(String... groupIds) {
-        Globals.getEngageApplication().startTxLegba(0, 0, groupIds);
+    public void startTx(boolean isSos, String... groupIds) {
+
+        Globals.getEngageApplication().startTxLegba(0, isSos ? 1 : 0, groupIds);
     }
 
     public void endTx(String... groupIds) {

@@ -387,4 +387,9 @@ public class Channel implements Serializable {
         }
         myDao.update(this);
     }
+
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getChannelDao() : null;
+    }
 }

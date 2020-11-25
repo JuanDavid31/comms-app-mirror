@@ -2804,24 +2804,21 @@ public class EngageApplication
         }
 
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                logEvent(Analytics.GROUP_RX_ENDED);
+        runOnUiThread(() -> {
+            logEvent(Analytics.GROUP_RX_ENDED);
 
-                GroupDescriptor gd = getGroup(id);
-                if (gd == null) {
-                    Log.e(TAG, "onGroupRxEnded: cannot find group id='" + id + "'");
-                    return;
-                }
-
-                Log.d(TAG, "onGroupRxEnded: id='" + id + "', n='" + gd.name + "'");
-
-                gd.rx = false;
-                _lastAudioActivity = Utils.nowMs();
-
-                notifyGroupUiListeners(gd);
+            GroupDescriptor gd = getGroup(id);
+            if (gd == null) {
+                Log.e(TAG, "onGroupRxEnded: cannot find group id='" + id + "'");
+                return;
             }
+
+            Log.d(TAG, "onGroupRxEnded: id='" + id + "', n='" + gd.name + "'");
+
+            gd.rx = false;
+            _lastAudioActivity = Utils.nowMs();
+
+            notifyGroupUiListeners(gd);
         });
     }
 
@@ -2856,7 +2853,8 @@ public class EngageApplication
                                 if (pd != null) {
                                     displayName = pd.displayName;
                                 }
-                                Globals.notifyListenersStart(id, td.alias, displayName);
+                                boolean isSos = obj.optInt(Engine.JsonFields.TalkerInformation.rxFlags) == 1;
+                                Globals.notifyListenersStart(id, td.alias, displayName, isSos);
 
                                 talkers.add(td);
                             }
@@ -3603,7 +3601,7 @@ public class EngageApplication
 
                     // Our JSON parameters indicate that the payload is binary human biometric data in Engage format
                     JSONObject bi = new JSONObject();
-                    bi.put(Engine.JsonFields.BlobHeader.payloadType, Engine.BlobType.engageHumanBiometrics.toInt());
+                    bi.put(Engine.JsonFields.BlobInfo.payloadType, Engine.BlobType.engageHumanBiometrics.toInt());
                     String jsonParams = bi.toString();
 
                     ActiveConfiguration ac = getActiveConfiguration();
@@ -3778,9 +3776,9 @@ public class EngageApplication
                 try {
                     JSONObject blobInfo = new JSONObject(blobInfoJson);
 
-                    int payloadType = blobInfo.getInt(Engine.JsonFields.BlobHeader.payloadType);
-                    String source = blobInfo.getString(Engine.JsonFields.BlobHeader.source);
-                    String target = blobInfo.getString(Engine.JsonFields.BlobHeader.target);
+                    int payloadType = blobInfo.getInt(Engine.JsonFields.BlobInfo.payloadType);
+                    String source = blobInfo.getString(Engine.JsonFields.BlobInfo.source);
+                    String target = blobInfo.getString(Engine.JsonFields.BlobInfo.target);
 
                     PresenceDescriptor pd = _activeConfiguration.getPresenceDescriptor(source);
 
@@ -4089,6 +4087,13 @@ public class EngageApplication
                     }
                 }
             }
+        });
+    }
+
+    @Override
+    public void onGroupRxVolumeChanged(final String id, final int leftLevelPerc, final int rightLevelPerc, final String eventExtraJson) {
+        runOnUiThread(() -> {
+            Log.e(TAG, "onGroupRxVolumeChanged: id='" + id + "'");
         });
     }
 
