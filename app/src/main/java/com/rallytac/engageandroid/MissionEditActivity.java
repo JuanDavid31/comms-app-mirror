@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
+import com.rallytac.engageandroid.legba.data.dto.DaoSession;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.legba.data.dto.MissionDao;
 import com.rallytac.engageandroid.legba.util.MappingUtils;
@@ -559,7 +560,8 @@ public class MissionEditActivity extends AppCompatActivity {
     }
 
     private void saveMission() {
-        Mission newMission = MappingUtils.map_missionToMission(_mission);
+        DaoSession daoSession = ((EngageApplication) getApplication()).getDaoSession();
+        Mission newMission = MappingUtils.map_missionToMission(_mission, daoSession);
         if (missionControlChannel == null) {
             Timber.i("Adding generated missionControlChannel");
             newMission.getChannels()
@@ -576,8 +578,7 @@ public class MissionEditActivity extends AppCompatActivity {
             return;
         }
 
-        MissionDao missionDao = ((EngageApplication) getApplication()).getDaoSession().getMissionDao();
-        missionDao.insertOrReplace(newMission);
+        newMission.insertOrReplace();
     }
 
     @Override

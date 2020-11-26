@@ -7,6 +7,7 @@ import com.rallytac.engageandroid.DatabaseGroup;
 import com.rallytac.engageandroid.DatabaseMission;
 import com.rallytac.engageandroid.Utils;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
+import com.rallytac.engageandroid.legba.data.dto.DaoSession;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 
 import org.json.JSONArray;
@@ -68,7 +69,7 @@ public class MappingUtils {
         return _mission;
     }
 
-    public static Mission map_missionToMission(DatabaseMission _mission) {
+    public static Mission map_missionToMission(DatabaseMission _mission, DaoSession daoSession) {
         Timber.i("Mission %s", _mission);
 
         List<Channel> newGroups = _mission._groups.stream().map(_group -> {
@@ -98,7 +99,7 @@ public class MappingUtils {
                     channel.setTxPort(_mission._mcPort);
                 });
 
-        Timber.i("Mission %s", newMission);
+        newMission.__setDaoSession(daoSession);
         return newMission;
     }
 

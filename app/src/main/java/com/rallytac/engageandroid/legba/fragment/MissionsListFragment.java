@@ -104,6 +104,7 @@ public class MissionsListFragment extends Fragment {
     public void onStart() {
         super.onStart();
         List<Mission> missions = vm.getMissions();
+        missions.forEach(mission -> Timber.i("Missions -> %s channelsGrooups -> %s", mission.getId(), mission.getChannelsGroups()));
         MissionsRecyclerViewAdapter adapter = new MissionsRecyclerViewAdapter(new MissionsRecyclerViewAdapter.AdapterDiffCallback(), this, vm);
         binding.missionsListRecyclerView.setAdapter(adapter);
         adapter.setMissions(missions);

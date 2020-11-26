@@ -73,7 +73,6 @@ public class Mission implements Serializable {
         this.rpAddress = rpAddress;
         this.rpPort = rpPort;
         this.multicastType = multicastType;
-        this.channelsGroups = new ArrayList<>();
     }
 
     @Generated(hash = 409910037)
@@ -151,7 +150,7 @@ public class Mission implements Serializable {
                 ", rpAddress='" + rpAddress + '\'' +
                 ", rpPort=" + rpPort +
                 ", multicastType=" + multicastType +
-                ", channelsGroups=" + channelsGroups +
+                ", channelsGroups=" + (channelsGroups != null ? channelsGroups.size() : null )  +
                 ", channels=" + (channels != null ? channels.size() : null) +
                 '}';
     }
@@ -290,10 +289,13 @@ public class Mission implements Serializable {
     }
 
     public void insertOrReplace() {
-        myDao.insertOrReplace(this);
-        for (Channel channel : channels) {
-            daoSession.getChannelDao().insertOrReplaceInTx(channel);
+        for (Channel channel : getChannels()) {
+            daoSession.getChannelDao().insertOrReplace(channel);
         }
+        for (ChannelGroup channelGroup : getChannelsGroups()){
+            daoSession.getChannelGroupDao().insertOrReplace(channelGroup);
+        }
+        myDao.insertOrReplace(this);
     }
 
     public boolean getUseRp() {

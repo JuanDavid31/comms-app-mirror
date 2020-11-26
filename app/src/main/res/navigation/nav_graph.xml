@@ -28,8 +28,8 @@
         android:name="com.rallytac.engageandroid.legba.fragment.MissionFragment"
         tools:layout="@layout/fragment_mission">
         <argument
-            android:name="mission"
-            app:argType="com.rallytac.engageandroid.legba.data.dto.Mission" />
+            android:name="missionId"
+            app:argType="string" />
         <action
             android:id="@+id/action_missionFragment_to_channelFragment"
             app:destination="@id/channelFragment"

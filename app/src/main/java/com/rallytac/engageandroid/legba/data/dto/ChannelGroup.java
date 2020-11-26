@@ -166,4 +166,6 @@ public class ChannelGroup implements Serializable {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getChannelGroupDao() : null;
     }
+
+
 }

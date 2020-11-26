@@ -102,9 +102,9 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
 
     private void setupMission() {
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
-        Mission mission = missionFragmentArgs.getMission(); //TODO: the id should be the only one to be passed as an argument instead of a Mission instance
+        String missionId = missionFragmentArgs.getMissionId();
 
-        vm.setupMission(mission);
+        vm.setupMission(missionId);
     }
 
     @Override
@@ -121,23 +121,19 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
         binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
 
-        List<ChannelGroup> channelsGroup = getChannelsGroup();
+        List<ChannelGroup> channelsGroup = vm.getChannelsGroup();
         channelSlidePageAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
         binding.missionViewPager.setAdapter(channelSlidePageAdapter);
 
         setupViewPagerOnPageChangeListener();
         setupPTTOnMic();
-        setupViewPagerDotIndicator(getChannelsGroup());
+        setupViewPagerDotIndicator(vm.getChannelsGroup());
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();
         updateDots(0);
         setupEditCurrentChannelGroupLayout();
 
         return binding.getRoot();
-    }
-
-    public List<ChannelGroup> getChannelsGroup() {
-        return vm.getChannelsGroup() == null ? new ArrayList<>() : vm.getChannelsGroup();
     }
 
     private void updateToolbar() {
@@ -340,7 +336,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         }
     }
 
-    private void updateChannelListAdapter(){
+    private void updateChannelListAdapter() {
         List<Channel> allChannels = vm
                 .getAudioChannels()
                 .stream()
@@ -637,6 +633,18 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         }*/
     }
 
+    private void pauseActiveTx() {
+        vm.getAudioChannels().forEach(audioChannel -> audioChannel.setOnRx(false));
+        String[] channelIds = vm.getAudioChannels()
+                .stream()
+                .peek(audioChannel -> audioChannel.setOnRx(false))
+                .map(Channel::getId)
+                .toArray(String[]::new);
+
+        binding.txImage.setVisibility(View.INVISIBLE);
+        DataManager.getInstance().endTx(channelIds);
+    }
+
     @Override
     public void stopRx(String id, String eventExtraJson) {
 /*        int channelsSize = getChannelsGroup().get(currentPage).getChannels().size();
@@ -650,6 +658,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         } else {
             //TODO: Compound animation
         }*/
+
     }
 
     @Override
