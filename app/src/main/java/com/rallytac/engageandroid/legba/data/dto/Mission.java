@@ -293,10 +293,11 @@ public class Mission implements Serializable {
     }
 
     public void insertOrReplace() {
-        myDao.insertOrReplace(this);
         for (Channel channel : channels) {
-            daoSession.getChannelDao().insertOrReplaceInTx(channel);
+            channel.__setDaoSession(daoSession);
+            channel.insertOrReplace();
         }
+        myDao.insertOrReplace(this);
     }
 
     public boolean getUseRp() {

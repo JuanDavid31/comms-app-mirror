@@ -2749,47 +2749,28 @@ public class EngageApplication
 
     @Override
     public void onGroupRxStarted(final String id, final String eventExtraJson) {
+        runOnUiThread(() -> {
+            logEvent(Analytics.GROUP_RX_STARTED);
+
+            Timber.i("onGroupRxStarted %s", id);
 
 
-        try {
-            //Globals.actualListener.onRx(id, eventExtraJson);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-
-        Log.w("message", eventExtraJson);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                logEvent(Analytics.GROUP_RX_STARTED);
-
-                GroupDescriptor gd = getGroup(id);
-                if (gd == null) {
-                    Log.e(TAG, "onGroupRxStarted: cannot find group id='" + id + "'");
-                    return;
-                }
-
-                Log.d(TAG, "onGroupRxStarted: id='" + id + "', n='" + gd.name + "'");
-
-                gd.rx = true;
-
-                long now = Utils.nowMs();
-                if ((now - _lastAudioActivity) > (Constants.RX_IDLE_SECS_BEFORE_NOTIFICATION * 1000)) {
-                    if (_activeConfiguration.getNotifyOnNewAudio()) {
-                        float volume = _activeConfiguration.getNotificationToneNotificationLevel();
-                        if (volume != 0.0) {
-                            try {
-                                Globals.getAudioPlayerManager().playNotification(R.raw.incoming_rx, volume, null);
-                            } catch (Exception e) {
-                            }
+            long now = Utils.nowMs();
+            if ((now - _lastAudioActivity) > (Constants.RX_IDLE_SECS_BEFORE_NOTIFICATION * 1000)) {
+                if (_activeConfiguration.getNotifyOnNewAudio()) {
+                    float volume = _activeConfiguration.getNotificationToneNotificationLevel();
+                    if (volume != 0.0) {
+                        try {
+                            Globals.getAudioPlayerManager().playNotification(R.raw.incoming_rx, volume, null);
+                        } catch (Exception e) {
                         }
                     }
                 }
-                _lastAudioActivity = now;
-
-                notifyGroupUiListeners(gd);
             }
+            _lastAudioActivity = now;
+
+            //notifyGroupUiListeners(gd);
         });
     }
 
@@ -2830,7 +2811,7 @@ public class EngageApplication
             public void run() {
                 //logEvent(Analytics.GROUP_RX_SPEAKER_COUNT_CHANGED);
 
-                Timber.d("onGroupRxSpeakersChanged: id='%s'", id);
+                Timber.i("onGroupRxSpeakersChanged: id='%s'", id);
 
                 ArrayList<TalkerDescriptor> talkers = null;
 

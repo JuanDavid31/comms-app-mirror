@@ -43,6 +43,7 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
                 nameJsonElement != null ? nameJsonElement.getAsString() : "",
                 imageJsonElement != null ? imageJsonElement.getAsString() : "",
                 getChannelType(typeJsonElement != null ? typeJsonElement.getAsString() : ""),
+                txAudioJsonObject != null && txAudioJsonObject.get("fdx").getAsBoolean(),
                 txAudioJsonObject != null ? txAudioJsonObject.get("framingMs").getAsInt() : 60,
                 txAudioJsonObject != null ? txAudioJsonObject.get("encoder").getAsInt() : 25,
                 txAudioJsonObject != null ? txAudioJsonObject.get("maxTxSecs").getAsInt() : 30,

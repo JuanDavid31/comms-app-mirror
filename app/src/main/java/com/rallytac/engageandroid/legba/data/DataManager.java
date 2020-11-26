@@ -130,7 +130,7 @@ public class DataManager {
                 .forEach(channel -> {
                     AddressAndPort rx = new AddressAndPort(channel.getRxAddress(), channel.getRxPort());
                     AddressAndPort tx = new AddressAndPort(channel.getTxAddress(), channel.getTxPort());
-                    TxAudio txAudio = new TxAudio(channel.getTxCodecId(), channel.getTxFramingMs(), channel.getMaxTxSecs());
+                    TxAudio txAudio = new TxAudio(channel.getTxCodecId(), channel.getTxFramingMs(), channel.isFullDuplex(), channel.getMaxTxSecs());
                     TxData txData = new TxData(channel.getId(),
                             channel.getName(),
                             channel.getEngageType() == Channel.EngageType.AUDIO ? 1 : 2,
@@ -189,7 +189,8 @@ public class DataManager {
     public Channel generateMissionControlChannel(String missionId) {
         return new Channel(Globals.MISSION_CONTROL_ID, missionId,
                 "MISSION CONTROL", "",
-                Channel.ChannelType.PRIMARY, 30,
+                Channel.ChannelType.PRIMARY, false,
+                30,
                 25, 120,
                 "239.42.43.1", 49000,
                 "239.42.43.1", 49000,

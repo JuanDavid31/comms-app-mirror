@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.rallytac.engageandroid.legba.data.DataManager;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
+import com.rallytac.engageandroid.legba.data.dto.DaoSession;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.legba.data.dto.MissionDao;
 import com.rallytac.engageandroid.legba.util.MappingUtils;
@@ -576,8 +577,9 @@ public class MissionEditActivity extends AppCompatActivity {
             return;
         }
 
-        MissionDao missionDao = ((EngageApplication) getApplication()).getDaoSession().getMissionDao();
-        missionDao.insertOrReplace(newMission);
+        DaoSession daoSession = ((EngageApplication) getApplication()).getDaoSession();
+        newMission.__setDaoSession(daoSession);
+        newMission.insertOrReplace();
     }
 
     @Override

@@ -93,6 +93,7 @@ public class Globals
         channel.setLastRxAlias(formattedAlias);
         channel.setLastRxDisplayName(formattedDisplayName);
         channel.setLastRxTime(time);
+        channel.__setDaoSession(daoSession);
         channel.update();
     }
 
