@@ -88,9 +88,8 @@ public class MissionViewModel extends ViewModel {
                 .buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
-    public void setupMission(Mission mission) {
-        this.mission = mission;
-        getMissionById(mission.getId())
+    public void setupMission(String id) {
+        getMissionById(id)
                 .ifPresent(updatedMission -> this.mission = updatedMission);
     }
 

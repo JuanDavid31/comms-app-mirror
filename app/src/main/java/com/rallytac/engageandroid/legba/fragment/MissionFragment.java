@@ -102,9 +102,9 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
 
     private void setupMission() {
         MissionFragmentArgs missionFragmentArgs = MissionFragmentArgs.fromBundle(requireArguments());
-        Mission mission = missionFragmentArgs.getMission(); //TODO: the id should be the only one to be passed as an argument instead of a Mission instance
+        String missionId = missionFragmentArgs.getMissionId();
 
-        vm.setupMission(mission);
+        vm.setupMission(missionId);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         setHasOptionsMenu(true);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
 
-        List<ChannelGroup> channelsGroup = getChannelsGroup();
+        List<ChannelGroup> channelsGroup = vm.getChannelsGroup();
         channelSlidePageAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
         binding.missionViewPager.setAdapter(channelSlidePageAdapter);
 
@@ -127,17 +127,13 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         setupEmergencyListeners();
         setupViewPagerOnPageChangeListener();
         setupPTTOnMic();
-        setupViewPagerDotIndicator(getChannelsGroup());
+        setupViewPagerDotIndicator(vm.getChannelsGroup());
         setUpSlidingUpPanelListener();
         setUpSlidingUpChannels();
         updateDots(0);
         setupEditCurrentChannelGroupLayout();
 
         return binding.getRoot();
-    }
-
-    public List<ChannelGroup> getChannelsGroup() {
-        return vm.getChannelsGroup() == null ? new ArrayList<>() : vm.getChannelsGroup();
     }
 
     private void updateToolbar() {
@@ -150,10 +146,10 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
-    private void recoverState(){
+    private void recoverState() {
         binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
-        if(vm.isMissionOnSos()){
-            ((RxListener)this).onRx(vm.getIncomingSosChannelId(), vm.getIncomingSosAlias(), vm.getIncomingSosDisplayName(), true);
+        if (vm.isMissionOnSos()) {
+            ((RxListener) this).onRx(vm.getIncomingSosChannelId(), vm.getIncomingSosAlias(), vm.getIncomingSosDisplayName(), true);
         }
     }
 
@@ -369,7 +365,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         }
     }
 
-    private void updateChannelListAdapter(){
+    private void updateChannelListAdapter() {
         List<Channel> allChannels = vm
                 .getAudioChannels()
                 .stream()
@@ -644,7 +640,8 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
 
     @Override
     public void onRx(String id, String alias, String displayName, boolean isSos) {
-        if (!isSos)return;
+        if (!isSos) return;
+        Timber.i("OnRx SOS");
 
         vm.getAudioChannels()
                 .stream()
@@ -652,28 +649,40 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                 .filter(channelId -> channelId.equalsIgnoreCase(id))
                 .findFirst()
                 .ifPresent(channel -> {
+                    Timber.i("OnRx SOS ifPresent %s %s %s", id, alias, displayName);
                     vm.setIncomingSosChannelId(id);
                     vm.setIncomingSosAlias(alias);
                     vm.setIncomingSosDisplayName(displayName);
                     vm.setMissionOnSos(true);
 
-                    String[] channelIds = vm.getAudioChannels()
-                            .stream()
-                            .peek(audioChannel -> audioChannel.setOnRx(false))
-                            .map(Channel::getId)
-                            .toArray(String[]::new);
-
-                    binding.txImage.setVisibility(View.INVISIBLE);
-                    DataManager.getInstance().endTx(channelIds);
+                    pauseActiveTx(); //Only works if full duplex is enable
 
                     activity.binding.incomingSosOverlapMessageName.setText(alias);
-                    toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
+                    if (activity.binding.incomingSosOverlapLayout.getVisibility() == View.GONE) {
+                        // this method (onRx) is being called every time a speaker/talker is added, so this is being called more than once
+                        //making this toggle bug the incomingSosOverlapLayout
+                        toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
+                    }
                 });
+    }
+
+    private void pauseActiveTx() {
+        vm.getAudioChannels().forEach(audioChannel -> audioChannel.setOnRx(false));
+        String[] channelIds = vm.getAudioChannels()
+                .stream()
+                .peek(audioChannel -> audioChannel.setOnRx(false))
+                .map(Channel::getId)
+                .toArray(String[]::new);
+
+        binding.txImage.setVisibility(View.INVISIBLE);
+        DataManager.getInstance().endTx(channelIds);
     }
 
     @Override
     public void stopRx(String id, String eventExtraJson) {
-        if(vm.isMissionOnSos()){
+        Timber.i("stopRX");
+        if (vm.isMissionOnSos()) {
+            Timber.i("stopRX MissionsOnSos");
             vm.setMissionOnSos(false);
             toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
         }

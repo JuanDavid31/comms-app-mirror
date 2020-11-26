@@ -560,7 +560,8 @@ public class MissionEditActivity extends AppCompatActivity {
     }
 
     private void saveMission() {
-        Mission newMission = MappingUtils.map_missionToMission(_mission);
+        DaoSession daoSession = ((EngageApplication) getApplication()).getDaoSession();
+        Mission newMission = MappingUtils.map_missionToMission(_mission, daoSession);
         if (missionControlChannel == null) {
             Timber.i("Adding generated missionControlChannel");
             newMission.getChannels()
@@ -577,8 +578,6 @@ public class MissionEditActivity extends AppCompatActivity {
             return;
         }
 
-        DaoSession daoSession = ((EngageApplication) getApplication()).getDaoSession();
-        newMission.__setDaoSession(daoSession);
         newMission.insertOrReplace();
     }
 
