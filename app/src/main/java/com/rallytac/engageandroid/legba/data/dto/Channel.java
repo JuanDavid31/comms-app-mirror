@@ -9,6 +9,7 @@ import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.JoinEntity;
+import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.ToMany;
 import org.greenrobot.greendao.annotation.Transient;
@@ -54,54 +55,33 @@ public class Channel implements Serializable {
 
     private String lastRxTime;
 
-    @Transient
+    private boolean fullDuplex;
+
     private int txFramingMs;
 
-    @Transient
     private int txCodecId;
 
-    @Transient
     private int maxTxSecs;
 
-    @Transient
     private String txAddress;
 
-    @Transient
     private int txPort;
 
-    @Transient
     private String rxAddress;
 
-    @Transient
     private int rxPort;
 
-    @Transient
+    @Convert(converter = EngageTypeConverter.class, columnType = Integer.class)
     private EngageType engageType;
 
     @Convert(converter = ChannelTypeConverter.class, columnType = String.class)
     private ChannelType type;
 
-    @ToMany
-    @JoinEntity(
-            entity = ChannelsWithChannelElements.class,
-            sourceProperty = "channelId",
-            targetProperty = "channelElementId"
-    )
-    private List<ChannelElement> channelElements;
-
     @Transient
     public List<Identity> users;
 
-    /**
-     * Used to resolve relations
-     */
-    @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /**
-     * Used for active entity operations.
-     */
-    @Generated(hash = 783605529)
     private transient ChannelDao myDao;
 
     public Channel() {
@@ -116,6 +96,7 @@ public class Channel implements Serializable {
                    String name,
                    String image,
                    ChannelType type,
+                   boolean fullDuplex,
                    int txFramingMs,
                    int txCodecId,
                    int maxTxSecs,
@@ -123,13 +104,13 @@ public class Channel implements Serializable {
                    int txPort,
                    String rxAddress,
                    int rxPort,
-                   EngageType engageType,
-                   List<ChannelElement> channelElements) {
+                   EngageType engageType) {
         this.id = id;
         this.missionId = missionId;
         this.name = name;
         this.image = image;
         this.type = type;
+        this.fullDuplex = fullDuplex;
         this.txFramingMs = txFramingMs;
         this.txCodecId = txCodecId;
         this.maxTxSecs = maxTxSecs;
@@ -138,7 +119,7 @@ public class Channel implements Serializable {
         this.rxAddress = rxAddress;
         this.rxPort = rxPort;
         this.engageType = engageType;
-        this.channelElements = channelElements;
+
 
         this.isActive = false;
         this.isSpeakerOn = true;
@@ -147,8 +128,9 @@ public class Channel implements Serializable {
         this.lastRxDisplayName = "";
     }
 
-    @Generated(hash = 1644940346)
-    public Channel(String id, String missionId, String name, String image, boolean isSpeakerOn, String lastRxAlias, String lastRxDisplayName, String lastRxTime, ChannelType type) {
+    @Generated(hash = 424181647)
+    public Channel(String id, String missionId, String name, String image, boolean isSpeakerOn, String lastRxAlias, String lastRxDisplayName, String lastRxTime, boolean fullDuplex,
+            int txFramingMs, int txCodecId, int maxTxSecs, String txAddress, int txPort, String rxAddress, int rxPort, EngageType engageType, ChannelType type) {
         this.id = id;
         this.missionId = missionId;
         this.name = name;
@@ -157,6 +139,15 @@ public class Channel implements Serializable {
         this.lastRxAlias = lastRxAlias;
         this.lastRxDisplayName = lastRxDisplayName;
         this.lastRxTime = lastRxTime;
+        this.fullDuplex = fullDuplex;
+        this.txFramingMs = txFramingMs;
+        this.txCodecId = txCodecId;
+        this.maxTxSecs = maxTxSecs;
+        this.txAddress = txAddress;
+        this.txPort = txPort;
+        this.rxAddress = rxAddress;
+        this.rxPort = rxPort;
+        this.engageType = engageType;
         this.type = type;
     }
 
@@ -216,6 +207,8 @@ public class Channel implements Serializable {
         isOnRx = onRx;
     }
 
+    public enum ChannelType {PRIMARY, PRIORITY, RADIO}
+
     public ChannelType getType() {
         return type;
     }
@@ -240,33 +233,6 @@ public class Channel implements Serializable {
         this.lastRxTime = lastRxTime;
     }
 
-    /**
-     * To-many relationship, resolved on first access (and after reset).
-     * Changes to to-many relations are not persisted, make changes to the target entity.
-     */
-    @Generated(hash = 1452385247)
-    public List<ChannelElement> getChannelElements() {
-        if (channelElements == null) {
-            final DaoSession daoSession = this.daoSession;
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            ChannelElementDao targetDao = daoSession.getChannelElementDao();
-            List<ChannelElement> channelElementsNew = targetDao._queryChannel_ChannelElements(id);
-            synchronized (this) {
-                if (channelElements == null) {
-                    channelElements = channelElementsNew;
-                }
-            }
-        }
-        return channelElements;
-    }
-
-    public void setChannelElements(List<ChannelElement> channelElements) {
-        this.channelElements = channelElements;
-        this.isSpeakerOn = true;
-    }
-
     @Override
     public String toString() {
         return "Channel{" +
@@ -277,55 +243,23 @@ public class Channel implements Serializable {
                 ", isActive=" + isActive +
                 ", isSpeakerOn=" + isSpeakerOn +
                 ", isOnRx=" + isOnRx +
-                ", channelElements=" + channelElements +
+                ", users=" + users +
                 ", type=" + type +
                 '}';
     }
 
-    /**
-     * Resets a to-many relationship, making the next get call to query for a fresh result.
-     */
-    @Generated(hash = 886780443)
-    public synchronized void resetChannelElements() {
-        channelElements = null;
-    }
-
-    /**
-     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
-     * Entity must attached to an entity context.
-     */
-    @Generated(hash = 128553479)
+    @Keep
     public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
+        daoSession.getChannelsGroupsWithChannelsDao()
+                .queryBuilder()
+                .where(ChannelsGroupsWithChannelsDao.Properties.ChannelId.eq(getId()))
+                .buildDelete()
+                .executeDeleteWithoutDetachingEntities();
         myDao.delete(this);
     }
-
-    /**
-     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
-     * Entity must attached to an entity context.
-     */
-    @Generated(hash = 1942392019)
-    public void refresh() {
-        if (myDao == null) {
-            throw new DaoException("Entity is detached from DAO context");
-        }
-        myDao.refresh(this);
-    }
-
-    /**
-     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
-     * Entity must attached to an entity context.
-     */
-    @Generated(hash = 713229351)
-    public void update() {
-        if (myDao == null) {
-            throw new DaoException("Entity is detached from DAO context");
-        }
-        myDao.update(this);
-    }
-
 
     public boolean getIsActive() {
         return this.isActive;
@@ -351,9 +285,6 @@ public class Channel implements Serializable {
         this.lastRxAlias = lastRxAlias;
     }
 
-    //ChannelElementType
-    public enum ChannelType {PRIMARY, PRIORITY, RADIO}
-
     public static class ChannelTypeConverter implements PropertyConverter<ChannelType, String> {
 
         @Override
@@ -365,6 +296,14 @@ public class Channel implements Serializable {
         public String convertToDatabaseValue(ChannelType entityProperty) {
             return entityProperty.name();
         }
+    }
+
+    public boolean isFullDuplex() {
+        return fullDuplex;
+    }
+
+    public void setFullDuplex(boolean fullDuplex) {
+        this.fullDuplex = fullDuplex;
     }
 
     public int getTxFramingMs() {
@@ -431,10 +370,45 @@ public class Channel implements Serializable {
         this.engageType = engageType;
     }
 
-    /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 2049488309)
+    public static class EngageTypeConverter implements PropertyConverter<EngageType, Integer> {
+
+        @Override
+        public EngageType convertToEntityProperty(Integer type) {
+            if (type == 1) {
+                return EngageType.AUDIO;
+            } else {
+                return EngageType.PRESENCE;
+            }
+        }
+
+        @Override
+        public Integer convertToDatabaseValue(EngageType type) {
+            if (type == EngageType.AUDIO) {
+                return 1;
+            } else {
+                return 2;
+            }
+        }
+    }
+
+    public void insertOrReplace(){
+        myDao.insertOrReplace(this);
+    }
+
+    public void update() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.update(this);
+    }
+
+    @Keep
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getChannelDao() : null;
+    }
+
+    public boolean getFullDuplex() {
+        return this.fullDuplex;
     }
 }

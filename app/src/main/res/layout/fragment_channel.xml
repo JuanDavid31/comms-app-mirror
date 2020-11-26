@@ -19,6 +19,6 @@
             android:paddingBottom="6.25dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:context=".fragment.ChannelFragment"
-            tools:itemCount="6"
+            tools:itemCount="9"
             tools:listitem="@layout/member_info_item" />
 </layout>

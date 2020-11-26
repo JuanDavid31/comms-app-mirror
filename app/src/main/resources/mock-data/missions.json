@@ -2,211 +2,134 @@
     {
         "id": "{M1}",
         "name": "OVERLORD",
-        "rpAddress": "demo.rallytac.com",
-        "rpPort": 7443,
-        "channels": [
+        "multicastFailoverPolicy": 0,
+        "rallypoint": { "use": false, "address": "demo.rallytac.com", "port": 7443 },
+        "groups": [
             {
                 "id": "{GCONTROL}",
                 "missionId": "{M1}",
                 "image": "primary",
-                "name": "ALPHA",
-                "type": "primary",
-                "txFramingMs": 30,
-                "txCodecId": 25,
-                "maxTxSecs": 120,
-                "txAddress": "239.42.43.1",
-                "txPort": 49000,
-                "rxAddress": "239.42.43.1",
-                "rxPort": 49000,
-                "engageType": 2
+                "name": "ALPHA CONTROL",
+                "txAudio": {
+                    "encoder": 25,
+                    "fdx": false,
+                    "framingMs": 60,
+                    "maxTxSecs": 30
+                },
+                "tx": {
+                    "address": "234.42.42.99",
+                    "port": 19999
+                },
+                "rx": {
+                    "address": "234.42.42.99",
+                    "port": 19999
+                },
+                "type": 2
             },
             {
                 "id": "{G1}",
                 "missionId": "{M1}",
                 "image": "primary",
                 "name": "ALPHA",
-                "type": "primary",
-                "txFramingMs": 30,
-                "txCodecId": 25,
-                "maxTxSecs": 120,
-                "txAddress": "239.42.43.1",
-                "txPort": 49000,
-                "rxAddress": "239.42.43.1",
-                "rxPort": 49000,
-                "engageType": 1,
-                "subChannelsAndMembers": [
-                    {
-                        "id": 1,
-                        "name": "EVIN JACOBS",
-                        "nickName": "Evi",
-                        "type": "member",
-                        "state": "added",
-                        "number": "5432211"
-                    },
-                    {
-                        "id": 2,
-                        "name": "MICHAEL SMITH",
-                        "nickName": "Mike",
-                        "type": "member",
-                        "state": "pending",
-                        "number": "544321559"
-                    },
-                    {
-                        "id": 3,
-                        "name": "2ND AIRBONE",
-                        "type": "subchannel",
-                        "image": "quinary",
-                        "members": [
-                            {
-                                "id": 1,
-                                "subchannelId": 3,
-                                "name": "JOHN WAREN",
-                                "nickName": "johnister",
-                                "number": "544321124"
-                            },
-                            {
-                                "id": 2,
-                                "subchannelId": 3,
-                                "name": "DONALD MIKE",
-                                "nickName": "Archie",
-                                "number": "544321125"
-                            },
-                            {
-                                "id": 3,
-                                "subchannelId": 3,
-                                "name": "EDWARD WATKIN",
-                                "nickName": "Edi",
-                                "number": "544321132"
-                            },
-                            {
-                                "id": 4,
-                                "subchannelId": 3,
-                                "name": "JULIUS HODGES",
-                                "nickName": "Juli",
-                                "number": "544321352"
-                            },
-                            {
-                                "id": 5,
-                                "subchannelId": 3,
-                                "name": "SMITH RICHARDSON",
-                                "nickName": "Kiah",
-                                "number": "544321563"
-                            },
-                            {
-                                "id": 6,
-                                "subchannelId": 3,
-                                "name": "RUBEN COLEMAN",
-                                "nickName": "Rubby",
-                                "number": "544321668"
-                            },
-                            {
-                                "id": 7,
-                                "subchannelId": 3,
-                                "name": "EUNICE FLEMING",
-                                "nickName": "Nice",
-                                "number": "54321003"
-                            },
-                            {
-                                "id": 8,
-                                "subchannelId": 3,
-                                "name": "STELLA JOHNSTON",
-                                "nickName": "The steal",
-                                "number": "544321591"
-                            },
-                            {
-                                "id": 9,
-                                "subchannelId": 3,
-                                "name": "MARLON BARNES",
-                                "nickName": "Marly",
-                                "number": "544321777"
-                            }
-                        ]
-                    },
-                    {
-                        "id": 4,
-                        "name": "PHILBERT FULLER",
-                        "nickName": "Bert",
-                        "type": "member",
-                        "state": "not added",
-                        "number": "544321007"
-                    },
-                    {
-                        "id": 5,
-                        "name": "ASHLEY THOMPSON",
-                        "nickName": "Abe",
-                        "type": "member",
-                        "state": "not added",
-                        "number": "5443211987"
-                    },
-                    {
-                        "id": 6,
-                        "name": "KOBE PHILIPS",
-                        "nickName": "Jay",
-                        "type": "member",
-                        "state": "not added",
-                        "number": "544321639"
-                    }
-                ]
+                "txAudio": {
+                    "encoder": 25,
+                    "fdx": false,
+                    "framingMs": 60,
+                    "maxTxSecs": 30
+                },
+                "tx": {
+                    "address": "239.26.239.241",
+                    "port": 37770
+                },
+                "rx": {
+                    "address": "239.26.239.241",
+                    "port": 37770
+                },
+                "type": 1
             },
             {
                 "id": "{G2}",
                 "missionId": "{M1}",
                 "image": "secondary",
                 "name": "DELTA",
-                "type": "priority",
-                "txFramingMs": 30,
-                "txCodecId": 25,
-                "maxTxSecs": 120,
-                "txAddress": "239.42.43.1",
-                "txPort": 49000,
-                "rxAddress": "239.42.43.1",
-                "rxPort": 49000,
-                "engageType": 1
+                "txAudio": {
+                    "framingMs": 30,
+                    "fdx": false,
+                    "encoder": 25,
+                    "maxTxSecs": 120
+                },
+                "tx": {
+                    "address": "239.247.169.134",
+                    "port": 37772
+                },
+                "rx": {
+                    "address": "239.247.169.134",
+                    "port": 37772
+                },
+                "type": 1
             },
             {
                 "id": "{G3}",
                 "missionId": "{M1}",
                 "image": "tertiary",
                 "name": "ECHO",
-                "type": "priority",
-                "txFramingMs": 30,
-                "txCodecId": 25,
-                "maxTxSecs": 120,
-                "txAddress": "239.42.43.1",
-                "txPort": 49000,
-                "rxAddress": "239.42.43.1",
-                "rxPort": 49000,
-                "engageType": 1
+                "txAudio": {
+                    "framingMs": 30,
+                    "fdx": false,
+                    "encoder": 25,
+                    "maxTxSecs": 120
+                },
+                "tx": {
+                    "address": "239.229.144.92",
+                    "port": 37774
+                },
+                "rx": {
+                    "address": "239.229.144.92",
+                    "port": 37774
+                },
+                "type": 1
             },
             {
                 "id": "{G4}",
                 "missionId": "{M1}",
                 "image": "quaternary",
                 "name": "CHARLIE",
-                "type": "radio",
-                "txFramingMs": 30,
-                "txCodecId": 25,
-                "maxTxSecs": 120,
-                "txAddress": "239.42.43.1",
-                "txPort": 49000,
-                "rxAddress": "239.42.43.1",
-                "rxPort": 49000,
-                "engageType": 1
+                "txAudio": {
+                    "framingMs": 30,
+                    "fdx": false,
+                    "encoder": 25,
+                    "maxTxSecs": 120
+                },
+                "tx": {
+                    "address": "239.67.34.84",
+                    "port": 37776
+                },
+                "rx": {
+                    "address": "239.67.34.84",
+                    "port": 37776
+                },
+                "type": 1
             },
             {
                 "id": "{G5}",
                 "missionId": "{M1}",
                 "image": "quinary",
                 "name": "GROUND TEAM",
-                "type": "radio",
-                "txFramingMs": 30,
-                "txCodecId": 25,
-                "maxTxSecs": 120,
-                "txAddress": "239.42.43.1",
-                "txPort": 49000,
-                "rxAddress": "239.42.43.1",
-                "rxPort": 49000,
-                "engageType": 1
+                "txAudio": {
+                    "framingMs": 30,
+                    "fdx": false,
+                    "encoder": 25,
+                    "maxTxSecs": 120
+                },
+                "tx": {
+                    "address": "239.67.34.84",
+                    "port": 37776
+                },
+                "rx": {
+                    "address": "239.67.34.84",
+                    "port": 37776
+                },
+                "type": 1
             }
         ]
     }

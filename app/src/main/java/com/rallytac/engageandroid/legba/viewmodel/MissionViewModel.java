@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel;
 import com.rallytac.engageandroid.EngageApplication;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.ChannelDao;
-import com.rallytac.engageandroid.legba.data.dto.ChannelElementDao;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroup;
 import com.rallytac.engageandroid.legba.data.dto.ChannelGroupDao;
 import com.rallytac.engageandroid.legba.data.dto.ChannelsGroupsWithChannels;
@@ -26,25 +25,27 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import timber.log.Timber;
+
 public class MissionViewModel extends ViewModel {
 
     private Mission mission;
 
     private float toggleRadioChannelButtonRotation = 0;
+    private String incomingSosChannelId;
+    private String incomingSosAlias;
+    private String incomingSosDisplayName;
+    private boolean isMissionOnSos;
 
     private MissionDao missionDao;
     private ChannelGroupDao channelGroupDao;
-    private ChannelDao channelDao;
-    private ChannelElementDao channelElementDao;
     private ChannelsGroupsWithChannelsDao channelsGroupsWithChannelsDao;
     HashMap<String, Set<Identity>> channelUsers = new HashMap<>();
 
-    public MissionViewModel(Activity activity) {
-        DaoSession daoSession = ((EngageApplication) activity.getApplication()).getDaoSession();
+    public MissionViewModel(EngageApplication app) {
+        DaoSession daoSession = app.getDaoSession();
         missionDao = daoSession.getMissionDao();
         channelGroupDao = daoSession.getChannelGroupDao();
-        channelDao = daoSession.getChannelDao();
-        channelElementDao = daoSession.getChannelElementDao();
         channelsGroupsWithChannelsDao = daoSession.getChannelsGroupsWithChannelsDao();
     }
 
@@ -87,19 +88,12 @@ public class MissionViewModel extends ViewModel {
                 .buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
-    public void setupMission(Mission mission) {
-        this.mission = mission;
-        getMissionById(mission.getId())
+    public void setupMission(String id) {
+        getMissionById(id)
                 .ifPresent(updatedMission -> this.mission = updatedMission);
     }
 
     public Optional<Mission> getMissionById(String id) {
-        if(missionDao.loadAll().size() == 0) {
-            channelElementDao.insertOrReplaceInTx(mission.getChannels().get(0).getChannelElements());
-            channelDao.insertOrReplaceInTx(mission.getChannels());
-            missionDao.insertOrReplace(mission);
-        }
-
         return missionDao.loadAll()
                 .stream()
                 .filter(mission -> mission.getId().equals(id))
@@ -110,8 +104,11 @@ public class MissionViewModel extends ViewModel {
         return mission;
     }
 
-    public List<Channel> getAllChannels() {
-        return mission.getChannels();
+    public List<Channel> getAudioChannels() {
+        return mission.getChannels()
+                .stream()
+                .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
+                .collect(Collectors.toList());
     }
 
     public void addChannelUser(GroupDiscoveryInfo groupDiscoveryInfo) {
@@ -126,12 +123,13 @@ public class MissionViewModel extends ViewModel {
                     } else {
                         identities.add(groupDiscoveryInfo.identity);
                     }
+                    Timber.i("New identity added %s", groupDiscoveryInfo.identity);
                 });
         updateChannels();
     }
 
     private void updateChannels(){
-        getAllChannels().forEach(channel -> channel.users = getUsersByChannelId(channel.getId()));
+        getAudioChannels().forEach(channel -> channel.users = getUsersByChannelId(channel.getId()));
     }
 
     public void removeChannelUser(GroupDiscoveryInfo groupDiscoveryInfo) {
@@ -145,6 +143,44 @@ public class MissionViewModel extends ViewModel {
     }
 
     public List<Identity> getUsersByChannelId(String channelId){
-        return new ArrayList<>(channelUsers.get(channelId));
+        Set<Identity> identities = channelUsers.get(channelId);
+        if (identities != null){
+            return new ArrayList<>(identities);
+        }else {
+            return new ArrayList<>();
+        }
+
+    }
+
+    public String getIncomingSosChannelId() {
+        return incomingSosChannelId;
+    }
+
+    public void setIncomingSosChannelId(String incomingSosChannelId) {
+        this.incomingSosChannelId = incomingSosChannelId;
+    }
+
+    public String getIncomingSosAlias() {
+        return incomingSosAlias;
+    }
+
+    public void setIncomingSosAlias(String incomingSosAlias) {
+        this.incomingSosAlias = incomingSosAlias;
+    }
+
+    public String getIncomingSosDisplayName() {
+        return incomingSosDisplayName;
+    }
+
+    public void setIncomingSosDisplayName(String incomingSosDisplayName) {
+        this.incomingSosDisplayName = incomingSosDisplayName;
+    }
+
+    public boolean isMissionOnSos(){
+        return isMissionOnSos;
+    }
+
+    public void setMissionOnSos(boolean isMissionOnSos) {
+        this.isMissionOnSos = isMissionOnSos;
     }
 }

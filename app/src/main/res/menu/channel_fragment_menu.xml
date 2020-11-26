@@ -5,8 +5,8 @@
     <item
             android:id="@+id/notifications_action"
             app:showAsAction="ifRoom"
-            app:actionLayout="@layout/notifications_button"
-            android:title="notifications"
+            app:actionLayout="@layout/notifications_button_pinkish_gray"
+            android:title="Notifications"
             />
 
     <item

@@ -8,13 +8,16 @@ package com.rallytac.engageandroid;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
@@ -36,12 +39,10 @@ import com.rallytac.engage.engine.Engine;
 import java.util.Date;
 
 public class AboutActivity extends
-                                AppCompatActivity
-                           implements
-                                LicenseActivationTask.ITaskCompletionNotification,
-                                LicenseDeactivationTask.ITaskCompletionNotification
-
-{
+        AppCompatActivity
+        implements
+        LicenseActivationTask.ITaskCompletionNotification,
+        LicenseDeactivationTask.ITaskCompletionNotification {
     private static String TAG = AboutActivity.class.getSimpleName();
 
     private int OFFLINE_ACTIVATION_REQUEST_CODE = 771;
@@ -71,36 +72,30 @@ public class AboutActivity extends
     private int _numberOfClicksOfAppLogo = 0;
     private int _numberOfClicksOfAppName = 0;
 
-    private class InternalDescriptor
-    {
+    private class InternalDescriptor {
         public LicenseDescriptor _ld;
         public boolean _needsSaving = false;
 
-        InternalDescriptor()
-        {
+        InternalDescriptor() {
             _needsSaving = false;
         }
 
-        InternalDescriptor(InternalDescriptor x)
-        {
+        InternalDescriptor(InternalDescriptor x) {
             this._ld = x._ld;
             this._needsSaving = x._needsSaving;
         }
 
-        public boolean isValid()
-        {
+        public boolean isValid() {
             return _ld.isValid();
         }
 
-        public boolean equals(InternalDescriptor x)
-        {
+        public boolean equals(InternalDescriptor x) {
             return this._ld.equals(x);
         }
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Globals.getEngageApplication().pauseLicenseActivation();
@@ -109,8 +104,7 @@ public class AboutActivity extends
         setContentView(R.layout.activity_about);
 
         ActionBar ab = getSupportActionBar();
-        if(ab != null)
-        {
+        if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -118,26 +112,20 @@ public class AboutActivity extends
         // click the app logo 7 times, the app toggles developer mode
         {
             _ivAppLogo = findViewById(R.id.ivAppLogo);
-            _ivAppLogo.setOnClickListener(new View.OnClickListener()
-            {
+            _ivAppLogo.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v)
-                {
+                public void onClick(View v) {
                     _numberOfClicksOfAppLogo++;
-                    if(_numberOfClicksOfAppLogo >= 7)
-                    {
+                    if (_numberOfClicksOfAppLogo >= 7) {
                         _numberOfClicksOfAppLogo = 0;
                         boolean devModeActive = Globals.getSharedPreferences().getBoolean(PreferenceKeys.DEVELOPER_MODE_ACTIVE, false);
                         devModeActive = !devModeActive;
                         Globals.getSharedPreferencesEditor().putBoolean(PreferenceKeys.DEVELOPER_MODE_ACTIVE, devModeActive);
                         Globals.getSharedPreferencesEditor().apply();
 
-                        if(devModeActive)
-                        {
+                        if (devModeActive) {
                             Toast.makeText(AboutActivity.this, getString(R.string.developer_mode_activated), Toast.LENGTH_LONG).show();
-                        }
-                        else
-                        {
+                        } else {
                             Toast.makeText(AboutActivity.this, getString(R.string.developer_mode_deactivated), Toast.LENGTH_LONG).show();
                         }
                     }
@@ -145,26 +133,20 @@ public class AboutActivity extends
             });
 
             _tvAppName = findViewById(R.id.tvAppName);
-            _tvAppName.setOnClickListener(new View.OnClickListener()
-            {
+            _tvAppName.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v)
-                {
+                public void onClick(View v) {
                     _numberOfClicksOfAppName++;
-                    if(_numberOfClicksOfAppName >= 5)
-                    {
+                    if (_numberOfClicksOfAppName >= 5) {
                         _numberOfClicksOfAppName = 0;
                         boolean advModeActive = Globals.getSharedPreferences().getBoolean(PreferenceKeys.ADVANCED_MODE_ACTIVE, false);
                         advModeActive = !advModeActive;
                         Globals.getSharedPreferencesEditor().putBoolean(PreferenceKeys.ADVANCED_MODE_ACTIVE, advModeActive);
                         Globals.getSharedPreferencesEditor().apply();
 
-                        if(advModeActive)
-                        {
+                        if (advModeActive) {
                             Toast.makeText(AboutActivity.this, getString(R.string.advanced_mode_activated), Toast.LENGTH_LONG).show();
-                        }
-                        else
-                        {
+                        } else {
                             Toast.makeText(AboutActivity.this, getString(R.string.advanced_mode_deactivated), Toast.LENGTH_LONG).show();
                         }
                     }
@@ -177,8 +159,8 @@ public class AboutActivity extends
 
         // Get the license descriptor using the existing license key and activation code (if any)
         _activeLd = parseIntoInternalDescriptor(Globals.getEngageApplication()
-                                                .getEngine()
-                                                .engageGetLicenseDescriptor(getString(R.string.licensing_entitlement), key, ac, getString(R.string.manufacturer_id)));
+                .getEngine()
+                .engageGetLicenseDescriptor(getString(R.string.licensing_entitlement), key, ac, getString(R.string.manufacturer_id)));
 
         // At this point, the new one is the same as the active one
         _newLd = new InternalDescriptor(_activeLd);
@@ -188,41 +170,33 @@ public class AboutActivity extends
         _tvLicensingMessage = findViewById(R.id.tvLicensingMessage);
         _etDeviceId = findViewById(R.id.etDeviceId);
         _etLicenseKey = findViewById(R.id.etLicenseKey);
-        _etLicenseKey.addTextChangedListener(new TextWatcher()
-        {
+        _etLicenseKey.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
 
             @Override
-            public void afterTextChanged(Editable s)
-            {
+            public void afterTextChanged(Editable s) {
                 _etActivationCode.setText(null);
                 userChangedLicensedData();
             }
         });
         _etActivationCode = findViewById(R.id.etActivationCode);
-        _etActivationCode.addTextChangedListener(new TextWatcher()
-        {
+        _etActivationCode.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
 
             @Override
-            public void afterTextChanged(Editable s)
-            {
+            public void afterTextChanged(Editable s) {
                 userChangedLicensedData();
             }
         });
@@ -232,8 +206,7 @@ public class AboutActivity extends
         _ivWebFetchActivationCode = findViewById(R.id.ivWebFetchActivationCode);
 
         String s = _activeLd._ld._deviceId;
-        if(Utils.isEmptyString(s))
-        {
+        if (Utils.isEmptyString(s)) {
             s = getString(R.string.unknown_device_id);
         }
 
@@ -245,7 +218,7 @@ public class AboutActivity extends
 
         versionInfo = BuildConfig.VERSION_NAME + " (Engage Engine " + Globals.getEngageApplication().getEngine().engageGetVersion() + ")"; //NON-NLS
 
-        ((TextView)findViewById(R.id.tvVersion)).setText(versionInfo);
+        ((TextView) findViewById(R.id.tvVersion)).setText(versionInfo);
 
         setTitle(R.string.title_about);
 
@@ -255,20 +228,25 @@ public class AboutActivity extends
     }
 
     @Override
-    protected void onResume()
-    {
-        Globals.getEngageApplication().pauseLicenseActivation();
+    protected void onResume() {
         super.onResume();
+        Globals.getEngageApplication().pauseLicenseActivation();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override
-    protected void onStop()
-    {
+    public void onPause() {
+        super.onPause();
+        //Unlocks rotation
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    }
+
+    @Override
+    protected void onStop() {
         super.onStop();
     }
 
-    private void clearStoredLicensing()
-    {
+    private void clearStoredLicensing() {
         Globals.getSharedPreferencesEditor().putString(PreferenceKeys.USER_LICENSING_KEY, "");
         Globals.getSharedPreferencesEditor().putString(PreferenceKeys.USER_LICENSING_ACTIVATION_CODE, "");
         Globals.getSharedPreferencesEditor().apply();
@@ -277,10 +255,8 @@ public class AboutActivity extends
         Globals.getEngageApplication().getEngine().engageUpdateLicense(getString(R.string.licensing_entitlement), "", "", getString(R.string.manufacturer_id));
     }
 
-    private void saveLicenseData()
-    {
-        if(_newLd.isValid() && _newLd._needsSaving)
-        {
+    private void saveLicenseData() {
+        if (_newLd.isValid() && _newLd._needsSaving) {
             _newLd._needsSaving = false;
 
             String key = Utils.emptyAs(_newLd._ld._key, "");
@@ -299,150 +275,106 @@ public class AboutActivity extends
         }
     }
 
-    private void userChangedLicensedData()
-    {
-        if(!_creating)
-        {
+    private void userChangedLicensedData() {
+        if (!_creating) {
             updateNewLdFromEnteredData();
             updateUi();
         }
     }
 
-    private InternalDescriptor parseIntoInternalDescriptor(String jsonData)
-    {
+    private InternalDescriptor parseIntoInternalDescriptor(String jsonData) {
         InternalDescriptor rc = new InternalDescriptor();
         rc._ld = LicenseDescriptor.fromJson(jsonData);
         return rc;
     }
 
-    private void updateNewLdFromEnteredData()
-    {
+    private void updateNewLdFromEnteredData() {
         String key = _etLicenseKey.getText().toString();
         String ac = _etActivationCode.getText().toString();
 
         _newLd = parseIntoInternalDescriptor(Globals.getEngageApplication()
-                                                    .getEngine()
-                                                    .engageGetLicenseDescriptor(getString(R.string.licensing_entitlement), key, ac, getString(R.string.manufacturer_id)));
+                .getEngine()
+                .engageGetLicenseDescriptor(getString(R.string.licensing_entitlement), key, ac, getString(R.string.manufacturer_id)));
 
         _newLd._needsSaving = true;
     }
 
-    private void updateUi()
-    {
+    private void updateUi() {
         String msg;
 
-        if(_activeLd.equals(_newLd))
-        {
+        if (_activeLd.equals(_newLd)) {
             // If active and new are the same, we'll build from the active
-            if(_activeLd.isValid())
-            {
-                if(_activeLd._ld._theType == Engine.LicenseType.expires)
-                {
+            if (_activeLd.isValid()) {
+                if (_activeLd._ld._theType == Engine.LicenseType.expires) {
                     Date dt = new Date();
-                    if(_activeLd._ld._expires.after(dt))
-                    {
+                    if (_activeLd._ld._expires.after(dt)) {
                         msg = String.format(getString(R.string.your_license_expires_on), Utils.formattedTimespan(dt.getTime(), _activeLd._ld._expires.getTime()));
-                    }
-                    else
-                    {
+                    } else {
                         msg = String.format(getString(R.string.this_license_expired_on), _activeLd._ld._expiresFormatted);
                     }
-                }
-                else
-                {
-                    if(Utils.isEmptyString(_activeLd._ld._activationCode))
-                    {
+                } else {
+                    if (Utils.isEmptyString(_activeLd._ld._activationCode)) {
                         msg = getString(R.string.existing_license_never_expires_but_requires_activation);
-                    }
-                    else
-                    {
+                    } else {
                         msg = getString(R.string.your_license_is_active);
                     }
                     //tryAutoActivate = true;
                 }
-            }
-            else
-            {
+            } else {
                 msg = getString(R.string.you_dont_yet_have_a_valid_license);
             }
-        }
-        else
-        {
-            if(_newLd.isValid())
-            {
-                if(_newLd._ld._theType == Engine.LicenseType.expires && _newLd._ld._expires != null)
-                {
+        } else {
+            if (_newLd.isValid()) {
+                if (_newLd._ld._theType == Engine.LicenseType.expires && _newLd._ld._expires != null) {
                     Date dt = new Date();
-                    if(_newLd._ld._expires.after(dt))
-                    {
+                    if (_newLd._ld._expires.after(dt)) {
                         msg = String.format(getString(R.string.this_license_expires_on), Utils.formattedTimespan(dt.getTime(), _newLd._ld._expires.getTime()));
-                    }
-                    else
-                    {
+                    } else {
                         msg = String.format(getString(R.string.this_license_expired_on), _newLd._ld._expiresFormatted);
                     }
-                }
-                else
-                {
-                    if(Utils.isEmptyString(_newLd._ld._activationCode))
-                    {
+                } else {
+                    if (Utils.isEmptyString(_newLd._ld._activationCode)) {
                         msg = getString(R.string.this_license_never_expires_but_requires_activation);
-                    }
-                    else
-                    {
+                    } else {
                         msg = getString(R.string.your_license_is_active);
                     }
                     //tryAutoActivate = true;
                 }
-            }
-            else
-            {
+            } else {
                 msg = getString(R.string.not_a_valid_license);
             }
         }
 
         _tvLicensingMessage.setText(msg);
 
-        if(Utils.isEmptyString(_activeLd._ld._activationCode) || Utils.isEmptyString(_etActivationCode.getText().toString()))
-        {
+        if (Utils.isEmptyString(_activeLd._ld._activationCode) || Utils.isEmptyString(_etActivationCode.getText().toString())) {
             findViewById(R.id.btnDeactivate).setVisibility(View.INVISIBLE);
-        }
-        else
-        {
+        } else {
             findViewById(R.id.btnDeactivate).setVisibility(View.VISIBLE);
         }
 
-        if(Utils.isEmptyString(_etLicenseKey.getText().toString()))
-        {
+        if (Utils.isEmptyString(_etLicenseKey.getText().toString())) {
             findViewById(R.id.ivShareLicenseKey).setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             findViewById(R.id.ivShareLicenseKey).setVisibility(View.VISIBLE);
         }
 
         String key = _etLicenseKey.getText().toString();
         String ac = _etActivationCode.getText().toString();
 
-        if(Utils.isEmptyString(ac))
-        {
+        if (Utils.isEmptyString(ac)) {
             _etLicenseKey.setEnabled(true);
             _ivScanLicenseKey.setVisibility(View.VISIBLE);
-        }
-        else
-        {
+        } else {
             _etLicenseKey.setEnabled(false);
             _ivScanLicenseKey.setVisibility(View.GONE);
         }
 
-        if(Utils.isEmptyString(key))
-        {
+        if (Utils.isEmptyString(key)) {
             _etActivationCode.setEnabled(false);
             _ivScanActivationCode.setVisibility(View.GONE);
             _ivWebFetchActivationCode.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             _etActivationCode.setEnabled(true);
             _ivScanActivationCode.setVisibility(View.VISIBLE);
             _ivWebFetchActivationCode.setVisibility(View.VISIBLE);
@@ -450,18 +382,15 @@ public class AboutActivity extends
     }
 
     @Override
-    public void finish()
-    {
+    public void finish() {
         saveLicenseData();
         Globals.getEngageApplication().resumeLicenseActivation();
         super.finish();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == android.R.id.home)
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }
@@ -470,39 +399,29 @@ public class AboutActivity extends
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent)
-    {
-        if(requestCode == IntentIntegrator.REQUEST_CODE)
-        {
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == IntentIntegrator.REQUEST_CODE) {
             _scanning = false;
 
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-            if(result != null)
-            {
+            if (result != null) {
                 String scannedString = result.getContents();
 
-                if (!Utils.isEmptyString(scannedString))
-                {
-                    if(_scanType == ScanType.stLicenseKey)
-                    {
+                if (!Utils.isEmptyString(scannedString)) {
+                    if (_scanType == ScanType.stLicenseKey) {
                         _etLicenseKey.setText(scannedString);
                         updateUi();
-                    }
-                    else if(_scanType == ScanType.stActivationCode)
-                    {
+                    } else if (_scanType == ScanType.stActivationCode) {
                         _etActivationCode.setText(scannedString);
                         updateUi();
                     }
                 }
             }
-        }
-        else if(requestCode == OFFLINE_ACTIVATION_REQUEST_CODE)
-        {
-            if(intent != null)
-            {
+        } else if (requestCode == OFFLINE_ACTIVATION_REQUEST_CODE) {
+            if (intent != null) {
                 String activationCode = intent.getStringExtra(OfflineActivationActivity.EXTRA_ACTIVATION_CODE);
-                if (!Utils.isEmptyString(activationCode))
-                {
+                if (!Utils.isEmptyString(activationCode)) {
                     _etActivationCode.setText(activationCode);
                     updateUi();
                 }
@@ -510,8 +429,7 @@ public class AboutActivity extends
         }
     }
 
-    private String machineInfo()
-    {
+    private String machineInfo() {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int densityDpi = (int) (dm.density * 160f);
@@ -544,8 +462,7 @@ public class AboutActivity extends
         return sb.toString();
     }
 
-    private void scanData(String prompt, ScanType st)
-    {
+    private void scanData(String prompt, ScanType st) {
         _scanType = st;
         _scanning = true;
 
@@ -562,14 +479,12 @@ public class AboutActivity extends
     }
 
 
-    public void onClickContact(View view)
-    {
+    public void onClickContact(View view) {
         Intent intent = new Intent(this, ContactActivity.class);
         startActivity(intent);
     }
 
-    public void onClickSystemInfo(View view)
-    {
+    public void onClickSystemInfo(View view) {
         String s;
 
         s = machineInfo();
@@ -590,11 +505,9 @@ public class AboutActivity extends
         dlg.show();
     }
 
-    public void onClickShareLicenseKey(View view)
-    {
+    public void onClickShareLicenseKey(View view) {
         String licenseString = _etLicenseKey.getText().toString();
-        if(Utils.isEmptyString(licenseString))
-        {
+        if (Utils.isEmptyString(licenseString)) {
             return;
         }
 
@@ -614,42 +527,34 @@ public class AboutActivity extends
     }
 
 
-    public void onClickScanLicenseKey(View view)
-    {
+    public void onClickScanLicenseKey(View view) {
         scanData(getString(R.string.scan_license_key), ScanType.stLicenseKey);
     }
 
-    public void onClickScanActivationCode(View view)
-    {
+    public void onClickScanActivationCode(View view) {
         scanData(getString(R.string.scan_activation_code), ScanType.stActivationCode);
     }
 
-    public void onClickGetActivationCodeOnline(View view)
-    {
+    public void onClickGetActivationCodeOnline(View view) {
         attemptOnlineActivation();
     }
 
-    public void onClickDeactivate(View view)
-    {
+    public void onClickDeactivate(View view) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
         alertDialogBuilder.setTitle(R.string.about_deactivate_title);
 
         alertDialogBuilder.setMessage(R.string.about_deactivate_really_sure);
         alertDialogBuilder.setCancelable(true);
-        alertDialogBuilder.setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener()
-        {
+        alertDialogBuilder.setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
-        alertDialogBuilder.setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener()
-        {
+        alertDialogBuilder.setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 attemptOnlineDeactivation();
             }
         });
@@ -660,29 +565,21 @@ public class AboutActivity extends
 
 
     @Override
-    public void onLicenseActivationTaskComplete(int result, String activationCode, String resultMessage)
-    {
+    public void onLicenseActivationTaskComplete(int result, String activationCode, String resultMessage) {
         _progressDialog = Utils.hideProgressMessage(_progressDialog);
 
-        if(result == 0 && !Utils.isEmptyString(activationCode))
-        {
+        if (result == 0 && !Utils.isEmptyString(activationCode)) {
             _etActivationCode.setText(activationCode);
-        }
-        else
-        {
+        } else {
             promptForOfflineActivation();
         }
     }
 
-    private void attemptOnlineActivation()
-    {
+    private void attemptOnlineActivation() {
         String url;
-        if(Globals.getSharedPreferences().getBoolean(PreferenceKeys.DEVELOPER_USE_DEV_LICENSING_SYSTEM, false))
-        {
+        if (Globals.getSharedPreferences().getBoolean(PreferenceKeys.DEVELOPER_USE_DEV_LICENSING_SYSTEM, false)) {
             url = getString(R.string.online_licensing_activation_url_dev);
-        }
-        else
-        {
+        } else {
             url = getString(R.string.online_licensing_activation_url_prod);
         }
 
@@ -690,20 +587,17 @@ public class AboutActivity extends
         String ac = _etActivationCode.getText().toString();
         String entitlementKey = getString(R.string.licensing_entitlement);
 
-        if(Utils.isEmptyString(key))
-        {
+        if (Utils.isEmptyString(key)) {
             Utils.showErrorMsg(this, getString(R.string.about_invalid_license_key));
             return;
         }
 
-        if(Utils.isEmptyString(entitlementKey))
-        {
+        if (Utils.isEmptyString(entitlementKey)) {
             Utils.showErrorMsg(this, getString(R.string.about_invalid_entitlement_key));
             return;
         }
 
-        try
-        {
+        try {
             LicenseDescriptor testDescriptor = LicenseDescriptor.fromJson(Globals.getEngageApplication()
                     .getEngine()
                     .engageGetLicenseDescriptor(Globals.getEngageApplication().getString(R.string.licensing_entitlement),
@@ -711,14 +605,12 @@ public class AboutActivity extends
                             ac,
                             Globals.getEngageApplication().getString(R.string.manufacturer_id)));
 
-            if (testDescriptor == null)
-            {
+            if (testDescriptor == null) {
                 Utils.showErrorMsg(this, getString(R.string.failed_to_validate_license_info));
                 throw new Exception("");
             }
 
-            if (testDescriptor._status != Engine.LicensingStatusCode.ok && testDescriptor._status != Engine.LicensingStatusCode.requiresActivation)
-            {
+            if (testDescriptor._status != Engine.LicensingStatusCode.ok && testDescriptor._status != Engine.LicensingStatusCode.requiresActivation) {
                 Utils.showErrorMsg(this, getString(R.string.about_invalid_license_key));
                 throw new Exception("");
             }
@@ -730,25 +622,19 @@ public class AboutActivity extends
 
             _progressDialog = Utils.showProgressMessage(this, getString(R.string.obtaining_activation_code), _progressDialog);
             lat.execute();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onLicenseDeactivationTaskComplete(int result, String resultMessage)
-    {
+    public void onLicenseDeactivationTaskComplete(int result, String resultMessage) {
         _progressDialog = Utils.hideProgressMessage(_progressDialog);
 
-        if(result == 0)
-        {
-            runOnUiThread(new Runnable()
-            {
+        if (result == 0) {
+            runOnUiThread(new Runnable() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     Globals.getEngageApplication().logEvent(Analytics.LICENSE_DEACTIVATED);
                     _etLicenseKey.setText(null);
                     _etActivationCode.setText(null);
@@ -758,22 +644,16 @@ public class AboutActivity extends
                     Toast.makeText(AboutActivity.this, R.string.deactivated, Toast.LENGTH_LONG).show();
                 }
             });
-        }
-        else
-        {
+        } else {
             promptForOfflineDeactivation();
         }
     }
 
-    private void attemptOnlineDeactivation()
-    {
+    private void attemptOnlineDeactivation() {
         String url;
-        if(Globals.getSharedPreferences().getBoolean(PreferenceKeys.DEVELOPER_USE_DEV_LICENSING_SYSTEM, false))
-        {
+        if (Globals.getSharedPreferences().getBoolean(PreferenceKeys.DEVELOPER_USE_DEV_LICENSING_SYSTEM, false)) {
             url = getString(R.string.online_licensing_deactivation_url_dev);
-        }
-        else
-        {
+        } else {
             url = getString(R.string.online_licensing_deactivation_url_prod);
         }
 
@@ -790,32 +670,25 @@ public class AboutActivity extends
         ldt.execute();
     }
 
-    private void promptForOfflineDeactivation()
-    {
-        runOnUiThread(new Runnable()
-        {
+    private void promptForOfflineDeactivation() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AboutActivity.this);
 
                 alertDialogBuilder.setTitle(R.string.about_deactivate_title);
 
                 alertDialogBuilder.setMessage(R.string.deactivation_failed_try_offline);
                 alertDialogBuilder.setCancelable(true);
-                alertDialogBuilder.setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener()
-                {
+                alertDialogBuilder.setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-                alertDialogBuilder.setPositiveButton(R.string.button_no, new DialogInterface.OnClickListener()
-                {
+                alertDialogBuilder.setPositiveButton(R.string.button_no, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         Globals.getEngageApplication().logEvent(Analytics.LICENSE_DEACTIVATED);
                         _etLicenseKey.setText(null);
                         _etActivationCode.setText(null);
@@ -837,35 +710,27 @@ public class AboutActivity extends
         });
     }
 
-    private void promptForOfflineActivation()
-    {
-        runOnUiThread(new Runnable()
-        {
+    private void promptForOfflineActivation() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AboutActivity.this);
 
                 alertDialogBuilder.setTitle(R.string.about_activate_title);
 
                 alertDialogBuilder.setMessage(R.string.activation_failed_try_offline);
                 alertDialogBuilder.setCancelable(true);
-                alertDialogBuilder.setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener()
-                {
+                alertDialogBuilder.setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-                alertDialogBuilder.setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener()
-                {
+                alertDialogBuilder.setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         String key = _etLicenseKey.getText().toString();
-                        if(Utils.isEmptyString(key))
-                        {
+                        if (Utils.isEmptyString(key)) {
                             Utils.showErrorMsg(AboutActivity.this, getString(R.string.about_invalid_license_key));
                             return;
                         }

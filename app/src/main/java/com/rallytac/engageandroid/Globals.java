@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.DaoSession;
-import com.rallytac.engageandroid.legba.engage.GroupDiscoveryInfo;
 import com.rallytac.engageandroid.legba.engage.GroupDiscoveryListener;
 import com.rallytac.engageandroid.legba.engage.RxListener;
 
@@ -23,6 +22,7 @@ import timber.log.Timber;
 
 public class Globals
 {
+    public static final String MISSION_CONTROL_ID = "{GCONTROL}";
     private static Context _ctx = null;
     private static EngageApplication _app = null;
     private static SharedPreferences _sp = null;
@@ -77,13 +77,13 @@ public class Globals
         return _apm;
     }
 
-    public static void notifyListenersStart(final String id, final String alias, final String displayName) {
+    public static void notifyListenersStart(final String id, final String alias, final String displayName, boolean isSos) {
         Timber.i("notifyListenersStart id -> %s alias -> %s displayName -> %s", id, alias, displayName);
-        rxListeners.forEach(rxListener -> rxListener.onRx(id, alias, displayName));
-        updateChannelIncommingMessage(id, alias, displayName);
+        rxListeners.forEach(rxListener -> rxListener.onRx(id, alias, displayName, isSos));
+        updateChannelIncomingMessage(id, alias, displayName);
     }
 
-    private static void updateChannelIncommingMessage(final String id, final String alias, final String displayName) {
+    private static void updateChannelIncomingMessage(final String id, final String alias, final String displayName) {
         String formattedAlias = alias == null ? "UNKNOWN" : alias;
         String formattedDisplayName = displayName == null ? "Unknown user" : displayName;
         String time = DateTimeFormatter.ofPattern("hh:mm a").format(LocalDateTime.now());
@@ -93,6 +93,7 @@ public class Globals
         channel.setLastRxAlias(formattedAlias);
         channel.setLastRxDisplayName(formattedDisplayName);
         channel.setLastRxTime(time);
+        channel.__setDaoSession(daoSession);
         channel.update();
     }
 

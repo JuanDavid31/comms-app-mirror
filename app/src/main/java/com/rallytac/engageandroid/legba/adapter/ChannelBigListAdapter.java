@@ -71,7 +71,7 @@ public class ChannelBigListAdapter extends RecyclerView.Adapter<ChannelBigListAd
         setupSpeakerIcon(currentChannel.isSpeakerOn(), holder.channelSpeaker);
         holder.channelSpeaker.setOnClickListener(view -> {
             currentChannel.setSpeakerOn(!currentChannel.isSpeakerOn());
-            DataManager.getInstance(fragment.getContext()).toggleMute(currentChannel.getId(), currentChannel.isSpeakerOn());
+            DataManager.getInstance().toggleMute(currentChannel.getId(), currentChannel.isSpeakerOn());
             this.fragment.binding.missionViewPager.getAdapter().notifyDataSetChanged();
         });
 

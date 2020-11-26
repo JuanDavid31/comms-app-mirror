@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
     <color name="colorBlack">#000000</color>
     <color name="colorSentMessage">#aa00aa</color>
     <color name="colorReceivedMessage">#5f5f5f</color>
@@ -9,6 +7,7 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
 
+    <color name="navigationViewBlack">#0e0e0e</color>
     <color name="primaryBlack">#1a1a1a</color>
     <color name="secondaryBlack">#1d1d1d</color>
     <color name="tertiaryBlack">#252525</color>
@@ -38,8 +37,12 @@
     <color name="violet">#9f17de</color>
     <color name="white_two">#fefefe</color>
     <color name="black_two">#0f0f0f</color>
+
+    <color name="shutdown_color">#c33333</color>
+
     <color name="white_03">#4cffffff</color>
     <color name="black_three">#121212</color>
     <color name="black_four">#151515</color>
     <color name="white_three">#f2f2f2</color>
+    <color name="black_card_view">#0e0e0e</color>
 </resources>

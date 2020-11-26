@@ -49,15 +49,15 @@ android {
         applicationId apkPackageName
         minSdkVersion 26
         targetSdkVersion 28
-        versionCode 1222
-        versionName "1222"
+        versionCode 1226
+        versionName "1226"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -81,7 +81,7 @@ greendao {
 dependencies {
 
     // Engage Engine - copied from engage
-    implementation 'com.rallytac.engage:engage-engine-release:1.176.9013@aar'
+    implementation 'com.rallytac.engage:engage-engine-release:1.189.9026@aar'
 
     implementation "com.airbnb.android:lottie:3.4.4"
 

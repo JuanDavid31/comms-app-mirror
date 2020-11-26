@@ -23,12 +23,15 @@ import android.view.MenuItem;
 
 
 import com.rallytac.engage.engine.Engine;
+import com.rallytac.engageandroid.legba.data.DataManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import timber.log.Timber;
 
 public class SettingsActivity extends AppCompatPreferenceActivity
 {
@@ -50,7 +53,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity
         {
             String stringValue = value.toString();
 
-            //Log.e(TAG, ">>>>>> onPreferenceChange: " + preference.getKey());
+            String preferenceKey = preference.getKey();
+
+            if (preferenceKey.equalsIgnoreCase("user_displayName")
+                    || preferenceKey.equalsIgnoreCase("user_id")){ // Legba logic
+                try{
+                    DataManager.getInstance().updatePresenceDescriptor();
+                }catch (IllegalStateException e){
+                    e.printStackTrace();
+                }
+            }
 
             if(!_prefChangeIsBeingForcedByBinding)
             {

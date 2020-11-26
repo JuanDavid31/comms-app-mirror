@@ -1,80 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/nav_graph"
-        app:startDestination="@id/missionsFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/missionsFragment">
 
     <fragment
-            android:id="@+id/missionsFragment"
-            android:name="com.rallytac.engageandroid.legba.fragment.MissionsListFragment"
-            tools:layout="@layout/fragment_missions_list">
+        android:id="@+id/missionsFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.MissionsListFragment"
+        tools:layout="@layout/fragment_missions_list">
         <action
-                android:id="@+id/action_Missions_fragment_to_missionFragment"
-                app:destination="@id/missionFragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+            android:id="@+id/action_Missions_fragment_to_missionFragment"
+            app:destination="@id/missionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
-            android:id="@+id/action_missionsFragment_to_largeCardFragment"
-            app:destination="@id/nfcActionsFragment"
+                android:id="@+id/action_missionsFragment_to_missionEditActivity"
+                app:destination="@id/missionEditActivity" />
+        <action
+                android:id="@+id/action_missionsFragment_to_aboutActivity"
+                app:destination="@id/aboutActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/missionFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.MissionFragment"
+        tools:layout="@layout/fragment_mission">
+        <argument
+            android:name="missionId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_missionFragment_to_channelFragment"
+            app:destination="@id/channelFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
-            android:id="@+id/missionFragment"
-            android:name="com.rallytac.engageandroid.legba.fragment.MissionFragment"
-            tools:layout="@layout/fragment_mission">
+        android:id="@+id/channelFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.ChannelFragment"
+        tools:layout="@layout/fragment_channel">
         <argument
-                android:name="mission"
-                app:argType="com.rallytac.engageandroid.legba.data.dto.Mission" />
-        <action
-                android:id="@+id/action_missionFragment_to_channelFragment"
-                app:destination="@id/channelFragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+            android:name="channel"
+            app:argType="com.rallytac.engageandroid.legba.data.dto.Channel" />
     </fragment>
+
+    <!-- Navigation Drawer -->
+
+    <!--<fragment
+        android:id="@+id/myMissionsFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.MissionsListFragment">
+    </fragment>-->
+
     <fragment
-            android:id="@+id/channelFragment"
-            android:name="com.rallytac.engageandroid.legba.fragment.ChannelFragment"
-            tools:layout="@layout/fragment_channel" >
-        <argument
-                android:name="channel"
-                app:argType="com.rallytac.engageandroid.legba.data.dto.Channel" />
-        <action
-                android:id="@+id/action_channelFragment_to_subchannelFragment"
-                app:destination="@id/subchannelFragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
-        <action
-                android:id="@+id/action_channelFragment_to_channelHistoryFragment"
-                app:destination="@id/channelHistoryFragment" />
+        android:id="@+id/myChannelsFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.MyChannelsFragment">
     </fragment>
+
     <fragment
-            android:id="@+id/subchannelFragment"
-            android:name="com.rallytac.engageandroid.legba.fragment.SubchannelFragment"
-            tools:layout="@layout/fragment_subchannel" >
-        <argument
-                android:name="subchannel"
-                app:argType="com.rallytac.engageandroid.legba.data.dto.Subchannel" />
+        android:id="@+id/historyFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.HistoryFragment">
     </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.SettingsFragment">
+        <action
+                android:id="@+id/action_settingsFragment_to_settingsActivity"
+                app:destination="@id/settingsActivity" />
+        <action
+                android:id="@+id/action_settingsFragment_to_nfcActionsFragment"
+                app:destination="@id/nfcActionsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.rallytac.engageandroid.legba.fragment.AboutFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/drawer_action_shutdown"
+        android:name="com.rallytac.engageandroid.legba.fragment.ShutdownFragment"/>
     <fragment
         android:id="@+id/nfcActionsFragment"
         android:name="com.rallytac.engageandroid.legba.fragment.NFCActionsFragment" />
-    <fragment
-            android:id="@+id/channelHistoryFragment"
-            android:name="com.rallytac.engageandroid.legba.fragment.ChannelHistoryFragment"
-            android:label="fragment_channel_history"
-            tools:layout="@layout/fragment_channel_history" >
+    <activity
+            android:id="@+id/missionEditActivity"
+            android:name="com.rallytac.engageandroid.MissionEditActivity"
+            android:label="activity_mission_edit"
+            tools:layout="@layout/activity_mission_edit" >
         <argument
-                android:name="channel"
-                app:argType="com.rallytac.engageandroid.legba.data.dto.Channel" />
-    </fragment>
+                android:name="mission"
+                app:argType="com.rallytac.engageandroid.legba.data.dto.Mission"
+                app:nullable="true" />
+    </activity>
+    <activity
+            android:id="@+id/settingsActivity"
+            android:name="com.rallytac.engageandroid.SettingsActivity"
+            android:label="SettingsActivity" />
+    <activity
+            android:id="@+id/aboutActivity"
+            android:name="com.rallytac.engageandroid.AboutActivity"
+            android:label="activity_about"
+            tools:layout="@layout/activity_about" />
 </navigation>

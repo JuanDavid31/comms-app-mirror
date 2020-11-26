@@ -8,16 +8,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
-import com.rallytac.engageandroid.legba.data.dto.ChannelElement;
 
 import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.List;
 
 import static com.rallytac.engageandroid.legba.data.dto.Channel.*;
 import static com.rallytac.engageandroid.legba.data.dto.Channel.EngageType.AUDIO;
 import static com.rallytac.engageandroid.legba.data.dto.Channel.EngageType.PRESENCE;
-import static com.rallytac.engageandroid.legba.data.engagedto.EngageClasses.TxData.PRESENCE_TYPE;
 
 public class ChannelDeserializer implements JsonDeserializer<Channel> {
 
@@ -30,19 +27,15 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
         JsonElement nameJsonElement = jsonObject.get("name");
         JsonElement typeJsonElement = jsonObject.get("type");
         JsonElement imageJsonElement = jsonObject.get("image");
-        JsonElement engageTypeJsonElement = jsonObject.get("engageType");
-        JsonElement txFramingMsJsonElement = jsonObject.get("txFramingMs");
-        JsonElement txCodecIdJsonElement = jsonObject.get("txCodecId");
-        JsonElement maxTxSecsJsonElement = jsonObject.get("maxTxSecs");
-        JsonElement txAddressJsonElement = jsonObject.get("txAddress");
-        JsonElement txPortJsonElement = jsonObject.get("txPort");
-        JsonElement rxAddressJsonElement = jsonObject.get("rxAddress");
-        JsonElement rxPortJsonElement = jsonObject.get("rxPort");
+        JsonElement engageTypeJsonElement = jsonObject.get("type");
 
-        JsonElement subChannelsAndMembers = jsonObject.get("subChannelsAndMembers");
-        Type listType = new TypeToken<List<ChannelElement>>() {
-        }.getType();
-        List<ChannelElement> channelElements = new Gson().fromJson(subChannelsAndMembers, listType);
+        JsonElement txAudioJsonElement = jsonObject.get("txAudio");
+
+        JsonObject txAudioJsonObject = txAudioJsonElement != null ? txAudioJsonElement.getAsJsonObject() : null;
+
+
+        JsonObject rxJsonObject = jsonObject.get("rx").getAsJsonObject();
+        JsonObject txJsonObject = jsonObject.get("tx").getAsJsonObject();
 
         return new Channel( //TODO: Create a proper constructor without innecesary boilerplate
                 idJsonElement != null ? idJsonElement.getAsString() : "",
@@ -50,15 +43,15 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
                 nameJsonElement != null ? nameJsonElement.getAsString() : "",
                 imageJsonElement != null ? imageJsonElement.getAsString() : "",
                 getChannelType(typeJsonElement != null ? typeJsonElement.getAsString() : ""),
-                txFramingMsJsonElement != null ? txFramingMsJsonElement.getAsInt() : 30,
-                txCodecIdJsonElement != null ? txCodecIdJsonElement.getAsInt() : 25,
-                maxTxSecsJsonElement != null ? maxTxSecsJsonElement.getAsInt() : 120,
-                txAddressJsonElement != null ? txAddressJsonElement.getAsString() : "239.42.43.1",
-                txPortJsonElement != null ? txPortJsonElement.getAsInt() : 49000,
-                rxAddressJsonElement != null ? rxAddressJsonElement.getAsString() : "239.42.43.1",
-                rxPortJsonElement != null ? rxPortJsonElement.getAsInt() : 49000,
-                getEngageType(engageTypeJsonElement != null ? engageTypeJsonElement.getAsInt() : 1),
-                channelElements != null ? channelElements : Collections.emptyList()
+                txAudioJsonObject != null && txAudioJsonObject.get("fdx").getAsBoolean(),
+                txAudioJsonObject != null ? txAudioJsonObject.get("framingMs").getAsInt() : 60,
+                txAudioJsonObject != null ? txAudioJsonObject.get("encoder").getAsInt() : 25,
+                txAudioJsonObject != null ? txAudioJsonObject.get("maxTxSecs").getAsInt() : 30,
+                txJsonObject != null ? txJsonObject.get("address").getAsString() : "239.42.43.1",
+                txJsonObject != null ? txJsonObject.get("port").getAsInt() : 49000,
+                rxJsonObject != null ? rxJsonObject.get("address").getAsString() : "239.42.43.1",
+                rxJsonObject != null ? rxJsonObject.get("port").getAsInt() : 49000,
+                getEngageType(engageTypeJsonElement != null ? engageTypeJsonElement.getAsInt() : 1)
         );
     }
 

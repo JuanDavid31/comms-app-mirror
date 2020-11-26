@@ -1,6 +1,5 @@
 package com.rallytac.engageandroid.legba.data;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
@@ -14,12 +13,15 @@ import com.rallytac.engageandroid.MissionDatabase;
 import com.rallytac.engageandroid.Utils;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
+import com.rallytac.engageandroid.legba.data.engagedto.EngageClasses;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import okio.BufferedSource;
@@ -31,18 +33,18 @@ import static com.rallytac.engageandroid.legba.data.engagedto.EngageClasses.*;
 public class DataManager {
 
     private final static String MISSIONS_PATH = "mock-data/missions.json";
-    private Context context;
-    private MissionDatabase db;
+    private final MissionDatabase db;
     private static DataManager instance;
 
-    private DataManager(Context context) {
-        this.context = context;
+    private Mission activeMission = null;
+
+    private DataManager() {
         db = MissionDatabase.load(Globals.getSharedPreferences(), Constants.MISSION_DATABASE_NAME);
     }
 
-    public static DataManager getInstance(Context context) {
+    public static DataManager getInstance() {
         if (instance == null) {
-            instance = new DataManager(context);
+            instance = new DataManager();
         }
         return instance;
     }
@@ -52,19 +54,22 @@ public class DataManager {
         BufferedSource source = Okio.buffer(Okio.source(inputStream));
         try {
             String jsonMissions = source.readUtf8();
-            Type listType = new TypeToken<List<Mission>>() {
-            }.getType();
-            List<Mission> missions = new GsonBuilder()
-                    .create()
-                    .fromJson(jsonMissions, listType);
+            List<Mission> missions = missionsStringToMissionsList(jsonMissions);
             loadMissionsOnEgageEngine(missions);
-            missions.forEach(Mission::removeMissionControlChannelFromList);
             return missions;
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
+    }
+
+    public List<Mission> missionsStringToMissionsList(String jsonMissions) {
+        Type listType = new TypeToken<List<Mission>>() {
+        }.getType();
+        return new GsonBuilder()
+                .create()
+                .fromJson(jsonMissions, listType);
     }
 
     private void loadMissionsOnEgageEngine(List<Mission> missions) {
@@ -121,24 +126,11 @@ public class DataManager {
     }
 
     public void switchToMissionOnEngageEngine(Mission mission) {
-        db._missions
-                .stream()
-                .filter(m -> m._id.equals(mission.getId()))
-                .findAny()
-                .ifPresent(m -> {
-                    Globals.getEngageApplication().switchToMission(mission.getId());
-                    Globals.getEngageApplication().getActiveConfiguration().set_missionId(mission.getId());
-                    Timber.i("MissionId updated to %s ", mission);
-                });
-        updateDB();
-
-        mission.addMissionControlChannelToList();
-
         mission.getChannels()
                 .forEach(channel -> {
                     AddressAndPort rx = new AddressAndPort(channel.getRxAddress(), channel.getRxPort());
                     AddressAndPort tx = new AddressAndPort(channel.getTxAddress(), channel.getTxPort());
-                    TxAudio txAudio = new TxAudio(channel.getTxCodecId(), channel.getTxFramingMs(), channel.getMaxTxSecs());
+                    TxAudio txAudio = new TxAudio(channel.getTxCodecId(), channel.getTxFramingMs(), channel.isFullDuplex(), channel.getMaxTxSecs());
                     TxData txData = new TxData(channel.getId(),
                             channel.getName(),
                             channel.getEngageType() == Channel.EngageType.AUDIO ? 1 : 2,
@@ -149,13 +141,20 @@ public class DataManager {
 
                     Timber.i("txData -> %s", initialJsonTxData);
 
-                    String finalTxData = Globals.getEngageApplication().buildFinalGroupJsonConfiguration(initialJsonTxData);
+                    String finalTxData = Globals.getEngageApplication().buildFinalGroupJsonConfigurationLegba(initialJsonTxData, mission);
                     Globals.getEngageApplication().getEngine().engageCreateGroup(finalTxData);
                 });
+        activeMission = mission;
+    }
 
-        Globals.getEngageApplication().updateActiveConfiguration();
-
-        mission.removeMissionControlChannelFromList();
+    public void leaveMissionActiveMission(){
+        if (activeMission != null){
+            activeMission.getChannels()
+                    .stream()
+                    .map(Channel::getId)
+                    .forEach(channelId -> Globals.getEngageApplication().getEngine().engageLeaveGroup(channelId));
+            activeMission = null;
+        }
     }
 
     public void toggleMute(String groupId, boolean isSpeakerOn) {
@@ -166,11 +165,35 @@ public class DataManager {
         }
     }
 
-    public void startTx(String... groupIds) {
-        Globals.getEngageApplication().startTxLegba(0, 0, groupIds);
+    public void startTx(boolean isSos, String... groupIds) {
+
+        Globals.getEngageApplication().startTxLegba(0, isSos ? 1 : 0, groupIds);
     }
 
     public void endTx(String... groupIds) {
         Globals.getEngageApplication().endTxLega(groupIds);
+    }
+
+    public void updatePresenceDescriptor() {
+        EngageClasses.PresenceDescriptor presenceDescriptor =
+                new EngageClasses.PresenceDescriptor("{USER-A}",
+                        Globals.getSharedPreferences().getString("user_id", ""),
+                        Globals.getSharedPreferences().getString("user_displayName", ""));
+
+        String json = new Gson().toJson(presenceDescriptor);
+
+        Timber.i("Updating presence descriptor %s", Globals.MISSION_CONTROL_ID);
+        Globals.getEngageApplication().getEngine().engageUpdatePresenceDescriptor(Globals.MISSION_CONTROL_ID, json, 1);
+    }
+
+    public Channel generateMissionControlChannel(String missionId) {
+        return new Channel(Globals.MISSION_CONTROL_ID, missionId,
+                "MISSION CONTROL", "",
+                Channel.ChannelType.PRIMARY, false,
+                30,
+                25, 120,
+                "239.42.43.1", 49000,
+                "239.42.43.1", 49000,
+                Channel.EngageType.PRESENCE);
     }
 }

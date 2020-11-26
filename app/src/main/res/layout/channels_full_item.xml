@@ -46,7 +46,7 @@
                 android:textSize="10.1sp"
                 app:layout_constraintBottom_toBottomOf="@+id/channel_photo"
                 app:layout_constraintStart_toStartOf="@+id/channel_name_text"
-                tools:text="Primary Channel" />
+                android:text="Primary Channel" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

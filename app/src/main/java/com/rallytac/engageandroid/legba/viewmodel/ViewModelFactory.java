@@ -1,24 +1,27 @@
 package com.rallytac.engageandroid.legba.viewmodel;
 
-import android.app.Activity;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.rallytac.engageandroid.EngageApplication;
+
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
-    private Activity activity;
+    private EngageApplication app;
 
-    public ViewModelFactory(Activity activity){
-        this.activity = activity;
+    public ViewModelFactory(EngageApplication app){
+        this.app = app;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if(modelClass == MissionViewModel.class){
-            return (T) new MissionViewModel(activity);
+            return (T) new MissionViewModel(app);
+        }
+        if(modelClass == MissionsListViewModel.class){
+            return (T) new MissionsListViewModel(app);
         }
         throw new IllegalArgumentException("Impossible to instantiate class");
     }

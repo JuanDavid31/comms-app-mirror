@@ -601,11 +601,8 @@ public class ActiveConfiguration
 
     public boolean getUseRp()
     {
-        //return _useRP && getCanUseRp();
-
-        // FIXME: hardcoding to always use the rallypoint for now. We can remove this one rallypoints are configurable.
-
         return getCanUseRp();
+        //return _useRP && getCanUseRp();
     }
 
     public boolean getCanUseRp()
@@ -986,7 +983,7 @@ public class ActiveConfiguration
                 }
 
                 // Default to stereo output
-                audio.put(Engine.JsonFields.EnginePolicy.Audio.outputChannels, 2);
+                audio.put(Engine.JsonFields.EnginePolicy.Audio.internalChannels, 2);
 
                 JSONObject aec = audio.optJSONObject(Engine.JsonFields.EnginePolicy.Audio.Aec.objectName);
                 if(aec == null)
@@ -1008,7 +1005,7 @@ public class ActiveConfiguration
                     boolean disableStereo = Globals.getSharedPreferences().getBoolean(PreferenceKeys.USER_AUDIO_AEC_DISABLE_STEREO, Constants.DEF_AEC_STEREO_DISABLED);
                     if(disableStereo)
                     {
-                        audio.put(Engine.JsonFields.EnginePolicy.Audio.outputChannels, 1);
+                        audio.put(Engine.JsonFields.EnginePolicy.Audio.internalChannels, 1);
                     }
                 }
 

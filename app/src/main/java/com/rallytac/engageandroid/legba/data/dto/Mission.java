@@ -1,5 +1,9 @@
 package com.rallytac.engageandroid.legba.data.dto;
 
+import com.google.gson.annotations.JsonAdapter;
+import com.rallytac.engageandroid.legba.mapping.MissionDeserializer;
+
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Keep;
@@ -8,27 +12,32 @@ import org.greenrobot.greendao.annotation.ToMany;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
-import org.greenrobot.greendao.annotation.Transient;
+import org.greenrobot.greendao.converter.PropertyConverter;
 
 @Entity(nameInDb = "MISSIONS")
+@JsonAdapter(MissionDeserializer.class)
 public class Mission implements Serializable {
 
     private static final long serialVersionUID = -6105178297191589989L;
+
+    public enum MulticastType {OVERRIDE_AND_PREVENT, OVERRIDE_AND_ALLOW, FOLLOW_APP_SETTING}
 
     @Id
     private String id;
 
     private String name;
 
-    @Transient
+    private boolean useRp;
+
     private String rpAddress;
 
-    @Transient
     private int rpPort;
+
+    @Convert(converter = MulticastTypeConverter.class, columnType = Integer.class)
+    private MulticastType multicastType;
 
     @ToMany(referencedJoinProperty = "missionId")
     private List<ChannelGroup> channelsGroups;
@@ -56,17 +65,24 @@ public class Mission implements Serializable {
         this.id = id;
     }
 
-    public Mission(String id, String name, List<ChannelGroup> channelsGroups, List<Channel> channels) {
+    public Mission(String id, String name, List<Channel> channels, boolean useRp, String rpAddress, int rpPort, MulticastType multicastType) {
         this.id = id;
         this.name = name;
-        this.channelsGroups = channelsGroups;
         this.channels = channels;
+        this.useRp = useRp;
+        this.rpAddress = rpAddress;
+        this.rpPort = rpPort;
+        this.multicastType = multicastType;
     }
 
-    @Generated(hash = 716121425)
-    public Mission(String id, String name) {
+    @Generated(hash = 409910037)
+    public Mission(String id, String name, boolean useRp, String rpAddress, int rpPort, MulticastType multicastType) {
         this.id = id;
         this.name = name;
+        this.useRp = useRp;
+        this.rpAddress = rpAddress;
+        this.rpPort = rpPort;
+        this.multicastType = multicastType;
     }
 
     public String getId() {
@@ -83,6 +99,91 @@ public class Mission implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setChannelsGroups(List<ChannelGroup> channelsGroups) {
+        this.channelsGroups = channelsGroups;
+    }
+
+    public void setChannels(List<Channel> channels) {
+        this.channels = channels;
+    }
+
+    public boolean useRp() {
+        return useRp;
+    }
+
+    public void setUseRp(boolean useRp) {
+        this.useRp = useRp;
+    }
+
+    public String getRpAddress() {
+        return rpAddress;
+    }
+
+    public void setRpAddress(String rpAddress) {
+        this.rpAddress = rpAddress;
+    }
+
+    public int getRpPort() {
+        return rpPort;
+    }
+
+    public void setRpPort(int rpPort) {
+        this.rpPort = rpPort;
+    }
+
+    public MulticastType getMulticastType() {
+        return multicastType;
+    }
+
+    public void setMulticastType(MulticastType multicastType) {
+        this.multicastType = multicastType;
+    }
+
+    @Override
+    public String toString() {
+        return "Mission{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", useRp=" + useRp +
+                ", rpAddress='" + rpAddress + '\'' +
+                ", rpPort=" + rpPort +
+                ", multicastType=" + multicastType +
+                ", channelsGroups=" + (channelsGroups != null ? channelsGroups.size() : null )  +
+                ", channels=" + (channels != null ? channels.size() : null) +
+                '}';
+    }
+
+    public static class MulticastTypeConverter implements PropertyConverter<MulticastType, Integer> {
+
+        @Override
+        public MulticastType convertToEntityProperty(Integer databaseValue) {
+            switch (databaseValue) {
+                case 0:
+                    return MulticastType.OVERRIDE_AND_PREVENT;
+                case 1:
+                    return MulticastType.OVERRIDE_AND_ALLOW;
+                case 2:
+                    return MulticastType.FOLLOW_APP_SETTING;
+                default:
+                    return MulticastType.OVERRIDE_AND_PREVENT;
+            }
+        }
+
+        @Override
+        public Integer convertToDatabaseValue(MulticastType entityProperty) {
+            switch (entityProperty) {
+                case OVERRIDE_AND_PREVENT:
+                    return 0;
+                case OVERRIDE_AND_ALLOW:
+                    return 1;
+                case FOLLOW_APP_SETTING:
+                    return 2;
+                default:
+                    return 0;
+            }
+        }
     }
 
     /**
@@ -107,8 +208,12 @@ public class Mission implements Serializable {
         return channelsGroups;
     }
 
-    public void setChannelsGroups(List<ChannelGroup> channelsGroups) {
-        this.channelsGroups = channelsGroups;
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
+    @Generated(hash = 1974632286)
+    public synchronized void resetChannelsGroups() {
+        channelsGroups = null;
     }
 
     /**
@@ -133,27 +238,6 @@ public class Mission implements Serializable {
         return channels;
     }
 
-    public void setChannels(List<Channel> channels) {
-        this.channels = channels;
-    }
-
-    @Override
-    public String toString() {
-        return "Mission{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", channels=" + channels +
-                '}';
-    }
-
-    /**
-     * Resets a to-many relationship, making the next get call to query for a fresh result.
-     */
-    @Generated(hash = 1974632286)
-    public synchronized void resetChannelsGroups() {
-        channelsGroups = null;
-    }
-
     /**
      * Resets a to-many relationship, making the next get call to query for a fresh result.
      */
@@ -166,11 +250,20 @@ public class Mission implements Serializable {
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
      * Entity must attached to an entity context.
      */
-    @Generated(hash = 128553479)
+    @Keep
     public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
+        for (Channel channel : channels) {
+            channel.__setDaoSession(daoSession);
+            channel.delete();
+        }
+        daoSession.getChannelGroupDao()
+                .queryBuilder()
+                .where(ChannelGroupDao.Properties.MissionId.eq(getId()))
+                .buildDelete()
+                .executeDeleteWithoutDetachingEntities();
         myDao.delete(this);
     }
 
@@ -198,56 +291,18 @@ public class Mission implements Serializable {
         myDao.update(this);
     }
 
-    public String getRpAddress() {
-        return rpAddress;
-    }
-
-    public void setRpAddress(String rpAddress) {
-        this.rpAddress = rpAddress;
-    }
-
-    public int getRpPort() {
-        return rpPort;
-    }
-
-    public void setRpPort(int rpPort) {
-        this.rpPort = rpPort;
-    }
-
-    @Transient
-    private Channel missionControlChannel;
-
-    public void removeMissionControlChannelFromList() {
-        for(Channel channel : getChannels()){
-            if (channel.getEngageType() == Channel.EngageType.PRESENCE){
-                missionControlChannel = channel;
-                break;
-            }
+    public void insertOrReplace() {
+        for (Channel channel : getChannels()) {
+            daoSession.getChannelDao().insertOrReplace(channel);
         }
-        /*getChannels()
-                .stream()
-                .filter(channel -> channel.getEngageType() == Channel.EngageType.PRESENCE)
-                .findFirst()
-                .ifPresent(channel -> missionControlChannel = channel);*/
-
-        List<Channel> audioChannels = new ArrayList<>();
-        for(Channel channel : getChannels()){
-            if (channel.getEngageType() == Channel.EngageType.AUDIO){
-                audioChannels.add(channel);
-            }
+        for (ChannelGroup channelGroup : getChannelsGroups()){
+            daoSession.getChannelGroupDao().insertOrReplace(channelGroup);
         }
-        /*List<Channel> audioChannels = getChannels()
-                .stream()
-                .filter(channel -> channel.getEngageType() == Channel.EngageType.AUDIO)
-                .collect(Collectors.toList());*/
-
-        setChannels(audioChannels);
+        myDao.insertOrReplace(this);
     }
 
-    public void addMissionControlChannelToList() {
-        List<Channel> newChannels = new ArrayList<>(getChannels());
-        newChannels.add(missionControlChannel);
-        setChannels(newChannels);
+    public boolean getUseRp() {
+        return this.useRp;
     }
 
     /** called by internal mechanisms, do not call yourself. */

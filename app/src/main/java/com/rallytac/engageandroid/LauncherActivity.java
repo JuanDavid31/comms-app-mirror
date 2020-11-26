@@ -434,9 +434,9 @@ public class LauncherActivity extends AppCompatActivity
                 Manifest.permission.INTERNET,
                 Manifest.permission.MODIFY_AUDIO_SETTINGS,
                 Manifest.permission.VIBRATE,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.CAMERA,
+                //Manifest.permission.ACCESS_FINE_LOCATION,
+                //Manifest.permission.ACCESS_COARSE_LOCATION,
+                //Manifest.permission.CAMERA,
                 android.Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
         };
 

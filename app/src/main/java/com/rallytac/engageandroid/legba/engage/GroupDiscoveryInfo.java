@@ -1,5 +1,6 @@
 package com.rallytac.engageandroid.legba.engage;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,7 +21,7 @@ public class GroupDiscoveryInfo{
         }
     }
 
-    public class Identity{
+    public class Identity implements Serializable {
         public String displayName = "";
         String userId = "";
 

@@ -46,9 +46,10 @@ public class EngageClasses {
         boolean fdx;
         int maxTxSecs;
 
-        public TxAudio(int encoder, int framingMs, int maxTxSecs) {
+        public TxAudio(int encoder, int framingMs,boolean fullDuplex, int maxTxSecs) {
             this.encoder = encoder;
             this.framingMs = framingMs;
+            this.fdx = fullDuplex;
             this.maxTxSecs = maxTxSecs;
         }
     }
@@ -59,7 +60,7 @@ public class EngageClasses {
         int type = 2;
         AddressAndPort rx = new AddressAndPort("", 49000);
         AddressAndPort tx = new AddressAndPort("239.42.43.1", 49000);
-        TxAudio txAudio = new TxAudio(25, 60, 120);
+        TxAudio txAudio = new TxAudio(25, 60, false, 120);
 
         public PresenceTxData(String id, String name) {
             this.id = id;
