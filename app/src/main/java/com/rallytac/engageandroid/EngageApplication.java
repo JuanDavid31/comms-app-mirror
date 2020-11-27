@@ -2834,7 +2834,7 @@ public class EngageApplication
                                 if (pd != null) {
                                     displayName = pd.displayName;
                                 }
-                                boolean isSos = obj.optInt(Engine.JsonFields.TalkerInformation.rxFlags) == 1;
+                                boolean isSos = obj.optInt(Engine.JsonFields.TalkerInformation.rxFlags) == 250;
                                 Globals.notifyListenersStart(id, td.alias, displayName, isSos);
 
                                 talkers.add(td);
