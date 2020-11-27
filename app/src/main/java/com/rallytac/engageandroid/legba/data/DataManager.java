@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.rallytac.engage.engine.Engine;
 import com.rallytac.engageandroid.Constants;
 import com.rallytac.engageandroid.DatabaseGroup;
 import com.rallytac.engageandroid.DatabaseMission;
@@ -14,6 +15,9 @@ import com.rallytac.engageandroid.Utils;
 import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.legba.data.engagedto.EngageClasses;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -195,5 +199,18 @@ public class DataManager {
                 "239.42.43.1", 49000,
                 "239.42.43.1", 49000,
                 Channel.EngageType.PRESENCE);
+    }
+
+    public void askForAudiosHistory(String channelId) {
+        JSONObject queryOptions = new JSONObject();
+
+        try {
+            queryOptions.put(Engine.JsonFields.TimelineQuery.maxCount, 10);
+            queryOptions.put(Engine.JsonFields.TimelineQuery.mostRecentFirst, true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Globals.getEngageApplication().getEngine().engageQueryGroupTimeline(channelId, queryOptions.toString());
     }
 }

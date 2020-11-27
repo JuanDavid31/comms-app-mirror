@@ -21,7 +21,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-                android:id="@+id/left_history_member_caps_text"
+                android:id="@+id/audio_history_member_caps_text"
                 style="@style/callOfOpsDutyFont"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
     </FrameLayout>
 
     <TextView
-            android:id="@+id/left_history_member_name_text"
+            android:id="@+id/audio_history_member_name_text"
             style="@style/builtTitlingRgBoldFont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             app:layout_constraintTop_toTopOf="@+id/left_history_member_caps_layout" />
 
     <TextView
-            android:id="@+id/left_history_member_nickname_text"
+            android:id="@+id/audio_history_member_nickname_text"
             style="@style/secondaryTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,18 +57,18 @@
             android:text="Johnister"
             android:textColor="@color/greyish_93"
             app:layout_constraintBottom_toBottomOf="@+id/left_history_member_caps_layout"
-            app:layout_constraintStart_toStartOf="@+id/left_history_member_name_text" />
+            app:layout_constraintStart_toStartOf="@+id/audio_history_member_name_text" />
 
     <TextView
-            android:id="@+id/left_history_member_number_text"
+            android:id="@+id/audio_history_member_number_text"
             style="@style/openSansRegularFont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="544321124"
             android:textColor="@color/white_93"
             android:textSize="10.1sp"
-            app:layout_constraintStart_toEndOf="@+id/left_history_member_nickname_text"
-            app:layout_constraintTop_toTopOf="@+id/left_history_member_nickname_text" />
+            app:layout_constraintStart_toEndOf="@+id/audio_history_member_nickname_text"
+            app:layout_constraintTop_toTopOf="@+id/audio_history_member_nickname_text" />
 
     <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline6"
@@ -85,6 +85,7 @@
             app:layout_constraintGuide_begin="42.8dp" />
 
     <TextView
+            android:id="@+id/audio_history_started_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans_light"
@@ -97,8 +98,8 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="5:05 AM" />
 
-    <ImageView
-            android:id="@+id/imageView2"
+    <ImageButton
+            android:id="@+id/audio_history_play_stop_button"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_marginStart="20.3dp"
@@ -108,19 +109,20 @@
             app:layout_constraintStart_toStartOf="parent" />
 
     <SeekBar
+            android:id="@+id/audio_history_seekbar"
             android:layout_width="0dp"
             android:layout_height="13.3dp"
             android:layout_marginBottom="21.5dp"
-            android:progress="50"
+            android:progress="0"
             android:thumbTint="@color/paleRed"
             android:progressBackgroundTint="@color/white_three"
             android:progressTint="@color/paleRed"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textView4"
-            app:layout_constraintStart_toEndOf="@+id/imageView2" />
+            app:layout_constraintEnd_toStartOf="@+id/audio_history_duration"
+            app:layout_constraintStart_toEndOf="@+id/audio_history_play_stop_button" />
 
     <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/audio_history_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="19.3dp"

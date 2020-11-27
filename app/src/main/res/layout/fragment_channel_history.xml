@@ -13,9 +13,11 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:background="@color/primaryBlack"
+            android:paddingStart="17dp"
+            android:paddingEnd="17dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            tools:listitem=""
+            tools:listitem="@layout/left_audio_history_item"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="2"
             tools:context=".legba.fragment.ChannelHistoryFragment" />

@@ -30,6 +30,7 @@ public class Globals
     private static AudioPlayerManager _apm = null;
     public static List<RxListener> rxListeners = new ArrayList();
     public static GroupDiscoveryListener groupDiscoveryListener = null;
+    public static EngageApplication.IGroupTimelineListenerLegba onGroupTimelineReportListener;
 
     public static void setContext(Context ctx)
     {

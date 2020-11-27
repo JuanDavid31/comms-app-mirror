@@ -168,6 +168,28 @@ public class EngageApplication
         void onGroupStatsReportFailed(GroupDescriptor gd);
     }
 
+    public interface IGroupTimelineListenerLegba {
+        void onGroupTimelineEventStarted(String groupId, String eventJson);
+
+        /*void onGroupTimelineEventUpdated(GroupDescriptor gd, String eventJson);
+
+        void onGroupTimelineEventEnded(GroupDescriptor gd, String eventJson);
+
+        void onGroupTimelineReport(GroupDescriptor gd, String reportJson);
+
+        void onGroupTimelineReportFailed(GroupDescriptor gd);
+
+        void onGroupTimelineGroomed(GroupDescriptor gd, String eventListJson);
+
+        void onGroupHealthReport(GroupDescriptor gd, String reportJson);
+
+        void onGroupHealthReportFailed(GroupDescriptor gd);
+
+        void onGroupStatsReport(GroupDescriptor gd, String reportJson);
+
+        void onGroupStatsReportFailed(GroupDescriptor gd);*/
+    }
+
     private EngageService _svc = null;
     private boolean _engineRunning = false;
     private ActiveConfiguration _activeConfiguration = null;
@@ -3953,20 +3975,14 @@ public class EngageApplication
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                logEvent(Analytics.GROUP_TIMELINE_REPORT);
 
                 Log.d(TAG, "onGroupTimelineReport: " + id);
 
-                final GroupDescriptor gd = getGroup(id);
-                if (gd == null) {
-                    Log.e(TAG, "onGroupTimelineReport: cannot find group id='" + id + "'");
-                    return;
-                }
-
-                synchronized (_groupTimelineListeners) {
-                    for (IGroupTimelineListener listener : _groupTimelineListeners) {
+                synchronized (Globals.onGroupTimelineReportListener) {
+                    Globals.onGroupTimelineReportListener.onGroupTimelineEventStarted(id, reportJson);
+                    /*for (IGroupTimelineListener listener : _groupTimelineListeners) {
                         listener.onGroupTimelineReport(gd, reportJson);
-                    }
+                    }*/
                 }
             }
         });

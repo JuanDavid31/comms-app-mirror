@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
     <TextView
-            android:id="@+id/left_history_member_caps_text"
+            android:id="@+id/audio_history_member_caps_text"
             style="@style/callOfOpsDutyFont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

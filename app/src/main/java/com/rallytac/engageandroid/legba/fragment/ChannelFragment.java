@@ -115,9 +115,9 @@ public class ChannelFragment extends Fragment {
             notificationsCount = (notificationsCount + 1) % 6; //Cycle trhough 0 - 5
             updateNotificationsIcon();
             return true;
-        }else if (item.getItemId() == R.id.history_action){
-            /*NavHostFragment.findNavController(this)
-                    .navigate(ChannelFragmentDirections.actionChannelFragmentToChannelHistoryFragment(channel));*/
+        } else if (item.getItemId() == R.id.history_action) {
+            NavHostFragment.findNavController(this)
+                    .navigate(ChannelFragmentDirections.actionChannelFragmentToChannelHistoryFragment(channel.getId()));
             return true;
         }
         return super.onOptionsItemSelected(item);

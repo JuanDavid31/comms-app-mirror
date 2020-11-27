@@ -21,7 +21,7 @@ import java.util.List;
 
 import static com.rallytac.engageandroid.legba.util.DimUtils.convertDpToPx;
 
-public class UsersRecyclerViewAdapter extends ListAdapter<Member, UsersRecyclerViewAdapter.ChannelElementViewHolder> {
+public class UsersRecyclerViewAdapter extends ListAdapter<Member, UsersRecyclerViewAdapter.MemberViewHolder> {
 
     private List<Member> members = new ArrayList();
 
@@ -36,23 +36,21 @@ public class UsersRecyclerViewAdapter extends ListAdapter<Member, UsersRecyclerV
 
     @NonNull
     @Override
-    public ChannelElementViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MemberViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.member_info_item, parent, false);
         return new MemberViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChannelElementViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MemberViewHolder holder, int position) {
         Member member = members.get(position);
-        MemberViewHolder memberViewHolder = (MemberViewHolder) holder;
-
         String name = getFirstLetterCapsFrom(member.getName());
 
-        memberViewHolder.membersCaps.setText(name);
-        memberViewHolder.name.setText(member.getName());
-        memberViewHolder.memberNickName.setText(member.getNickName());
-        memberViewHolder.memberNumber.setText(member.getNumber());
+        holder.membersCaps.setText(name);
+        holder.name.setText(member.getName());
+        holder.memberNickName.setText(member.getNickName());
+        holder.memberNumber.setText(member.getNumber());
     }
 
     private String getFirstLetterCapsFrom(String name) {
@@ -89,17 +87,9 @@ public class UsersRecyclerViewAdapter extends ListAdapter<Member, UsersRecyclerV
         return members.size();
     }
 
-    static class ChannelElementViewHolder extends RecyclerView.ViewHolder {
+    static class MemberViewHolder extends RecyclerView.ViewHolder {
 
-        protected TextView name;
-
-        public ChannelElementViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-    }
-
-    static class MemberViewHolder extends ChannelElementViewHolder {
-
+        private TextView name;
         private TextView membersCaps;
         private TextView memberNickName;
         private TextView memberNumber;
