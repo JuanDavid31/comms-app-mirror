@@ -82,15 +82,16 @@ public class MissionDeserializer implements JsonDeserializer<Mission> {
         Mission.MulticastType multicastType
                 = new Mission.MulticastTypeConverter().convertToEntityProperty(multicastFailoverPolicy);
 
-        JsonElement groups = jsonObject.get(GROUPS);
+        JsonElement groupsElement = jsonObject.get(GROUPS);
+
+        if (!groupsElement.isJsonArray()) {
+            throw new JsonParseException("groups property is not an array");
+        }
+
         Type listType = new TypeToken<List<Channel>>() {
         }.getType();
 
-        List<Channel> channels = new Gson().fromJson(groups, listType);
-
-        if (channels.isEmpty()){
-            throw new JsonParseException("There are no groups");
-        }
+        List<Channel> channels = new Gson().fromJson(groupsElement, listType);
 
         return new Mission(id, name, channels, rpUse, rpAddress, rpPort, multicastType);
     }
