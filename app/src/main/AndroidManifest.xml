@@ -55,6 +55,14 @@
                 <action android:name="android.speech.action.VOICE_SEARCH_HANDS_FREE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <intent-filter android:priority="2147483647">
+                <action android:name="android.speech.action.WEB_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.sec.action.SVOICE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -138,16 +146,6 @@
             android:launchMode="singleInstance"
             android:showOnLockScreen="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter android:priority="2147483647">
-                <action android:name="android.speech.action.WEB_SEARCH" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.sec.action.SVOICE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
     </application>
 
