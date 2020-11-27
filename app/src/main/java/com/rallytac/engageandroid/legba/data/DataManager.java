@@ -167,7 +167,7 @@ public class DataManager {
 
     public void startTx(boolean isSos, String... groupIds) {
 
-        Globals.getEngageApplication().startTxLegba(0, isSos ? 250 : 0, groupIds);
+        Globals.getEngageApplication().startTxLegba(isSos ? 250 : 0, isSos ? 1 : 0, groupIds);
     }
 
     public void endTx(String... groupIds) {
