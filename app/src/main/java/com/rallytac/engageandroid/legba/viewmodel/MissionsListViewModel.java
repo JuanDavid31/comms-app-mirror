@@ -2,6 +2,7 @@ package com.rallytac.engageandroid.legba.viewmodel;
 
 import android.content.Context;
 import android.net.Uri;
+import android.widget.Toast;
 
 import androidx.lifecycle.ViewModel;
 
@@ -71,7 +72,17 @@ public class MissionsListViewModel extends ViewModel {
 
     public void saveNewMission(Uri fileUri, Context context) {
         String jsonMission = Utils.readTextFile(context, fileUri);
-        Mission importedMission = new GsonBuilder().create().fromJson(jsonMission, Mission.class);
+
+        Mission importedMission;
+        try {
+            importedMission = new GsonBuilder().create().fromJson(jsonMission, Mission.class);
+        }catch (Exception e){
+            Toast.makeText(context, "Invalid json format", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+            return;
+        }
+
+
         importedMission.getChannels().forEach(channel -> channel.setMissionId(importedMission.getId()));
         importedMission.__setDaoSession(daoSession);
         importedMission.insertOrReplace();
