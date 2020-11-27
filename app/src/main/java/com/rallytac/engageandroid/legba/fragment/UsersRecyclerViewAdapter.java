@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rallytac.engageandroid.R;
 import com.rallytac.engageandroid.legba.data.dto.Member;
+import com.rallytac.engageandroid.legba.util.StringUtils;
 
 
 import java.util.ArrayList;
@@ -45,27 +46,12 @@ public class UsersRecyclerViewAdapter extends ListAdapter<Member, UsersRecyclerV
     @Override
     public void onBindViewHolder(@NonNull MemberViewHolder holder, int position) {
         Member member = members.get(position);
-        String name = getFirstLetterCapsFrom(member.getName());
+        String name = StringUtils.getFirstLetterCapsFrom(member.getName());
 
         holder.membersCaps.setText(name);
         holder.name.setText(member.getName());
         holder.memberNickName.setText(member.getNickName());
         holder.memberNumber.setText(member.getNumber());
-    }
-
-    private String getFirstLetterCapsFrom(String name) {
-        String[] names;
-        if (name.contains(" ")) {
-            names = name.split(" ");
-        } else {
-            return name.isEmpty() ? "" : String.valueOf(name.toUpperCase().charAt(0));
-        }
-
-        String result = "";
-        for (int i = 0; (i < names.length) && (i < 2); i++) {
-            result += Character.toUpperCase(names[i].charAt(0));
-        }
-        return result;
     }
 
     public int getStateImage(Member.RequestType state) {

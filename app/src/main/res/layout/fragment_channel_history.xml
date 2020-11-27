@@ -17,7 +17,7 @@
             android:paddingEnd="17dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            tools:listitem="@layout/left_audio_history_item"
+            tools:listitem="@layout/receiver_audio_history_item"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="2"
             tools:context=".legba.fragment.ChannelHistoryFragment" />

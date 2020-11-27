@@ -28,6 +28,7 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Member;
 import com.rallytac.engageandroid.legba.util.RUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -68,7 +69,8 @@ public class ChannelFragment extends Fragment {
         binding.channelElementsRecycler.setAdapter(adapter);
 
         //
-        List<Member> members = channel.users
+        List<Member> members = new ArrayList<>();
+        members = channel.users
                 .stream()
                 .map(userIdentity -> {
                     Member newMember = new Member();

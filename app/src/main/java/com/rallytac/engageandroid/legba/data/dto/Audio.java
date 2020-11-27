@@ -1,12 +1,15 @@
 package com.rallytac.engageandroid.legba.data.dto;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.JsonAdapter;
+import com.rallytac.engageandroid.legba.HostActivity;
 import com.rallytac.engageandroid.legba.mapping.AudioDeserializer;
 
 import java.time.LocalTime;
@@ -38,6 +41,30 @@ public class Audio {
         this.sender = sender;
         this.audioUri = audioUri;
         this.durationInSeconds = durationInSeconds;
+    }
+
+    public void connectWithSeekbar(SeekBar audioBar, Context context) {
+        audioBar.setMax(mediaPlayer.getDuration());
+
+        mediaPlayerHandler = new Handler();
+
+        ((HostActivity) context).runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                if (mediaPlayer != null) {
+                    int mCurrentPosition = mediaPlayer.getCurrentPosition();
+                    audioBar.setProgress(mCurrentPosition);
+                }
+                mediaPlayerHandler.postDelayed(this, 100);
+            }
+        });
+    }
+
+    public void disconnectSeekbar() {
+        if (mediaPlayerHandler != null) {
+            mediaPlayerHandler.removeCallbacksAndMessages(null);
+        }
     }
 
     @Override

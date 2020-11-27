@@ -3,7 +3,6 @@ package com.rallytac.engageandroid.legba.fragment;
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,22 +15,22 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.R;
-import com.rallytac.engageandroid.legba.HostActivity;
 import com.rallytac.engageandroid.legba.data.dto.Audio;
+import com.rallytac.engageandroid.legba.util.StringUtils;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.logging.LogRecord;
 
 public class AudioHistoryRecyclerViewAdapter extends ListAdapter<Audio, AudioHistoryRecyclerViewAdapter.AudioHistoryViewHolder> {
 
     private List<Audio> audios;
     private Context context;
 
-    final int ODD_VIEW = 1;
-    final int EVEN_VIEW = 2;
+    final int SENDER_VIEW = 1;
+    final int RECEIVER_VIEW = 2;
 
     protected AudioHistoryRecyclerViewAdapter(@NonNull DiffUtil.ItemCallback<Audio> diffCallback, List<Audio> audios, Context context) {
         super(diffCallback);
@@ -43,11 +42,6 @@ public class AudioHistoryRecyclerViewAdapter extends ListAdapter<Audio, AudioHis
         return audios;
     }
 
-    public void setAudios(List<Audio> audios) {
-        this.audios = audios;
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getItemCount() {
         return audios.size();
@@ -56,13 +50,13 @@ public class AudioHistoryRecyclerViewAdapter extends ListAdapter<Audio, AudioHis
     @NonNull
     @Override
     public AudioHistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == EVEN_VIEW) {
+        if (viewType == RECEIVER_VIEW) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.left_audio_history_item, parent, false);
-            return new LeftAudioHistoryViewHolder(itemView);
+                    .inflate(R.layout.receiver_audio_history_item, parent, false);
+            return new ReceiverAudioHistoryViewHolder(itemView);
         } else {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.right_audio_history_item, parent, false);
+                    .inflate(R.layout.sender_audio_history_item, parent, false);
             return new AudioHistoryViewHolder(itemView);
         }
     }
@@ -81,8 +75,17 @@ public class AudioHistoryRecyclerViewAdapter extends ListAdapter<Audio, AudioHis
 
         holder.audioDuration.setText(String.format("%01d:%02d", minutes, seconds));
 
+        if (holder instanceof ReceiverAudioHistoryViewHolder){
+            ReceiverAudioHistoryViewHolder receiverAudioHistoryViewHolder = (ReceiverAudioHistoryViewHolder)holder;
+            String nameInCaps = StringUtils.getFirstLetterCapsFrom(currentAudio.sender);
+            receiverAudioHistoryViewHolder.membersCaps.setText(nameInCaps);
+        }
 
-        //Audio stuff
+        prepareMediaPlayer(currentAudio, holder);
+        setupSeekbarListener(currentAudio, holder);
+    }
+
+    private void prepareMediaPlayer(Audio audio, AudioHistoryViewHolder holder) {
         MediaPlayer mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioAttributes(
                 new AudioAttributes.Builder()
@@ -92,58 +95,62 @@ public class AudioHistoryRecyclerViewAdapter extends ListAdapter<Audio, AudioHis
         );
 
         mediaPlayer.setOnPreparedListener(preparedMediaPlayer -> {
-            currentAudio.mediaPlayer = preparedMediaPlayer;
+            audio.mediaPlayer = preparedMediaPlayer;
             holder.playStopButton.setOnClickListener(view -> {
                 if (preparedMediaPlayer.isPlaying()) {
                     preparedMediaPlayer.pause();
-                    currentAudio.mediaPlayerPosition = preparedMediaPlayer.getCurrentPosition();
+                    audio.mediaPlayerPosition = preparedMediaPlayer.getCurrentPosition();
                     holder.playStopButton.setImageResource(R.drawable.ic_round_play_arrow_24);
-
-                    currentAudio.mediaPlayerHandler.removeCallbacksAndMessages(null);
+                    audio.disconnectSeekbar();
                 } else {
-                    preparedMediaPlayer.seekTo(currentAudio.mediaPlayerPosition);
+                    preparedMediaPlayer.seekTo(audio.mediaPlayerPosition);
                     preparedMediaPlayer.start();
                     holder.playStopButton.setImageResource(R.drawable.ic_round_pause_24);
-
-                    // Connection between Seekbar and MediaPlayer
-
-                    holder.audioBar.setMax(mediaPlayer.getDuration() / 1000);
-
-                    currentAudio.mediaPlayerHandler = new Handler();
-
-                    ((HostActivity)context).runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            if(currentAudio.mediaPlayer != null){
-                                int mCurrentPosition = currentAudio.mediaPlayer.getCurrentPosition() / 1000;
-                                holder.audioBar.setProgress(mCurrentPosition);
-                            }
-                            currentAudio.mediaPlayerHandler.postDelayed(this, 1000);
-                        }
-                    });
-
+                    audio.connectWithSeekbar(holder.audioBar, context);
                 }
             });
         });
 
         mediaPlayer.setOnCompletionListener(completedMediaPlayer -> {
-            currentAudio.mediaPlayerPosition = 0;
+            audio.mediaPlayerPosition = 0;
+            holder.audioBar.setProgress(0);
+            audio.disconnectSeekbar();
             holder.playStopButton.setImageResource(R.drawable.ic_round_play_arrow_24);
         });
 
         try {
-            mediaPlayer.setDataSource(context, currentAudio.audioUri);
+            mediaPlayer.setDataSource(context, audio.audioUri);
             mediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void setupSeekbarListener(Audio audio, AudioHistoryViewHolder holder){
+        holder.audioBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean changedFromUser) {
+                if (audio.mediaPlayer != null && changedFromUser){
+                    audio.mediaPlayerPosition = progress;
+                    audio.mediaPlayer.seekTo(progress);
+                }
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+    }
+
     @Override
     public int getItemViewType(int position) {
-        int realPosition = position + 1;
-        return realPosition % 2 == 0 ? EVEN_VIEW : ODD_VIEW;
+        Audio currentAudio = audios.get(position);
+        String userAlias = Globals.getEngageApplication().getActiveConfiguration().getUserAlias();
+        if (currentAudio.sender.equalsIgnoreCase(userAlias)){
+            return SENDER_VIEW;
+        } else {
+            return RECEIVER_VIEW;
+        }
     }
 
     static class AudioHistoryViewHolder extends RecyclerView.ViewHolder {
@@ -169,11 +176,11 @@ public class AudioHistoryRecyclerViewAdapter extends ListAdapter<Audio, AudioHis
         }
     }
 
-    static class LeftAudioHistoryViewHolder extends AudioHistoryViewHolder {
+    static class ReceiverAudioHistoryViewHolder extends AudioHistoryViewHolder {
 
         private TextView membersCaps;
 
-        public LeftAudioHistoryViewHolder(@NonNull View itemView) {
+        public ReceiverAudioHistoryViewHolder(@NonNull View itemView) {
             super(itemView);
             membersCaps = itemView.findViewById(R.id.audio_history_member_caps_text);
         }
