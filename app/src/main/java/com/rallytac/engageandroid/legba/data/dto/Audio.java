@@ -14,10 +14,14 @@ import com.rallytac.engageandroid.legba.mapping.AudioDeserializer;
 
 import java.time.LocalTime;
 
+import timber.log.Timber;
+
 @JsonAdapter(AudioDeserializer.class)
 public class Audio {
 
     public enum AudioType {Rx, Tx}
+
+    public String id;
 
     public AudioType type;
 
@@ -35,7 +39,8 @@ public class Audio {
 
     public Handler mediaPlayerHandler;
 
-    public Audio(AudioType type, LocalTime startedTime, String sender, Uri audioUri, int durationInSeconds) {
+    public Audio(String id, AudioType type, LocalTime startedTime, String sender, Uri audioUri, int durationInSeconds) {
+        this.id = id;
         this.type = type;
         this.startedTime = startedTime;
         this.sender = sender;
@@ -53,8 +58,13 @@ public class Audio {
             @Override
             public void run() {
                 if (mediaPlayer != null) {
-                    int mCurrentPosition = mediaPlayer.getCurrentPosition();
-                    audioBar.setProgress(mCurrentPosition);
+                    /*try {*/
+                        int mCurrentPosition = mediaPlayer.getCurrentPosition();
+                        audioBar.setProgress(mCurrentPosition);
+                    /*}catch (IllegalStateException e) {
+                        e.printStackTrace();
+                        Timber.e("MediaPlayer isPlaying %s", mediaPlayer.isPlaying());
+                    }*/
                 }
                 mediaPlayerHandler.postDelayed(this, 100);
             }

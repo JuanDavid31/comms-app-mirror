@@ -38,12 +38,12 @@ public class ChannelHistoryViewModel extends ViewModel {
         if (!Utils.isEmptyString(reportJson)) {
             try {
                 JSONObject root = new JSONObject(reportJson);
-                String events = root.getJSONArray(Engine.JsonFields.TimelineReport.events).toString();
+                String timelineAudios = root.getJSONArray(Engine.JsonFields.TimelineReport.events).toString();
 
                 Type listType = new TypeToken<List<Audio>>() {
                 }.getType();
 
-                return new Gson().fromJson(events, listType);
+                return new Gson().fromJson(timelineAudios, listType);
 
             } catch (Exception e) {
                 e.printStackTrace();

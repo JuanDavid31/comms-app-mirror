@@ -7,7 +7,7 @@
             android:icon="@drawable/ic_baseline_history_24"
             android:iconTint="@color/paleRed"
             app:showAsAction="always"
-            android:enabled="false"
+            android:enabled="true"
             android:title="history" />
 
     <item

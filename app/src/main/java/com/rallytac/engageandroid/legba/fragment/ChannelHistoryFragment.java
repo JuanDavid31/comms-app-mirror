@@ -1,9 +1,11 @@
 package com.rallytac.engageandroid.legba.fragment;
 
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -98,17 +100,10 @@ public class ChannelHistoryFragment extends Fragment implements EngageApplicatio
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item = menu.findItem(R.id.settings_action);
-        item.getIcon().mutate().setAlpha(100);
+        item.getIcon().mutate().setAlpha(80);
+
+        Drawable historyDrawable = menu.findItem(R.id.history_action).getIcon().mutate();
+        Drawable compatDrawable = DrawableCompat.wrap(historyDrawable);
+        DrawableCompat.setTint(compatDrawable, getResources().getColor(R.color.paleRed, null));
     }
-
-    /*@Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        MenuItem item = menu.findItem(R.id.menu_my_item);
-
-        if (myItemShouldBeEnabled) {
-            item.setEnabled(true);
-            item.getIcon().setAlpha(255);
-        }
-    }*/
 }

@@ -83,6 +83,7 @@ public class AudioHistoryRecyclerViewAdapter extends ListAdapter<Audio, AudioHis
 
         prepareMediaPlayer(currentAudio, holder);
         setupSeekbarListener(currentAudio, holder);
+        //TODO: Set state according to media player
     }
 
     private void prepareMediaPlayer(Audio audio, AudioHistoryViewHolder holder) {
@@ -190,7 +191,7 @@ public class AudioHistoryRecyclerViewAdapter extends ListAdapter<Audio, AudioHis
 
         @Override
         public boolean areItemsTheSame(@NonNull Audio oldItem, @NonNull Audio newItem) {
-            return false;//oldItem.getId() == newItem.getId(); TODO: Fix
+            return oldItem.id.equals(newItem.id);
         }
 
         @Override

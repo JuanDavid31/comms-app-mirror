@@ -24,6 +24,8 @@ public class AudioDeserializer implements JsonDeserializer<Audio> {
     public Audio deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject audio = json.getAsJsonObject();
 
+        String id = audio.get(Engine.JsonFields.TimelineEvent.id).getAsString();
+
         Audio.AudioType audioType = audio.get(Engine.JsonFields.TimelineEvent.direction).getAsInt() == 1 ? Audio.AudioType.Tx : Audio.AudioType.Rx;
 
         long startedTimestamp = audio.get(Engine.JsonFields.TimelineEvent.started).getAsLong();
@@ -37,6 +39,6 @@ public class AudioDeserializer implements JsonDeserializer<Audio> {
         long ms = audio.get("audio").getAsJsonObject().get(Engine.JsonFields.TimelineEvent.Audio.ms).getAsLong();
         int durationInSeconds = (int) TimeUnit.MILLISECONDS.toSeconds(ms);
 
-        return new Audio(audioType, startedTime, sender, audioUri, durationInSeconds);
+        return new Audio(id, audioType, startedTime, sender, audioUri, durationInSeconds);
     }
 }

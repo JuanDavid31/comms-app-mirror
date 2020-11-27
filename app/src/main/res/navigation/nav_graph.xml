@@ -47,7 +47,12 @@
             app:argType="com.rallytac.engageandroid.legba.data.dto.Channel" />
         <action
                 android:id="@+id/action_channelFragment_to_channelHistoryFragment"
-                app:destination="@id/channelHistoryFragment" />
+                app:destination="@id/channelHistoryFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                />
     </fragment>
 
     <!-- Navigation Drawer -->
@@ -70,7 +75,11 @@
                 app:destination="@id/settingsActivity" />
         <action
                 android:id="@+id/action_settingsFragment_to_nfcActionsFragment"
-                app:destination="@id/nfcActionsFragment" />
+                app:destination="@id/nfcActionsFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
