@@ -5,14 +5,16 @@
     <item
             android:id="@+id/history_action"
             android:icon="@drawable/ic_baseline_history_24"
-            android:iconTint="@color/pinkish_grey"
+            android:iconTint="@color/paleRed"
             app:showAsAction="always"
+            android:enabled="false"
             android:title="history" />
 
     <item
             android:id="@+id/settings_action"
             android:iconTint="@color/pinkish_grey"
             android:icon="@drawable/ic_settings"
+            android:enabled="false"
             app:showAsAction="always"
             android:title="Settings" />
 </menu>

@@ -105,8 +105,7 @@
             tools:layout="@layout/activity_about" />
     <fragment
             android:id="@+id/channelHistoryFragment"
-            android:name="com.rallytac.engageandroid.legba.fragment.ChannelHistoryFragment"
-            android:label="ChannelHistoryFragment" >
+            android:name="com.rallytac.engageandroid.legba.fragment.ChannelHistoryFragment">
         <argument
                 android:name="channelId"
                 app:argType="string" />
