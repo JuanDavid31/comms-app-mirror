@@ -11,6 +11,7 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 
 public class MissionDeserializer implements JsonDeserializer<Mission> {
@@ -44,27 +45,25 @@ public class MissionDeserializer implements JsonDeserializer<Mission> {
         int rpPort = 0;
 
         JsonElement rpElement = jsonObject.get(RALLYPOINT);
-        if (rpElement != null) {
-            if (!rpElement.isJsonObject()) {
-                throw new JsonParseException("Rallypoint property is invalid");
-            }
-
+        if (rpElement == null || !rpElement.isJsonObject()) {
+            throw new JsonParseException("Rallypoint property is invalid");
+        } else {
             JsonObject rp = rpElement.getAsJsonObject();
 
             JsonElement rpUseElement = rp.get(RP_USE);
-            if (!rpUseElement.isJsonPrimitive()) {
+            if (rpUseElement == null || !rpUseElement.isJsonPrimitive()) {
                 throw new JsonParseException("Use property is not valid");
             }
             rpUse = rpUseElement.getAsBoolean();
 
             JsonElement rpAddressElement = rp.get(RP_ADDRESS);
-            if (rpAddressElement.isJsonPrimitive()) {
+            if (rpAddressElement == null || rpAddressElement.isJsonPrimitive()) {
                 throw new JsonParseException("Address property is not valid");
             }
             rpAddress = rpAddressElement.getAsString();
 
             JsonElement rpPortElement = rp.get(RP_PORT);
-            if (rpPortElement.isJsonPrimitive()) {
+            if (rpPortElement == null || rpPortElement.isJsonPrimitive()) {
                 throw new JsonParseException("Port property is not valid");
             }
             rpPort = rpPortElement.getAsInt();
@@ -82,16 +81,20 @@ public class MissionDeserializer implements JsonDeserializer<Mission> {
         Mission.MulticastType multicastType
                 = new Mission.MulticastTypeConverter().convertToEntityProperty(multicastFailoverPolicy);
 
+
+        List<Channel> channels = Collections.emptyList();
+
         JsonElement groupsElement = jsonObject.get(GROUPS);
 
-        if (!groupsElement.isJsonArray()) {
-            throw new JsonParseException("groups property is not an array");
+        if (groupsElement != null) {
+            if (groupsElement.isJsonArray()){
+                Type listType = new TypeToken<List<Channel>>() {
+                }.getType();
+                channels = new Gson().fromJson(groupsElement, listType);
+            }else {
+                throw new JsonParseException("groups property is not an array");
+            }
         }
-
-        Type listType = new TypeToken<List<Channel>>() {
-        }.getType();
-
-        List<Channel> channels = new Gson().fromJson(groupsElement, listType);
 
         return new Mission(id, name, channels, rpUse, rpAddress, rpPort, multicastType);
     }
