@@ -9,6 +9,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,10 +22,9 @@ import androidx.core.content.ContextCompat;
 import androidx.customview.widget.Openable;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.Navigator;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -32,14 +32,11 @@ import com.google.android.material.navigation.NavigationView;
 import com.rallytac.engageandroid.AboutActivity;
 import com.rallytac.engageandroid.ActiveConfiguration;
 import com.rallytac.engageandroid.BuildConfig;
+import com.rallytac.engageandroid.Constants;
 import com.rallytac.engageandroid.Globals;
 import com.rallytac.engageandroid.PreferenceKeys;
 import com.rallytac.engageandroid.R;
-import com.rallytac.engageandroid.SettingsActivity;
-import com.rallytac.engageandroid.SimpleUiMainActivity;
-import com.rallytac.engageandroid.VolumeLevels;
 import com.rallytac.engageandroid.databinding.ActivityHostBinding;
-import com.rallytac.engageandroid.legba.fragment.SettingsFragmentDirections;
 
 import java.util.Objects;
 
@@ -191,5 +188,16 @@ public class HostActivity extends AppCompatActivity {
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(uiOptions);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_HEADSETHOOK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            Intent intent = new Intent(Constants.KEY_EVENT_ACTION);
+            intent.putExtra(Constants.KEY_EVENT_EXTRA_DOWN_TIME, event.getDownTime());
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        }
+
+        return super.dispatchKeyEvent(event);
     }
 }
