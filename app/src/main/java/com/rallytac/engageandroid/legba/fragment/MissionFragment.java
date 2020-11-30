@@ -338,33 +338,6 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         return true;
     }
 
-    private void setupViewPagerOnPageChangeListener() {
-        binding.missionViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                boolean speak = currentPage != position;
-                currentPage = position;
-                int channelsGroupsSize = vm.getChannelsGroup().size();
-                lastPage = currentPage == channelsGroupsSize;
-                updateDots(position);
-
-                if (position < channelsGroupsSize) {
-                    activity.binding.showCreateEditChannelsGroupButton.setVisibility(View.VISIBLE);
-                    String name = vm.getChannelsGroup().get(position).getName();
-                    activity.binding.fragmentDescription.setText(name);
-                    if (speak) {
-                        voiceRecognition.speak(name);
-                    }
-                } else {
-                    activity.binding.fragmentDescription.setText(getString(R.string.add_title));
-                    activity.binding.showCreateEditChannelsGroupButton.setVisibility(View.GONE);
-                }
-
-                //updateChannelListAdapter(); // Prevent a visual bug bug creates another problem when the storage is clean and the user tries to create a new channel group.
-            }
-        });
-    }
-
     private void setupViewPagerDotIndicator(List channelGroup) {
         binding.tabLayout.removeAllViews();
         int dotNumber = channelGroup.size() + 1;
@@ -733,18 +706,6 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                         toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
                     }
                 });
-    }
-
-    private void pauseActiveTx() {
-        vm.getAudioChannels().forEach(audioChannel -> audioChannel.setOnRx(false));
-        String[] channelIds = vm.getAudioChannels()
-                .stream()
-                .peek(audioChannel -> audioChannel.setOnRx(false))
-                .map(Channel::getId)
-                .toArray(String[]::new);
-
-        binding.txImage.setVisibility(View.INVISIBLE);
-        DataManager.getInstance().endTx(channelIds);
     }
 
     private void pauseActiveTx() {
