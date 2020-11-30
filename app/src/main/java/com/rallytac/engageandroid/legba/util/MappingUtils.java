@@ -54,6 +54,7 @@ public class MappingUtils {
                     newGroup._id = channel.getId();
                     newGroup._name = channel.getName();
                     newGroup._type = channel.getEngageType() == Channel.EngageType.AUDIO ? 1 : 2;
+                    newGroup._fdx = channel.isFullDuplex();
                     newGroup._txFramingMs = channel.getTxFramingMs();
                     newGroup._txCodecId = channel.getTxCodecId();
                     newGroup._maxTxSecs = channel.getMaxTxSecs();
@@ -75,7 +76,8 @@ public class MappingUtils {
         List<Channel> newGroups = _mission._groups.stream().map(_group -> {
             return new Channel(_group._id, _mission._id,
                     _group._name, _group._image,
-                    Channel.ChannelType.PRIMARY, _group._txFramingMs,
+                    Channel.ChannelType.PRIMARY, _group._fdx,
+                    _group._txFramingMs,
                     _group._txCodecId, _group._maxTxSecs,
                     _group._txAddress, _group._txPort,
                     _group._rxAddress, _group._rxPort,
@@ -163,7 +165,7 @@ public class MappingUtils {
 
                         JSONObject txAudio = new JSONObject();
                         txAudio.put("encoder", _group._txCodecId);
-                        txAudio.put("fdx", false);
+                        txAudio.put("fdx", _group._fdx);
                         txAudio.put("framingMs", _group._txFramingMs);
                         txAudio.put("maxTxSecs", _group._maxTxSecs);
                         group.put("txAudio", txAudio);

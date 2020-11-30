@@ -40,7 +40,7 @@ public class MissionsListViewModel extends ViewModel {
     public List<Mission> getMissions() {
         List<Mission> missions = missionDao.loadAll();
 
-        //Sets OVERLORD missions as always present at first position
+        //Sets OVERLORD missions as always present in first position
         String defaultMissionName = "OVERLORD";
 
         Mission missionFromJson = DataManager

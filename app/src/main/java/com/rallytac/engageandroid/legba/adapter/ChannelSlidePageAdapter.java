@@ -209,7 +209,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
     private void setFirstChannelViewState(Channel firstChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
         if (firstChannel.isOnRx()) {
-            ((RxListener) holder).onRx(firstChannel.getId(), firstChannel.getLastRxAlias(), firstChannel.getLastRxDisplayName());
+            ((RxListener) holder).onRx(firstChannel.getId(), firstChannel.getLastRxAlias(), firstChannel.getLastRxDisplayName(), false);
         } else {
             boolean brotherViewIsOnRx = channels.stream().anyMatch(Channel::isOnRx);
             if (brotherViewIsOnRx) {
@@ -233,7 +233,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
     private void setSecondChannelViewState(Channel secondChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
         if (secondChannel.isOnRx()) {
-            ((RxListener) holder).onRx(secondChannel.getId(), secondChannel.getLastRxAlias(), secondChannel.getLastRxDisplayName());
+            ((RxListener) holder).onRx(secondChannel.getId(), secondChannel.getLastRxAlias(), secondChannel.getLastRxDisplayName(), false);
         } else {
             boolean brotherViewIsOnRx = channels.stream().anyMatch(Channel::isOnRx);
             if (brotherViewIsOnRx) {
@@ -246,7 +246,7 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
 
     private void setThirdChannelViewState(Channel currentChannel, ChannelResumeViewHolder holder, List<Channel> channels) {
         if (currentChannel.isOnRx()) {
-            ((RxListener) holder).onRx(currentChannel.getId(), currentChannel.getLastRxAlias(), currentChannel.getLastRxDisplayName());
+            ((RxListener) holder).onRx(currentChannel.getId(), currentChannel.getLastRxAlias(), currentChannel.getLastRxDisplayName(), false);
         } else {
             boolean brotherViewIsOnRx = channels.stream().anyMatch(Channel::isOnRx);
             if (brotherViewIsOnRx) {
@@ -375,7 +375,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         }
 
         @Override
-        public void onRx(String id, String alias, String displayName) {
+        public void onRx(String id, String alias, String displayName, boolean isSos) {
+            if (isSos)return;
             String formattedAlias = alias == null ? "UNKNOWN" : alias;
             String formattedDisplayName = displayName == null ? "Unknown user" : displayName;
             String time = DateTimeFormatter.ofPattern("hh:mm a").format(LocalDateTime.now());
@@ -679,7 +680,8 @@ public class ChannelSlidePageAdapter extends RecyclerView.Adapter<ChannelSlidePa
         }
 
         @Override
-        public void onRx(String id, String alias, String displayName) {
+        public void onRx(String id, String alias, String displayName, boolean isSos) {
+            if (isSos)return;
             String formattedAlias = alias == null ? "UNKNOWN" : alias;
 
             this.channels

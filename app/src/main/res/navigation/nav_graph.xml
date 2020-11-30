@@ -24,9 +24,9 @@
                 app:destination="@id/aboutActivity" />
     </fragment>
     <fragment
-        android:id="@+id/missionFragment"
-        android:name="com.rallytac.engageandroid.legba.fragment.MissionFragment"
-        tools:layout="@layout/fragment_mission">
+            android:id="@+id/missionFragment"
+            android:name="com.rallytac.engageandroid.legba.fragment.MissionFragment"
+            tools:layout="@layout/fragment_mission">
         <argument
             android:name="missionId"
             app:argType="string" />
@@ -45,6 +45,14 @@
         <argument
             android:name="channel"
             app:argType="com.rallytac.engageandroid.legba.data.dto.Channel" />
+        <action
+                android:id="@+id/action_channelFragment_to_channelHistoryFragment"
+                app:destination="@id/channelHistoryFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                />
     </fragment>
 
     <!-- Navigation Drawer -->
@@ -60,11 +68,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/historyFragment"
-        android:name="com.rallytac.engageandroid.legba.fragment.HistoryFragment">
-    </fragment>
-
-    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.rallytac.engageandroid.legba.fragment.SettingsFragment">
         <action
@@ -72,7 +75,11 @@
                 app:destination="@id/settingsActivity" />
         <action
                 android:id="@+id/action_settingsFragment_to_nfcActionsFragment"
-                app:destination="@id/nfcActionsFragment" />
+                app:destination="@id/nfcActionsFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -105,4 +112,15 @@
             android:name="com.rallytac.engageandroid.AboutActivity"
             android:label="activity_about"
             tools:layout="@layout/activity_about" />
+    <fragment
+            android:id="@+id/channelHistoryFragment"
+            android:name="com.rallytac.engageandroid.legba.fragment.ChannelHistoryFragment">
+        <argument
+                android:name="channelId"
+                app:argType="string" />
+    </fragment>
+    <fragment
+            android:id="@+id/historyFragment"
+            android:name="com.rallytac.engageandroid.legba.fragment.HistoryFragment"
+            android:label="HistoryFragment" />
 </navigation>

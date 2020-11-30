@@ -55,6 +55,8 @@ public class Channel implements Serializable {
 
     private String lastRxTime;
 
+    private boolean fullDuplex;
+
     private int txFramingMs;
 
     private int txCodecId;
@@ -94,6 +96,7 @@ public class Channel implements Serializable {
                    String name,
                    String image,
                    ChannelType type,
+                   boolean fullDuplex,
                    int txFramingMs,
                    int txCodecId,
                    int maxTxSecs,
@@ -107,6 +110,7 @@ public class Channel implements Serializable {
         this.name = name;
         this.image = image;
         this.type = type;
+        this.fullDuplex = fullDuplex;
         this.txFramingMs = txFramingMs;
         this.txCodecId = txCodecId;
         this.maxTxSecs = maxTxSecs;
@@ -124,9 +128,9 @@ public class Channel implements Serializable {
         this.lastRxDisplayName = "";
     }
 
-    @Generated(hash = 1301108969)
-    public Channel(String id, String missionId, String name, String image, boolean isSpeakerOn, String lastRxAlias, String lastRxDisplayName, String lastRxTime, int txFramingMs,
-                   int txCodecId, int maxTxSecs, String txAddress, int txPort, String rxAddress, int rxPort, EngageType engageType, ChannelType type) {
+    @Generated(hash = 424181647)
+    public Channel(String id, String missionId, String name, String image, boolean isSpeakerOn, String lastRxAlias, String lastRxDisplayName, String lastRxTime, boolean fullDuplex,
+            int txFramingMs, int txCodecId, int maxTxSecs, String txAddress, int txPort, String rxAddress, int rxPort, EngageType engageType, ChannelType type) {
         this.id = id;
         this.missionId = missionId;
         this.name = name;
@@ -135,6 +139,7 @@ public class Channel implements Serializable {
         this.lastRxAlias = lastRxAlias;
         this.lastRxDisplayName = lastRxDisplayName;
         this.lastRxTime = lastRxTime;
+        this.fullDuplex = fullDuplex;
         this.txFramingMs = txFramingMs;
         this.txCodecId = txCodecId;
         this.maxTxSecs = maxTxSecs;
@@ -280,9 +285,6 @@ public class Channel implements Serializable {
         this.lastRxAlias = lastRxAlias;
     }
 
-    //ChannelElementType
-
-
     public static class ChannelTypeConverter implements PropertyConverter<ChannelType, String> {
 
         @Override
@@ -294,6 +296,14 @@ public class Channel implements Serializable {
         public String convertToDatabaseValue(ChannelType entityProperty) {
             return entityProperty.name();
         }
+    }
+
+    public boolean isFullDuplex() {
+        return fullDuplex;
+    }
+
+    public void setFullDuplex(boolean fullDuplex) {
+        this.fullDuplex = fullDuplex;
     }
 
     public int getTxFramingMs() {
@@ -381,10 +391,24 @@ public class Channel implements Serializable {
         }
     }
 
+    public void insertOrReplace(){
+        myDao.insertOrReplace(this);
+    }
+
     public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
         }
         myDao.update(this);
+    }
+
+    @Keep
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getChannelDao() : null;
+    }
+
+    public boolean getFullDuplex() {
+        return this.fullDuplex;
     }
 }

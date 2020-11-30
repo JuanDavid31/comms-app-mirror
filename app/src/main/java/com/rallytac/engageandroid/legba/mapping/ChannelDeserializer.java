@@ -25,6 +25,7 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
     private final static String IMAGE = "image";
     //private final static String type = "type";
     private final static String TX_AUDIO = "txAudio";
+    private final static String FULL_DUPLEX = "fdx";
     private final static String FRAMING_MS = "framingMs";
     private final static String ENCODER = "encoder";
     private final static String MAX_TX_SECS = "maxTxSecs";
@@ -55,18 +56,19 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
         if (nameJsonElement == null || nameJsonElement.isJsonPrimitive()) {
             throw new JsonParseException("name in group is not a valid property");
         }
-        /*if (typeJsonElement == null || typeJsonElement.isJsonPrimitive()) {
-            throw new JsonParseException("type in group is not a valid property");
-        }*/
         if (imageJsonElement == null || imageJsonElement.isJsonPrimitive()) {
             throw new JsonParseException("image in group is not a valid property");
         }
+        /*if (typeJsonElement == null || typeJsonElement.isJsonPrimitive()) {
+            throw new JsonParseException("type in group is not a valid property");
+        }*/
         if (engageTypeJsonElement == null || !engageTypeJsonElement.isJsonPrimitive()) {
             throw new JsonParseException("engageType in group is not a valid property");
         }
 
         JsonElement txAudioJsonElement = root.get(TX_AUDIO);
 
+        boolean fullDuplex;
         int framingMs = 60;
         int encoder = 25;
         int maxTxSecs = 30;
@@ -75,18 +77,29 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
         } else {
             JsonObject txAudioJsonObject =  txAudioJsonElement.getAsJsonObject();
 
+            JsonElement fullDuplexJsonElement = txAudioJsonObject.get(FULL_DUPLEX);
+            if(fullDuplexJsonElement == null || !fullDuplexJsonElement.isJsonPrimitive()){
+                throw new JsonParseException("fdx in group is not valid");
+            }
+            fullDuplex = fullDuplexJsonElement.getAsBoolean();
+
             JsonElement framingMsJsonElement = txAudioJsonObject.get(FRAMING_MS);
             if(framingMsJsonElement == null || !framingMsJsonElement.isJsonPrimitive()){
                 throw new JsonParseException("framingMs in group is not valid");
             }
+            framingMs = framingMsJsonElement.getAsInt();
+
             JsonElement encoderJsonElement = txAudioJsonObject.get(ENCODER);
             if(encoderJsonElement == null || !encoderJsonElement.isJsonPrimitive()){
                 throw new JsonParseException("encoder in group is not valid");
             }
+            encoder = encoderJsonElement.getAsInt();
+
             JsonElement maxTxSecsJsonElement = txAudioJsonObject.get(MAX_TX_SECS);
             if(maxTxSecsJsonElement == null || !maxTxSecsJsonElement.isJsonPrimitive()){
                 throw new JsonParseException("maxTxSecs in group is not valid");
             }
+            maxTxSecs = maxTxSecsJsonElement.getAsInt();
         }
 
 
@@ -99,6 +112,7 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
                 nameJsonElement.getAsString(),
                 imageJsonElement.getAsString(),
                 getChannelType(typeJsonElement.getAsString()),
+                fullDuplex,
                 framingMs,
                 encoder,
                 maxTxSecs,

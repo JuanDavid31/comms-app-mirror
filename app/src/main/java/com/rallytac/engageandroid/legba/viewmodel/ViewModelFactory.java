@@ -23,6 +23,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if(modelClass == MissionsListViewModel.class){
             return (T) new MissionsListViewModel(app);
         }
+        if (modelClass == ChannelHistoryViewModel.class){
+            return (T) new ChannelHistoryViewModel(app);
+        }
         throw new IllegalArgumentException("Impossible to instantiate class");
     }
 }
