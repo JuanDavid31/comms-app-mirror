@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="114dp"
+        android:layout_marginTop="8.5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/primary_element_box_shape"
+        android:elevation="5.3dp">
+
+    <FrameLayout
+            android:id="@+id/left_history_member_caps_layout"
+            android:layout_width="38dp"
+            android:layout_height="37.5dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="20.3dp"
+            android:background="@drawable/star_box_shape"
+            android:elevation="5.3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+    <TextView
+            android:id="@+id/audio_history_member_name_text"
+            style="@style/builtTitlingRgBoldFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="11.5dp"
+            android:letterSpacing="0.02"
+            android:text="MILEY POPES"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@id/left_history_member_caps_layout"
+            app:layout_constraintTop_toTopOf="@+id/left_history_member_caps_layout" />
+
+    <TextView
+            android:id="@+id/audio_history_member_nickname_text"
+            style="@style/secondaryTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="4dp"
+            android:text="Ajax"
+            android:textColor="@color/greyish_93"
+            app:layout_constraintBottom_toBottomOf="@+id/audio_history_member_number_text"
+            app:layout_constraintEnd_toStartOf="@+id/audio_history_member_number_text" />
+
+    <TextView
+            android:id="@+id/audio_history_member_number_text"
+            style="@style/openSansRegularFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="544321124"
+            android:textColor="@color/white_93"
+            android:textSize="10.1sp"
+            app:layout_constraintBottom_toBottomOf="@+id/left_history_member_caps_layout"
+            app:layout_constraintEnd_toEndOf="@+id/audio_history_member_name_text" />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="24.5dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="42.8dp" />
+
+    <TextView
+            android:id="@+id/audio_history_started_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="19.3dp"
+            android:layout_marginTop="25.3dp"
+            android:fontFamily="@font/open_sans_light"
+            android:textColor="@color/paleRed"
+            android:textSize="10.1sp"
+            android:textStyle="normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="5:05 AM" />
+
+    <ImageButton
+            android:id="@+id/audio_history_play_stop_button"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_marginEnd="15.3dp"
+            android:layout_marginBottom="15.5dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_round_play_arrow_24"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    <SeekBar
+            android:id="@+id/audio_history_seekbar"
+            android:layout_width="0dp"
+            android:layout_height="13.3dp"
+            android:layout_marginBottom="21.5dp"
+            android:progress="0"
+            android:progressBackgroundTint="@color/white_three"
+            android:progressTint="@color/paleRed"
+            android:thumbTint="@color/paleRed"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/audio_history_play_stop_button"
+            app:layout_constraintStart_toEndOf="@+id/audio_history_duration" />
+
+    <TextView
+            android:id="@+id/audio_history_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20.3dp"
+            android:layout_marginBottom="21.5dp"
+            android:fontFamily="@font/open_sans_light"
+            android:textColor="@color/greyish_93"
+            android:textSize="10.1sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="0:30" />\
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="22.5dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20.3dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="32.5dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="35.8dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="22.5dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

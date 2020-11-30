@@ -32,6 +32,10 @@ public class MissionViewModel extends ViewModel {
     private Mission mission;
 
     private float toggleRadioChannelButtonRotation = 0;
+    private String incomingSosChannelId;
+    private String incomingSosAlias;
+    private String incomingSosDisplayName;
+    private boolean isMissionOnSos;
 
     private MissionDao missionDao;
     private ChannelGroupDao channelGroupDao;
@@ -146,5 +150,37 @@ public class MissionViewModel extends ViewModel {
             return new ArrayList<>();
         }
 
+    }
+
+    public String getIncomingSosChannelId() {
+        return incomingSosChannelId;
+    }
+
+    public void setIncomingSosChannelId(String incomingSosChannelId) {
+        this.incomingSosChannelId = incomingSosChannelId;
+    }
+
+    public String getIncomingSosAlias() {
+        return incomingSosAlias;
+    }
+
+    public void setIncomingSosAlias(String incomingSosAlias) {
+        this.incomingSosAlias = incomingSosAlias;
+    }
+
+    public String getIncomingSosDisplayName() {
+        return incomingSosDisplayName;
+    }
+
+    public void setIncomingSosDisplayName(String incomingSosDisplayName) {
+        this.incomingSosDisplayName = incomingSosDisplayName;
+    }
+
+    public boolean isMissionOnSos(){
+        return isMissionOnSos;
+    }
+
+    public void setMissionOnSos(boolean isMissionOnSos) {
+        this.isMissionOnSos = isMissionOnSos;
     }
 }

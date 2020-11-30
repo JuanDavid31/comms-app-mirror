@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.rallytac.engage.engine.Engine;
 import com.rallytac.engageandroid.Constants;
 import com.rallytac.engageandroid.DatabaseGroup;
 import com.rallytac.engageandroid.DatabaseMission;
@@ -15,12 +16,16 @@ import com.rallytac.engageandroid.legba.data.dto.Channel;
 import com.rallytac.engageandroid.legba.data.dto.Mission;
 import com.rallytac.engageandroid.legba.data.engagedto.EngageClasses;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import okio.BufferedSource;
@@ -129,7 +134,7 @@ public class DataManager {
                 .forEach(channel -> {
                     AddressAndPort rx = new AddressAndPort(channel.getRxAddress(), channel.getRxPort());
                     AddressAndPort tx = new AddressAndPort(channel.getTxAddress(), channel.getTxPort());
-                    TxAudio txAudio = new TxAudio(channel.getTxCodecId(), channel.getTxFramingMs(), channel.getMaxTxSecs());
+                    TxAudio txAudio = new TxAudio(channel.getTxCodecId(), channel.getTxFramingMs(), channel.isFullDuplex(), channel.getMaxTxSecs());
                     TxData txData = new TxData(channel.getId(),
                             channel.getName(),
                             channel.getEngageType() == Channel.EngageType.AUDIO ? 1 : 2,
@@ -164,8 +169,9 @@ public class DataManager {
         }
     }
 
-    public void startTx(String... groupIds) {
-        Globals.getEngageApplication().startTxLegba(0, 0, groupIds);
+    public void startTx(boolean isSos, String... groupIds) {
+
+        Globals.getEngageApplication().startTxLegba(0, isSos ? 1 : 0, groupIds);
     }
 
     public void endTx(String... groupIds) {
@@ -187,10 +193,24 @@ public class DataManager {
     public Channel generateMissionControlChannel(String missionId) {
         return new Channel(Globals.MISSION_CONTROL_ID, missionId,
                 "MISSION CONTROL", "",
-                Channel.ChannelType.PRIMARY, 30,
+                Channel.ChannelType.PRIMARY, false,
+                30,
                 25, 120,
                 "239.42.43.1", 49000,
                 "239.42.43.1", 49000,
                 Channel.EngageType.PRESENCE);
+    }
+
+    public void askForAudiosHistory(String channelId) {
+        JSONObject queryOptions = new JSONObject();
+
+        try {
+            queryOptions.put(Engine.JsonFields.TimelineQuery.maxCount, 10);
+            queryOptions.put(Engine.JsonFields.TimelineQuery.mostRecentFirst, true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Globals.getEngageApplication().getEngine().engageQueryGroupTimeline(channelId, queryOptions.toString());
     }
 }

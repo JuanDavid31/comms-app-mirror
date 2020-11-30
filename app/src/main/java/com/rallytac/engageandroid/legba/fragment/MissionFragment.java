@@ -74,7 +74,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
     private ChannelListAdapter channelListAdapter;
     private ImageView[] dotIndicators;
     private MenuItem sosAction;
-    private TransitionDrawable transition;
+    private TransitionDrawable sosOverlapBackgroundTransition;
     private Context context;
     private MissionViewModel vm;
     private VoiceRecognition voiceRecognition;
@@ -148,18 +148,19 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         Timber.i("onCreateView");
         activity = (HostActivity) requireActivity();
 
-        transition = (TransitionDrawable) activity.binding.sosOverlapLayout.getBackground();
+        sosOverlapBackgroundTransition = (TransitionDrawable) activity.binding.sosOverlapLayout.getBackground();
 
         updateToolbar();
         setHasOptionsMenu(true);
-        setupEmergencyListeners();
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mission, container, false);
-        binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
 
-        List<ChannelGroup> channelsGroup = vm.getChannelsGroup();
+        List<ChannelGroup> channelsGroup = vm
+                .getChannelsGroup();
         channelSlidePageAdapter = new ChannelSlidePageAdapter(this, channelsGroup);
         binding.missionViewPager.setAdapter(channelSlidePageAdapter);
 
+        recoverState();
+        setupEmergencyListeners();
         setupViewPagerOnPageChangeListener();
         setupPTTOnMic();
         setupViewPagerDotIndicator(vm.getChannelsGroup());
@@ -181,6 +182,13 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         Objects.requireNonNull(((HostActivity) requireActivity()).getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_round_keyboard_arrow_left_24);
     }
 
+    private void recoverState() {
+        binding.toggleRadioChannelButton.setRotation(vm.getToggleRadioChannelButtonRotation());
+        if (vm.isMissionOnSos()) {
+            ((RxListener) this).onRx(vm.getIncomingSosChannelId(), vm.getIncomingSosAlias(), vm.getIncomingSosDisplayName(), true);
+        }
+    }
+
     private void setupEmergencyListeners() {
         activity.binding.sosSwipeButton.setSosEmergencyListener(new SwipeButton.SOSEmergencyListener() {
 
@@ -194,7 +202,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                         .setDuration(1);
 
                 if (!isGradientActive) {
-                    transition.startTransition(300);
+                    sosOverlapBackgroundTransition.startTransition(300);
                     isGradientActive = true;
                 }
             }
@@ -202,7 +210,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
             @Override
             public void onSwipeStartEnd() {
                 if (isGradientActive) {
-                    transition.reverseTransition(300);
+                    sosOverlapBackgroundTransition.reverseTransition(300);
                     isGradientActive = false;
                 }
             }
@@ -214,7 +222,15 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                 activity.binding.sosTxImage.animate()
                         .alpha(1f)
                         .setDuration(900);
-                Globals.getEngageApplication().startTx(0, 1);
+
+                String[] activeGroupIds = vm.getChannelsGroup()
+                        .get(currentPage)
+                        .getChannels()
+                        .stream()
+                        .map(Channel::getId)
+                        .toArray(String[]::new);
+
+                DataManager.getInstance().startTx(true, activeGroupIds);
             }
 
             @Override
@@ -224,13 +240,21 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                 activity.binding.sosTxImage.animate()
                         .alpha(0.0f)
                         .setDuration(300);
-                Globals.getEngageApplication().endTx();
+
+                String[] activeGroupIds = vm.getChannelsGroup()
+                        .get(currentPage)
+                        .getChannels()
+                        .stream()
+                        .map(Channel::getId)
+                        .toArray(String[]::new);
+
+                DataManager.getInstance().endTx(activeGroupIds);
             }
 
             @Override
             public void onFreeButton(double ms) {
                 if (isGradientActive) {
-                    transition.reverseTransition((int) ms);
+                    sosOverlapBackgroundTransition.reverseTransition((int) ms);
                     isGradientActive = false;
                 }
             }
@@ -242,6 +266,33 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                         .animate()
                         .alpha(1f)
                         .setDuration(300);
+            }
+        });
+    }
+
+    private void setupViewPagerOnPageChangeListener() {
+        binding.missionViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                boolean speak = currentPage != position;
+                currentPage = position;
+                int channelsGroupsSize = vm.getChannelsGroup().size();
+                lastPage = currentPage == channelsGroupsSize;
+                updateDots(position);
+
+                if (position < channelsGroupsSize) {
+                    activity.binding.showCreateEditChannelsGroupButton.setVisibility(View.VISIBLE);
+                    String name = vm.getChannelsGroup().get(position).getName();
+                    activity.binding.fragmentDescription.setText(name);
+                    if (speak) {
+                        voiceRecognition.speak(name);
+                    }
+                } else {
+                    activity.binding.fragmentDescription.setText(getString(R.string.add_title));
+                    activity.binding.showCreateEditChannelsGroupButton.setVisibility(View.GONE);
+                }
+
+                //updateChannelListAdapter(); // Prevent a visual bug bug creates another problem when the storage is clean and the user tries to create a new channel group.
             }
         });
     }
@@ -266,12 +317,18 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                 .map(Channel::getId)
                 .toArray(String[]::new);
 
+        /*if (vm.isMissionOnSos()){
+            binding.txImage.setVisibility(View.INVISIBLE);
+            DataManager.getInstance().endTx(activeGroupIds);
+            return false;
+        }*/
+
         if (action == MotionEvent.ACTION_DOWN) {
             isPttButtonDown = true;
             binding.txImage.setVisibility(View.VISIBLE);
             Log.w("sending", "#SB#: onTouch ACTION_DOWN - startTx");//NON-NLS
             Timber.i("Tx to %s", activeGroupIds);
-            DataManager.getInstance().startTx(activeGroupIds);
+            DataManager.getInstance().startTx(false, activeGroupIds);
         } else if (action == MotionEvent.ACTION_UP) {
             isPttButtonDown = false;
             binding.txImage.setVisibility(View.INVISIBLE);
@@ -651,27 +708,43 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
     }
 
     @Override
-    public void onRx(String id, String alias, String displayName) {
-/*        boolean isIdPresent = vm.getChannelsGroup()
-                .get(currentPage)
-                .getChannels()
+    public void onRx(String id, String alias, String displayName, boolean isSos) {
+        if (!isSos) return;
+        Timber.i("OnRx SOS");
+
+        vm.getAudioChannels()
                 .stream()
-                .anyMatch(channel -> channel.getId().equals(id));
+                .map(Channel::getId)
+                .filter(channelId -> channelId.equalsIgnoreCase(id))
+                .findFirst()
+                .ifPresent(channel -> {
+                    Timber.i("OnRx SOS ifPresent %s %s %s", id, alias, displayName);
+                    vm.setIncomingSosChannelId(id);
+                    vm.setIncomingSosAlias(alias);
+                    vm.setIncomingSosDisplayName(displayName);
+                    vm.setMissionOnSos(true);
 
-        if (!isIdPresent) return;
-        ;
+                    pauseActiveTx(); //Only works if full duplex is enable
 
-        int channelsSize = getChannelsGroup().get(currentPage).getChannels().size();
+                    activity.binding.incomingSosOverlapMessageName.setText(alias);
+                    if (activity.binding.incomingSosOverlapLayout.getVisibility() == View.GONE) {
+                        // this method (onRx) is being called every time a speaker/talker is added, so this is being called more than once
+                        //making this toggle bug the incomingSosOverlapLayout
+                        toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
+                    }
+                });
+    }
 
-        if (channelsSize == 0) {
-            //TODO: Standalone animation
-            int currentItem = this.binding.missionViewPager.getCurrentItem();
-            View viewById = this.binding.missionViewPager.findViewById(currentItem);
-            Timber.i("viewById %s", viewById.getClass());
-        } else {
-            //TODO: Compound animation
-            //this.channelSlidePageAdapter.initCompoundAnimation();
-        }*/
+    private void pauseActiveTx() {
+        vm.getAudioChannels().forEach(audioChannel -> audioChannel.setOnRx(false));
+        String[] channelIds = vm.getAudioChannels()
+                .stream()
+                .peek(audioChannel -> audioChannel.setOnRx(false))
+                .map(Channel::getId)
+                .toArray(String[]::new);
+
+        binding.txImage.setVisibility(View.INVISIBLE);
+        DataManager.getInstance().endTx(channelIds);
     }
 
     private void pauseActiveTx() {
@@ -688,18 +761,12 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
 
     @Override
     public void stopRx(String id, String eventExtraJson) {
-/*        int channelsSize = getChannelsGroup().get(currentPage).getChannels().size();
-
-        if (channelsSize == 0) {
-            //TODO: Standalone animation
-            int currentItem = this.binding.missionViewPager.getCurrentItem();
-            View viewById = this.binding.missionViewPager.findViewById(currentItem);
-            Timber.i("viewById %s", viewById.getClass());
-
-        } else {
-            //TODO: Compound animation
-        }*/
-
+        Timber.i("stopRX");
+        if (vm.isMissionOnSos()) {
+            Timber.i("stopRX MissionsOnSos");
+            vm.setMissionOnSos(false);
+            toggleLayoutVisiblity(activity.binding.incomingSosOverlapLayout);
+        }
     }
 
     @Override

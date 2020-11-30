@@ -30,6 +30,7 @@ public class Globals
     private static AudioPlayerManager _apm = null;
     public static List<RxListener> rxListeners = new ArrayList();
     public static GroupDiscoveryListener groupDiscoveryListener = null;
+    public static EngageApplication.IGroupTimelineListenerLegba onGroupTimelineReportListener;
 
     public static void setContext(Context ctx)
     {
@@ -77,9 +78,9 @@ public class Globals
         return _apm;
     }
 
-    public static void notifyListenersStart(final String id, final String alias, final String displayName) {
+    public static void notifyListenersStart(final String id, final String alias, final String displayName, boolean isSos) {
         Timber.i("notifyListenersStart id -> %s alias -> %s displayName -> %s", id, alias, displayName);
-        rxListeners.forEach(rxListener -> rxListener.onRx(id, alias, displayName));
+        rxListeners.forEach(rxListener -> rxListener.onRx(id, alias, displayName, isSos));
         updateChannelIncomingMessage(id, alias, displayName);
     }
 
@@ -93,6 +94,7 @@ public class Globals
         channel.setLastRxAlias(formattedAlias);
         channel.setLastRxDisplayName(formattedDisplayName);
         channel.setLastRxTime(time);
+        channel.__setDaoSession(daoSession);
         channel.update();
     }
 
