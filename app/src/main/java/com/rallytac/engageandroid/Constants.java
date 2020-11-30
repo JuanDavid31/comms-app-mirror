@@ -92,4 +92,7 @@ public class Constants
     public final static int DEFAULT_ENCODER = 25;
     public final static int DEFAULT_TX_FRAMING_MS = 60;
     public static final String CERTSTORE_CHANGED_TO_FN = "CertStoreChangedToFn";//NON-NLS
+
+    public static final String KEY_EVENT_ACTION = "KEY_EVENT";//NON-NLS
+    public static final String KEY_EVENT_EXTRA_DOWN_TIME = "EVENT_DOWN_TIME";//NON-NLS
 }
