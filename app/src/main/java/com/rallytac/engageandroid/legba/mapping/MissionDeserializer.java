@@ -14,6 +14,8 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class MissionDeserializer implements JsonDeserializer<Mission> {
 
     private final static String MISSION_ID = "id";
@@ -51,19 +53,19 @@ public class MissionDeserializer implements JsonDeserializer<Mission> {
             JsonObject rp = rpElement.getAsJsonObject();
 
             JsonElement rpUseElement = rp.get(RP_USE);
-            if (rpUseElement == null || !rpUseElement.isJsonPrimitive()) {
+            if (rpUseElement == null || !rpUseElement.getAsJsonPrimitive().isBoolean()) {
                 throw new JsonParseException("Use property is not valid");
             }
             rpUse = rpUseElement.getAsBoolean();
 
             JsonElement rpAddressElement = rp.get(RP_ADDRESS);
-            if (rpAddressElement == null || rpAddressElement.isJsonPrimitive()) {
+            if (rpAddressElement == null || !rpAddressElement.getAsJsonPrimitive().isString()) {
                 throw new JsonParseException("Address property is not valid");
             }
             rpAddress = rpAddressElement.getAsString();
 
             JsonElement rpPortElement = rp.get(RP_PORT);
-            if (rpPortElement == null || rpPortElement.isJsonPrimitive()) {
+            if (rpPortElement == null || !rpPortElement.getAsJsonPrimitive().isNumber()) {
                 throw new JsonParseException("Port property is not valid");
             }
             rpPort = rpPortElement.getAsInt();
@@ -72,7 +74,7 @@ public class MissionDeserializer implements JsonDeserializer<Mission> {
         int multicastFailoverPolicy;
 
         JsonElement multicastPolicyElement = jsonObject.get(MULTICAST_POLICY);
-        if (multicastPolicyElement != null && multicastPolicyElement.isJsonPrimitive()) {
+        if (multicastPolicyElement != null && multicastPolicyElement.getAsJsonPrimitive().isNumber()) {
             multicastFailoverPolicy = multicastPolicyElement.getAsInt();
         } else {
             throw new JsonParseException("multicastFailoverPolicy property is not valid");
@@ -80,7 +82,6 @@ public class MissionDeserializer implements JsonDeserializer<Mission> {
 
         Mission.MulticastType multicastType
                 = new Mission.MulticastTypeConverter().convertToEntityProperty(multicastFailoverPolicy);
-
 
         List<Channel> channels = Collections.emptyList();
 

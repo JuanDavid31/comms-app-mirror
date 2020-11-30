@@ -45,24 +45,32 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
         JsonElement imageJsonElement = root.get(IMAGE);
         JsonElement engageTypeJsonElement = root.get(TYPE);
 
-        if (idJsonElement == null || idJsonElement.isJsonPrimitive()) {
+        if (idJsonElement == null || !idJsonElement.getAsJsonPrimitive().isString()) {
             throw new JsonParseException("id in group property is not valid ");
         }
         String id = idJsonElement.getAsString();
 
-        if (missionIdJsonElement == null || missionIdJsonElement.isJsonPrimitive()) {
+        if (missionIdJsonElement == null || !missionIdJsonElement.getAsJsonPrimitive().isString()) {
             throw new JsonParseException("missionId in group is not a valid property");
         }
-        if (nameJsonElement == null || nameJsonElement.isJsonPrimitive()) {
+        String missionId = missionIdJsonElement.getAsString();
+
+        if (nameJsonElement == null || !nameJsonElement.getAsJsonPrimitive().isString()) {
             throw new JsonParseException("name in group is not a valid property");
         }
-        if (imageJsonElement == null || imageJsonElement.isJsonPrimitive()) {
+        String name = nameJsonElement.getAsString();
+
+        if (imageJsonElement == null || !imageJsonElement.getAsJsonPrimitive().isString()) {
             throw new JsonParseException("image in group is not a valid property");
         }
+        String image = imageJsonElement.getAsString();
+
         /*if (typeJsonElement == null || typeJsonElement.isJsonPrimitive()) {
             throw new JsonParseException("type in group is not a valid property");
         }*/
-        if (engageTypeJsonElement == null || !engageTypeJsonElement.isJsonPrimitive()) {
+
+
+        if (engageTypeJsonElement == null || !engageTypeJsonElement.getAsJsonPrimitive().isNumber()) {
             throw new JsonParseException("engageType in group is not a valid property");
         }
 
@@ -72,55 +80,54 @@ public class ChannelDeserializer implements JsonDeserializer<Channel> {
         int framingMs = 60;
         int encoder = 25;
         int maxTxSecs = 30;
-        if (txAudioJsonElement == null && !txAudioJsonElement.isJsonObject()){
+        if (txAudioJsonElement == null || !txAudioJsonElement.isJsonObject()){
             throw new JsonParseException("txAudio in group is not a valid property");
         } else {
-            JsonObject txAudioJsonObject =  txAudioJsonElement.getAsJsonObject();
+            JsonObject txAudioJsonObject = txAudioJsonElement.getAsJsonObject();
 
             JsonElement fullDuplexJsonElement = txAudioJsonObject.get(FULL_DUPLEX);
-            if(fullDuplexJsonElement == null || !fullDuplexJsonElement.isJsonPrimitive()){
+            if(fullDuplexJsonElement == null || !fullDuplexJsonElement.getAsJsonPrimitive().isBoolean()){
                 throw new JsonParseException("fdx in group is not valid");
             }
             fullDuplex = fullDuplexJsonElement.getAsBoolean();
 
             JsonElement framingMsJsonElement = txAudioJsonObject.get(FRAMING_MS);
-            if(framingMsJsonElement == null || !framingMsJsonElement.isJsonPrimitive()){
+            if(framingMsJsonElement == null || !framingMsJsonElement.getAsJsonPrimitive().isNumber()){
                 throw new JsonParseException("framingMs in group is not valid");
             }
             framingMs = framingMsJsonElement.getAsInt();
 
             JsonElement encoderJsonElement = txAudioJsonObject.get(ENCODER);
-            if(encoderJsonElement == null || !encoderJsonElement.isJsonPrimitive()){
+            if(encoderJsonElement == null || !encoderJsonElement.getAsJsonPrimitive().isNumber()){
                 throw new JsonParseException("encoder in group is not valid");
             }
             encoder = encoderJsonElement.getAsInt();
 
             JsonElement maxTxSecsJsonElement = txAudioJsonObject.get(MAX_TX_SECS);
-            if(maxTxSecsJsonElement == null || !maxTxSecsJsonElement.isJsonPrimitive()){
+            if(maxTxSecsJsonElement == null || !maxTxSecsJsonElement.getAsJsonPrimitive().isNumber()){
                 throw new JsonParseException("maxTxSecs in group is not valid");
             }
             maxTxSecs = maxTxSecsJsonElement.getAsInt();
         }
 
-
         JsonObject rxJsonObject = root.get(RX).getAsJsonObject();
         JsonObject txJsonObject = root.get(TX).getAsJsonObject();
 
-        return new Channel( //TODO: Create a proper constructor without innecesary boilerplate
+        return new Channel(
                 id,
-                missionIdJsonElement.getAsString(),
-                nameJsonElement.getAsString(),
-                imageJsonElement.getAsString(),
+                missionId,
+                name,
+                image,
                 getChannelType(typeJsonElement.getAsString()),
                 fullDuplex,
                 framingMs,
                 encoder,
                 maxTxSecs,
-                txJsonObject != null ? txJsonObject.get("address").getAsString() : "239.42.43.1",
-                txJsonObject != null ? txJsonObject.get("port").getAsInt() : 49000,
-                rxJsonObject != null ? rxJsonObject.get("address").getAsString() : "239.42.43.1",
-                rxJsonObject != null ? rxJsonObject.get("port").getAsInt() : 49000,
-                getEngageType(engageTypeJsonElement != null ? engageTypeJsonElement.getAsInt() : 1)
+                txJsonObject != null ? txJsonObject.get("address").getAsString() : "239.42.43.1", //TODO: Validate
+                txJsonObject != null ? txJsonObject.get("port").getAsInt() : 49000, //TODO: Validate
+                rxJsonObject != null ? rxJsonObject.get("address").getAsString() : "239.42.43.1", //TODO: Validate
+                rxJsonObject != null ? rxJsonObject.get("port").getAsInt() : 49000, //TODO: Validate
+                getEngageType(engageTypeJsonElement.getAsInt()) //TODO: Validate
         );
     }
 
