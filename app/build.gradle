@@ -49,8 +49,8 @@ android {
         applicationId apkPackageName
         minSdkVersion 26
         targetSdkVersion 28
-        versionCode 1226
-        versionName "1226"
+        versionCode 1229
+        versionName "1229"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
