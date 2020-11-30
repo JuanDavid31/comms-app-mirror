@@ -113,9 +113,11 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".MissionEditActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_edit_mission" />
         <activity
             android:name=".MissionListActivity"
