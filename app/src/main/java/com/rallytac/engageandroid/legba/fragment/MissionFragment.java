@@ -655,7 +655,7 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
                     vm.setIncomingSosDisplayName(displayName);
                     vm.setMissionOnSos(true);
 
-                    pauseActiveTx(); //Only works if full duplex is enable
+                    pauseActiveTx(); //Only works if full duplex is enabled
 
                     activity.binding.incomingSosOverlapMessageName.setText(alias);
                     if (activity.binding.incomingSosOverlapLayout.getVisibility() == View.GONE) {
@@ -670,7 +670,6 @@ public class MissionFragment extends Fragment implements RxListener, GroupDiscov
         vm.getAudioChannels().forEach(audioChannel -> audioChannel.setOnRx(false));
         String[] channelIds = vm.getAudioChannels()
                 .stream()
-                .peek(audioChannel -> audioChannel.setOnRx(false))
                 .map(Channel::getId)
                 .toArray(String[]::new);
 
